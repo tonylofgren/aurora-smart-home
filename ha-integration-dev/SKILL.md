@@ -29,8 +29,8 @@ Ask user:
 2. **Update method?** (polling interval vs push/websocket)
 3. **Authentication?** (none, API key, OAuth2)
 4. **Entity types needed?** (sensor, switch, light, climate, etc.)
-5. **Output method?**
-   - **Save to project** - Write files to custom_components/ folder
+5. **Output method?** ⚠️ ALWAYS ASK
+   - **Save to folder** - Write files to custom_components/ in current working directory
    - **Copy from chat** - Display code for user to copy manually
 
 ## Quick Reference

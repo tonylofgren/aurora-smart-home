@@ -33,7 +33,7 @@ Reference skill for Home Assistant configuration and automation.
    - YAML files (automations.yaml, packages/)
 
 3. **Output method?** ⚠️ ALWAYS ASK
-   - **Save to project** - Write file to their project folder (automations.yaml, packages/, etc.)
+   - **Save to folder** - Write file to the current working directory (where Claude is running)
    - **Copy from chat** - Display code for user to copy manually
 
 4. **HA Version?** (for deprecated syntax awareness)

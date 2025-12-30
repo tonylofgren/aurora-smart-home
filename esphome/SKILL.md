@@ -31,8 +31,8 @@ Reference skill for ESPHome device configuration and firmware.
    - ESP8266 / D1 Mini (legacy)
    - Shelly / Sonoff / Tuya (specify model)
 
-2. **Output method?**
-   - **Save to project** - Write .yaml file to their project folder
+2. **Output method?** ⚠️ ALWAYS ASK
+   - **Save to folder** - Write .yaml file to the current working directory
    - **Copy from chat** - Display code for user to copy manually
 
 **Do NOT assume `esp32dev`. User must confirm board.**
