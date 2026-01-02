@@ -76,7 +76,21 @@ To move from one scope to another (e.g., user → local):
 
 ## Secrets Configuration
 
-The skill generates configs using `!secret` references. Add to your ESPHome `secrets.yaml`:
+The skill generates configs using `!secret` references. Create your `secrets.yaml`:
+
+### Option 1: Use the helper scripts (recommended)
+
+```bash
+# Python (cross-platform)
+python scripts/generate_secrets.py --output
+
+# Or Bash (Linux/Mac)
+./scripts/generate_secrets.sh --output
+```
+
+This creates a complete `secrets.yaml` with secure random keys.
+
+### Option 2: Manual creation
 
 ```yaml
 wifi_ssid: "YourWiFiName"
@@ -84,6 +98,8 @@ wifi_password: "YourWiFiPassword"
 api_encryption_key: "your-32-byte-base64-key"  # Generate: openssl rand -base64 32
 ota_password: "your-ota-password"
 ```
+
+See [scripts/README.md](../scripts/README.md) for more options.
 
 ---
 
