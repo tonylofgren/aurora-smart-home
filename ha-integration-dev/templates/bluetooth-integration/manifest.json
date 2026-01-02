@@ -1,0 +1,17 @@
+{
+  "domain": "my_bluetooth_device",
+  "name": "My Bluetooth Device",
+  "version": "1.0.0",
+  "codeowners": ["@USERNAME"],
+  "config_flow": true,
+  "documentation": "https://github.com/USERNAME/REPO",
+  "issue_tracker": "https://github.com/USERNAME/REPO/issues",
+  "iot_class": "local_push",
+  "dependencies": ["bluetooth"],
+  "requirements": ["bleak>=0.21.0"],
+  "bluetooth": [
+    {
+      "local_name": "MyDevice*"
+    }
+  ]
+}

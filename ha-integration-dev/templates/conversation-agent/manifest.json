@@ -1,0 +1,13 @@
+{
+  "domain": "my_llm_assistant",
+  "name": "LLM Conversation Agent",
+  "version": "1.0.0",
+  "codeowners": ["@USERNAME"],
+  "config_flow": true,
+  "documentation": "https://github.com/USERNAME/REPO",
+  "issue_tracker": "https://github.com/USERNAME/REPO/issues",
+  "iot_class": "cloud_polling",
+  "dependencies": ["conversation"],
+  "requirements": [],
+  "quality_scale": "silver"
+}

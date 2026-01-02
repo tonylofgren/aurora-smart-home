@@ -1,0 +1,41 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Select Device",
+        "description": "Select your Bluetooth device from the list, or enter the address manually.",
+        "data": {
+          "address": "Bluetooth Address"
+        },
+        "data_description": {
+          "address": "The Bluetooth MAC address of your device (e.g., AA:BB:CC:DD:EE:FF)"
+        }
+      },
+      "bluetooth_confirm": {
+        "title": "Confirm Device",
+        "description": "Do you want to set up {name}?"
+      }
+    },
+    "error": {
+      "invalid_address": "Invalid Bluetooth address format",
+      "cannot_connect": "Could not connect to device"
+    },
+    "abort": {
+      "already_configured": "Device is already configured",
+      "not_supported": "Device is not supported"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "battery": {
+        "name": "Battery"
+      },
+      "temperature": {
+        "name": "Temperature"
+      },
+      "rssi": {
+        "name": "Signal Strength"
+      }
+    }
+  }
+}

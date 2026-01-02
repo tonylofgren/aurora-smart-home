@@ -22,7 +22,7 @@ The most comprehensive Claude Code skill pack for smart home development.
 | **Reference Guides** | 49 | 24 | 17 |
 | **Example Prompts** | 300+ | 600+ | 129 |
 | **Code Examples** | 700+ | 950+ | 200+ |
-| **Ready Templates** | 17 | 15 | 6 |
+| **Ready Templates** | 17 | 19 | 8 |
 | **Coverage** | 50+ integrations | 160+ components | Full HA framework |
 
 ---
@@ -48,6 +48,35 @@ The most comprehensive Claude Code skill pack for smart home development.
 /plugin install esphome@aurora-smart-home --scope local
 /plugin install ha-integration@aurora-smart-home --scope local
 ```
+
+---
+
+## Getting Started with Your First Project
+
+After installation, just describe what you want to build. The skills auto-activate based on your request:
+
+```
+💬 "Create an ESP32 temperature sensor with OLED display"
+   → ESPHome skill activates, asks about board, generates complete config
+
+💬 "Build an automation that turns on lights at sunset"
+   → HA-YAML skill activates, clarifies format, creates automation
+
+💬 "I need a custom integration for the Acme API"
+   → HA-Integration skill activates, guides through architecture
+```
+
+### Example Projects
+
+The `examples/` folder contains complete, working projects:
+
+| Example | Description |
+|---------|-------------|
+| [complete-smart-room](./examples/complete-smart-room/) | Full room with sensors, voice control, automations |
+
+### How Skills Work Together
+
+See [SKILL-INTEGRATION.md](./SKILL-INTEGRATION.md) for detailed workflows showing how ESPHome → HA Integration → HA Automation skills connect.
 
 ---
 
@@ -100,11 +129,11 @@ Build custom Home Assistant integrations in Python.
 | Reference guides | 17 |
 | Development prompts | 129 |
 | Code examples | 200+ |
-| Starter templates | 6 |
+| Starter templates | 8 |
 
 **Covers:** Config flows, DataUpdateCoordinator, entity platforms (20+), services, events, device registry, OAuth2, WebSocket, HACS publishing, Core contribution.
 
-**Templates:** Basic, polling, push, OAuth2, multi-device hub, service integration.
+**Templates:** Basic, polling, push, OAuth2, multi-device hub, service, Bluetooth, conversation agent.
 
 [View Integration Dev documentation](./ha-integration-dev/README.md)
 
@@ -168,6 +197,18 @@ To move a plugin from one scope to another (e.g., user → local):
    ```
 
 **Note:** Use the interactive UI to uninstall - the CLI command `/plugin uninstall` only disables plugins.
+
+---
+
+## Troubleshooting
+
+Having issues? Check the [Troubleshooting Guide](./TROUBLESHOOTING.md) for common problems and solutions across all skills.
+
+---
+
+## Changelog
+
+See [CHANGELOG.md](./CHANGELOG.md) for version history and recent updates.
 
 ---
 

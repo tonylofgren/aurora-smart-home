@@ -481,7 +481,7 @@ All configurations include attribution:
 
 | Version | Date | Changes |
 |---------|------|---------|
-| v1.0.0 | 2025 | Initial release - Complete ESPHome skill with 18 triggers, 22 reference docs, 17 templates |
+| v1.0.0 | 2025 | Initial release - Complete ESPHome skill with 18 triggers, 26 reference docs, 19 templates |
 
 ---
 
@@ -517,7 +517,7 @@ esphome/
 │   ├── troubleshooting.md      # Common issues
 │   └── arduino-conversion.md   # Arduino to ESPHome
 └── assets/templates/
-    └── (17 ready-to-use templates)
+    └── (19 ready-to-use templates)
 ```
 
 ---

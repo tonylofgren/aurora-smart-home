@@ -1,0 +1,71 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Select LLM Provider",
+        "description": "Choose which LLM provider to use for the conversation agent.",
+        "data": {
+          "llm_provider": "Provider"
+        }
+      },
+      "ollama": {
+        "title": "Configure Ollama",
+        "description": "Enter your Ollama server details. Ollama runs locally and is free.",
+        "data": {
+          "api_url": "Ollama URL",
+          "model": "Model"
+        },
+        "data_description": {
+          "api_url": "URL of your Ollama server (default: http://localhost:11434)",
+          "model": "Model name to use (e.g., llama3.2, mistral, gemma2)"
+        }
+      },
+      "openai": {
+        "title": "Configure OpenAI",
+        "description": "Enter your OpenAI API key.",
+        "data": {
+          "api_key": "API Key",
+          "model": "Model"
+        },
+        "data_description": {
+          "api_key": "Your OpenAI API key (starts with sk-)",
+          "model": "Model to use (e.g., gpt-4o-mini, gpt-4o, gpt-4-turbo)"
+        }
+      },
+      "anthropic": {
+        "title": "Configure Anthropic",
+        "description": "Enter your Anthropic API key.",
+        "data": {
+          "api_key": "API Key",
+          "model": "Model"
+        },
+        "data_description": {
+          "api_key": "Your Anthropic API key (starts with sk-ant-)",
+          "model": "Model to use (e.g., claude-3-haiku-20240307, claude-3-5-sonnet-20241022)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect to the LLM server",
+      "invalid_auth": "Invalid API key"
+    },
+    "abort": {
+      "already_configured": "Already configured"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "LLM Settings",
+        "data": {
+          "temperature": "Temperature",
+          "max_history": "Conversation History Length"
+        },
+        "data_description": {
+          "temperature": "Higher values (0.7-1.0) = more creative, lower (0.1-0.3) = more focused",
+          "max_history": "Number of previous messages to include in context"
+        }
+      }
+    }
+  }
+}
