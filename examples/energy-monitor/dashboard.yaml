@@ -1,0 +1,139 @@
+# Energy Monitor Lovelace Dashboard
+# Import via: Settings > Dashboards > Add Dashboard > Import
+
+title: Energy
+views:
+  - title: Overview
+    path: energy
+    icon: mdi:flash
+    badges: []
+    cards:
+      # Header
+      - type: markdown
+        content: >
+          # ⚡ Energy Monitor
+
+          Real-time whole-house power monitoring
+
+      # Main power gauge
+      - type: gauge
+        entity: sensor.energy_monitor_power
+        name: Current Power
+        min: 0
+        max: 10000
+        severity:
+          green: 0
+          yellow: 3000
+          red: 5000
+        needle: true
+        unit: W
+
+      # Today's stats
+      - type: horizontal-stack
+        cards:
+          - type: statistic
+            entity: sensor.energy_monitor_daily_energy
+            name: Today's Usage
+            stat_type: state
+            period:
+              calendar:
+                period: day
+
+          - type: entity
+            entity: sensor.energy_monitor_daily_cost
+            name: Today's Cost
+            icon: mdi:currency-eur
+
+      # Power graph
+      - type: history-graph
+        title: Power Usage (24h)
+        hours_to_show: 24
+        entities:
+          - entity: sensor.energy_monitor_power
+            name: Power
+
+      # Circuit breakdown
+      - type: entities
+        title: Circuit Breakdown
+        entities:
+          - entity: sensor.energy_monitor_power
+            name: Total Power
+          - entity: sensor.energy_monitor_circuit_1
+            name: Circuit 1
+          - entity: sensor.energy_monitor_circuit_2
+            name: Circuit 2
+          - type: divider
+          - entity: sensor.energy_monitor_current
+            name: Current Draw
+
+      # Usage level indicator
+      - type: entity
+        entity: text_sensor.energy_monitor_usage_level
+        name: Usage Level
+        icon: mdi:speedometer
+
+      # Alerts
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: binary_sensor.energy_monitor_high_usage
+            state: "on"
+        card:
+          type: alert
+          title: High Power Usage
+          content: >
+            Power consumption is unusually high.
+            Current: {{ states('sensor.energy_monitor_power') }}W
+
+      # Energy statistics cards
+      - type: statistics-graph
+        title: Daily Energy Trend
+        entities:
+          - sensor.energy_monitor_daily_energy
+        stat_types:
+          - mean
+          - max
+        days_to_show: 7
+
+      # Device info
+      - type: entities
+        title: System Info
+        entities:
+          - entity: binary_sensor.energy_monitor_status
+            name: Device Status
+          - entity: sensor.energy_monitor_wifi
+            name: WiFi Signal
+          - entity: sensor.energy_monitor_uptime
+            name: Uptime
+          - entity: button.energy_monitor_restart
+            name: Restart Device
+
+  # Historical view
+  - title: History
+    path: energy-history
+    icon: mdi:chart-line
+    cards:
+      - type: markdown
+        content: >
+          # 📊 Energy History
+
+      - type: history-graph
+        title: Power (7 days)
+        hours_to_show: 168
+        entities:
+          - entity: sensor.energy_monitor_power
+
+      - type: statistics-graph
+        title: Daily Consumption
+        entities:
+          - sensor.energy_monitor_daily_energy
+        stat_types:
+          - sum
+        days_to_show: 30
+        period: day
+
+      - type: energy-date-selection
+
+      - type: energy-usage-graph
+
+      - type: energy-distribution

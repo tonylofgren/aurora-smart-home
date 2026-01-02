@@ -1,0 +1,147 @@
+# Smart Greenhouse Lovelace Dashboard
+# Import via: Settings > Dashboards > Add Dashboard > Import
+
+title: Greenhouse
+views:
+  - title: Overview
+    path: greenhouse
+    icon: mdi:greenhouse
+    badges: []
+    cards:
+      # Header with status
+      - type: markdown
+        content: >
+          # 🌱 Greenhouse Control Center
+
+          Status: **{{ states('sensor.greenhouse_status') }}**
+
+      # Main gauges row
+      - type: horizontal-stack
+        cards:
+          - type: gauge
+            entity: sensor.greenhouse_temperature
+            name: Temperature
+            min: 0
+            max: 50
+            severity:
+              green: 15
+              yellow: 28
+              red: 35
+            needle: true
+
+          - type: gauge
+            entity: sensor.greenhouse_humidity
+            name: Humidity
+            min: 0
+            max: 100
+            severity:
+              red: 30
+              yellow: 40
+              green: 50
+            needle: true
+
+          - type: gauge
+            entity: sensor.greenhouse_soil_moisture
+            name: Soil Moisture
+            min: 0
+            max: 100
+            severity:
+              red: 20
+              yellow: 40
+              green: 50
+            needle: true
+
+      # Light and soil temp
+      - type: horizontal-stack
+        cards:
+          - type: sensor
+            entity: sensor.greenhouse_light
+            name: Light Level
+            icon: mdi:white-balance-sunny
+            graph: line
+            hours_to_show: 24
+            detail: 2
+
+          - type: sensor
+            entity: sensor.greenhouse_soil_temperature
+            name: Soil Temp
+            icon: mdi:thermometer
+            graph: line
+            hours_to_show: 24
+            detail: 2
+
+      # Control switches
+      - type: entities
+        title: Controls
+        show_header_toggle: false
+        entities:
+          - entity: switch.greenhouse_water_pump
+            name: Water Pump
+            icon: mdi:water-pump
+          - entity: switch.greenhouse_water_valve
+            name: Water Valve
+            icon: mdi:pipe-valve
+          - entity: switch.greenhouse_fan
+            name: Ventilation Fan
+            icon: mdi:fan
+          - entity: switch.greenhouse_grow_light
+            name: Grow Light
+            icon: mdi:lightbulb
+
+      # Quick actions
+      - type: horizontal-stack
+        cards:
+          - type: button
+            entity: button.greenhouse_water_now
+            name: Water Now
+            icon: mdi:watering-can
+            tap_action:
+              action: call-service
+              service: button.press
+              target:
+                entity_id: button.greenhouse_water_now
+
+          - type: button
+            entity: switch.greenhouse_fan
+            name: Toggle Fan
+            icon: mdi:fan
+            tap_action:
+              action: toggle
+
+      # Alerts
+      - type: entities
+        title: Alerts
+        entities:
+          - entity: binary_sensor.greenhouse_needs_water
+            name: Needs Water
+          - entity: binary_sensor.greenhouse_too_hot
+            name: Too Hot
+          - entity: binary_sensor.greenhouse_frost_warning
+            name: Frost Warning
+          - entity: binary_sensor.greenhouse_low_light
+            name: Low Light
+
+      # History graph
+      - type: history-graph
+        title: 24 Hour History
+        hours_to_show: 24
+        entities:
+          - entity: sensor.greenhouse_temperature
+            name: Temp
+          - entity: sensor.greenhouse_humidity
+            name: Humidity
+          - entity: sensor.greenhouse_soil_moisture
+            name: Soil
+
+      # Device info
+      - type: entities
+        title: Device Info
+        entities:
+          - entity: binary_sensor.greenhouse_status
+            name: Device Status
+          - entity: sensor.greenhouse_wifi
+            name: WiFi Signal
+          - entity: sensor.greenhouse_esphome_version
+            name: ESPHome Version
+          - entity: button.greenhouse_restart
+            name: Restart Device

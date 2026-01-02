@@ -1,0 +1,24 @@
+{
+  "ignorePatterns": [
+    {
+      "pattern": "^https://github.com/tonylofgren/aurora-smart-home"
+    },
+    {
+      "pattern": "^#"
+    },
+    {
+      "pattern": "localhost"
+    },
+    {
+      "pattern": "127\\.0\\.0\\.1"
+    },
+    {
+      "pattern": "\\{\\{"
+    }
+  ],
+  "timeout": "20s",
+  "retryOn429": true,
+  "retryCount": 3,
+  "fallbackRetryDelay": "30s",
+  "aliveStatusCodes": [200, 206, 301, 302, 307, 308]
+}

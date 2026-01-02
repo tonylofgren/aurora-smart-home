@@ -1,0 +1,193 @@
+# Energy Monitor Automations for Home Assistant
+# Add these to your automations.yaml or via UI
+
+# =============================================================================
+# High Usage Alerts
+# =============================================================================
+
+- alias: "Energy - High Usage Alert"
+  id: energy_high_usage_alert
+  description: "Alert when power consumption exceeds 5000W"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.energy_monitor_power
+      above: 5000
+      for:
+        minutes: 5
+  action:
+    - service: notify.notify
+      data:
+        title: "⚡ High Energy Usage"
+        message: >
+          Power consumption is {{ states('sensor.energy_monitor_power') }}W.
+          This is unusually high. Check for appliances left on.
+
+- alias: "Energy - Overload Warning"
+  id: energy_overload_warning
+  description: "Critical alert for potential electrical overload"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.energy_monitor_power
+      above: 7000
+      for:
+        seconds: 30
+  action:
+    - service: notify.notify
+      data:
+        title: "🚨 ELECTRICAL OVERLOAD WARNING"
+        message: >
+          Power consumption is {{ states('sensor.energy_monitor_power') }}W!
+          Risk of tripping breaker. Turn off unnecessary appliances immediately.
+    - service: persistent_notification.create
+      data:
+        title: "Electrical Overload"
+        message: "Extremely high power usage detected!"
+        notification_id: energy_overload
+
+# =============================================================================
+# Standby Power Detection
+# =============================================================================
+
+- alias: "Energy - Night Standby Check"
+  id: energy_standby_check
+  description: "Check standby power at night"
+  trigger:
+    - platform: time
+      at: "02:00:00"
+  action:
+    - service: notify.notify
+      data:
+        title: "Night Energy Report"
+        message: >
+          Standby power at 2 AM: {{ states('sensor.energy_monitor_power') }}W.
+          {% if states('sensor.energy_monitor_power') | float > 200 %}
+          This seems high for standby. Check for appliances left on.
+          {% else %}
+          Normal standby consumption.
+          {% endif %}
+
+# =============================================================================
+# Daily Summary
+# =============================================================================
+
+- alias: "Energy - Daily Summary"
+  id: energy_daily_summary
+  description: "Send daily energy consumption summary"
+  trigger:
+    - platform: time
+      at: "21:00:00"
+  action:
+    - service: notify.notify
+      data:
+        title: "⚡ Daily Energy Summary"
+        message: >
+          Today's usage: {{ states('sensor.energy_monitor_daily_energy') }} kWh
+          Estimated cost: €{{ states('sensor.energy_monitor_daily_cost') }}
+          Peak power: {{ state_attr('sensor.energy_monitor_power', 'max') | default('N/A') }}W
+
+# =============================================================================
+# Weekly Report
+# =============================================================================
+
+- alias: "Energy - Weekly Report"
+  id: energy_weekly_report
+  description: "Weekly energy consumption report"
+  trigger:
+    - platform: time
+      at: "18:00:00"
+  condition:
+    - condition: time
+      weekday:
+        - sun
+  action:
+    - service: notify.notify
+      data:
+        title: "📊 Weekly Energy Report"
+        message: >
+          This week's energy consumption summary.
+          Check the Energy Dashboard for detailed breakdown.
+
+# =============================================================================
+# Unusual Usage Patterns
+# =============================================================================
+
+- alias: "Energy - Unusual Daytime Usage"
+  id: energy_unusual_daytime
+  description: "Alert for unusual usage when nobody home"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.energy_monitor_power
+      above: 1000
+      for:
+        minutes: 30
+  condition:
+    # Nobody home (adjust entity)
+    - condition: state
+      entity_id: group.family
+      state: "not_home"
+  action:
+    - service: notify.notify
+      data:
+        title: "🏠 Unusual Energy Usage"
+        message: >
+          High power usage ({{ states('sensor.energy_monitor_power') }}W)
+          detected while nobody is home. Check if something was left on.
+
+# =============================================================================
+# Device Left On Detection
+# =============================================================================
+
+- alias: "Energy - Appliance Running Too Long"
+  id: energy_appliance_too_long
+  description: "Detect if high-power appliance running unusually long"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.energy_monitor_power
+      above: 2000
+      for:
+        hours: 2
+  action:
+    - service: notify.notify
+      data:
+        title: "⏰ Appliance Running Long"
+        message: >
+          Power has been above 2000W for over 2 hours.
+          Check if oven, heater, or other appliance was left on.
+
+# =============================================================================
+# Cost Threshold Alerts
+# =============================================================================
+
+- alias: "Energy - Daily Cost Threshold"
+  id: energy_cost_threshold
+  description: "Alert when daily cost exceeds threshold"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.energy_monitor_daily_cost
+      above: 5  # €5 daily threshold
+  action:
+    - service: notify.notify
+      data:
+        title: "💰 High Daily Energy Cost"
+        message: >
+          Today's energy cost has exceeded €5.
+          Current: €{{ states('sensor.energy_monitor_daily_cost') }}
+
+# =============================================================================
+# Utility Meter Reset
+# =============================================================================
+
+- alias: "Energy - Monthly Reset Notification"
+  id: energy_monthly_reset
+  description: "Notification when monthly meter resets"
+  trigger:
+    - platform: time
+      at: "00:01:00"
+  condition:
+    - condition: template
+      value_template: "{{ now().day == 1 }}"
+  action:
+    - service: notify.notify
+      data:
+        title: "📅 Monthly Energy Reset"
+        message: "Monthly energy counter has been reset. New billing period started."

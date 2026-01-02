@@ -1,0 +1,279 @@
+# Smart Garage Controller
+# Complete ESPHome configuration for garage automation
+#
+# Hardware:
+#   - ESP32 DevKit
+#   - Reed switches (door position)
+#   - Ultrasonic sensor (car detection)
+#   - DHT22 (temperature/humidity)
+#   - PIR sensor (motion)
+#   - Relay (door control)
+#   - IR break beam (obstruction)
+
+substitutions:
+  device_name: "garage"
+  friendly_name: "Garage"
+
+  # Sensor pins
+  door_closed_pin: "GPIO4"
+  door_open_pin: "GPIO5"
+  ultrasonic_trigger: "GPIO16"
+  ultrasonic_echo: "GPIO17"
+  dht_pin: "GPIO18"
+  pir_pin: "GPIO19"
+
+  # Control pins
+  relay_pin: "GPIO21"
+  obstruction_pin: "GPIO22"
+
+  # Car detection threshold (cm)
+  car_present_distance: "180"
+
+  # Door operation timeout (seconds)
+  door_timeout: "30"
+
+esphome:
+  name: ${device_name}
+  friendly_name: ${friendly_name}
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: "${device_name}-fallback"
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+logger:
+  level: INFO
+
+# =============================================================================
+# Door Position Sensors
+# =============================================================================
+
+binary_sensor:
+  # Door closed sensor (reed switch)
+  - platform: gpio
+    pin:
+      number: ${door_closed_pin}
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "${friendly_name} Door Closed"
+    id: door_closed
+    device_class: garage_door
+    filters:
+      - delayed_on: 100ms
+      - delayed_off: 100ms
+
+  # Door open sensor (reed switch)
+  - platform: gpio
+    pin:
+      number: ${door_open_pin}
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "${friendly_name} Door Open"
+    id: door_open
+    device_class: garage_door
+    filters:
+      - delayed_on: 100ms
+      - delayed_off: 100ms
+
+  # Motion sensor (PIR)
+  - platform: gpio
+    pin: ${pir_pin}
+    name: "${friendly_name} Motion"
+    id: garage_motion
+    device_class: motion
+    filters:
+      - delayed_off: 30s
+
+  # Obstruction sensor (IR break beam)
+  - platform: gpio
+    pin:
+      number: ${obstruction_pin}
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "${friendly_name} Obstruction"
+    id: obstruction
+    device_class: safety
+    on_press:
+      # Stop door if obstruction detected
+      - if:
+          condition:
+            lambda: 'return id(door_moving);'
+          then:
+            - cover.stop: garage_door
+            - logger.log: "Obstruction detected - door stopped!"
+
+  # Car presence (from ultrasonic)
+  - platform: template
+    name: "${friendly_name} Car Present"
+    id: car_present
+    device_class: occupancy
+    lambda: return id(car_distance).state < ${car_present_distance};
+
+  - platform: status
+    name: "${friendly_name} Status"
+
+# =============================================================================
+# Sensors
+# =============================================================================
+
+sensor:
+  # Car distance (ultrasonic)
+  - platform: ultrasonic
+    trigger_pin: ${ultrasonic_trigger}
+    echo_pin: ${ultrasonic_echo}
+    name: "${friendly_name} Car Distance"
+    id: car_distance
+    update_interval: 10s
+    unit_of_measurement: "cm"
+    filters:
+      - multiply: 100
+      - median:
+          window_size: 5
+          send_every: 1
+
+  # Temperature & Humidity
+  - platform: dht
+    pin: ${dht_pin}
+    model: DHT22
+    temperature:
+      name: "${friendly_name} Temperature"
+      id: garage_temp
+    humidity:
+      name: "${friendly_name} Humidity"
+      id: garage_humidity
+    update_interval: 60s
+
+  # WiFi Signal
+  - platform: wifi_signal
+    name: "${friendly_name} WiFi"
+    update_interval: 60s
+    entity_category: diagnostic
+
+# =============================================================================
+# Globals
+# =============================================================================
+
+globals:
+  - id: door_moving
+    type: bool
+    restore_value: no
+    initial_value: 'false'
+
+# =============================================================================
+# Door Control Relay
+# =============================================================================
+
+switch:
+  # Door opener relay (momentary pulse)
+  - platform: gpio
+    pin: ${relay_pin}
+    name: "${friendly_name} Door Relay"
+    id: door_relay
+    internal: true
+    restore_mode: ALWAYS_OFF
+
+# =============================================================================
+# Cover (Garage Door)
+# =============================================================================
+
+cover:
+  - platform: template
+    name: "${friendly_name} Door"
+    id: garage_door
+    device_class: garage
+    lambda: |-
+      if (id(door_closed).state) return COVER_CLOSED;
+      if (id(door_open).state) return COVER_OPEN;
+      return {};  // Unknown/moving
+
+    open_action:
+      - if:
+          condition:
+            binary_sensor.is_on: door_closed
+          then:
+            - globals.set:
+                id: door_moving
+                value: 'true'
+            - switch.turn_on: door_relay
+            - delay: 500ms
+            - switch.turn_off: door_relay
+            # Timeout safety
+            - delay: ${door_timeout}s
+            - globals.set:
+                id: door_moving
+                value: 'false'
+
+    close_action:
+      - if:
+          condition:
+            binary_sensor.is_on: door_open
+          then:
+            - globals.set:
+                id: door_moving
+                value: 'true'
+            - switch.turn_on: door_relay
+            - delay: 500ms
+            - switch.turn_off: door_relay
+            # Timeout safety
+            - delay: ${door_timeout}s
+            - globals.set:
+                id: door_moving
+                value: 'false'
+
+    stop_action:
+      - switch.turn_on: door_relay
+      - delay: 500ms
+      - switch.turn_off: door_relay
+      - globals.set:
+          id: door_moving
+          value: 'false'
+
+# =============================================================================
+# Button (Toggle Door)
+# =============================================================================
+
+button:
+  # Toggle door (like wall button)
+  - platform: template
+    name: "${friendly_name} Door Toggle"
+    icon: "mdi:garage"
+    on_press:
+      - switch.turn_on: door_relay
+      - delay: 500ms
+      - switch.turn_off: door_relay
+
+  - platform: restart
+    name: "${friendly_name} Restart"
+    entity_category: config
+
+# =============================================================================
+# Text Sensors
+# =============================================================================
+
+text_sensor:
+  - platform: template
+    name: "${friendly_name} Door State"
+    lambda: |-
+      if (id(door_closed).state) return {"Closed"};
+      if (id(door_open).state) return {"Open"};
+      if (id(door_moving)) return {"Moving"};
+      return {"Partially Open"};
+    update_interval: 1s
+
+  - platform: version
+    name: "${friendly_name} ESPHome Version"
+    entity_category: diagnostic

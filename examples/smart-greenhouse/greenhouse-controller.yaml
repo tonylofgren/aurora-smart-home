@@ -1,0 +1,258 @@
+# Smart Greenhouse Controller
+# Complete ESPHome configuration for greenhouse automation
+#
+# Hardware:
+#   - ESP32 DevKit
+#   - DHT22 (temp/humidity)
+#   - Capacitive soil moisture sensor
+#   - BH1750 light sensor
+#   - DS18B20 soil temperature
+#   - 4-channel relay module
+
+substitutions:
+  device_name: "greenhouse"
+  friendly_name: "Greenhouse"
+
+  # Sensor pins
+  dht_pin: "GPIO4"
+  soil_moisture_pin: "GPIO34"
+  ds18b20_pin: "GPIO5"
+
+  # I2C for BH1750
+  sda_pin: "GPIO21"
+  scl_pin: "GPIO22"
+
+  # Relay pins
+  pump_pin: "GPIO16"
+  valve_pin: "GPIO17"
+  fan_pin: "GPIO18"
+  light_pin: "GPIO19"
+
+  # Thresholds
+  soil_dry_threshold: "30"
+  temp_high_threshold: "30"
+  temp_frost_threshold: "5"
+  light_low_threshold: "500"
+
+esphome:
+  name: ${device_name}
+  friendly_name: ${friendly_name}
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: "${device_name}-fallback"
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+logger:
+  level: INFO
+
+# =============================================================================
+# I2C Bus
+# =============================================================================
+
+i2c:
+  sda: ${sda_pin}
+  scl: ${scl_pin}
+  scan: true
+
+# =============================================================================
+# Dallas 1-Wire
+# =============================================================================
+
+one_wire:
+  - platform: gpio
+    pin: ${ds18b20_pin}
+
+# =============================================================================
+# Sensors
+# =============================================================================
+
+sensor:
+  # Air Temperature & Humidity (DHT22)
+  - platform: dht
+    pin: ${dht_pin}
+    model: DHT22
+    temperature:
+      name: "${friendly_name} Temperature"
+      id: greenhouse_temp
+      filters:
+        - sliding_window_moving_average:
+            window_size: 5
+            send_every: 1
+    humidity:
+      name: "${friendly_name} Humidity"
+      id: greenhouse_humidity
+    update_interval: 30s
+
+  # Soil Moisture (Capacitive sensor)
+  - platform: adc
+    pin: ${soil_moisture_pin}
+    name: "${friendly_name} Soil Moisture Raw"
+    id: soil_moisture_raw
+    attenuation: 11db
+    update_interval: 30s
+    internal: true
+
+  - platform: template
+    name: "${friendly_name} Soil Moisture"
+    id: soil_moisture
+    unit_of_measurement: "%"
+    icon: "mdi:water-percent"
+    accuracy_decimals: 0
+    lambda: |-
+      // Calibrate these values for your sensor
+      // dry = ~3.0V, wet = ~1.2V (typical capacitive sensor)
+      float voltage = id(soil_moisture_raw).state;
+      float moisture = (3.0 - voltage) / (3.0 - 1.2) * 100;
+      return clamp(moisture, 0.0f, 100.0f);
+    update_interval: 30s
+
+  # Light Level (BH1750)
+  - platform: bh1750
+    name: "${friendly_name} Light"
+    id: greenhouse_light
+    address: 0x23
+    update_interval: 30s
+
+  # Soil Temperature (DS18B20)
+  - platform: dallas_temp
+    name: "${friendly_name} Soil Temperature"
+    id: soil_temp
+    update_interval: 60s
+
+  # WiFi Signal
+  - platform: wifi_signal
+    name: "${friendly_name} WiFi"
+    update_interval: 60s
+    entity_category: diagnostic
+
+# =============================================================================
+# Switches (Relays)
+# =============================================================================
+
+switch:
+  # Water Pump
+  - platform: gpio
+    pin: ${pump_pin}
+    name: "${friendly_name} Water Pump"
+    id: water_pump
+    icon: "mdi:water-pump"
+    restore_mode: ALWAYS_OFF
+    # Safety: max 10 minutes
+    on_turn_on:
+      - delay: 10min
+      - switch.turn_off: water_pump
+
+  # Solenoid Valve
+  - platform: gpio
+    pin: ${valve_pin}
+    name: "${friendly_name} Water Valve"
+    id: water_valve
+    icon: "mdi:pipe-valve"
+    restore_mode: ALWAYS_OFF
+
+  # Ventilation Fan
+  - platform: gpio
+    pin: ${fan_pin}
+    name: "${friendly_name} Fan"
+    id: vent_fan
+    icon: "mdi:fan"
+    restore_mode: ALWAYS_OFF
+
+  # Grow Light
+  - platform: gpio
+    pin: ${light_pin}
+    name: "${friendly_name} Grow Light"
+    id: grow_light
+    icon: "mdi:lightbulb"
+    restore_mode: ALWAYS_OFF
+
+# =============================================================================
+# Binary Sensors (Alerts)
+# =============================================================================
+
+binary_sensor:
+  # Needs watering
+  - platform: template
+    name: "${friendly_name} Needs Water"
+    device_class: moisture
+    lambda: return id(soil_moisture).state < ${soil_dry_threshold};
+
+  # Temperature too high
+  - platform: template
+    name: "${friendly_name} Too Hot"
+    device_class: heat
+    lambda: return id(greenhouse_temp).state > ${temp_high_threshold};
+    on_press:
+      - switch.turn_on: vent_fan
+    on_release:
+      - switch.turn_off: vent_fan
+
+  # Frost warning
+  - platform: template
+    name: "${friendly_name} Frost Warning"
+    device_class: cold
+    lambda: return id(greenhouse_temp).state < ${temp_frost_threshold};
+
+  # Low light
+  - platform: template
+    name: "${friendly_name} Low Light"
+    lambda: return id(greenhouse_light).state < ${light_low_threshold};
+
+  - platform: status
+    name: "${friendly_name} Status"
+
+# =============================================================================
+# Text Sensors
+# =============================================================================
+
+text_sensor:
+  - platform: template
+    name: "${friendly_name} Status"
+    lambda: |-
+      std::string status = "";
+      if (id(soil_moisture).state < ${soil_dry_threshold}) status += "Dry, ";
+      if (id(greenhouse_temp).state > ${temp_high_threshold}) status += "Hot, ";
+      if (id(greenhouse_temp).state < ${temp_frost_threshold}) status += "Cold, ";
+      if (id(greenhouse_light).state < ${light_low_threshold}) status += "Dark, ";
+      if (status.empty()) return {"All Good"};
+      return {status.substr(0, status.length() - 2)};
+    update_interval: 60s
+
+  - platform: version
+    name: "${friendly_name} ESPHome Version"
+    entity_category: diagnostic
+
+# =============================================================================
+# Buttons
+# =============================================================================
+
+button:
+  - platform: restart
+    name: "${friendly_name} Restart"
+    entity_category: config
+
+  # Manual watering cycle
+  - platform: template
+    name: "${friendly_name} Water Now"
+    icon: "mdi:watering-can"
+    on_press:
+      - switch.turn_on: water_valve
+      - switch.turn_on: water_pump
+      - delay: 5min
+      - switch.turn_off: water_pump
+      - switch.turn_off: water_valve

@@ -19,10 +19,10 @@ The most comprehensive Claude Code skill pack for smart home development.
 
 |  | Home Assistant | ESPHome | Integration Dev |
 |---|:---:|:---:|:---:|
-| **Reference Guides** | 49 | 24 | 17 |
+| **Reference Guides** | 49 | 25 | 17 |
 | **Example Prompts** | 300+ | 600+ | 129 |
-| **Code Examples** | 700+ | 950+ | 200+ |
-| **Ready Templates** | 17 | 19 | 8 |
+| **Code Examples** | 700+ | 1000+ | 200+ |
+| **Ready Templates** | 17 | 27 | 10 |
 | **Coverage** | 50+ integrations | 160+ components | Full HA framework |
 
 ---
@@ -73,6 +73,9 @@ The `examples/` folder contains complete, working projects:
 | Example | Description |
 |---------|-------------|
 | [complete-smart-room](./examples/complete-smart-room/) | Full room with sensors, voice control, automations |
+| [smart-greenhouse](./examples/smart-greenhouse/) | Automated irrigation, climate monitoring, grow lights |
+| [smart-garage](./examples/smart-garage/) | Garage door control, car detection, safety features |
+| [energy-monitor](./examples/energy-monitor/) | CT clamp power monitoring, cost tracking, alerts |
 
 ### How Skills Work Together
 
@@ -106,10 +109,10 @@ Everything you need for ESP32/ESP8266 device development.
 
 | Feature | Count |
 |---------|-------|
-| Reference guides | 24 |
+| Reference guides | 25 |
 | Project prompts | 600+ |
-| Configuration examples | 950+ |
-| Device templates | 15 |
+| Configuration examples | 1000+ |
+| Device templates | 27 |
 | Components covered | 160+ |
 
 **Covers:** Sensors, displays, climate control, LED strips, BLE, motors, IR/RF remotes, power monitoring, voice assistants, and device conversions (Shelly, Sonoff, Tuya).
@@ -129,11 +132,11 @@ Build custom Home Assistant integrations in Python.
 | Reference guides | 17 |
 | Development prompts | 129 |
 | Code examples | 200+ |
-| Starter templates | 8 |
+| Starter templates | 10 |
 
 **Covers:** Config flows, DataUpdateCoordinator, entity platforms (20+), services, events, device registry, OAuth2, WebSocket, HACS publishing, Core contribution.
 
-**Templates:** Basic, polling, push, OAuth2, multi-device hub, service, Bluetooth, conversation agent.
+**Templates:** Basic, polling, push, OAuth2, multi-device hub, service, Bluetooth, conversation agent, media player, webhook.
 
 [View Integration Dev documentation](./ha-integration-dev/README.md)
 
@@ -143,7 +146,7 @@ Build custom Home Assistant integrations in Python.
 
 - **Saves hours** - No more searching through docs and forums
 - **Always current** - Covers HA 2024.x/2025.x and latest ESPHome
-- **Copy-paste ready** - 38 templates you can use immediately
+- **Copy-paste ready** - 54 templates you can use immediately
 - **Battle-tested patterns** - Based on community best practices
 - **Complete coverage** - From beginner to advanced use cases
 

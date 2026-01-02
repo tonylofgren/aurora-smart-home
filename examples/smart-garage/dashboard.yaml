@@ -1,0 +1,134 @@
+# Smart Garage Lovelace Dashboard
+# Import via: Settings > Dashboards > Add Dashboard > Import
+
+title: Garage
+views:
+  - title: Overview
+    path: garage
+    icon: mdi:garage
+    badges: []
+    cards:
+      # Main door control
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: >
+              # 🚗 Garage Control
+
+          - type: picture-entity
+            entity: cover.garage_door
+            camera_view: auto
+            show_state: true
+            show_name: true
+            state_image:
+              open: /local/garage-open.png
+              closed: /local/garage-closed.png
+            tap_action:
+              action: toggle
+
+      # Door control buttons
+      - type: horizontal-stack
+        cards:
+          - type: button
+            entity: cover.garage_door
+            name: Open
+            icon: mdi:garage-open
+            tap_action:
+              action: call-service
+              service: cover.open_cover
+              target:
+                entity_id: cover.garage_door
+            show_state: false
+
+          - type: button
+            entity: cover.garage_door
+            name: Stop
+            icon: mdi:stop
+            icon_height: 40px
+            tap_action:
+              action: call-service
+              service: cover.stop_cover
+              target:
+                entity_id: cover.garage_door
+            show_state: false
+
+          - type: button
+            entity: cover.garage_door
+            name: Close
+            icon: mdi:garage
+            tap_action:
+              action: call-service
+              service: cover.close_cover
+              target:
+                entity_id: cover.garage_door
+            show_state: false
+
+      # Status cards row
+      - type: horizontal-stack
+        cards:
+          - type: entity
+            entity: text_sensor.garage_door_state
+            name: Door
+            icon: mdi:garage-variant
+
+          - type: entity
+            entity: binary_sensor.garage_car_present
+            name: Car
+            icon: mdi:car
+
+          - type: entity
+            entity: binary_sensor.garage_motion
+            name: Motion
+            icon: mdi:motion-sensor
+
+      # Environmental sensors
+      - type: horizontal-stack
+        cards:
+          - type: sensor
+            entity: sensor.garage_temperature
+            name: Temperature
+            graph: line
+            hours_to_show: 24
+            detail: 2
+
+          - type: sensor
+            entity: sensor.garage_humidity
+            name: Humidity
+            graph: line
+            hours_to_show: 24
+            detail: 2
+
+      # Car distance (for debugging)
+      - type: gauge
+        entity: sensor.garage_car_distance
+        name: Car Distance
+        min: 0
+        max: 300
+        severity:
+          green: 0
+          yellow: 150
+          red: 200
+        needle: true
+        unit: cm
+
+      # Safety status
+      - type: entities
+        title: Safety
+        entities:
+          - entity: binary_sensor.garage_obstruction
+            name: Obstruction Sensor
+          - entity: binary_sensor.garage_door_closed
+            name: Door Closed Sensor
+          - entity: binary_sensor.garage_door_open
+            name: Door Open Sensor
+
+      # Device info
+      - type: entities
+        title: Device Info
+        entities:
+          - entity: binary_sensor.garage_status
+            name: Device Status
+          - entity: sensor.garage_wifi
+            name: WiFi Signal
+          - entity: button.garage_restart
+            name: Restart Device

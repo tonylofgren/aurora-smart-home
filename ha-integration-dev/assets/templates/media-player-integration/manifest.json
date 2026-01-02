@@ -1,0 +1,11 @@
+{
+  "domain": "my_media_player",
+  "name": "My Media Player",
+  "codeowners": ["@your_github_username"],
+  "config_flow": true,
+  "documentation": "https://github.com/your_username/my_media_player",
+  "integration_type": "device",
+  "iot_class": "local_push",
+  "requirements": [],
+  "version": "1.0.0"
+}

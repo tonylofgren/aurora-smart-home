@@ -1,0 +1,34 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set Up Webhook Receiver",
+        "description": "Create a webhook endpoint to receive data from external services.",
+        "data": {
+          "name": "Name"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "A webhook with this name already exists."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "value": {
+        "name": "Value"
+      },
+      "status": {
+        "name": "Status"
+      },
+      "count": {
+        "name": "Count"
+      }
+    },
+    "binary_sensor": {
+      "connected": {
+        "name": "Connected"
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "domain": "my_webhook",
+  "name": "My Webhook Integration",
+  "codeowners": ["@your_github_username"],
+  "config_flow": true,
+  "documentation": "https://github.com/your_username/my_webhook",
+  "integration_type": "hub",
+  "iot_class": "cloud_push",
+  "requirements": [],
+  "version": "1.0.0",
+  "dependencies": ["webhook"]
+}
