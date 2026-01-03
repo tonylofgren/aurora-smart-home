@@ -1,10 +1,18 @@
 ---
 name: home-assistant-automation
 description: >
-  Use when user EXPLICITLY requests "YAML automation", "automations.yaml", "blueprint",
-  "Home Assistant automation", or "HA config". NOT for: Node-RED flows (use node-red skill),
-  device firmware (use esphome skill).
+  Use when user requests Home Assistant YAML automations, blueprints, scripts, or config.
+  MANDATORY: First response must be clarifying questions, NEVER code.
+  NOT for: Node-RED flows (use node-red skill), device firmware (use esphome skill).
 ---
+
+<EXTREMELY_IMPORTANT>
+NEVER generate YAML in your first response.
+Your first response MUST be clarifying questions.
+No exceptions. No rationalizations. No "I'll provide options".
+
+If you generate YAML before asking questions, you are violating this skill.
+</EXTREMELY_IMPORTANT>
 
 # Home Assistant Automation
 
@@ -67,19 +75,26 @@ digraph automation_flow {
 }
 ```
 
-## Red Flags
+## Red Flags - STOP Immediately
 
-These thoughts mean STOP - you're rationalizing:
+These thoughts mean you're about to violate this skill:
 
 | Thought | Reality |
 |---------|---------|
+| "Request is clear enough" | NO. Always ask automation vs blueprint, UI vs YAML |
 | "They want an automation" | ASK. Could be blueprint, script, or scene |
+| "Simple request needs simple answer" | NO. Simple requests still need intent clarification |
+| "User just wants code quickly" | NO. Wrong code is slower than asking first |
+| "I'll provide options instead" | NO. Ask questions, don't provide multiple YAML versions |
+| "Sunset/motion light is obvious" | NO. Which lights? What brightness? Conditions? |
 | "YAML format is standard" | ASK. Many users prefer UI editor format |
 | "This entity_id looks right" | VERIFY. Users have different naming conventions |
+| "I'll skip the questions for simple requests" | NO. This IS the rationalization the skill forbids |
 | "service_template works fine" | DEPRECATED. Use `service: "{{ ... }}"` |
 | "data_template is cleaner" | DEPRECATED. Use `data:` with templates |
-| "I'll skip the questions for simple requests" | NO. Simple requests still need intent clarification |
 | "states() is the easiest approach" | SLOW. Filter by domain: `states.sensor` |
+
+**If you're thinking ANY of these, STOP. Ask questions first.**
 
 ## FIRST STEP: Clarify Intent (MANDATORY)
 
@@ -100,6 +115,37 @@ These thoughts mean STOP - you're rationalizing:
 4. **HA Version?** (for deprecated syntax awareness)
 
 **Do NOT skip these questions. Do NOT assume defaults.**
+
+## MANDATORY First Response Format
+
+Your first response MUST follow this exact pattern:
+
+```
+I'll help you create [brief description]. Let me clarify a few things first:
+
+1. **Type:** Automation (specific to your setup) or Blueprint (reusable template)?
+2. **Format:** UI editor (Settings > Automations) or YAML files?
+3. **Entities:** Which specific entity IDs? (e.g., light.living_room, sensor.motion)
+4. **Options:** [context-specific questions like brightness, conditions, timing]
+```
+
+**THEN STOP.** Wait for user answers. Do NOT generate YAML until you have answers.
+
+**Violation example (DO NOT DO THIS):**
+```
+Here's the automation:
+automation:
+  - alias: "..."
+```
+
+**Correct example:**
+```
+I'll help you create a sunset light automation. Let me clarify:
+1. Automation or Blueprint?
+2. UI editor or YAML file?
+3. Which lights? (entity IDs like light.living_room)
+4. Any brightness preference or conditions (only when home)?
+```
 
 ## Code Attribution
 
