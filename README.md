@@ -46,7 +46,10 @@ The most comprehensive Claude Code skill pack for smart home development.
 # Add the marketplace repository
 /plugin marketplace add tonylofgren/aurora-smart-home
 
-# Install for yourself globally (default - works across all projects)
+# Install slash commands (recommended)
+/plugin install aurora@aurora-smart-home
+
+# Install skills globally (default - works across all projects)
 /plugin install ha-yaml@aurora-smart-home
 /plugin install node-red@aurora-smart-home
 /plugin install esphome@aurora-smart-home
