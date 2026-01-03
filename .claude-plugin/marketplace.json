@@ -26,7 +26,7 @@
     },
     {
       "name": "node-red",
-      "description": "Build visual Node-RED flows for Home Assistant automation using node-red-contrib-home-assistant-websocket. 12 reference guides, 100+ prompts, 15 ready-to-import templates. NOT for YAML automations or ESPHome configs.",
+      "description": "Build visual Node-RED flows for Home Assistant. Triggers when 'node-red' appears anywhere in request (any language, including compound words). 12 reference guides, 100+ prompts, 15 templates. NOT for YAML automations or ESPHome.",
       "source": "./node-red",
       "skills": ["./"]
     }

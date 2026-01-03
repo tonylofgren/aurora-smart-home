@@ -1,7 +1,9 @@
 ---
 name: node-red
 description: >
-  Use when user EXPLICITLY requests "Node-RED", "flow", or "visual automation".
+  Use when user mentions "node-red" anywhere in their request (including
+  compound words like "node-redflöde", "node-red-flow"). The term "Node-RED"
+  is a product name that appears unchanged in all languages.
   NOT for: YAML automations (use home-assistant skill), device firmware (use esphome skill).
 ---
 
