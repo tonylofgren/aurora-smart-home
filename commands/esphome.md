@@ -11,4 +11,4 @@ Activate the esphome skill for creating device firmware configurations.
 
 **Usage:** Just describe what device you want after invoking this command.
 
-Example: `/esphome` then "Create a temperature sensor with OLED display"
+Example: `/aurora:esphome` then "Create a temperature sensor with OLED display"

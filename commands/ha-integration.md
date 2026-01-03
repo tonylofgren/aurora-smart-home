@@ -12,4 +12,4 @@ Activate the ha-integration skill for developing Python integrations.
 
 **Usage:** Just describe what integration you want after invoking this command.
 
-Example: `/ha-integration` then "Create a custom integration for my cloud API"
+Example: `/aurora:ha-integration` then "Create a custom integration for my cloud API"

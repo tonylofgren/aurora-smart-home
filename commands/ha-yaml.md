@@ -11,4 +11,4 @@ Activate the ha-yaml skill for creating YAML-based automations.
 
 **Usage:** Just describe what automation you want after invoking this command.
 
-Example: `/ha-yaml` then "Create an automation that sends a notification at sunset"
+Example: `/aurora:ha-yaml` then "Create an automation that sends a notification at sunset"

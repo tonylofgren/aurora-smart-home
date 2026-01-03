@@ -11,4 +11,4 @@ Activate the node-red skill for creating visual Node-RED flows.
 
 **Usage:** Just describe what flow you want after invoking this command.
 
-Example: `/node-red` then "Create a flow that turns on lights when motion is detected"
+Example: `/aurora:node-red` then "Create a flow that turns on lights when motion is detected"
