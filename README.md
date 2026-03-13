@@ -9,8 +9,8 @@
 The most comprehensive Claude Code skill pack for smart home development.
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skills-7c3aed.svg)](https://docs.anthropic.com/en/docs/claude-code)
-[![Home Assistant](https://img.shields.io/badge/Home_Assistant-2024.x%2F2025.x-41BDF5.svg)](https://www.home-assistant.io/)
-[![ESPHome](https://img.shields.io/badge/ESPHome-ESP32%2FESP8266-000000.svg)](https://esphome.io/)
+[![Home Assistant](https://img.shields.io/badge/Home_Assistant-2024.x--2026.x-41BDF5.svg)](https://www.home-assistant.io/)
+[![ESPHome](https://img.shields.io/badge/ESPHome-2026.2-000000.svg)](https://esphome.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
@@ -31,9 +31,9 @@ The most comprehensive Claude Code skill pack for smart home development.
 
 | I want to... | Use this skill |
 |--------------|----------------|
-| Create **YAML automations** (automations.yaml, blueprints) | `ha-yaml` |
+| Create **YAML automations** (automations.yaml, blueprints, dashboards) | `ha-yaml` |
 | Build **visual Node-RED flows** (drag-and-drop, JSON) | `node-red` |
-| Configure **ESP32/ESP8266 device firmware** | `esphome` |
+| Configure **ESP device firmware** or **design a new IoT product** | `esphome` |
 | Develop **Python custom components** (HACS) | `ha-integration` |
 
 > **Tip:** If your request is ambiguous (e.g., "make a motion light"), the skill will ask which platform you prefer.
@@ -177,19 +177,19 @@ Build **visual automation flows** using node-red-contrib-home-assistant-websocke
 
 ### ESPHome Skill (`esphome`)
 
-Configure **ESP32/ESP8266 device firmware** - sensors, displays, LEDs, and more.
+Configure **ESP device firmware** and **design new IoT products** - from sensor configs to production-ready hardware.
 
 | Feature | Count |
 |---------|-------|
-| Reference guides | 25 |
+| Reference guides | 28 |
 | Project prompts | 600+ |
 | Configuration examples | 1000+ |
 | Device templates | 27 |
 | Components covered | 160+ |
 
-**Covers:** Sensors, displays, climate control, LED strips, BLE, motors, IR/RF remotes, power monitoring, voice assistants, and device conversions (Shelly, Sonoff, Tuya).
+**Covers:** Sensors, displays, climate control, LED strips, BLE, motors, IR/RF remotes, power monitoring, voice assistants, device conversions (Shelly, Sonoff, Tuya), and **full product development** (hardware selection, PCB design, enclosures, CE/FCC certification, manufacturing).
 
-**Supports:** ESP32, ESP32-S3, ESP32-C3, ESP32-C6, ESP8266
+**Supports:** ESP32, ESP32-S3, ESP32-C3, ESP32-C6, ESP32-H2, ESP32-P4, ESP8266, RP2040, nRF52, LibreTiny
 
 [View ESPHome documentation](./esphome/README.md)
 
@@ -217,7 +217,7 @@ Develop **Python custom components** for Home Assistant (custom_components, HACS
 ## Why This Skill Pack?
 
 - **Saves hours** - No more searching through docs and forums
-- **Always current** - Covers HA 2024.x/2025.x and latest ESPHome
+- **Always current** - Covers HA 2024.x-2026.x, ESPHome 2026.2, Node-RED 4.x
 - **Copy-paste ready** - 54 templates you can use immediately
 - **Battle-tested patterns** - Based on community best practices
 - **Complete coverage** - From beginner to advanced use cases
