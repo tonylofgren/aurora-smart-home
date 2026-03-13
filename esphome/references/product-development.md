@@ -15,6 +15,46 @@ From idea to finished product — how to design professional Home Assistant devi
 9. [BOM Template](#bom-template)
 10. [Cost Estimation](#cost-estimation)
 
+## Project Output Structure
+
+When developing a product, create all files inside a named project folder in the user's
+current working directory. This keeps everything organized and easy to find.
+
+```
+my-product/                          ← Named after the product
+├── README.md                        ← Product overview, specs, how to build
+├── firmware/
+│   ├── my-product.yaml              ← ESPHome configuration
+│   └── secrets.yaml.example         ← Template for user's credentials
+├── hardware/
+│   ├── bom.md                       ← Bill of materials with component links
+│   ├── schematic-notes.md           ← Circuit description, pin mapping
+│   └── wiring-diagram.md            ← Connection guide (ASCII or description)
+├── production/
+│   ├── test-plan.md                 ← Test matrix and pass criteria
+│   └── flash-instructions.md        ← How to flash firmware
+└── enclosure/
+    └── requirements.md              ← Dimensions, IP rating, mounting
+```
+
+After creating files, always print a summary:
+```
+Project created: my-product/
+├── firmware/my-product.yaml      (ESPHome config — ready to flash)
+├── hardware/bom.md               (12 components, est. $8.50/unit)
+├── hardware/schematic-notes.md   (pin mapping, I2C addresses)
+├── production/test-plan.md       (8 test cases)
+└── README.md                     (product overview)
+
+Next steps:
+1. Review the BOM and order components
+2. Wire prototype on breadboard using schematic-notes.md
+3. Flash firmware: esphome run firmware/my-product.yaml
+```
+
+For simpler requests (just a YAML config, not full product), skip the project folder
+and save directly to the current directory as before.
+
 ## Development Lifecycle
 
 ```

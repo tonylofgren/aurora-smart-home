@@ -71,8 +71,8 @@ Watch out for these assumptions:
 ## First Step: Determine Scope
 
 Before generating anything, determine if this is:
-- **A. Configure an existing device** — ask about hardware & output (below)
-- **B. Design a new product** — read `references/product-development.md` and walk through the lifecycle
+- **A. Configure an existing device** — ask about hardware & output (below), save file to current directory
+- **B. Design a new product** — read `references/product-development.md`, create a named project folder (e.g., `my-product/`) with firmware, hardware, and production subdirectories. Print a file summary when done so the user knows where everything is.
 
 For existing devices, ask:
 
