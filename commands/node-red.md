@@ -27,6 +27,7 @@ THEN STOP. Wait for answers.
 ---
 
 **What this does:**
-- Uses node-red-contrib-home-assistant-websocket nodes
-- Generates importable JSON flows
-- Follows current API (trigger-state, api-call-service)
+- Uses node-red-contrib-home-assistant-websocket v0.80+ nodes
+- Generates importable JSON flows for Node-RED 4.x (Node.js 18+)
+- Follows current API (trigger-state, api-call-service, number, select, text, time-entity)
+- Avoids deprecated state type config (use entity state casting)

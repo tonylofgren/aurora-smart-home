@@ -9,7 +9,9 @@ description: >
 
 # Node-RED for Home Assistant
 
-Build Node-RED flows using node-red-contrib-home-assistant-websocket nodes.
+Build Node-RED flows using node-red-contrib-home-assistant-websocket nodes (v0.80+).
+
+**Requirements:** Node-RED 4.x (Node.js 18+), Home Assistant 2024.3.0+.
 
 ## The Iron Law
 
@@ -118,6 +120,22 @@ The following nodes require `hass-node-red` integration (separate from the webso
 - Entity config nodes
 
 **Always mention this prerequisite when using entity nodes.**
+
+## Stable Entity Nodes (v0.71.0+)
+
+These nodes were promoted from beta to stable in September 2024:
+- `number` — expose HA number entities
+- `select` — expose HA select entities
+- `text` — expose HA text entities
+- `time-entity` — expose HA time entities
+
+These support "Expose as" listening modes and input override blocking (v0.70.0+).
+
+## Deprecations (v0.79-v0.80)
+
+**State type configuration is deprecated** (removed in v1.0). Use entity state casting instead.
+
+**Calendar event dates** now use ISO 8601 local strings with timezone offsets (v0.78.0+). A new `all_day` property identifies all-day events explicitly.
 
 ## Timer Pattern (Motion Light)
 
@@ -260,6 +278,9 @@ Include a comment node in all generated flows:
 | `dataType: "jsonata"` for service data | Use `msg` when passing dynamic payload |
 | `global.get('axios')` for HTTP | Use http request node, or warn about settings.js |
 | `return msg` in async function | Use `node.send(msg)` + `node.done()` + `return null` |
+| Configuring state type on nodes | Deprecated in v0.79. Use entity state casting instead |
+| Assuming Node.js < 18 works | Node-RED 4.x requires Node.js 18+ |
+| Old calendar date format | Use ISO 8601 with timezone offset (v0.78.0+) |
 
 ## Pre-Output Checklist
 
