@@ -44,30 +44,39 @@ The most comprehensive Claude Code skill pack for smart home development — fro
 ## Quick Start
 
 ```bash
-# Add the marketplace repository
+# 1. Add the marketplace
 /plugin marketplace add tonylofgren/aurora-smart-home
 
-# Install slash commands (recommended)
+# 2. Install slash commands + all skills
 /plugin install aurora@aurora-smart-home
-
-# Install skills globally (default - works across all projects)
 /plugin install ha-yaml@aurora-smart-home
-/plugin install node-red@aurora-smart-home
 /plugin install esphome@aurora-smart-home
+/plugin install node-red@aurora-smart-home
 /plugin install ha-integration@aurora-smart-home
-
-# OR install for your team (shared via git)
-/plugin install ha-yaml@aurora-smart-home --scope project
-/plugin install node-red@aurora-smart-home --scope project
-/plugin install esphome@aurora-smart-home --scope project
-/plugin install ha-integration@aurora-smart-home --scope project
-
-# OR install for yourself in this project only (gitignored)
-/plugin install ha-yaml@aurora-smart-home --scope local
-/plugin install node-red@aurora-smart-home --scope local
-/plugin install esphome@aurora-smart-home --scope local
-/plugin install ha-integration@aurora-smart-home --scope local
 ```
+
+That's it — skills are now available in all your projects.
+
+<details>
+<summary><strong>Advanced: install per-project or per-team instead</strong></summary>
+
+By default, skills install globally (`--scope user`). You can also scope them:
+
+```bash
+# Shared with your team via git (committed to .claude/settings.json)
+/plugin install ha-yaml@aurora-smart-home --scope project
+
+# Only for you in this project (gitignored, .claude/settings.local.json)
+/plugin install ha-yaml@aurora-smart-home --scope local
+```
+
+| Scope | Stored in | Shared? | Use when |
+|-------|-----------|---------|----------|
+| `user` (default) | `~/.claude/settings.json` | No | Personal use across all projects |
+| `project` | `.claude/settings.json` | Yes, via git | Team wants same skills |
+| `local` | `.claude/settings.local.json` | No (gitignored) | Testing, personal project config |
+
+</details>
 
 ---
 
