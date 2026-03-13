@@ -28,5 +28,5 @@ THEN STOP. Wait for answers.
 
 **What this does:**
 - Creates automations, scripts, scenes, blueprints
-- Uses modern syntax (no deprecated service_template/data_template)
-- Follows Home Assistant best practices
+- Uses modern HA 2024.8+ syntax: `action:` (not `service:`), plural keys (`triggers:`, `conditions:`, `actions:`)
+- Avoids deprecated patterns: `service_template`, `data_template`, `platform: template` sensors

@@ -21,6 +21,7 @@ Reference skill for Home Assistant configuration and automation.
 
 ```
 CLARIFY INTENT BEFORE GENERATING ANY YAML
+USE MODERN SYNTAX: action: (not service:), triggers:/conditions:/actions: (plural)
 ```
 
 Ask: Automation or Blueprint? Format: UI or YAML? Never assume. Never skip these questions.
@@ -70,8 +71,10 @@ Watch out for these assumptions:
 | "YAML format is standard" | ASK. Many users prefer UI editor format |
 | "This entity_id looks right" | VERIFY. Users have different naming conventions |
 | "I'll skip the questions for simple requests" | NO. This IS the rationalization the skill forbids |
-| "service_template works fine" | DEPRECATED. Use `service: "{{ ... }}"` |
+| "service_template works fine" | DEPRECATED. Use `action: "{{ ... }}"` |
 | "data_template is cleaner" | DEPRECATED. Use `data:` with templates |
+| "service: is the correct keyword" | RENAMED in HA 2024.8. Use `action:` instead |
+| "trigger: is singular" | RENAMED in HA 2024.10. Use plural: `triggers:`, `conditions:`, `actions:` |
 | "states() is the easiest approach" | SLOW. Filter by domain: `states.sensor` |
 
 ## First Step: Clarify Intent
@@ -204,10 +207,24 @@ Wait for user answers before generating YAML.
 - **State comparisons** - States are strings; use `| int` for numeric comparisons
 
 ### Action Issues
-- **`service_template` deprecated** - Use `service: "{{ ... }}"` directly
+- **`service:` renamed to `action:`** - Since HA 2024.8, use `action: light.turn_on` instead of `service: light.turn_on`
+- **`service_template` deprecated** - Use `action: "{{ ... }}"` directly
 - **`data_template` deprecated** - Use `data:` with templates inside
 - **`entity_id` in data** - Should be under `target:` block since HA 2021.x
 - **Missing `continue_on_error`** - Long automations fail silently; add error handling
+
+### Syntax Rename (HA 2024.8+)
+- **`service:` → `action:`** - Service calls are now called "actions" throughout HA
+- **`trigger:` → `triggers:`** - Automation keys use plural form since HA 2024.10
+- **`condition:` → `conditions:`** - Plural form
+- **`action:` → `actions:`** - Plural form (the automation key, not the service call keyword)
+- **`platform:` → `trigger:`** - Inside triggers, e.g. `trigger: state` replaces `platform: state`
+- Old syntax still works but is deprecated. Always use modern syntax.
+
+### Legacy Template Entity Migration (CRITICAL — deadline HA 2026.6)
+- **`platform: template` sensors stop working in HA 2026.6**
+- Must migrate to the `template:` integration format
+- See Modern Syntax section below for before/after examples
 
 ### Template Issues
 - **`states()` without domain** - Returns ALL entities (slow); use `states.sensor` or `states('sensor.name')`
@@ -235,16 +252,16 @@ Wait for user answers before generating YAML.
 automation:
   - alias: "Descriptive Name"
     id: unique_automation_id  # Required for UI editing
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "on"
         id: motion_detected  # For multi-trigger identification
-    condition:
+    conditions:
       - condition: time
         after: sunset
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.living_room
         data:
@@ -273,43 +290,58 @@ blueprint:
           entity:
             domain: light
 
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: !input motion_sensor
     to: "on"
 
-action:
-  - service: light.turn_on
+actions:
+  - action: light.turn_on
     target: !input target_light
 ```
 
-## Modern Syntax (HA 2021+)
+## Modern Syntax (HA 2024.8+)
 
-### Service Calls
+### Actions (formerly Service Calls)
 ```yaml
-# Old (deprecated)
+# Old (deprecated since HA 2024.8)
+service: light.turn_on
 service_template: "{{ 'light.turn_on' if is_on else 'light.turn_off' }}"
 data_template:
   entity_id: light.living_room
 
-# New (correct)
-service: "{{ 'light.turn_on' if is_on else 'light.turn_off' }}"
+# Current (correct)
+action: light.turn_on
 target:
   entity_id: light.living_room
 data:
   brightness: "{{ brightness_value }}"
+
+# Dynamic action
+action: "{{ 'light.turn_on' if is_on else 'light.turn_off' }}"
+```
+
+### Automation Keys (plural since HA 2024.10)
+```yaml
+# Old (deprecated)
+trigger:
+  - platform: state
+
+# Current (correct)
+triggers:
+  - trigger: state
 ```
 
 ### Template Sensors
 ```yaml
-# Old (deprecated)
+# Old (STOPS WORKING in HA 2026.6!)
 sensor:
   - platform: template
     sensors:
       my_sensor:
         value_template: "{{ states('sensor.input') }}"
 
-# New (correct) - template integration
+# Current (correct) - template integration
 template:
   - sensor:
       - name: "My Sensor"
@@ -328,8 +360,11 @@ template:
 - [ ] HA version considered for syntax compatibility
 
 ### YAML Syntax
-- [ ] No deprecated `service_template` (use `service:` with template)
-- [ ] No deprecated `data_template` (use `data:` with templates)
+- [ ] Uses `action:` not `service:` for service calls (renamed in HA 2024.8)
+- [ ] Uses plural keys: `triggers:`, `conditions:`, `actions:` (HA 2024.10)
+- [ ] Uses `trigger: state` not `platform: state` inside triggers
+- [ ] No deprecated `service_template` or `data_template`
+- [ ] No `platform: template` sensors (use `template:` integration — deadline 2026.6)
 - [ ] `entity_id` under `target:` block (not in `data:`)
 - [ ] All template syntax uses `{{ }}` correctly
 - [ ] Quotes around string states: `to: "on"` not `to: on`
