@@ -6,7 +6,7 @@
 
 > **75,000+ lines** of documentation | **900+ example prompts** | **1,500+ code examples**
 
-The most comprehensive Claude Code skill pack for smart home development.
+The most comprehensive Claude Code skill pack for smart home development — from YAML automations to designing and manufacturing professional ESPHome-based IoT products.
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skills-7c3aed.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Home Assistant](https://img.shields.io/badge/Home_Assistant-2024.x--2026.x-41BDF5.svg)](https://www.home-assistant.io/)
@@ -24,6 +24,7 @@ The most comprehensive Claude Code skill pack for smart home development.
 | **Code Examples** | 700+ | 200+ | 1000+ | 200+ |
 | **Ready Templates** | 17 | 15 | 27 | 10 |
 | **Coverage** | 50+ integrations | 31 nodes | 160+ components | Full HA framework |
+| **Bonus** | Sections dashboard | Node-RED 4.x | **Product dev: idea → production** | HACS v2 |
 
 ---
 
