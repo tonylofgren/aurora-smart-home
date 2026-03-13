@@ -23,9 +23,10 @@ Reference skill for developing Home Assistant custom integrations in Python.
 TIMESTAMPS: dt_util.now() / dt_util.utcnow() - NEVER datetime.now()
 ATTRIBUTES: JSON-SERIALIZABLE ONLY - NO DATACLASSES, NO DATETIME OBJECTS
 ASYNC: aiohttp FOR HTTP - NEVER requests
+STORAGE: entry.runtime_data - NEVER hass.data[DOMAIN]
 ```
 
-These three rules cause 90% of integration bugs. Violating them creates timezone bugs, serialization failures, and event loop blocking.
+The first three rules cause 90% of integration bugs. The fourth rule (`runtime_data`) is the modern pattern since HA 2024.4 — it provides type safety and cleaner lifecycle management.
 
 ## The Process
 
@@ -68,6 +69,10 @@ Watch out for these Iron Law violations:
 | "This API doesn't need rate limiting" | WRONG. Always implement backoff |
 | "I'll skip the coordinator for simplicity" | NO. Coordinator centralizes error handling |
 | "Logging the API key helps debugging" | NEVER log credentials |
+| "I'll use hass.data[DOMAIN] for storage" | OUTDATED. Use `entry.runtime_data` (typed, HA 2024.4+) |
+| "EntityDescription doesn't need frozen" | REQUIRED since HA 2025.1. Use `frozen=True, kw_only=True` |
+| "Coordinator doesn't need config_entry" | REQUIRED. Pass `config_entry=entry` (deadline HA 2025.11) |
+| "service: in YAML examples" | RENAMED. HA calls these "actions" since 2024.8 |
 
 ## First Step: Clarify Integration Type
 
@@ -277,15 +282,22 @@ Required for HACS:
 This topic allows finding all integrations created with this skill:
 `https://github.com/topics/aurora-smart-home`
 
-## Quick Pattern: Minimal Integration
+## Quick Pattern: Minimal Integration (HA 2024.4+)
 
 ```python
 # __init__.py
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant
+
 DOMAIN = "my_integration"
 PLATFORMS = ["sensor"]
 
-async def async_setup_entry(hass, entry):
-    hass.data.setdefault(DOMAIN, {})
+type MyConfigEntry = ConfigEntry[MyCoordinator]  # Typed runtime_data
+
+async def async_setup_entry(hass: HomeAssistant, entry: MyConfigEntry) -> bool:
+    coordinator = MyCoordinator(hass, entry)
+    await coordinator.async_config_entry_first_refresh()
+    entry.runtime_data = coordinator  # Replaces hass.data[DOMAIN][entry_id]
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
 ```
@@ -384,20 +396,22 @@ _LOGGER.debug("Connecting to %s", host)  # OK
 
 See `references/security.md` for complete security documentation.
 
-## Advanced Patterns (HA 2024+)
+## Advanced Patterns (HA 2024-2026)
 
 | Pattern | Use Case | Reference |
 |---------|----------|-----------|
-| EntityDescription | Dataclass-based entity definitions | `entity-description.md` |
-| Typed runtime_data | Type-safe coordinator storage | `architecture.md` |
+| EntityDescription (`frozen=True`) | Dataclass-based entity definitions (required since HA 2025.1) | `entity-description.md` |
+| Typed `runtime_data` | Type-safe coordinator storage via `ConfigEntry[T]` | `architecture.md` |
 | Reconfigure flow | Change settings without re-add | `config-flow.md` |
-| Service responses | Return data from services | `services-events.md` |
-| Repair issues | User-actionable notifications | `repair-issues.md` |
-| Config subentries | Multi-device hubs | `subentries.md` |
+| Action responses (`SupportsResponse`) | Return data from actions (formerly services) | `services-events.md` |
+| Repair issues | User-actionable notifications (Silver tier) | `repair-issues.md` |
+| Config subentries | Sub-features per config entry (AI agents, multi-device) | `subentries.md` |
 | Device triggers | Automation trigger support | `device-registry.md` |
 | Multi-coordinator | Different update intervals | `advanced-patterns.md` |
 | Conversation agent | Voice assistant integration | `conversation-agent.md` |
-| System health | Integration health reporting | `diagnostics.md` |
+| AI Task entity | Structured AI data generation | `conversation-agent.md` |
+| System health | Integration health reporting (Silver tier) | `diagnostics.md` |
+| Integration Quality Scale | Bronze → Silver → Gold → Platinum tiers | `publishing.md` |
 
 ## Pre-Completion Checklist
 
@@ -427,6 +441,10 @@ See `references/security.md` for complete security documentation.
 - [ ] All imports at top of file (not inside functions/methods)
 - [ ] No credentials or sensitive data in logs
 - [ ] `unique_id` set for all entities
+- [ ] Uses `entry.runtime_data` instead of `hass.data[DOMAIN]` (HA 2024.4+)
+- [ ] `EntityDescription` dataclasses use `frozen=True, kw_only=True` (HA 2025.1+)
+- [ ] `DataUpdateCoordinator` created with `config_entry=entry` argument
+- [ ] No use of `hass.helpers.*` (import from `homeassistant.helpers.*` directly)
 
 ### Config Flow
 - [ ] All user input validated

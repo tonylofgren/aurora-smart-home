@@ -2,8 +2,9 @@
 name: esphome-devices
 description: >
   ESPHome device configuration and firmware. Covers ESP32, ESP32-S3, ESP32-C3, ESP32-C6,
-  ESP8266, Shelly, Sonoff, Tuya, BLE proxy, Matter firmware, GPIO, sensor YAML,
-  LED strips, displays, voice assistant hardware, device flashing, and Arduino conversion.
+  ESP32-H2, ESP32-P4, ESP8266, RP2040, nRF52, LibreTiny, Shelly, Sonoff, Tuya,
+  BLE proxy, Matter firmware, Thread, Zigbee, GPIO, sensor YAML, LVGL displays,
+  LED strips, voice assistant hardware, device flashing, and Arduino conversion.
 ---
 
 # ESPHome Devices
@@ -14,7 +15,7 @@ Reference skill for ESPHome device configuration and firmware.
 
 **Core principle:** Never generate ESPHome configuration without knowing the exact hardware. Board selection determines GPIO mapping, flash size, available features, and component compatibility.
 
-**Context:** This skill requires hardware confirmation before any YAML generation. Different ESP chips have vastly different capabilities - ESP32-S3 supports USB and cameras, ESP32-C6 supports Thread/Matter, ESP8266 has limited GPIO and memory.
+**Context:** This skill requires hardware confirmation before any YAML generation. Different ESP chips have vastly different capabilities — ESP32-S3 supports USB and cameras, ESP32-C6 supports Thread/Matter/WiFi 6, ESP32-H2 is BLE+Thread only (no WiFi), ESP32-P4 is high-performance with MIPI DSI displays, and ESP8266 has limited GPIO and memory. ESPHome also supports nRF52 (Zephyr), RP2040, and LibreTiny (BK72xx/RTL87xx) platforms.
 
 ## The Iron Law
 
@@ -68,13 +69,18 @@ Watch out for these assumptions:
 
 Before generating any configuration, ask:
 
-1. **What ESP board are you using?**
+1. **What board/platform are you using?**
    - ESP32 DevKit (general purpose)
-   - ESP32-S3 (voice, cameras, USB)
-   - ESP32-C3 (compact, budget)
-   - ESP32-C6 (Thread/Matter)
-   - ESP8266 / D1 Mini (legacy)
+   - ESP32-S3 (voice, cameras, USB, PSRAM)
+   - ESP32-C3 (compact, RISC-V, budget)
+   - ESP32-C6 (Thread/Matter, WiFi 6, Zigbee)
+   - ESP32-H2 (BLE + Thread/Zigbee only — no WiFi)
+   - ESP32-P4 (high-performance, MIPI DSI displays — no integrated BLE)
+   - ESP8266 / D1 Mini (legacy, limited GPIO/memory)
    - Shelly / Sonoff / Tuya (specify model)
+   - RP2040 (Raspberry Pi Pico)
+   - nRF52 (Zephyr RTOS — Zigbee, BLE)
+   - LibreTiny (BK72xx, RTL87xx — Tuya replacements)
 
 2. **Output method?**
    - **Save to folder** - Write .yaml file to the current working directory
@@ -153,8 +159,10 @@ Located in `assets/templates/` - starter configs for common use cases.
 esphome:
   name: my-device
 
-esp32:  # or esp8266:
+esp32:  # or esp8266:, rp2040:, nrf52:, libretiny:
   board: <confirmed_board_id>
+  framework:
+    type: esp-idf  # Required for C6, H2, P4. Optional for others.
 
 wifi:
   ssid: !secret wifi_ssid
@@ -165,6 +173,28 @@ ota:
   platform: esphome
 logger:
 ```
+
+## Breaking Changes (ESPHome 2025.2+)
+
+- **"Old style" board config removed** — must use new-style platform config (e.g., `esp32:` block with `board:`)
+- **Custom components support removed** — use `external_components:` instead
+- **ESP32-C6, H2, P4 require ESP-IDF** — Arduino framework not supported for these chips
+- **OTA split into platform** — use `ota: platform: esphome` (not bare `ota:`)
+- **safe_mode is top-level** — no longer under `ota:`
+
+## New Components (2024-2026)
+
+Key additions to be aware of (read relevant reference files for details):
+
+| Component | Use Case |
+|-----------|----------|
+| LVGL | Full graphics library for displays |
+| Speaker Media Player | Audio playback devices |
+| HUB75 LED panels | Large-format LED matrix displays |
+| Zigbee End Device | ESP32-C6/H2/nRF52 as Zigbee devices |
+| OpenThread | Thread networking for ESP32-C6/H2 |
+| Z-Wave Proxy | Proxy Z-Wave serial over WiFi |
+| Packet Transport | Device-to-device UART/UDP communication |
 
 ## Common Mistakes
 
