@@ -267,6 +267,9 @@ See `enclosures-manufacturing.md` for detailed guidance.
 
 ## BOM Template
 
+When building a BOM, use WebSearch to look up current prices from LCSC/Mouser/DigiKey.
+See `hardware-selection.md` → "Live Price Lookup" for search query formats.
+
 ```
 | # | Component | Part Number | Specs | Qty | Unit Cost | Source |
 |---|-----------|-------------|-------|-----|-----------|--------|

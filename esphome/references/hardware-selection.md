@@ -2,6 +2,10 @@
 
 Detailed component recommendations with prices, interfaces, and ESPHome compatibility.
 
+> **Prices in this file are approximate reference prices (2024-2025).** When building a BOM
+> for the user, look up current prices from LCSC, Mouser, or DigiKey using WebSearch. This
+> ensures the user gets accurate, up-to-date pricing and stock availability.
+
 ## Table of Contents
 
 1. [MCU Comparison](#mcu-comparison)
@@ -316,6 +320,30 @@ ESP32 ADC is 12-bit but non-linear. For accurate analog readings:
 | **Reichelt** | German stock, fast DE ship | $5 (1-2 days DE) | 1 pc |
 
 **Tip:** For prototyping, buy breakout boards from AliExpress. For production, source bare ICs from LCSC/Mouser and design them onto your PCB.
+
+## Live Price Lookup
+
+When building a BOM for the user, fetch current prices using WebSearch with these queries:
+
+| Source | Search Query Format | Example |
+|--------|-------------------|---------|
+| **LCSC** | `site:lcsc.com [part number]` | `site:lcsc.com BME280` |
+| **Mouser** | `site:mouser.com [part number]` | `site:mouser.com SHT41` |
+| **DigiKey** | `site:digikey.com [part number]` | `site:digikey.com ESP32-C3-MINI-1` |
+| **JLCPCB Parts** | `site:jlcpcb.com/parts [part name]` | `site:jlcpcb.com/parts BME280` |
+
+**When to look up prices:**
+- User asks to build a BOM or estimate costs
+- User asks "how much does X cost?" or "what's the cheapest option?"
+- User is comparing components and price matters
+- User is planning production volume pricing
+
+**What to report:**
+- Unit price at qty 1 and qty 100 (or closest break)
+- Stock availability (in stock / lead time)
+- Source URL so the user can order directly
+
+**Do not look up prices** for casual browsing — only when the user is actively making purchasing decisions. The reference prices in this file are sufficient for initial planning.
 
 ---
 
