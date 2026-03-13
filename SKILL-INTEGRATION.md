@@ -2,48 +2,41 @@
 
 How the Aurora Smart Home skills work together.
 
-## The Three Skills
+## The Four Skills
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                        Aurora Smart Home Skills                          │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ┌──────────────┐    ┌──────────────────┐    ┌──────────────────┐       │
-│  │   ESPHome    │    │  HA Integration  │    │   HA Automation  │       │
-│  │   (esphome)  │    │ (ha-integration) │    │    (ha-yaml)     │       │
-│  ├──────────────┤    ├──────────────────┤    ├──────────────────┤       │
-│  │ ESP32/ESP8266│    │  Python code     │    │  YAML config     │       │
-│  │ firmware     │    │  custom_comp     │    │  automations     │       │
-│  │ .yaml config │    │  .py files       │    │  scripts/scenes  │       │
-│  └──────────────┘    └──────────────────┘    └──────────────────┘       │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│                             Aurora Smart Home Skills                                   │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                        │
+│  ┌──────────────┐  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐  │
+│  │   ESPHome    │  │  HA Integration  │  │   HA Automation  │  │    Node-RED      │  │
+│  │   (esphome)  │  │ (ha-integration) │  │    (ha-yaml)     │  │   (node-red)     │  │
+│  ├──────────────┤  ├──────────────────┤  ├──────────────────┤  ├──────────────────┤  │
+│  │ ESP32/ESP8266│  │  Python code     │  │  YAML config     │  │  Visual flows    │  │
+│  │ firmware     │  │  custom_comp     │  │  automations     │  │  JSON import     │  │
+│  │ .yaml config │  │  .py files       │  │  scripts/scenes  │  │  function nodes  │  │
+│  └──────────────┘  └──────────────────┘  └──────────────────┘  └──────────────────┘  │
+│                                                                                        │
+└──────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Decision Flow
 
-```dot
-digraph skill_selection {
-    rankdir=TB;
-    node [shape=box, style=rounded];
-
-    start [label="User Request", shape=doublecircle];
-    q1 [label="Hardware/firmware\nfor ESP chip?", shape=diamond];
-    q2 [label="Custom Python\nintegration?", shape=diamond];
-    q3 [label="YAML automation\nor blueprint?", shape=diamond];
-
-    esphome [label="Use: esphome skill", style=filled, fillcolor=lightblue];
-    ha_int [label="Use: ha-integration skill", style=filled, fillcolor=lightgreen];
-    ha_yaml [label="Use: ha-yaml skill", style=filled, fillcolor=lightyellow];
-
-    start -> q1;
-    q1 -> esphome [label="yes"];
-    q1 -> q2 [label="no"];
-    q2 -> ha_int [label="yes"];
-    q2 -> q3 [label="no"];
-    q3 -> ha_yaml [label="yes"];
-}
+```
+User Request
+    │
+    ▼
+Hardware/firmware for ESP chip? ──yes──▶ esphome skill
+    │ no
+    ▼
+Custom Python integration? ──yes──▶ ha-integration skill
+    │ no
+    ▼
+Visual flow / Node-RED? ──yes──▶ node-red skill
+    │ no
+    ▼
+YAML automation or blueprint? ──yes──▶ ha-yaml skill
 ```
 
 ## When to Use Each Skill
@@ -268,6 +261,7 @@ Each skill has a non-negotiable rule:
 | esphome | `CONFIRM BOARD BEFORE GENERATING ANY CONFIGURATION` |
 | ha-integration | `TIMESTAMPS: dt_util.now()` / `ATTRIBUTES: JSON-SERIALIZABLE` / `ASYNC: aiohttp` |
 | ha-yaml | `CLARIFY INTENT BEFORE GENERATING ANY YAML` |
+| node-red | `USE CURRENT NODE NAMES — NEVER OUTDATED ONES` |
 
 ## Quick Selection Guide
 
@@ -283,6 +277,8 @@ Each skill has a non-negotiable rule:
 | "Matter", "Thread", "Apple Home" | esphome |
 | "coordinator", "config_flow" | ha-integration |
 | "scene", "script", "template sensor" | ha-yaml |
+| "Node-RED", "flow", "visual automation" | node-red |
+| "function node", "trigger-state" | node-red |
 
 ---
 

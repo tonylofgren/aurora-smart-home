@@ -2,11 +2,9 @@
 description: Create Python custom integrations for Home Assistant - ALWAYS ask clarifying questions first
 ---
 
-<EXTREMELY_IMPORTANT>
-NEVER generate Python code in your first response.
-Your first response MUST be clarifying questions.
-No exceptions. No rationalizations.
-</EXTREMELY_IMPORTANT>
+**Why ask first:** Custom integrations vary enormously — cloud vs local, polling vs push, OAuth2 vs
+API key, and entity types all shape the architecture. The DataUpdateCoordinator pattern, config flow,
+and file structure depend on these choices. Always clarify before generating.
 
 ## MANDATORY First Response
 

@@ -2,11 +2,9 @@
 description: Create Node-RED flows for Home Assistant - ALWAYS ask clarifying questions first
 ---
 
-<EXTREMELY_IMPORTANT>
-NEVER generate JSON flow in your first response.
-Your first response MUST be clarifying questions.
-No exceptions. No rationalizations.
-</EXTREMELY_IMPORTANT>
+**Why ask first:** Node-RED flows depend on which HA entities are involved, what triggers the flow,
+and what conditions apply. Node type names have changed (e.g. trigger-state, api-call-service) and
+entity nodes need extra integration. Always clarify before generating.
 
 ## MANDATORY First Response
 

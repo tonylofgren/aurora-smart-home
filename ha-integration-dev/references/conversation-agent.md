@@ -33,7 +33,7 @@ En conversation agent tolkar användarens intentioner och utför åtgärder. Hom
 ```python
 """Custom Conversation Agent.
 
-Generated with ha-integration@aurora-smart-home v1.0.0
+Generated with ha-integration@aurora-smart-home v1.1.0
 https://github.com/tonylofgren/aurora-smart-home
 """
 
@@ -134,7 +134,7 @@ Med OpenAI, Anthropic, eller lokal LLM:
 ```python
 """LLM Conversation Agent.
 
-Generated with ha-integration@aurora-smart-home v1.0.0
+Generated with ha-integration@aurora-smart-home v1.1.0
 https://github.com/tonylofgren/aurora-smart-home
 """
 
@@ -302,7 +302,7 @@ I `__init__.py`:
 ```python
 """My integration with conversation agent.
 
-Generated with ha-integration@aurora-smart-home v1.0.0
+Generated with ha-integration@aurora-smart-home v1.1.0
 https://github.com/tonylofgren/aurora-smart-home
 """
 
@@ -357,7 +357,7 @@ Registrera custom intents:
 ```python
 """Custom intents.
 
-Generated with ha-integration@aurora-smart-home v1.0.0
+Generated with ha-integration@aurora-smart-home v1.1.0
 https://github.com/tonylofgren/aurora-smart-home
 """
 
@@ -535,7 +535,7 @@ async def async_process(self, user_input: ConversationInput) -> ConversationResu
 ```python
 """Tests for conversation agent.
 
-Generated with ha-integration@aurora-smart-home v1.0.0
+Generated with ha-integration@aurora-smart-home v1.1.0
 https://github.com/tonylofgren/aurora-smart-home
 """
 

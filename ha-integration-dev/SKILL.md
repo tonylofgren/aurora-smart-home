@@ -1,33 +1,19 @@
 ---
 name: ha-integration-dev
 description: >
-  Use when user EXPLICITLY requests "custom integration", "custom component", "Python for HA",
-  "HACS", or "config_flow". NOT for: YAML automations (use home-assistant skill),
-  Node-RED flows (use node-red skill), ESPHome device configs (use esphome skill).
+  Home Assistant custom integration development in Python. Covers custom_components,
+  DataUpdateCoordinator, config_flow, OAuth2, conversation agent, HACS publishing,
+  device registry, entity platforms, services, repair issues, diagnostics,
+  Bluetooth integrations, and multi-coordinator patterns.
 ---
 
 # Home Assistant Integration Development
 
 Reference skill for developing Home Assistant custom integrations in Python.
 
-## First Step: Clarify Intent
-
-**If the user's request does NOT explicitly mention "custom integration", "Python", or "HACS", ASK:**
-
-> "Do you want to:
-> 1. **Develop a Python custom integration** (custom_components, config_flow, HACS)
-> 2. **Create a YAML automation** (automations.yaml, blueprints - use home-assistant skill)
-> 3. **Build a Node-RED flow** (visual automation - use node-red skill)
-> 4. **Configure an ESPHome device** (ESP32/ESP8266 firmware - use esphome skill)"
-
-**NEVER assume Python development.** A request like "create an integration for my thermostat"
-could mean using an existing integration (YAML) or building a custom one (Python).
-
 ## Overview
 
 **Core principle:** Home Assistant integrations run in the same Python process as Core with full filesystem access. Security, proper async patterns, and correct timestamp handling are non-negotiable.
-
-**Announce at start:** "I'm using the ha-integration skill to help you develop your Home Assistant custom integration."
 
 **Context:** This skill requires understanding the integration type (polling vs push, cloud vs local) before generating code. The DataUpdateCoordinator pattern is mandatory for most integrations.
 
@@ -43,36 +29,35 @@ These three rules cause 90% of integration bugs. Violating them creates timezone
 
 ## The Process
 
-```dot
-digraph integration_flow {
-    rankdir=TB;
-    node [shape=box, style=rounded];
-
-    start [label="User request", shape=doublecircle];
-    clarify [label="Clarify: API type, auth, entities"];
-    ask_hacs [label="Ask: HACS preparation?"];
-    select_template [label="Select template"];
-    read_refs [label="Read relevant references"];
-    generate [label="Generate integration code"];
-    checklist [label="Run pre-completion checklist"];
-    hacs_files [label="Generate HACS files", style=dashed];
-    done [label="Deliver integration", shape=doublecircle];
-
-    start -> clarify;
-    clarify -> ask_hacs;
-    ask_hacs -> select_template;
-    select_template -> read_refs;
-    read_refs -> generate;
-    generate -> checklist;
-    checklist -> hacs_files [label="if HACS=yes"];
-    checklist -> done [label="if HACS=no"];
-    hacs_files -> done;
-}
+```
+User request
+    │
+    ▼
+Clarify: API type, auth, entities
+    │
+    ▼
+Ask: HACS preparation?
+    │
+    ▼
+Select template
+    │
+    ▼
+Read relevant references
+    │
+    ▼
+Generate integration code
+    │
+    ▼
+Run pre-completion checklist
+    │
+    ├──if HACS=yes──▶ Generate HACS files ──▶ Deliver integration
+    │
+    └──if HACS=no───▶ Deliver integration
 ```
 
-## Red Flags
+## Common Pitfalls
 
-These thoughts mean STOP - you're violating the Iron Law:
+Watch out for these Iron Law violations:
 
 | Thought | Reality |
 |---------|---------|
@@ -84,7 +69,7 @@ These thoughts mean STOP - you're violating the Iron Law:
 | "I'll skip the coordinator for simplicity" | NO. Coordinator centralizes error handling |
 | "Logging the API key helps debugging" | NEVER log credentials |
 
-## FIRST STEP: Clarify Integration Type
+## First Step: Clarify Integration Type
 
 Ask user:
 1. **What does the integration connect to?** (cloud API, local device, calculated data)
@@ -109,7 +94,7 @@ Ask user:
 ```python
 """My Integration.
 
-Generated with ha-integration@aurora-smart-home v1.0.0
+Generated with ha-integration@aurora-smart-home v1.1.0
 https://github.com/tonylofgren/aurora-smart-home
 """
 ```

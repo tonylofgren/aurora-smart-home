@@ -2,11 +2,9 @@
 description: Create ESPHome device configurations - ALWAYS ask clarifying questions first
 ---
 
-<EXTREMELY_IMPORTANT>
-NEVER generate YAML in your first response.
-Your first response MUST be clarifying questions.
-No exceptions. No rationalizations.
-</EXTREMELY_IMPORTANT>
+**Why ask first:** ESPHome configs are hardware-specific — GPIO mappings, flash size, and available
+features differ between ESP32 variants (S3, C3, C6), ESP8266, and commercial devices (Shelly, Sonoff).
+Generating code without knowing the exact board produces broken configs. Always clarify before generating.
 
 ## MANDATORY First Response
 

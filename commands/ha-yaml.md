@@ -2,11 +2,9 @@
 description: Create Home Assistant YAML automations - ALWAYS ask clarifying questions first
 ---
 
-<EXTREMELY_IMPORTANT>
-NEVER generate YAML in your first response.
-Your first response MUST be clarifying questions.
-No exceptions. No rationalizations.
-</EXTREMELY_IMPORTANT>
+**Why ask first:** Home Assistant automations are highly specific to each user's setup — entity IDs,
+naming conventions, automation vs blueprint choice, and UI vs YAML format all vary. Generating code
+without this context wastes time and produces wrong results. Always clarify before generating.
 
 ## MANDATORY First Response
 

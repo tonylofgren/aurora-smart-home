@@ -47,7 +47,7 @@ En integration kan behöva flera coordinators när:
 ```python
 """Data classes for multi-coordinator integration.
 
-Generated with ha-integration@aurora-smart-home v1.0.0
+Generated with ha-integration@aurora-smart-home v1.1.0
 https://github.com/tonylofgren/aurora-smart-home
 """
 
@@ -73,7 +73,7 @@ type MyConfigEntry = ConfigEntry[MyIntegrationData]
 ```python
 """Coordinators for multi-coordinator integration.
 
-Generated with ha-integration@aurora-smart-home v1.0.0
+Generated with ha-integration@aurora-smart-home v1.1.0
 https://github.com/tonylofgren/aurora-smart-home
 """
 
@@ -145,7 +145,7 @@ class HistoryCoordinator(DataUpdateCoordinator[list]):
 ```python
 """Integration setup with multi-coordinator.
 
-Generated with ha-integration@aurora-smart-home v1.0.0
+Generated with ha-integration@aurora-smart-home v1.1.0
 https://github.com/tonylofgren/aurora-smart-home
 """
 
@@ -195,7 +195,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: MyConfigEntry) -> bool:
 ```python
 """Sensor entities using multiple coordinators.
 
-Generated with ha-integration@aurora-smart-home v1.0.0
+Generated with ha-integration@aurora-smart-home v1.1.0
 https://github.com/tonylofgren/aurora-smart-home
 """
 
@@ -287,7 +287,7 @@ När en entity behöver data från flera coordinators:
 ```python
 """Entity that combines data from multiple coordinators.
 
-Generated with ha-integration@aurora-smart-home v1.0.0
+Generated with ha-integration@aurora-smart-home v1.1.0
 https://github.com/tonylofgren/aurora-smart-home
 """
 
@@ -370,7 +370,7 @@ Trigga uppdatering av alla coordinators:
 ```python
 """Service to refresh all coordinators.
 
-Generated with ha-integration@aurora-smart-home v1.0.0
+Generated with ha-integration@aurora-smart-home v1.1.0
 https://github.com/tonylofgren/aurora-smart-home
 """
 
@@ -414,7 +414,7 @@ Coordinator som bara körs under vissa förhållanden:
 ```python
 """Conditional coordinator that pauses when not needed.
 
-Generated with ha-integration@aurora-smart-home v1.0.0
+Generated with ha-integration@aurora-smart-home v1.1.0
 https://github.com/tonylofgren/aurora-smart-home
 """
 
@@ -463,7 +463,7 @@ Coordinator som anpassar intervall baserat på aktivitet:
 ```python
 """Adaptive coordinator with dynamic update interval.
 
-Generated with ha-integration@aurora-smart-home v1.0.0
+Generated with ha-integration@aurora-smart-home v1.1.0
 https://github.com/tonylofgren/aurora-smart-home
 """
 
