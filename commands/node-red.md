@@ -1,12 +1,12 @@
 ---
-description: Create Node-RED flows for Home Assistant - ALWAYS ask clarifying questions first
+description: Create Node-RED visual automation flows with trigger-state, function nodes, and HA websocket integration
 ---
 
 **Why ask first:** Node-RED flows depend on which HA entities are involved, what triggers the flow,
 and what conditions apply. Node type names have changed (e.g. trigger-state, api-call-service) and
 entity nodes need extra integration. Always clarify before generating.
 
-## MANDATORY First Response
+## First Response
 
 Ask these questions BEFORE generating any code:
 

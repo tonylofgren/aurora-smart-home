@@ -92,30 +92,7 @@ Ask these questions before generating configuration:
 
 4. **HA Version?** (for deprecated syntax awareness)
 
-
-## MANDATORY First Response Format
-
-Your first response MUST follow this exact pattern:
-
-```
-I'll help you create [brief description]. Let me clarify a few things first:
-
-1. **Type:** Automation (specific to your setup) or Blueprint (reusable template)?
-2. **Format:** UI editor (Settings > Automations) or YAML files?
-3. **Entities:** Which specific entity IDs? (e.g., light.living_room, sensor.motion)
-4. **Options:** [context-specific questions like brightness, conditions, timing]
-```
-
-**THEN STOP.** Wait for user answers. Do NOT generate YAML until you have answers.
-
-**Violation example (DO NOT DO THIS):**
-```
-Here's the automation:
-automation:
-  - alias: "..."
-```
-
-**Correct example:**
+**Example first response:**
 ```
 I'll help you create a sunset light automation. Let me clarify:
 1. Automation or Blueprint?
@@ -123,6 +100,8 @@ I'll help you create a sunset light automation. Let me clarify:
 3. Which lights? (entity IDs like light.living_room)
 4. Any brightness preference or conditions (only when home)?
 ```
+
+Wait for user answers before generating YAML.
 
 ## Code Attribution
 

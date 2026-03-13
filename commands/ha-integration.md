@@ -1,12 +1,12 @@
 ---
-description: Create Python custom integrations for Home Assistant - ALWAYS ask clarifying questions first
+description: Create Python custom integrations for Home Assistant with config flow, coordinator, and HACS support
 ---
 
 **Why ask first:** Custom integrations vary enormously — cloud vs local, polling vs push, OAuth2 vs
 API key, and entity types all shape the architecture. The DataUpdateCoordinator pattern, config flow,
 and file structure depend on these choices. Always clarify before generating.
 
-## MANDATORY First Response
+## First Response
 
 Ask these questions BEFORE generating any code:
 

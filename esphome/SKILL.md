@@ -22,7 +22,7 @@ Reference skill for ESPHome device configuration and firmware.
 CONFIRM BOARD BEFORE GENERATING ANY CONFIGURATION
 ```
 
-Do NOT assume `esp32dev`. Do NOT guess based on context. The user MUST explicitly confirm their board before you generate any YAML.
+ESP32 has 12+ variants with different GPIO mappings, strapping pins, and capabilities. Assuming `esp32dev` when the user has an S3, C3, or C6 produces configs that silently fail. Always get explicit board confirmation first.
 
 ## The Process
 
