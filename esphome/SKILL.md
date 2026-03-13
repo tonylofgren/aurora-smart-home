@@ -1,10 +1,13 @@
 ---
 name: esphome-devices
 description: >
-  ESPHome device configuration and firmware. Covers ESP32, ESP32-S3, ESP32-C3, ESP32-C6,
-  ESP32-H2, ESP32-P4, ESP8266, RP2040, nRF52, LibreTiny, Shelly, Sonoff, Tuya,
-  BLE proxy, Matter firmware, Thread, Zigbee, GPIO, sensor YAML, LVGL displays,
+  ESPHome device configuration, firmware, and IoT product development. Covers ESP32, ESP32-S3,
+  ESP32-C3, ESP32-C6, ESP32-H2, ESP32-P4, ESP8266, RP2040, nRF52, LibreTiny, Shelly, Sonoff,
+  Tuya, BLE proxy, Matter firmware, Thread, Zigbee, GPIO, sensor YAML, LVGL displays,
   LED strips, voice assistant hardware, device flashing, and Arduino conversion.
+  Also covers designing new ESPHome-based products: hardware selection, component sourcing,
+  PCB design (KiCad), enclosures, 3D printing, CE/FCC certification, BOM optimization,
+  and manufacturing from prototype to production scale.
 ---
 
 # ESPHome Devices
@@ -65,9 +68,13 @@ Watch out for these assumptions:
 | "I can infer from the project" | Never infer. Always confirm |
 | "secrets.yaml is just a file" | NEVER touch secrets.yaml. Use !secret references only |
 
-## First Step: Ask About Hardware & Output
+## First Step: Determine Scope
 
-Before generating any configuration, ask:
+Before generating anything, determine if this is:
+- **A. Configure an existing device** — ask about hardware & output (below)
+- **B. Design a new product** — read `references/product-development.md` and walk through the lifecycle
+
+For existing devices, ask:
 
 1. **What board/platform are you using?**
    - ESP32 DevKit (general purpose)
@@ -140,6 +147,14 @@ Before generating any configuration, ask:
 | Board Pinouts | `references/pinouts.md` |
 | Debug Flowcharts | `references/troubleshooting-flowcharts.md` |
 | Security Hardening | `references/security-hardening.md` |
+
+### Product Development
+
+| Topic | Reference File |
+|-------|---------------|
+| Full Lifecycle (idea → production) | `references/product-development.md` |
+| Hardware Selection (MCU, sensors, power) | `references/hardware-selection.md` |
+| Enclosures, PCB & Manufacturing | `references/enclosures-manufacturing.md` |
 
 ### Projects & Troubleshooting
 
