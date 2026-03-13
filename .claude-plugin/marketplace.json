@@ -1,39 +1,39 @@
 {
   "name": "aurora-smart-home",
-  "version": "1.0.0",
-  "description": "Aurora Smart Home - Claude Skills for Home Assistant and ESPHome",
+  "version": "1.1.0",
+  "description": "Aurora Smart Home - Claude Skills for Home Assistant, ESPHome, Node-RED, and IoT product development",
   "owner": {
     "name": "Tony Löfgren"
   },
   "plugins": [
     {
       "name": "aurora",
-      "description": "Aurora Smart Home slash commands - quick access to all skills",
+      "description": "Aurora Smart Home slash commands - quick access to all four skills",
       "source": "./",
       "skills": [],
       "commands": ["./commands"]
     },
     {
       "name": "ha-yaml",
-      "description": "Create, configure, and troubleshoot Home Assistant automations, scripts, templates, and integrations. 48 reference files, 15 templates, 600+ example prompts.",
+      "description": "Home Assistant YAML automation, blueprints, scripts, scenes, template sensors, Sections dashboards, Mushroom cards, presence detection, voice Assist, and Jinja2 templates. Uses modern HA 2024.8+ syntax. 49 reference guides, 17 templates, 300+ prompts.",
       "source": "./home-assistant",
       "skills": ["./"]
     },
     {
       "name": "esphome",
-      "description": "Create ESPHome device configurations, custom components, and sensor integrations. Comprehensive reference for YAML configs, C++ components, and automation patterns.",
+      "description": "ESPHome device configuration and IoT product development. Supports ESP32, ESP32-S3, C3, C6, H2, P4, ESP8266, RP2040, nRF52, LibreTiny. 160+ components, LVGL displays, voice assistant, Matter, Thread, Zigbee. Full product lifecycle: hardware selection with live pricing, KiCad PCB design, 3D enclosures, CE/FCC certification, manufacturing. 28 reference guides, 27 templates, 600+ prompts.",
       "source": "./esphome",
       "skills": ["./"]
     },
     {
       "name": "ha-integration",
-      "description": "Build custom_components in Python for Home Assistant. Use when writing Python code with ConfigEntry, DataUpdateCoordinator, async_setup_entry, or publishing to HACS. NOT for YAML automations.",
+      "description": "Home Assistant custom integration development in Python. Typed ConfigEntry with runtime_data, DataUpdateCoordinator, config flows, EntityDescription, action responses, repair issues, conversation agents, AI Task entities, HACS v2 publishing. 17 reference guides, 10 templates, 129 prompts.",
       "source": "./ha-integration-dev",
       "skills": ["./"]
     },
     {
       "name": "node-red",
-      "description": "Build visual Node-RED flows for Home Assistant. Triggers when 'node-red' appears anywhere in request (any language, including compound words). 12 reference guides, 100+ prompts, 15 templates. NOT for YAML automations or ESPHome.",
+      "description": "Node-RED visual automation flows for Home Assistant using node-red-contrib-home-assistant-websocket v0.80+. trigger-state, api-call-service, function nodes, number/select/text/time-entity nodes, context storage, timer patterns, error handling. Node-RED 4.x compatible. 12 reference guides, 15 templates, 100+ prompts.",
       "source": "./node-red",
       "skills": ["./"]
     }
