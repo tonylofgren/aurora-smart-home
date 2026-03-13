@@ -152,7 +152,7 @@ Create **YAML-based automations**, scripts, blueprints, templates, and dashboard
 | Production-ready templates | 17 |
 | Integrations covered | 50+ |
 
-**Covers:** Automations, scripts, blueprints, templates, dashboards, Jinja2, MQTT, Zigbee2MQTT, ZHA, Z-Wave, Matter, Bluetooth, Frigate, Tuya, Shelly, and more.
+**Covers:** Automations, scripts, blueprints, template sensors, Sections dashboards, Mushroom cards, Jinja2, helpers, packages, presence detection, voice Assist, calendar automations, notification patterns, energy monitoring. Integrations: MQTT, Zigbee2MQTT, ZHA, Z-Wave, Matter, Bluetooth, Frigate, Tuya, Shelly, Tasmota, and more. Uses modern HA 2024.8+ syntax (`action:`, plural keys, `template:` integration).
 
 [View Home Assistant documentation](./home-assistant/README.md)
 
@@ -160,7 +160,7 @@ Create **YAML-based automations**, scripts, blueprints, templates, and dashboard
 
 ### Node-RED Skill (`node-red`)
 
-Build **visual automation flows** using node-red-contrib-home-assistant-websocket.
+Build **visual automation flows** using node-red-contrib-home-assistant-websocket v0.80+ on Node-RED 4.x.
 
 | Feature | Count |
 |---------|-------|
@@ -170,7 +170,7 @@ Build **visual automation flows** using node-red-contrib-home-assistant-websocke
 | Ready-to-import templates | 15 |
 | Nodes covered | 31 |
 
-**Covers:** All HA websocket nodes, motion lights, presence detection, notifications, climate control, media, voice commands, state machines, and more.
+**Covers:** trigger-state, api-call-service, current-state, events, number/select/text/time-entity nodes, function nodes, context storage, timer patterns, error handling, subflows, JSONata, MQTT integration, and state machines.
 
 [View Node-RED documentation](./node-red/README.md)
 
@@ -188,9 +188,24 @@ Configure **ESP device firmware** and **design new IoT products** - from sensor 
 | Device templates | 27 |
 | Components covered | 160+ |
 
-**Covers:** Sensors, displays, climate control, LED strips, BLE, motors, IR/RF remotes, power monitoring, voice assistants, device conversions (Shelly, Sonoff, Tuya), and **full product development** (hardware selection, PCB design, enclosures, CE/FCC certification, manufacturing).
+**Component categories:**
 
-**Supports:** ESP32, ESP32-S3, ESP32-C3, ESP32-C6, ESP32-H2, ESP32-P4, ESP8266, RP2040, nRF52, LibreTiny
+| Category | Examples |
+|----------|---------|
+| Sensors | Temperature, humidity, pressure, CO2, VOC, PM2.5, light, UV, distance, weight |
+| Presence | PIR, mmWave radar (LD2410/2450), BLE tracking, Doppler |
+| Displays | OLED, e-ink, TFT, LVGL, HUB75 LED matrix, LCD |
+| Lighting | LED strips (WS2812, SK6812), PWM dimmers, RGBW, effects |
+| Climate | HVAC, thermostats, fans, covers, motorized blinds |
+| Audio | I2S microphone, speaker, media player, voice assistant |
+| Communication | I2C, SPI, UART, CAN bus, RS485, IR/RF remote, BLE, Zigbee, Thread, Matter |
+| Power | Energy monitoring (CT clamp, HLW8012), battery management, solar |
+| Motors | Stepper, servo, DC motor, H-bridge drivers |
+| Devices | Shelly, Sonoff, Tuya, commercial device conversions |
+
+**Product development:** Hardware selection with live pricing, KiCad PCB design, 3D-printed enclosures, CE/FCC certification, BOM optimization, and manufacturing from prototype to production.
+
+**Platforms:** ESP32, ESP32-S3, ESP32-C3, ESP32-C6, ESP32-H2, ESP32-P4, ESP8266, RP2040, nRF52, LibreTiny
 
 [View ESPHome documentation](./esphome/README.md)
 
@@ -207,7 +222,7 @@ Develop **Python custom components** for Home Assistant (custom_components, HACS
 | Code examples | 200+ |
 | Starter templates | 10 |
 
-**Covers:** Config flows, DataUpdateCoordinator, entity platforms (20+), services, events, device registry, OAuth2, WebSocket, HACS publishing, Core contribution.
+**Covers:** Typed ConfigEntry with `runtime_data`, DataUpdateCoordinator, config flows (setup, reauth, reconfigure, subentries), entity platforms (20+), EntityDescription (`frozen=True`), action responses (`SupportsResponse`), repair issues, diagnostics, device registry, OAuth2, conversation agents, AI Task entities, Integration Quality Scale, HACS v2 publishing.
 
 **Templates:** Basic, polling, push, OAuth2, multi-device hub, service, Bluetooth, conversation agent, media player, webhook.
 
