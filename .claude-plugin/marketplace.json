@@ -42,6 +42,12 @@
       "description": "Reference guide for connecting popular APIs to Home Assistant via Node-RED, YAML, or custom integrations. Covers auth, endpoints, and working examples for: Tibber, Nordpool, SMHI, OpenWeatherMap, yr.no, Tomorrow.io, SL, Trafikverket, Resrobot, Entur, Shelly, Tuya, Philips Hue, IKEA Dirigera, OpenAI, Spotify, Google Calendar, Telegram, GitHub.",
       "source": "./api-catalog",
       "skills": ["./"]
+    },
+    {
+      "name": "ha-dashboard-design",
+      "description": "Beautiful copy-paste Home Assistant dashboard designs. Nine visual styles: Glassmorphism, Dark Minimal, Material You, Nordic, Neon/Cyberpunk, Warm Home, Soft Pastel, Luxury Gold, Retro Terminal. Complete CSS themes, card-mod styles, button-card templates for all card types. Includes image generation prompts for backgrounds and mockups.",
+      "source": "./ha-dashboard-design",
+      "skills": ["./"]
     }
   ]
 }

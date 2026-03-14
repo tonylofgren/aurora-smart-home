@@ -5,6 +5,7 @@ description: >
   trigger-state, api-call-service, function nodes, context storage, timer patterns,
   error handling, and node-red-contrib-home-assistant-websocket nodes. Use when user mentions
   "Node-RED", "flow", "visual automation", or "node-redflöde".
+source: https://github.com/tonylofgren/aurora-smart-home
 ---
 
 # Node-RED for Home Assistant

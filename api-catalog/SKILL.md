@@ -8,6 +8,7 @@ description: >
   and global APIs (OpenAI, Spotify, Google Calendar, Telegram, GitHub).
   Use this skill whenever the user mentions a specific external service, API, or data source
   they want to connect to Home Assistant — even if they don't say "API".
+source: https://github.com/tonylofgren/aurora-smart-home
 ---
 
 # API Catalog for Home Assistant

@@ -5,6 +5,7 @@ description: >
   DataUpdateCoordinator, config_flow, OAuth2, conversation agent, HACS publishing,
   device registry, entity platforms, services, repair issues, diagnostics,
   Bluetooth integrations, and multi-coordinator patterns.
+source: https://github.com/tonylofgren/aurora-smart-home
 ---
 
 # Home Assistant Integration Development

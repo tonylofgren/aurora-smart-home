@@ -8,6 +8,7 @@ description: >
   Also covers designing new ESPHome-based products: hardware selection, component sourcing,
   PCB design (KiCad), enclosures, 3D printing, CE/FCC certification, BOM optimization,
   and manufacturing from prototype to production scale.
+source: https://github.com/tonylofgren/aurora-smart-home
 ---
 
 # ESPHome Devices

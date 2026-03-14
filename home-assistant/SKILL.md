@@ -5,6 +5,7 @@ description: >
   Covers automations, blueprints, scripts, scenes, template sensors, Lovelace dashboards, Mushroom cards,
   packages, helpers, presence detection, voice Assist, calendar automation, Jinja2 templates,
   notification patterns, and energy monitoring.
+source: https://github.com/tonylofgren/aurora-smart-home
 ---
 
 # Home Assistant Automation
