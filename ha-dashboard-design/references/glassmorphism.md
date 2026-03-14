@@ -481,7 +481,7 @@ styles:
 ## 5. Sections Dashboard Example
 
 ```yaml
-type: sections
+type: masonry  # Change to "sections" if using HA 2024.6+
 max_columns: 3
 sections:
   - type: grid

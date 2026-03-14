@@ -99,16 +99,28 @@ Each reference file contains copy-paste blocks for:
 
 ## Dashboard Types
 
-Both **Sections** (HA 2024.6+ grid layout) and **classic Lovelace** examples are included
-in each style file.
+**Always default to `masonry`** — it works in all HA versions and requires no setup.
+
+```yaml
+# Safe default — works everywhere
+views:
+  - title: Home
+    type: masonry   # ← default, always works
+    cards:
+      - ...
+```
+
+`type: sections` (HA 2024.6+ grid layout) can give a blank page if the user's HA version
+doesn't support it or if the view structure is wrong. Only suggest it if the user explicitly
+asks for it or confirms they're on HA 2024.6+.
 
 ## Pre-Output Checklist
 
+- [ ] Dashboard uses `type: masonry` unless user specifically asked for Sections
 - [ ] Theme YAML included with correct filename
 - [ ] card-mod styles wrapped in correct YAML structure
 - [ ] All entity IDs marked as placeholders (e.g., `sensor.YOUR_TEMPERATURE`)
 - [ ] HACS dependencies listed at top of output
-- [ ] Both Sections and Lovelace variants offered
 - [ ] Credentials/secrets not hardcoded
 
 ## Integration
