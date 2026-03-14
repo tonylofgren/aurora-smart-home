@@ -1,5 +1,5 @@
 ---
-name: home-assistant-automation
+name: Home Assistant YAML
 description: >
   Home Assistant YAML configuration and automation. The most common skill for general HA questions.
   Covers automations, blueprints, scripts, scenes, template sensors, Lovelace dashboards, Mushroom cards,

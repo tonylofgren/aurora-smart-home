@@ -1,5 +1,5 @@
 ---
-name: ha-integration-dev
+name: HA Integration Dev
 description: >
   Home Assistant custom integration development in Python. Covers custom_components,
   DataUpdateCoordinator, config_flow, OAuth2, conversation agent, HACS publishing,

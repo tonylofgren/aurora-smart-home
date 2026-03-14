@@ -1,5 +1,5 @@
 ---
-name: node-red
+name: Node-RED
 description: >
   Node-RED visual automation flows for Home Assistant. Covers visual automation, flow JSON,
   trigger-state, api-call-service, function nodes, context storage, timer patterns,
