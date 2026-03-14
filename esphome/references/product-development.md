@@ -239,7 +239,90 @@ sensor:
     name: "Uptime"
 ```
 
-### Gate 4: Firmware is feature-complete, OTA-updateable, and has fallback recovery.
+### Fleet OTA Updates (for products with multiple deployed units)
+
+Single-device OTA (`ota:` component) only works on the local network. For products deployed
+to customers, you need a remote update strategy.
+
+**Option A: HA-managed updates (simplest, 10-100 units)**
+
+Users update via Home Assistant UI. Requires `project:` and `dashboard_import:` blocks.
+
+```yaml
+esphome:
+  name: ${device_name}
+  project:
+    name: "mycompany.my-product"
+    version: "1.2.0"
+
+dashboard_import:
+  package_import_url: github://mycompany/my-product/firmware/my-product.yaml@main
+  import_full_config: false
+```
+
+When you push a new version to GitHub, users see "Update available" in HA → Settings → Devices.
+The `project.version` field controls what version HA displays.
+
+**Option B: Self-hosted HTTP OTA (100+ units, automatic)**
+
+The device periodically checks a server for new firmware and self-updates.
+
+```yaml
+# Check for updates every 6 hours
+interval:
+  - interval: 6h
+    then:
+      - http_request.get:
+          url: https://updates.mycompany.com/my-product/version.json
+          on_response:
+            then:
+              - lambda: |-
+                  if (status_code == 200) {
+                    // Parse JSON, compare version, trigger OTA if newer
+                    // See ESPHome http_request docs for full implementation
+                  }
+
+ota:
+  platform: http_request
+  url: https://updates.mycompany.com/my-product/firmware.bin
+```
+
+**Self-hosted update server** can be as simple as:
+- A static file server (nginx, S3, GitHub Releases) serving `version.json` + `firmware.bin`
+- `version.json` contains `{"version": "1.2.0", "url": "https://...firmware.bin"}`
+- The device compares its `project.version` with the server version
+
+**Option C: ESPHome Dashboard (local fleet, 10-50 units)**
+
+Run the ESPHome Dashboard as a service. It discovers devices on the local network
+and can push updates to all of them. Best for devices deployed within one location
+(office, warehouse, hotel).
+
+```bash
+# Run ESPHome Dashboard as Docker service
+docker run -d --name esphome \
+  -v /path/to/configs:/config \
+  -p 6052:6052 \
+  --restart unless-stopped \
+  ghcr.io/esphome/esphome
+```
+
+**Choosing an OTA strategy:**
+
+| Strategy | Internet needed? | User action? | Scale | Best for |
+|----------|-----------------|-------------|-------|----------|
+| HA `dashboard_import` | For download only | User clicks "Update" | 10-100 | Consumer products |
+| HTTP OTA (self-hosted) | Yes, periodic check | Automatic | 100-10,000+ | Commercial deployment |
+| ESPHome Dashboard | No (LAN only) | Admin clicks "Update All" | 10-50 | Single-location fleet |
+| Manual OTA (`esphome run`) | No (LAN only) | Developer runs command | 1-10 | Development/testing |
+
+**Important considerations:**
+- Always include `safe_mode:` so a bad update can be recovered
+- Version your firmware with `project.version` — track what's deployed
+- Test OTA updates as part of your test matrix (Phase 5)
+- Consider a staged rollout: update 10% of devices, verify, then roll out to all
+
+### Gate 4: Firmware is feature-complete, OTA-updateable, and has a fleet update strategy.
 
 ## Phase 5: Testing & Validation
 
