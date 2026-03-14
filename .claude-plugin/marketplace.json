@@ -1,6 +1,6 @@
 {
   "name": "aurora-smart-home",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Aurora Smart Home - Claude Skills for Home Assistant, ESPHome, Node-RED, and IoT product development",
   "owner": {
     "name": "Tony Löfgren"
@@ -8,46 +8,17 @@
   "plugins": [
     {
       "name": "aurora",
-      "description": "Aurora Smart Home slash commands - quick access to all four skills",
+      "description": "Aurora Smart Home — skills for Home Assistant, ESPHome, Node-RED, custom integrations, API catalog, and dashboard design",
       "source": "./",
-      "skills": [],
+      "skills": [
+        "./home-assistant",
+        "./esphome",
+        "./ha-integration-dev",
+        "./node-red",
+        "./api-catalog",
+        "./ha-dashboard-design"
+      ],
       "commands": ["./commands"]
-    },
-    {
-      "name": "ha-yaml",
-      "description": "Home Assistant YAML automation, blueprints, scripts, scenes, template sensors, Sections dashboards, Mushroom cards, presence detection, voice Assist, and Jinja2 templates. Uses modern HA 2024.8+ syntax. 49 reference guides, 17 templates, 300+ prompts.",
-      "source": "./home-assistant",
-      "skills": ["./"]
-    },
-    {
-      "name": "esphome",
-      "description": "ESPHome device configuration and IoT product development. Supports ESP32, ESP32-S3, C3, C6, H2, P4, ESP8266, RP2040, nRF52, LibreTiny. 160+ components, LVGL displays, voice assistant, Matter, Thread, Zigbee. Full product lifecycle: hardware selection with live pricing, KiCad PCB design, 3D enclosures, CE/FCC certification, manufacturing. 28 reference guides, 27 templates, 600+ prompts.",
-      "source": "./esphome",
-      "skills": ["./"]
-    },
-    {
-      "name": "ha-integration",
-      "description": "Home Assistant custom integration development in Python. Typed ConfigEntry with runtime_data, DataUpdateCoordinator, config flows, EntityDescription, action responses, repair issues, conversation agents, AI Task entities, HACS v2 publishing. 17 reference guides, 10 templates, 129 prompts.",
-      "source": "./ha-integration-dev",
-      "skills": ["./"]
-    },
-    {
-      "name": "node-red",
-      "description": "Node-RED visual automation flows for Home Assistant using node-red-contrib-home-assistant-websocket v0.80+. trigger-state, api-call-service, function nodes, number/select/text/time-entity nodes, context storage, timer patterns, error handling. Node-RED 4.x compatible. 12 reference guides, 15 templates, 100+ prompts.",
-      "source": "./node-red",
-      "skills": ["./"]
-    },
-    {
-      "name": "api-catalog",
-      "description": "Reference guide for connecting popular APIs to Home Assistant via Node-RED, YAML, or custom integrations. Covers auth, endpoints, and working examples for: Tibber, Nordpool, SMHI, OpenWeatherMap, yr.no, Tomorrow.io, SL, Trafikverket, Resrobot, Entur, Shelly, Tuya, Philips Hue, IKEA Dirigera, OpenAI, Spotify, Google Calendar, Telegram, GitHub.",
-      "source": "./api-catalog",
-      "skills": ["./"]
-    },
-    {
-      "name": "ha-dashboard-design",
-      "description": "Beautiful copy-paste Home Assistant dashboard designs. Nine visual styles: Glassmorphism, Dark Minimal, Material You, Nordic, Neon/Cyberpunk, Warm Home, Soft Pastel, Luxury Gold, Retro Terminal. Complete CSS themes, card-mod styles, button-card templates for all card types. Includes image generation prompts for backgrounds and mockups.",
-      "source": "./ha-dashboard-design",
-      "skills": ["./"]
     }
   ]
 }
