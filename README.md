@@ -28,6 +28,9 @@ The most comprehensive Claude Code skill pack for smart home development — fro
 
 ---
 
+> **⚠️ v1.2.0 — Action required if you installed before 2026-03-14:**
+> The plugin structure was updated. Run `/plugin marketplace add tonylofgren/aurora-smart-home` again to reinstall. Takes 30 seconds.
+
 ## Choosing the Right Skill
 
 | I want to... | Use this skill |
