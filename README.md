@@ -247,6 +247,96 @@ Develop **Python custom components** for Home Assistant (custom_components, HACS
 - **Battle-tested patterns** - Based on community best practices
 - **Complete coverage** - From beginner to advanced use cases
 
+<details>
+<summary><strong>Full Capability Map — everything these skills can do</strong></summary>
+
+### Home Assistant YAML
+
+| Capability | Details |
+|-----------|---------|
+| Automations | Triggers, conditions, actions, multi-trigger, `choose`, `if/then`, parallel |
+| Blueprints | Inputs, selectors, domain filtering, shareable templates |
+| Scripts | Sequences, variables, response data, rate limiting |
+| Scenes | State snapshots, transition control |
+| Template sensors | Trigger-based, time-based, aggregation, statistics |
+| Dashboards | Sections view, Tile cards, Mushroom cards, energy, climate, security |
+| Voice Assist | Custom sentences, intent scripts, Speech-to-Phrase, multi-wake word |
+| Helpers | Input boolean/number/select/text/datetime, counters, timers, groups |
+| Packages | Split config by room/function, includes |
+| Presence | Device tracker, zones, person, BLE, GPS |
+| Notifications | Actionable, images, TTS, persistent, priority routing |
+| Calendar | Schedule automations from HA calendar |
+| Energy | Utility meter, cost tracking, solar, EV charging |
+| Modern syntax | `action:` (not `service:`), plural keys, `template:` integration |
+| Integrations | MQTT, Zigbee2MQTT, ZHA, Z-Wave, Matter, Bluetooth, Frigate, Shelly, Tuya, Tasmota |
+
+### ESPHome — Device Configuration
+
+| Capability | Details |
+|-----------|---------|
+| 10 platforms | ESP32, S3, C3, C6, H2, P4, ESP8266, RP2040, nRF52, LibreTiny |
+| Sensors (50+) | Temperature, humidity, pressure, CO2, VOC, PM2.5, light, UV, distance, weight, power |
+| Presence | PIR (HC-SR501, AM312), mmWave (LD2410, LD2450), BLE tracking, Doppler |
+| Displays | OLED (SSD1306), e-ink, TFT (ILI9341), LVGL graphics, HUB75 LED matrix |
+| Lighting | WS2812B, SK6812, PWM, RGBW, addressable effects, color temperature |
+| Audio/Voice | I2S mic/speaker, media player, Micro Wake Word, Assist satellite |
+| Protocols | WiFi, BLE, Zigbee, Thread, Matter, I2C, SPI, UART, CAN bus, RS485, IR, RF 433MHz |
+| Climate | PID thermostat, bang-bang, fan speed, cover position, motorized blinds |
+| Power | CT clamp, HLW8012, PZEM, INA219, battery level, solar charge |
+| OTA | Local, HA-managed (dashboard_import), HTTP self-update, fleet management |
+| Devices | Shelly, Sonoff, Tuya conversion, Arduino migration |
+
+### ESPHome — Product Development
+
+| Capability | Details |
+|-----------|---------|
+| Hardware selection | MCU comparison, 60+ sensors with prices and I2C addresses, live price lookup |
+| Power design | USB-C, LiPo battery (TP4056), solar, PoE, mains (Hi-Link modules) |
+| PCB design | KiCad workflow, schematic checklist, layout rules, antenna clearance |
+| Enclosures | 3D printing (FDM/SLA materials), IP ratings, off-the-shelf options |
+| Prototyping | Breadboard → perfboard → custom PCB progression |
+| Production firmware | `project:` block, `dashboard_import:`, WiFi provisioning, fallback AP |
+| Fleet OTA | GitHub-hosted updates, self-hosted HTTP OTA, ESPHome Dashboard |
+| Certification | CE/FCC/RoHS, pre-certified module strategy, cost reduction tips |
+| Manufacturing | JLCPCB/PCBWay SMT assembly, test jig design, QC process |
+| Cost estimation | BOM template, volume pricing, retail price calculation |
+| Component sourcing | LCSC, Mouser, DigiKey, JLCPCB parts, AliExpress |
+
+### Node-RED
+
+| Capability | Details |
+|-----------|---------|
+| HA nodes | trigger-state, api-call-service, current-state, events, poll-state |
+| Entity nodes | number, select, text, time-entity (stable since v0.71) |
+| Flow patterns | Motion lights, presence detection, notifications, climate, media |
+| Function nodes | JavaScript, async patterns, `node.send()`/`node.done()`, global context |
+| State machines | Context storage, flow/global scope, persistence |
+| Error handling | Catch nodes, retry patterns, scoped error handling |
+| Advanced | Subflows, JSONata, MQTT, HTTP requests, timer with extend |
+| Compatibility | Node-RED 4.x, Node.js 18+, HA websocket v0.80+ |
+
+### Integration Development (Python)
+
+| Capability | Details |
+|-----------|---------|
+| Architecture | Typed `ConfigEntry[T]`, `runtime_data`, platform forwarding |
+| Config flows | Setup, reauth, reconfigure, options, subentries |
+| Data fetching | DataUpdateCoordinator with `_async_setup`, `config_entry` arg, `always_update` |
+| Entities (20+) | Sensor, binary sensor, switch, light, climate, cover, fan, media player, camera, etc. |
+| EntityDescription | `frozen=True`, `kw_only=True`, custom value functions |
+| Actions | `SupportsResponse`, `response_variable`, schema validation |
+| AI/Voice | ConversationEntity, LLM API, AI Task entity, subentry-based config |
+| Device registry | DeviceInfo, connections, identifiers, configuration URL |
+| Repair issues | `async_create_issue`, fixable repairs, RepairsFlow |
+| Diagnostics | Config entry + device diagnostics, sensitive data redaction |
+| Security | HTTPS enforcement, input validation, credential handling, rate limiting |
+| OAuth2 | Token refresh, `OAuth2TokenRequestReauthError`, application credentials |
+| Testing | pytest-homeassistant-custom-component, MockConfigEntry, fixtures |
+| Publishing | HACS v2, manifest.json, CI validation, GitHub topics, Quality Scale |
+| Templates | 10 starter templates (basic, polling, push, OAuth2, hub, BLE, voice, etc.) |
+
+</details>
+
 ---
 
 ## Installation
