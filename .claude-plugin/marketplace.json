@@ -36,6 +36,12 @@
       "description": "Node-RED visual automation flows for Home Assistant using node-red-contrib-home-assistant-websocket v0.80+. trigger-state, api-call-service, function nodes, number/select/text/time-entity nodes, context storage, timer patterns, error handling. Node-RED 4.x compatible. 12 reference guides, 15 templates, 100+ prompts.",
       "source": "./node-red",
       "skills": ["./"]
+    },
+    {
+      "name": "api-catalog",
+      "description": "Reference guide for connecting popular APIs to Home Assistant via Node-RED, YAML, or custom integrations. Covers auth, endpoints, and working examples for: Tibber, Nordpool, SMHI, OpenWeatherMap, yr.no, Tomorrow.io, SL, Trafikverket, Resrobot, Entur, Shelly, Tuya, Philips Hue, IKEA Dirigera, OpenAI, Spotify, Google Calendar, Telegram, GitHub.",
+      "source": "./api-catalog",
+      "skills": ["./"]
     }
   ]
 }

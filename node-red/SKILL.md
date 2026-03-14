@@ -298,11 +298,20 @@ Before outputting flow JSON:
 - [ ] Timer patterns use extend: true instead of separate reset nodes?
 - [ ] HTTP requests use http request node instead of global libraries?
 
+## External API Integrations
+
+For Node-RED flows that call external APIs (weather, energy, transport, smart home clouds,
+OpenAI, Spotify, Telegram, GitHub), see:
+
+- `references/popular-apis.md` — Node-RED function node snippets for all popular APIs
+- `api-catalog` skill — deep documentation, auth setup, and HA YAML sensors per API
+
 ## Integration
 
 **Pairs with:**
 - **ha-yaml** - Create YAML automations for logic that doesn't need visual flows
 - **esphome** - Configure ESPHome devices whose entities the flow monitors
+- **api-catalog** - Connecting external APIs and services
 
 **Typical flow:**
 ```
@@ -313,3 +322,4 @@ Device → ESPHome/HA Integration → Home Assistant → Node-RED (this skill)
 - For YAML automations instead of visual flows → use `ha-yaml` skill
 - For ESPHome device firmware → use `esphome` skill
 - For custom Python integrations → use `ha-integration` skill
+- For external API connections → use `api-catalog` skill
