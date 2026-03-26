@@ -10,7 +10,7 @@ The most comprehensive Claude Code skill pack for smart home development — fro
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skills-7c3aed.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Home Assistant](https://img.shields.io/badge/Home_Assistant-2024.x--2026.x-41BDF5.svg)](https://www.home-assistant.io/)
-[![ESPHome](https://img.shields.io/badge/ESPHome-2026.2-000000.svg)](https://esphome.io/)
+[![ESPHome](https://img.shields.io/badge/ESPHome-2026.3-000000.svg)](https://esphome.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
@@ -19,17 +19,34 @@ The most comprehensive Claude Code skill pack for smart home development — fro
 
 |  | Home Assistant | Node-RED | ESPHome | Integration Dev |
 |---|:---:|:---:|:---:|:---:|
-| **Reference Guides** | 49 | 12 | 25 | 17 |
+| **Reference Guides** | 49 | 12 | 38 | 17 |
 | **Example Prompts** | 300+ | 100+ | 600+ | 129 |
 | **Code Examples** | 700+ | 200+ | 1000+ | 200+ |
-| **Ready Templates** | 17 | 15 | 27 | 10 |
+| **Ready Templates** | 17 | 15 | 30 | 10 |
 | **Coverage** | 50+ integrations | 31 nodes | 160+ components | Full HA framework |
 | **Bonus** | Sections dashboard | Node-RED 4.x | **Product dev: idea → production** | HACS v2 |
 
 ---
 
-> **⚠️ v1.2.0 — Action required if you installed before 2026-03-14:**
+> **v1.2.0 — Action required if you installed before 2026-03-14:**
 > The plugin structure was updated. Run `/plugin marketplace add tonylofgren/aurora-smart-home` again to reinstall. Takes 30 seconds.
+
+### What's New in ESPHome v1.2.0
+
+Coverage updated through **ESPHome 2026.3**:
+
+- **Alarm Control Panel** — Template-based alarm state machine with zones, bypass, and code support
+- **Media Player redesign** — Speaker Media Player with dual pipelines, mixer, resampler, Ogg Opus
+- **Lock & Valve** — Template lock/unlock, valve control for irrigation and gas
+- **RP2040/RP2350** — First-class Raspberry Pi Pico support (143+ boards, WiFi, BLE, OTA)
+- **MIPI DSI displays** — High-performance displays for ESP32-P4
+- **Z-Wave Proxy** — Network-based Z-Wave serial over WiFi/Ethernet
+- **Zigbee expansion** — More device types on ESP32-C6/H2
+- **3 new templates** — Alarm panel, media player, irrigation controller
+
+See [CHANGELOG.md](CHANGELOG.md) for full details.
+
+---
 
 ## Choosing the Right Skill
 
