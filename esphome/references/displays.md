@@ -855,3 +855,72 @@ display:
     }
     // Normal display code...
 ```
+
+---
+
+## MIPI DSI Displays (ESP32-P4)
+
+*Since ESPHome 2025.8*
+
+The MIPI DSI Display Driver enables high-performance displays on ESP32-P4 processors. MIPI DSI provides much higher bandwidth than SPI/I2C, enabling large color displays at high refresh rates.
+
+### Requirements
+
+- **ESP32-P4 only** — MIPI DSI hardware is exclusive to ESP32-P4
+- **ESP-IDF framework required**
+- Typically paired with LVGL for UI rendering
+
+### Basic Configuration
+
+```yaml
+esp32:
+  board: esp32-p4-function-ev-board
+  framework:
+    type: esp-idf
+
+display:
+  - platform: mipi_dsi
+    id: my_display
+    dimensions:
+      width: 1024
+      height: 600
+    color_order: RGB
+    data_rate: 80MHz
+    # Lane configuration depends on the specific display panel
+    num_data_lanes: 2
+    lambda: |-
+      // Drawing code or use with LVGL
+```
+
+### With LVGL
+
+For complex UIs, combine MIPI DSI with the LVGL framework:
+
+```yaml
+display:
+  - platform: mipi_dsi
+    id: my_display
+    dimensions:
+      width: 1024
+      height: 600
+
+lvgl:
+  displays:
+    - my_display
+  pages:
+    - id: main_page
+      widgets:
+        - label:
+            text: "Hello from ESP32-P4!"
+            align: CENTER
+```
+
+### Supported Panels
+
+Waveshare ESP32-P4 panels (added in 2026.2) and other MIPI DSI-compatible displays. Check the specific panel datasheet for lane count, resolution, and timing parameters.
+
+### Key Notes
+
+- **Performance**: MIPI DSI is significantly faster than SPI — suitable for video, animations, and responsive UIs
+- **Power**: Higher bandwidth means higher power consumption than SPI displays
+- **Complexity**: Requires correct timing parameters from the display datasheet

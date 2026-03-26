@@ -714,3 +714,51 @@ button:
       - cover.close: blind_1
       - cover.close: blind_2
 ```
+
+---
+
+## Cover Movement Triggers (since 2026.2)
+
+New triggers that fire based on movement state — useful for controlling relays, LEDs, or logging.
+
+```yaml
+cover:
+  - platform: time_based
+    name: "Garage Door"
+    id: garage
+    open_duration: 15s
+    close_duration: 15s
+    open_action:
+      - switch.turn_on: relay_open
+    close_action:
+      - switch.turn_on: relay_close
+    stop_action:
+      - switch.turn_off: relay_open
+      - switch.turn_off: relay_close
+
+    # New movement triggers (2026.2+)
+    on_open_started:
+      - logger.log: "Garage door opening..."
+      - light.turn_on: status_led
+    on_open_completed:
+      - logger.log: "Garage door fully open"
+      - light.turn_off: status_led
+    on_close_started:
+      - logger.log: "Garage door closing..."
+      - light.turn_on: status_led
+    on_close_completed:
+      - logger.log: "Garage door fully closed"
+      - light.turn_off: status_led
+    on_stopped:
+      - logger.log: "Garage door stopped mid-travel"
+```
+
+**Available Movement Triggers:**
+
+| Trigger | Fires When |
+|---------|-----------|
+| `on_open_started` | Cover begins opening |
+| `on_open_completed` | Cover reaches fully open position |
+| `on_close_started` | Cover begins closing |
+| `on_close_completed` | Cover reaches fully closed position |
+| `on_stopped` | Cover stops before reaching target position |

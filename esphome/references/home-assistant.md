@@ -573,3 +573,51 @@ sensor:
 6. **Minimize HA sensors** - Polling HA adds load; cache locally
 7. **Use events** for buttons - More flexible than binary sensors
 8. **Name services clearly** - They show up as `esphome.device_name_service`
+
+---
+
+## API Action Responses (since 2025.12)
+
+ESPHome now supports bidirectional communication with Home Assistant via action responses. When HA calls an ESPHome service, the device can return data back.
+
+```yaml
+api:
+  services:
+    - service: get_sensor_reading
+      then:
+        - lambda: |-
+            float temp = id(temperature_sensor).state;
+            float hum = id(humidity_sensor).state;
+            // Return data back to Home Assistant
+            return {
+              {"temperature", to_string(temp)},
+              {"humidity", to_string(hum)}
+            };
+```
+
+This enables request-response patterns where HA actions receive structured data back from the device, rather than relying on one-way sensor updates.
+
+---
+
+## Conditional Package Inclusion (since 2025.12)
+
+Packages can now be conditionally included based on substitutions or conditions:
+
+```yaml
+substitutions:
+  has_display: "true"
+  has_battery: "false"
+
+packages:
+  base: !include common/base.yaml
+  display: !include
+    file: common/display.yaml
+    condition:
+      lambda: 'return ${has_display};'
+  battery: !include
+    file: common/battery.yaml
+    condition:
+      lambda: 'return ${has_battery};'
+```
+
+This is powerful for maintaining a single config that adapts to hardware variants — same firmware repo, different feature sets based on build-time flags.

@@ -845,3 +845,61 @@ sensor:
 | measurement | Instantaneous value (temperature, power) |
 | total | Cumulative value that can reset (rain today) |
 | total_increasing | Always increasing (energy, gas usage) |
+
+---
+
+## New Sensor Platforms (2025-2026)
+
+### Dew Point (since 2026.3)
+
+Native computed dew point sensor — no need for template sensors:
+
+```yaml
+sensor:
+  - platform: dew_point
+    name: "Dew Point"
+    temperature: temperature_sensor_id
+    humidity: humidity_sensor_id
+```
+
+### HDC302x (since 2025.11+)
+
+High-accuracy temperature and humidity sensor (TI HDC3020/HDC3021/HDC3022):
+
+```yaml
+sensor:
+  - platform: hdc302x
+    temperature:
+      name: "Temperature"
+    humidity:
+      name: "Humidity"
+    address: 0x44
+    update_interval: 60s
+```
+
+### SEN6x (since 2026.2+)
+
+Sensirion SEN60/SEN63/SEN65/SEN66 all-in-one environmental sensor (PM, VOC, NOx, T, RH, CO2):
+
+```yaml
+sensor:
+  - platform: sen6x
+    pm_1_0:
+      name: "PM 1.0"
+    pm_2_5:
+      name: "PM 2.5"
+    pm_10_0:
+      name: "PM 10"
+    temperature:
+      name: "Temperature"
+    humidity:
+      name: "Humidity"
+    voc:
+      name: "VOC Index"
+    nox:
+      name: "NOx Index"
+    co2:
+      name: "CO2"  # SEN66 only
+    address: 0x6B
+    update_interval: 60s
+```

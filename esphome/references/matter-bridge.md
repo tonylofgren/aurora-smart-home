@@ -474,6 +474,54 @@ Matter i ESPHome är under aktiv utveckling. Kommande funktioner:
 "Konfigurera Thread på ESP32-C6 för Matter"
 ```
 
+## Zigbee Platform (since 2026.2)
+
+ESPHome's Zigbee support has been expanded in 2026.2 with more device types supported directly. ESP32-C6 and ESP32-H2 can function as Zigbee end devices.
+
+### Basic Zigbee Configuration
+
+```yaml
+esp32:
+  board: esp32-c6-devkitm-1
+  framework:
+    type: esp-idf
+
+zigbee:
+  # Device acts as Zigbee end device
+  role: end_device
+
+light:
+  - platform: binary
+    name: "Zigbee Light"
+    output: relay_output
+    # Automatically exposed via Zigbee
+
+sensor:
+  - platform: dht
+    pin: GPIO4
+    temperature:
+      name: "Temperature"
+    humidity:
+      name: "Humidity"
+    # Sensors are exposed as Zigbee clusters
+```
+
+### Zigbee vs Matter-over-Thread
+
+| Feature | Zigbee | Matter-over-Thread |
+|---------|--------|-------------------|
+| Ecosystem | ZHA, Zigbee2MQTT | Apple/Google/Amazon |
+| Protocol | Zigbee 3.0 | Matter 1.x |
+| Chips | ESP32-C6, H2 | ESP32-C6, H2 |
+| Mesh | Yes (via router) | Yes (via Thread) |
+| ESPHome maturity | New (2026.2+) | Newer but active |
+
+### Important Notes
+
+- Zigbee and WiFi **cannot** run simultaneously on ESP32-C6 (shared radio)
+- ESP32-H2 is best for Zigbee/Thread (dedicated 802.15.4 radio)
+- Zigbee support is under active development — check ESPHome changelog for latest status
+
 ## Se även
 
 - `references/lights.md` - Lampkonfiguration

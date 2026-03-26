@@ -2,7 +2,7 @@
 
 # ESPHome Device Configuration Skill
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/tonylofgren/aurora-smart-home/releases)
+[![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)](https://github.com/tonylofgren/aurora-smart-home/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 Complete **ESPHome device firmware** assistant for Claude Code. Create, configure, and troubleshoot ESP32/ESP8266 devices with expert guidance. Includes Arduino to ESPHome conversion.
@@ -44,14 +44,18 @@ Complete **ESPHome device firmware** assistant for Claude Code. Create, configur
 | **Lights** | RGB, RGBW, addressable LED strips (WS2812, APA102), 15+ effects |
 | **Displays** | OLED (SSD1306), TFT (ILI9341, ST7789), E-Paper, LVGL, Nextion, LED Matrix |
 | **Climate** | Thermostats, PID control, IR AC control, heat pumps |
-| **Covers** | Blinds, roller shutters, garage doors with position sensing |
+| **Alarm & Security** | Alarm control panel (zones, bypass, arming), lock, valve |
+| **Media & Audio** | Speaker Media Player, I2S DAC, microphone, mixer, resampler, Audio DAC (ES8311/ES8388) |
+| **Covers** | Blinds, roller shutters, garage doors with position sensing, movement triggers |
 | **Fans** | Speed control, PWM, oscillation |
 | **Motors** | Stepper (A4988, TMC2209), servo, DC motors |
-| **Remote** | IR transmit/receive (40+ protocols), 433MHz RF |
-| **Communication** | I2C, SPI, UART, CAN bus, Modbus RTU/TCP |
+| **Input Entities** | Number, select, text, datetime, event |
+| **Remote** | IR transmit/receive (40+ protocols), 433MHz RF, CC1101 sub-GHz |
+| **Communication** | I2C, SPI, UART, CAN bus, Modbus RTU/TCP, Z-Wave Proxy, DLMS smart meter |
 | **Power Management** | Deep sleep, battery monitoring, low power optimization |
 | **Bluetooth** | BLE tracker, presence detection, proxy, iBeacon |
-| **Home Assistant** | Full integration, custom services, events, sensors |
+| **Platforms** | ESP32 (all variants), ESP8266, RP2040/RP2350, nRF52, LibreTiny |
+| **Home Assistant** | Full integration, custom services, events, API action responses |
 | **Device Conversion** | Shelly, Sonoff, Tuya, Xiaomi to ESPHome |
 | **External Components** | Victron MPPT, JK-BMS, Homekit, Nuki Lock, Roomba |
 | **Solar/Energy** | MPPT chargers, inverters, battery management |

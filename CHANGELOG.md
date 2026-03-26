@@ -6,6 +6,41 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.2.0] - 2026-03-26
+
+### Added
+
+#### ESPHome: New Component Coverage (ESPHome 2025.2 — 2026.3)
+
+**New Reference Files (3):**
+- `references/alarm-security.md` — Alarm Control Panel (template platform, zones, bypass, code support), Lock (template, output), Valve (template, position control)
+- `references/media-audio.md` — Redesigned media player architecture (2026.3): Speaker Media Player, Speaker Source, I2S Audio, Mixer/Resampler speakers, Microphone (I2S, UDP), Audio DAC (ES8311, ES8388), Audio File embedding, migration guide from legacy I2S Media Player
+- `references/input-entities.md` — Datetime (date/time/datetime types), Event entity platform with on_event trigger
+
+**New Templates (3):**
+- `assets/templates/alarm-panel.yaml` — Template alarm control panel with PIR + door sensors, zone bypass, arming buzzer
+- `assets/templates/media-player.yaml` — Speaker Media Player with ESP32-S3, MAX98357A DAC, INMP441 mic, rotary encoder volume
+- `assets/templates/irrigation-controller.yaml` — 4-zone valve-based irrigation with pump safety, soil moisture sensor, scheduling
+
+### Changed
+
+**ESPHome: Updated Reference Files (7):**
+- `references/boards.md` — RP2040/RP2350 first-class support (pico-sdk 2.0, 143+ boards, WiFi, BLE, OTA), nRF52 BLE+serial OTA via mcumgr
+- `references/displays.md` — MIPI DSI Display Driver for ESP32-P4 high-performance displays
+- `references/communication.md` — Z-Wave Proxy (network serial proxy), Serial Proxy (generic), DLMS Smart Meter (European smart meters)
+- `references/sensors.md` — Dew Point (native computed sensor), HDC302x, SEN6x all-in-one environmental sensor
+- `references/covers-fans.md` — Cover movement state triggers (on_open_started, on_close_completed, etc.)
+- `references/home-assistant.md` — API action responses (bidirectional), conditional package inclusion
+- `references/matter-bridge.md` — Zigbee platform expansion for ESP32-C6/H2
+
+**ESPHome SKILL.md:**
+- Version bump to v1.2.0
+- Updated skill description with new component keywords
+- Breaking changes section expanded to cover ESPHome 2025.2 — 2026.3
+- Reference table updated with 3 new entries
+
+---
+
 ## [Unreleased]
 
 ### Added

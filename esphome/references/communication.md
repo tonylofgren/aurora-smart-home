@@ -643,3 +643,83 @@ sensor:
     value_type: FP32
     unit_of_measurement: "W"
 ```
+
+---
+
+## Z-Wave Proxy
+
+*Since ESPHome 2025.10*
+
+The Z-Wave Proxy component enables network-based connectivity for Z-Wave hardware by proxying serial communication between a Z-Wave modem SoC and Z-Wave JS over WiFi or Ethernet. This lets you place a Z-Wave stick anywhere and connect it to your Z-Wave JS instance over the network.
+
+```yaml
+# Proxy a Z-Wave USB stick over the network
+uart:
+  tx_pin: GPIO17
+  rx_pin: GPIO16
+  baud_rate: 115200
+
+zwave_proxy:
+  uart_id: uart_bus
+```
+
+**Requirements:**
+- ESP32 with UART connected to Z-Wave modem (e.g., Silicon Labs EFR32ZG14/EFR32ZG23)
+- Z-Wave JS configured to connect to the ESPHome device IP
+- UART pins must match the Z-Wave modem's TX/RX
+
+---
+
+## Serial Proxy
+
+*Since ESPHome 2026.3*
+
+Generic serial port proxy over the network. Useful for any device with a serial interface that needs network access.
+
+```yaml
+uart:
+  tx_pin: GPIO17
+  rx_pin: GPIO16
+  baud_rate: 9600
+
+serial_proxy:
+  uart_id: uart_bus
+  port: 6638  # TCP port to listen on
+```
+
+---
+
+## DLMS Smart Meter
+
+*Since ESPHome 2026.2*
+
+The DLMS component reads data from smart electricity meters using the DLMS/COSEM protocol (IEC 62056). Common in European smart meters.
+
+```yaml
+uart:
+  tx_pin: GPIO17
+  rx_pin: GPIO16
+  baud_rate: 2400
+  data_bits: 8
+  parity: EVEN
+  stop_bits: 1
+
+dlms:
+  uart_id: uart_bus
+  decryption_key: !secret dlms_key  # If meter uses encryption
+
+sensor:
+  - platform: dlms
+    obis_code: "1.0.1.8.0"
+    name: "Total Energy Import"
+    unit_of_measurement: "kWh"
+    device_class: energy
+    state_class: total_increasing
+
+  - platform: dlms
+    obis_code: "1.0.1.7.0"
+    name: "Active Power"
+    unit_of_measurement: "W"
+    device_class: power
+    state_class: measurement
+```

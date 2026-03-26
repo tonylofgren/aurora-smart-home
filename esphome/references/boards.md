@@ -689,6 +689,100 @@ esp8266:
 
 ---
 
+## RP2040 / RP2350 (Raspberry Pi Pico)
+
+*First-class platform support since ESPHome 2026.3 (pico-sdk 2.0)*
+
+RP2040 (Pico W) and RP2350 (Pico 2 W) are now fully supported with WiFi, OTA, debug sensors, and captive portal. 143+ board definitions available.
+
+### Basic Configuration
+
+```yaml
+rp2040:
+  board: rpipicow  # Pico W (RP2040 + WiFi)
+  # board: rpipico2w  # Pico 2 W (RP2350 + WiFi)
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+api:
+ota:
+  platform: esphome
+logger:
+```
+
+### Supported Boards
+
+| Board ID | Chip | WiFi | Notes |
+|----------|------|------|-------|
+| `rpipicow` | RP2040 | Yes | Raspberry Pi Pico W |
+| `rpipico2w` | RP2350 | Yes | Raspberry Pi Pico 2 W |
+| `rpipico` | RP2040 | No | Requires external WiFi module |
+| `rpipico2` | RP2350 | No | Requires external WiFi module |
+
+### Key Differences from ESP32
+
+- **No BLE scanning** — RP2040 WiFi chip does not support BLE (RP2350 has BLE foundations in 2026.3)
+- **No ESP-IDF** — uses pico-sdk framework only
+- **GPIO** — 26 GPIO pins (GP0-GP25), 3 ADC channels (GP26-GP28)
+- **No strapping pins** — simpler GPIO usage than ESP32
+- **Dual-core** — both RP2040 and RP2350 are dual-core (Cortex-M0+ / Cortex-M33)
+
+### RP2040 with Sensors Example
+
+```yaml
+rp2040:
+  board: rpipicow
+
+i2c:
+  sda: GPIO4
+  scl: GPIO5
+
+sensor:
+  - platform: bme280_i2c
+    temperature:
+      name: "Temperature"
+    humidity:
+      name: "Humidity"
+    pressure:
+      name: "Pressure"
+```
+
+---
+
+## nRF52 (Zephyr RTOS)
+
+nRF52-based devices run on the Zephyr RTOS platform. Primarily used for Zigbee and BLE devices.
+
+### Basic Configuration
+
+```yaml
+nrf52:
+  board: adafruit_nrf52840
+
+# nRF52 does NOT support WiFi — uses BLE or Thread for connectivity
+```
+
+### BLE + Serial OTA (since 2026.3)
+
+nRF52 now supports OTA updates via BLE and serial using the mcumgr protocol:
+
+```yaml
+ota:
+  platform: nrf52
+  # Supports both BLE-based and serial-based OTA via mcumgr
+```
+
+### Key Notes
+
+- **No WiFi** — nRF52 chips have no WiFi, use BLE or Thread/Zigbee
+- **Zephyr RTOS** — different build system than ESP-IDF/Arduino
+- **Thread/Zigbee** — primary use case for Matter-over-Thread devices
+- **Limited component support** — not all ESPHome components work on nRF52
+
+---
+
 ## Related Documentation
 
 - [device-guides.md](device-guides.md) - Converting commercial devices
