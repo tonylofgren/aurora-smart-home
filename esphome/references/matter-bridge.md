@@ -520,7 +520,7 @@ sensor:
 
 - Zigbee and WiFi **cannot** run simultaneously on ESP32-C6 (shared radio)
 - ESP32-H2 is best for Zigbee/Thread (dedicated 802.15.4 radio)
-- Zigbee support is under active development — check ESPHome changelog for latest status
+- Zigbee support is under active development - check ESPHome changelog for latest status
 
 ## Se även
 

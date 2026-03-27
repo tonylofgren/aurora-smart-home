@@ -1,8 +1,8 @@
-# Aurora Smart Home — User Guide
+# Aurora Smart Home - User Guide
 
 > **The practical guide to getting great results from every skill**
 
-This guide shows you *how to use* Aurora Smart Home — what to say, how to prompt, and how to get the best results from Claude. No need to read it cover to cover; jump to the skill you're working with.
+This guide shows you *how to use* Aurora Smart Home - what to say, how to prompt, and how to get the best results from Claude. No need to read it cover to cover; jump to the skill you're working with.
 
 ---
 
@@ -13,42 +13,42 @@ This guide shows you *how to use* Aurora Smart Home — what to say, how to prom
 2. [Installation in 2 Minutes](#2-installation-in-2-minutes)
 3. [How to Activate a Skill](#3-how-to-activate-a-skill)
 4. [How to Write Good Prompts](#4-how-to-write-good-prompts)
-5. [When You're Stuck — How to Iterate with Claude](#5-when-youre-stuck--how-to-iterate-with-claude)
+5. [When You're Stuck - How to Iterate with Claude](#5-when-youre-stuck--how-to-iterate-with-claude)
 
 ### Home Assistant YAML
 6. [What the HA YAML Skill Does](#6-what-the-ha-yaml-skill-does)
-7. [Example Prompts — Automations](#7-example-prompts--automations)
-8. [Example Prompts — Blueprints](#8-example-prompts--blueprints)
-9. [Example Prompts — Dashboards](#9-example-prompts--dashboards)
-10. [Example Prompts — Templates and Helpers](#10-example-prompts--templates-and-helpers)
-11. [Organizing Your Config — Packages and Includes](#11-organizing-your-config--packages-and-includes)
+7. [Example Prompts - Automations](#7-example-prompts--automations)
+8. [Example Prompts - Blueprints](#8-example-prompts--blueprints)
+9. [Example Prompts - Dashboards](#9-example-prompts--dashboards)
+10. [Example Prompts - Templates and Helpers](#10-example-prompts--templates-and-helpers)
+11. [Organizing Your Config - Packages and Includes](#11-organizing-your-config--packages-and-includes)
 12. [Tips for Better HA Automations](#12-tips-for-better-ha-automations)
 
 ### ESPHome
 13. [What the ESPHome Skill Does](#13-what-the-esphome-skill-does)
 14. [Handling Secrets and Credentials](#14-handling-secrets-and-credentials)
-15. [Example Prompts — Sensor Configs](#15-example-prompts--sensor-configs)
-16. [Example Prompts — Lighting and Displays](#16-example-prompts--lighting-and-displays)
-17. [Example Prompts — Advanced Features](#17-example-prompts--advanced-features)
+15. [Example Prompts - Sensor Configs](#15-example-prompts--sensor-configs)
+16. [Example Prompts - Lighting and Displays](#16-example-prompts--lighting-and-displays)
+17. [Example Prompts - Advanced Features](#17-example-prompts--advanced-features)
 18. [Designing a New Product (Idea → Production)](#18-designing-a-new-product-idea--production)
-19. [Example Prompts — Product Development](#19-example-prompts--product-development)
+19. [Example Prompts - Product Development](#19-example-prompts--product-development)
 20. [What a Product Design Conversation Looks Like](#20-what-a-product-design-conversation-looks-like)
-21. [OTA Updates — Keeping Devices Updated](#21-ota-updates--keeping-devices-updated)
+21. [OTA Updates - Keeping Devices Updated](#21-ota-updates--keeping-devices-updated)
 22. [Setting Up an OTA Update Server](#22-setting-up-an-ota-update-server)
 23. [Tips for Better ESPHome Configs](#23-tips-for-better-esphome-configs)
 
 ### Node-RED
 24. [What the Node-RED Skill Does](#24-what-the-node-red-skill-does)
-25. [Example Prompts — Basic Flows](#25-example-prompts--basic-flows)
-26. [Example Prompts — Logic and State](#26-example-prompts--logic-and-state)
-27. [Example Prompts — External Data and APIs](#27-example-prompts--external-data-and-apis)
+25. [Example Prompts - Basic Flows](#25-example-prompts--basic-flows)
+26. [Example Prompts - Logic and State](#26-example-prompts--logic-and-state)
+27. [Example Prompts - External Data and APIs](#27-example-prompts--external-data-and-apis)
 28. [Tips for Better Node-RED Flows](#28-tips-for-better-node-red-flows)
 
 ### HA Integration Dev
 29. [What the Integration Dev Skill Does](#29-what-the-integration-dev-skill-does)
 30. [Who Is This For?](#30-who-is-this-for)
-31. [Example Prompts — Getting Started](#31-example-prompts--getting-started)
-32. [Example Prompts — Advanced Integrations](#32-example-prompts--advanced-integrations)
+31. [Example Prompts - Getting Started](#31-example-prompts--getting-started)
+32. [Example Prompts - Advanced Integrations](#32-example-prompts--advanced-integrations)
 33. [How to Share Your API with Claude](#33-how-to-share-your-api-with-claude)
 34. [Tips for Integration Development](#34-tips-for-integration-development)
 
@@ -76,7 +76,7 @@ Aurora Smart Home gives Claude deep expertise in four areas of home automation:
 | **node-red** | Building visual Node-RED flows (the output is importable JSON you paste into Node-RED) |
 | **ha-integration** | Writing Python custom components for Home Assistant (for developers) |
 
-**Without these skills**, Claude has general knowledge but may use outdated syntax, miss modern patterns, or give generic advice. **With these skills**, Claude has detailed, current knowledge — right down to correct GPIO pins, exact YAML syntax for HA 2026.x, and which ESPHome component handles which sensor chip.
+**Without these skills**, Claude has general knowledge but may use outdated syntax, miss modern patterns, or give generic advice. **With these skills**, Claude has detailed, current knowledge - right down to correct GPIO pins, exact YAML syntax for HA 2026.x, and which ESPHome component handles which sensor chip.
 
 ---
 
@@ -101,7 +101,7 @@ That's it. Skills are now available in every project.
 
 ## 3. How to Activate a Skill
 
-### Automatic — just mention the topic
+### Automatic - just mention the topic
 
 Skills activate when you use relevant keywords. You don't need to do anything special:
 
@@ -110,7 +110,7 @@ Skills activate when you use relevant keywords. You don't need to do anything sp
 - Say **"YAML automation"**, **"blueprint"**, **"automations.yaml"** → HA YAML skill loads
 - Say **"custom integration"**, **"HACS"**, **"custom_components"** → Integration skill loads
 
-### Manual — slash commands
+### Manual - slash commands
 
 If a skill doesn't activate automatically, use the explicit command:
 
@@ -127,7 +127,7 @@ Type `/aurora:` and you'll see all available commands.
 
 ## 4. How to Write Good Prompts
 
-The skills work best when you give enough context upfront. You don't need to be technical — just describe what you want clearly.
+The skills work best when you give enough context upfront. You don't need to be technical - just describe what you want clearly.
 
 ### Be specific
 
@@ -139,18 +139,18 @@ The skills work best when you give enough context upfront. You don't need to be 
 
 ### Tell the skill what you have
 
-- **ESPHome:** Always say what board you're using. ESP32 has 12+ variants — the config is different for each.
+- **ESPHome:** Always say what board you're using. ESP32 has 12+ variants - the config is different for each.
 - **HA YAML:** Say your entity IDs if you know them. If not, describe what the device is.
 - **Node-RED:** Describe the trigger and the result. What starts the flow? What should happen?
 - **Integration Dev:** Share an example API response or link to the API docs.
 
-### The skill will ask clarifying questions — that's normal
+### The skill will ask clarifying questions - that's normal
 
-Skills ask a few questions before generating anything. This is by design — the wrong config is slower than asking first. Answer as specifically as you can.
+Skills ask a few questions before generating anything. This is by design - the wrong config is slower than asking first. Answer as specifically as you can.
 
 ---
 
-## 5. When You're Stuck — How to Iterate with Claude
+## 5. When You're Stuck - How to Iterate with Claude
 
 Skills are built for back-and-forth. You don't have to get everything right in the first message.
 
@@ -170,7 +170,7 @@ Please fix it.
 
 ```
 My automation triggers at the wrong time. Here's the YAML: [paste YAML]
-It fires even during the day — I only want it after sunset. What's wrong?
+It fires even during the day - I only want it after sunset. What's wrong?
 ```
 
 ### Ask for modifications, not rewrites
@@ -221,20 +221,20 @@ Step 3: Then create the dashboard card
 
 The `ha-yaml` skill generates correct, modern Home Assistant YAML for:
 
-- **Automations** — triggers, conditions, actions, multi-trigger logic
-- **Blueprints** — reusable templates you can share and import
-- **Scripts** — reusable action sequences
-- **Scenes** — saved device states
-- **Template sensors** — calculated sensors using Jinja2
-- **Dashboards** — Lovelace layouts, Mushroom cards, Sections views
-- **Helpers** — input_boolean, input_number, counters, timers
-- **Packages** — organize your config by room or function
+- **Automations** - triggers, conditions, actions, multi-trigger logic
+- **Blueprints** - reusable templates you can share and import
+- **Scripts** - reusable action sequences
+- **Scenes** - saved device states
+- **Template sensors** - calculated sensors using Jinja2
+- **Dashboards** - Lovelace layouts, Mushroom cards, Sections views
+- **Helpers** - input_boolean, input_number, counters, timers
+- **Packages** - organize your config by room or function
 
 The skill always uses modern HA syntax (`action:` not `service:`, plural keys like `triggers:`).
 
 ---
 
-## 7. Example Prompts — Automations
+## 7. Example Prompts - Automations
 
 ### Motion light with timeout
 ```
@@ -296,9 +296,9 @@ Write an automation that:
 
 ---
 
-## 8. Example Prompts — Blueprints
+## 8. Example Prompts - Blueprints
 
-Blueprints are useful when you want the same logic applied to multiple rooms — configure once, reuse everywhere.
+Blueprints are useful when you want the same logic applied to multiple rooms - configure once, reuse everywhere.
 
 ### Motion light blueprint
 ```
@@ -329,7 +329,7 @@ set thermostat to 21°C. When disabled: restore previous states.
 
 ---
 
-## 9. Example Prompts — Dashboards
+## 9. Example Prompts - Dashboards
 
 ### Room overview card
 ```
@@ -369,7 +369,7 @@ Create a security dashboard showing:
 
 ---
 
-## 10. Example Prompts — Templates and Helpers
+## 10. Example Prompts - Templates and Helpers
 
 ### Average temperature sensor
 ```
@@ -405,7 +405,7 @@ Show as currency in SEK with 2 decimal places.
 
 ---
 
-## 11. Organizing Your Config — Packages and Includes
+## 11. Organizing Your Config - Packages and Includes
 
 As your Home Assistant config grows, splitting it into files by room or function keeps it manageable. The `ha-yaml` skill can help you set this up.
 
@@ -419,7 +419,7 @@ Each package should contain the automations, scripts, and helpers for that room.
 ### Ask to organize an existing config
 ```
 Here's my current automations.yaml: [paste content]
-Split it into packages — one file per topic:
+Split it into packages - one file per topic:
 lighting.yaml, climate.yaml, security.yaml, notifications.yaml.
 Show me the configuration.yaml includes too.
 ```
@@ -427,7 +427,7 @@ Show me the configuration.yaml includes too.
 ### How packages work (for reference)
 
 ```yaml
-# configuration.yaml — the only file you edit after setup
+# configuration.yaml - the only file you edit after setup
 homeassistant:
   packages:
     living_room: !include packages/living_room.yaml
@@ -436,13 +436,13 @@ homeassistant:
     security:    !include packages/security.yaml
 ```
 
-Each package file contains all the YAML for that area — automations, scripts, helpers, sensors — all in one place.
+Each package file contains all the YAML for that area - automations, scripts, helpers, sensors - all in one place.
 
 ---
 
 ## 12. Tips for Better HA Automations
 
-**Give your entity IDs.** Even approximate ones help. If you're unsure, describe the device — "my kitchen ceiling light" is enough for Claude to use a placeholder you can easily replace.
+**Give your entity IDs.** Even approximate ones help. If you're unsure, describe the device - "my kitchen ceiling light" is enough for Claude to use a placeholder you can easily replace.
 
 **Describe the logic in plain language first.** You don't need to know YAML. "Turn on when motion, but only at night, off after 5 minutes with no motion" is a perfect prompt.
 
@@ -466,8 +466,8 @@ Each package file contains all the YAML for that area — automations, scripts, 
 
 The `esphome` skill does two things:
 
-1. **Configure existing devices** — generate correct ESPHome YAML for your specific hardware
-2. **Design new IoT products** — guide you from idea to finished product, including hardware selection, PCB design, enclosure, certifications, and manufacturing
+1. **Configure existing devices** - generate correct ESPHome YAML for your specific hardware
+2. **Design new IoT products** - guide you from idea to finished product, including hardware selection, PCB design, enclosure, certifications, and manufacturing
 
 For device configs, it creates ready-to-flash YAML files. For product development, it creates a complete project folder with firmware, bill of materials, wiring guide, and production instructions.
 
@@ -475,7 +475,7 @@ For device configs, it creates ready-to-flash YAML files. For product developmen
 
 ## 14. Handling Secrets and Credentials
 
-ESPHome uses a `secrets.yaml` file to keep sensitive values — WiFi passwords, API keys, OTA passwords — out of your main config files. This is important because your `.yaml` device files can be shared safely; `secrets.yaml` never leaves your machine.
+ESPHome uses a `secrets.yaml` file to keep sensitive values - WiFi passwords, API keys, OTA passwords - out of your main config files. This is important because your `.yaml` device files can be shared safely; `secrets.yaml` never leaves your machine.
 
 ### How secrets work
 
@@ -517,7 +517,7 @@ Use placeholder values so I can fill in my own credentials.
 
 ---
 
-## 15. Example Prompts — Sensor Configs
+## 15. Example Prompts - Sensor Configs
 
 ### Temperature and humidity sensor
 ```
@@ -563,7 +563,7 @@ and room name per device. Shared secrets.yaml for all.
 
 ---
 
-## 16. Example Prompts — Lighting and Displays
+## 16. Example Prompts - Lighting and Displays
 
 ### WS2812B LED strip
 ```
@@ -594,7 +594,7 @@ calendar event pulled from HA. Update every 30 seconds.
 
 ---
 
-## 17. Example Prompts — Advanced Features
+## 17. Example Prompts - Advanced Features
 
 ### Voice assistant satellite
 ```
@@ -635,24 +635,24 @@ Schedule via HA calendar entity.
 
 ## 18. Designing a New Product (Idea → Production)
 
-When you want to design an entirely new device — not just configure existing hardware — the ESPHome skill becomes a full product development guide.
+When you want to design an entirely new device - not just configure existing hardware - the ESPHome skill becomes a full product development guide.
 
 It walks you through:
 
-1. **Requirements** — what it does, power source, environment, certifications needed
-2. **Component selection** — MCU, sensors, and power supply with real prices from LCSC/Mouser
-3. **Prototyping** — breadboard first, then PCB
-4. **PCB design** — KiCad workflow, layout rules, what files to send to JLCPCB
-5. **Firmware** — production-ready config with OTA updates
-6. **Enclosure** — 3D print recommendations or off-the-shelf options with IP ratings
-7. **Certification** — CE/FCC strategy, pre-certified module approach
-8. **Manufacturing** — small batch vs production scale, assembly instructions and cost
+1. **Requirements** - what it does, power source, environment, certifications needed
+2. **Component selection** - MCU, sensors, and power supply with real prices from LCSC/Mouser
+3. **Prototyping** - breadboard first, then PCB
+4. **PCB design** - KiCad workflow, layout rules, what files to send to JLCPCB
+5. **Firmware** - production-ready config with OTA updates
+6. **Enclosure** - 3D print recommendations or off-the-shelf options with IP ratings
+7. **Certification** - CE/FCC strategy, pre-certified module approach
+8. **Manufacturing** - small batch vs production scale, assembly instructions and cost
 
 The skill creates a complete project folder with all files organized.
 
 ---
 
-## 19. Example Prompts — Product Development
+## 19. Example Prompts - Product Development
 
 ### Simple product
 ```
@@ -705,9 +705,9 @@ Product development is always a conversation. Here's what a typical session look
 **Claude:** Great, I'll help you design this. A few questions to make sure we get it right:
 
 1. How long should the battery last between charges? (e.g., 1 week, 1 month, 1 season)
-2. What's the target environment — just outdoor, or could it be partially submerged?
+2. What's the target environment - just outdoor, or could it be partially submerged?
 3. Do you need WiFi (for real-time data) or is it fine to only sync occasionally?
-4. How many units are you planning — just 1-2 for yourself, or more?
+4. How many units are you planning - just 1-2 for yourself, or more?
 
 ---
 
@@ -715,7 +715,7 @@ Product development is always a conversation. Here's what a typical session look
 
 **Claude:** Perfect. Here's what I recommend:
 
-- **MCU:** ESP32-C3 — cheapest option with WiFi, excellent deep sleep (10µA)
+- **MCU:** ESP32-C3 - cheapest option with WiFi, excellent deep sleep (10µA)
 - **Sensor:** Capacitive soil moisture sensor (no corrosion vs resistive)
 - **Power:** 18650 Li-ion + TP4056 charger, solar optional
 - **Enclosure:** IP67-rated ABS box with cable gland for sensor probe
@@ -732,7 +732,7 @@ Estimated battery life at 15-min readings: ~45 days. Want me to proceed and gene
 soil-moisture-sensor/
 ├── README.md                  (overview, specs)
 ├── firmware/
-│   ├── soil-sensor.yaml       (ESPHome config — ready to flash)
+│   ├── soil-sensor.yaml       (ESPHome config - ready to flash)
 │   └── secrets.yaml.example   (credentials template)
 ├── hardware/
 │   ├── bom.md                 (6 components, est. $12/unit at LCSC)
@@ -752,7 +752,7 @@ This back-and-forth is normal and expected. Claude asks what it needs, you answe
 
 ---
 
-## 21. OTA Updates — Keeping Devices Updated
+## 21. OTA Updates - Keeping Devices Updated
 
 OTA (Over-the-Air) updates let you update firmware without physical access to the device.
 
@@ -761,7 +761,7 @@ OTA (Over-the-Air) updates let you update firmware without physical access to th
 | Situation | Strategy |
 |-----------|----------|
 | Single device at home, on your network | Local OTA via ESPHome Dashboard or CLI |
-| Device given to others (10–100 units) | GitHub + `dashboard_import` — users update via HA |
+| Device given to others (10–100 units) | GitHub + `dashboard_import` - users update via HA |
 | Commercial product, automatic updates | Self-hosted HTTP OTA server |
 | Fleet in one building (office, hotel) | ESPHome Dashboard on local network |
 
@@ -811,7 +811,7 @@ No server, no cost, no maintenance.
 
 ### Option B: Self-Hosted HTTP OTA Server
 
-For commercial products where you want devices to update themselves automatically — no user action needed. Devices periodically check a server, compare versions, and download new firmware if available.
+For commercial products where you want devices to update themselves automatically - no user action needed. Devices periodically check a server, compare versions, and download new firmware if available.
 
 **What you need:** Any static file host. Options from simplest to most control:
 
@@ -876,7 +876,7 @@ scp .esphome/build/my-product/.pioenvs/my-product/firmware.bin \
     user@yourserver:/var/www/ota/my-product/firmware.bin
 
 # 4. Update manifest.json with new version number
-# 5. Done — devices check in within their update interval
+# 5. Done - devices check in within their update interval
 ```
 
 **If using nginx**, here's a minimal config:
@@ -902,7 +902,7 @@ Get a free SSL certificate: `sudo certbot --nginx -d updates.mycompany.com`
 
 ### Option C: ESPHome Dashboard (Local Network)
 
-Best for a fleet in one location — no internet needed. You control when devices update.
+Best for a fleet in one location - no internet needed. You control when devices update.
 
 ```bash
 docker run -d \
@@ -960,11 +960,11 @@ done
 
 The `node-red` skill generates importable Node-RED flow JSON. You paste the output directly into Node-RED (Menu → Import → Clipboard).
 
-The skill uses current node names (`trigger-state`, `api-call-service`) — not the old names that silently fail. Every generated flow includes a comment node explaining what to configure and leaves the HA server field empty for you to fill in.
+The skill uses current node names (`trigger-state`, `api-call-service`) - not the old names that silently fail. Every generated flow includes a comment node explaining what to configure and leaves the HA server field empty for you to fill in.
 
 ---
 
-## 25. Example Prompts — Basic Flows
+## 25. Example Prompts - Basic Flows
 
 ### Motion light with auto-off
 ```
@@ -1013,7 +1013,7 @@ when it changes:
 
 ---
 
-## 26. Example Prompts — Logic and State
+## 26. Example Prompts - Logic and State
 
 ### Washing machine state machine
 ```
@@ -1041,7 +1041,7 @@ Create a flow that automatically sets input_select.home_mode based on time:
 - 09:00: set to "Day"
 - 17:00: set to "Evening"
 - 23:00: set to "Night"
-Also listen for person entities — if everyone leaves, set to "Away" regardless of time.
+Also listen for person entities - if everyone leaves, set to "Away" regardless of time.
 ```
 
 ### Lockout prevention
@@ -1053,7 +1053,7 @@ Climate: climate.living_room. Resume heating when all windows are closed.
 
 ---
 
-## 27. Example Prompts — External Data and APIs
+## 27. Example Prompts - External Data and APIs
 
 Node-RED's HTTP request node makes it easy to pull data from external services and push it into Home Assistant.
 
@@ -1070,7 +1070,7 @@ Create a flow that:
 ### Weather-based automation
 ```
 Every morning at 06:00, fetch today's weather forecast from the OpenWeatherMap API.
-If rain is expected, send a notification: "Rain today — remember umbrella."
+If rain is expected, send a notification: "Rain today - remember umbrella."
 Only on weekdays. My API key will be in the flow as a variable.
 ```
 
@@ -1106,7 +1106,7 @@ I want to call this from an external script.
 
 **Mention entity IDs.** Node-RED flows are entity-specific. The more precise you are, the less you'll need to edit the JSON afterward.
 
-**For API flows, share the response format.** Paste an example of what the API returns — the skill maps it to HA entities exactly right.
+**For API flows, share the response format.** Paste an example of what the API returns - the skill maps it to HA entities exactly right.
 
 **Ask for a plain-language description first.** Say "explain the flow before generating the JSON" if you want to verify the logic before getting the code.
 
@@ -1122,13 +1122,13 @@ I want to call this from an external script.
 
 ## 29. What the Integration Dev Skill Does
 
-The `ha-integration` skill writes Python code for Home Assistant custom components. This is how you connect a device or cloud service to HA in a way that looks and works just like a built-in integration — with a config UI, proper entities, update logic, and HACS publishing support.
+The `ha-integration` skill writes Python code for Home Assistant custom components. This is how you connect a device or cloud service to HA in a way that looks and works just like a built-in integration - with a config UI, proper entities, update logic, and HACS publishing support.
 
 ---
 
 ## 30. Who Is This For?
 
-This skill is for people who are comfortable with (or want to learn) Python. You don't need to be an expert — Claude writes the code — but you do need to be able to run Python, install files, and restart Home Assistant.
+This skill is for people who are comfortable with (or want to learn) Python. You don't need to be an expert - Claude writes the code - but you do need to be able to run Python, install files, and restart Home Assistant.
 
 **Use this skill when:**
 - You have a cloud service or local device that doesn't have an existing HA integration
@@ -1136,13 +1136,13 @@ This skill is for people who are comfortable with (or want to learn) Python. You
 - YAML automations or Node-RED can't get the data you need (e.g., the service requires OAuth2 or a persistent connection)
 
 **You probably don't need this skill if:**
-- The service already has a HACS integration — search [HACS](https://hacs.xyz) first
+- The service already has a HACS integration - search [HACS](https://hacs.xyz) first
 - A REST sensor or MQTT sensor in YAML is enough for what you need
-- You just want to call a webhook — the `rest_command:` in YAML handles that
+- You just want to call a webhook - the `rest_command:` in YAML handles that
 
 ---
 
-## 31. Example Prompts — Getting Started
+## 31. Example Prompts - Getting Started
 
 ### Connect a simple REST API
 ```
@@ -1182,7 +1182,7 @@ Make it HACS-ready. My GitHub username is myuser.
 
 ---
 
-## 32. Example Prompts — Advanced Integrations
+## 32. Example Prompts - Advanced Integrations
 
 ### Device with multiple entity types
 ```
@@ -1298,10 +1298,10 @@ Skills work best together. A typical project touches multiple layers:
 Physical hardware
   → ESPHome firmware        (esphome skill)
       → HA entities
-          → Automations     (ha-yaml skill)      — simple if/then logic
-          → Node-RED flows  (node-red skill)     — complex state machines, API calls
+          → Automations     (ha-yaml skill)      - simple if/then logic
+          → Node-RED flows  (node-red skill)     - complex state machines, API calls
   Cloud/local service
-  → Custom integration      (ha-integration skill) — when no integration exists
+  → Custom integration      (ha-integration skill) - when no integration exists
       → HA entities
           → Automations or Node-RED
 ```
@@ -1316,14 +1316,14 @@ You can work on one layer at a time and reference what you've built in the next 
 
 A wall-mounted sensor for temperature, CO2, and presence that controls ventilation and lights.
 
-**Step 1 — ESPHome config:**
+**Step 1 - ESPHome config:**
 ```
 Wall-mounted sensor: ESP32-C3, SHT4x (temp/hum), SCD40 (CO2),
 LD2410 mmWave radar (presence), SSD1306 OLED. USB-C powered.
 Create the full config with secrets template.
 ```
 
-**Step 2 — Automation:**
+**Step 2 - Automation:**
 ```
 Using sensors from my room sensor (sensor.co2, binary_sensor.presence):
 - Turn on switch.ventilation when CO2 > 1000ppm
@@ -1331,7 +1331,7 @@ Using sensors from my room sensor (sensor.co2, binary_sensor.presence):
 - Notify me if CO2 stays above 1200ppm for more than 10 minutes
 ```
 
-**Step 3 — Dashboard card:**
+**Step 3 - Dashboard card:**
 ```
 Mushroom card for the room sensor: CO2 level, temperature, presence state.
 Color the CO2 display: green < 800, yellow < 1200, red above.
@@ -1343,13 +1343,13 @@ Color the CO2 display: green < 800, yellow < 1200, red above.
 
 Automatically run appliances when electricity is cheap.
 
-**Step 1 — Integration for electricity price** (if no existing integration):
+**Step 1 - Integration for electricity price** (if no existing integration):
 ```
 Create a HA integration that fetches hourly Nordpool prices for SE3.
 Expose as sensor.nordpool_current_price and sensor.nordpool_prices_today (list).
 ```
 
-**Step 2 — Node-RED flow:**
+**Step 2 - Node-RED flow:**
 ```
 Flow that monitors sensor.nordpool_current_price and:
 - Turns on switch.dishwasher and switch.water_heater when price < 0.50 kr/kWh
@@ -1358,7 +1358,7 @@ Flow that monitors sensor.nordpool_current_price and:
 - Sends a daily summary of total cost saved
 ```
 
-**Step 3 — Dashboard:**
+**Step 3 - Dashboard:**
 ```
 Energy dashboard showing today's hourly prices as a bar chart,
 current price highlighted, and which devices are currently active.
@@ -1368,21 +1368,21 @@ current price highlighted, and which devices are currently active.
 
 ### Project 3: Selling an ESPHome Device
 
-**Step 1 — Full product design:**
+**Step 1 - Full product design:**
 ```
 Design a plug-and-play indoor air quality monitor to sell.
 CO2 + temp/hum + OLED, USB-C. Under $40 retail, first batch 25 units.
 Need CE marking for EU. Full project: BOM, firmware, enclosure, cost estimate.
 ```
 
-**Step 2 — OTA for customers:**
+**Step 2 - OTA for customers:**
 ```
 Add GitHub-based OTA to my air quality monitor.
 Customers should see "Update available" in HA when I push to GitHub.
 GitHub: myuser, repo: aq-monitor.
 ```
 
-**Step 3 — Customer documentation:**
+**Step 3 - Customer documentation:**
 ```
 Write a quick-start guide for customers: how to add the device to HA,
 what entities to expect, and how updates work.
@@ -1400,7 +1400,7 @@ Yes, and it's the right behavior. The wrong config wastes more time than a few c
 
 **Q: Can I paste my existing code for Claude to fix or extend?**
 
-Absolutely — this is one of the best ways to use the skills:
+Absolutely - this is one of the best ways to use the skills:
 ```
 Here's my existing automation: [paste YAML]
 It fires during the day but should only run after sunset. What's wrong?
@@ -1414,7 +1414,7 @@ Add a condition that skips it on weekends.
 
 **Q: Can Claude read my actual entity IDs from Home Assistant?**
 
-Not directly — Claude doesn't connect to your HA instance. But you can paste your entity list, or describe devices in plain language ("my kitchen ceiling light"). Claude uses whatever you give it.
+Not directly - Claude doesn't connect to your HA instance. But you can paste your entity list, or describe devices in plain language ("my kitchen ceiling light"). Claude uses whatever you give it.
 
 ---
 
@@ -1422,8 +1422,8 @@ Not directly — Claude doesn't connect to your HA instance. But you can paste y
 
 The skill will ask: save to disk or show in chat?
 
-- **Save to disk** — Claude writes files directly to your current working directory in Claude Code
-- **Show in chat** — Claude displays the code and you copy-paste it
+- **Save to disk** - Claude writes files directly to your current working directory in Claude Code
+- **Show in chat** - Claude displays the code and you copy-paste it
 
 For ESPHome product development, the skill always creates an organized project folder.
 
@@ -1448,7 +1448,7 @@ The skill debugs and fixes its own output.
 
 **Q: Can I use these skills in my own language?**
 
-Yes. Communicate with Claude in any language — Swedish, English, German, etc. The generated YAML, JSON, and Python will always be in English (required by the tools), but you can write prompts in any language.
+Yes. Communicate with Claude in any language - Swedish, English, German, etc. The generated YAML, JSON, and Python will always be in English (required by the tools), but you can write prompts in any language.
 
 ---
 
@@ -1465,7 +1465,7 @@ and timeout as configurable inputs.
 
 **Q: Can the integration skill help if I don't know Python?**
 
-Yes — Claude writes all the Python. You need to be able to: copy files to your `custom_components/` folder, restart Home Assistant, and paste error messages back when something goes wrong. The actual code is generated for you.
+Yes - Claude writes all the Python. You need to be able to: copy files to your `custom_components/` folder, restart Home Assistant, and paste error messages back when something goes wrong. The actual code is generated for you.
 
 ---
 

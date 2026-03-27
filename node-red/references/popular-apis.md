@@ -1,4 +1,4 @@
-# Popular APIs — Node-RED Quick Reference
+# Popular APIs - Node-RED Quick Reference
 
 Quick reference for connecting external APIs in Node-RED flows. For deep documentation on each
 API (auth setup, response schemas, HA YAML sensors), see the `api-catalog` skill.
@@ -35,7 +35,7 @@ API (auth setup, response schemas, HA YAML sensors), see the `api-catalog` skill
 
 ## Energy APIs
 
-### Tibber — current electricity price
+### Tibber - current electricity price
 ```javascript
 // Function: build request
 msg.payload = JSON.stringify({
@@ -49,7 +49,7 @@ return msg;
 // HTTP node: POST https://api.tibber.com/v1-beta/gql
 ```
 
-### Nordpool — spot price SE3
+### Nordpool - spot price SE3
 ```javascript
 // HTTP GET: https://api.energidataservice.dk/dataset/Elspotprices?start=now/P1D&end=now%2BP2D&filter={"PriceArea":"SE3"}&sort=HourDK asc
 const records = msg.payload.records;
@@ -63,7 +63,7 @@ return msg;
 
 ## Weather APIs
 
-### SMHI — Stockholm forecast (no auth)
+### SMHI - Stockholm forecast (no auth)
 ```javascript
 // HTTP GET: https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/18.0686/lat/59.3293/data.json
 const series = msg.payload.timeSeries;
@@ -76,7 +76,7 @@ msg.payload = { temp: getP("t"), humidity: getP("r"), wind: getP("ws"), symbol: 
 return msg;
 ```
 
-### OpenWeatherMap — One Call API
+### OpenWeatherMap - One Call API
 ```javascript
 // HTTP GET: https://api.openweathermap.org/data/3.0/onecall?lat=59.33&lon=18.07&units=metric&lang=sv&appid={{env.OWM_KEY}}
 const c = msg.payload.current;
@@ -84,7 +84,7 @@ msg.payload = { temp: c.temp, humidity: c.humidity, wind: c.wind_speed, desc: c.
 return msg;
 ```
 
-### yr.no — Oslo (no auth, User-Agent required)
+### yr.no - Oslo (no auth, User-Agent required)
 ```javascript
 // Function: set required header
 msg.headers = { "User-Agent": "MyHomeAutomation/1.0 you@email.com" };
@@ -98,7 +98,7 @@ return msg;
 
 ## Transport APIs
 
-### SL — Stockholm departures (no auth)
+### SL - Stockholm departures (no auth)
 ```javascript
 // HTTP GET: https://transport.integration.sl.se/v1/sites/9001/departures?forecast=30
 const deps = msg.payload.departures;
@@ -109,7 +109,7 @@ msg.payload = next.join(", ") || "No departures";
 return msg;
 ```
 
-### Trafikverket — train delays
+### Trafikverket - train delays
 ```javascript
 // Function: build request body
 msg.payload = JSON.stringify({ REQUEST: { LOGIN: { id: env.get("TRAFIKVERKET_KEY") },
@@ -124,7 +124,7 @@ return msg;
 // HTTP node: POST https://api.trafikverket.se/v2/data.json
 ```
 
-### Entur — Oslo S departures (Norway, no auth)
+### Entur - Oslo S departures (Norway, no auth)
 ```javascript
 // Function: build GraphQL request
 msg.payload = JSON.stringify({ query: `{
@@ -145,7 +145,7 @@ return msg;
 
 ## Smart Home Clouds
 
-### Shelly — local control (Gen1)
+### Shelly - local control (Gen1)
 ```javascript
 // HTTP GET: http://192.168.1.100/relay/0?turn=on   (no auth by default)
 // HTTP GET: http://192.168.1.100/relay/0?turn=off
@@ -162,7 +162,7 @@ msg.payload = JSON.stringify({ id: 0, on: true });
 msg.payload = JSON.stringify({ id: 0 });
 ```
 
-### Philips Hue — local bridge
+### Philips Hue - local bridge
 ```javascript
 // HTTP PUT: http://{bridge-ip}/api/{username}/lights/{id}/state
 msg.method = "PUT";
@@ -170,7 +170,7 @@ msg.url = `http://192.168.1.50/api/${env.get("HUE_USERNAME")}/lights/1/state`;
 msg.payload = JSON.stringify({ on: true, bri: 200, ct: 370 });
 ```
 
-### Philips Hue — activate scene
+### Philips Hue - activate scene
 ```javascript
 // HTTP PUT: /api/{username}/groups/{id}/action
 msg.payload = JSON.stringify({ scene: "scene-id" });
@@ -180,7 +180,7 @@ msg.payload = JSON.stringify({ scene: "scene-id" });
 
 ## Global APIs
 
-### OpenAI — GPT chat
+### OpenAI - GPT chat
 ```javascript
 // Function: build chat request
 msg.payload = JSON.stringify({
@@ -196,7 +196,7 @@ return msg;
 msg.payload = msg.payload.choices[0].message.content;
 ```
 
-### Spotify — playback control
+### Spotify - playback control
 ```javascript
 // Play/pause
 msg.method = "PUT";
@@ -210,11 +210,11 @@ return msg;
 // Current track
 // HTTP GET: https://api.spotify.com/v1/me/player/currently-playing
 const item = msg.payload.item;
-msg.payload = item ? `${item.name} — ${item.artists[0].name}` : "Nothing playing";
+msg.payload = item ? `${item.name} - ${item.artists[0].name}` : "Nothing playing";
 return msg;
 ```
 
-### Telegram — send message
+### Telegram - send message
 ```javascript
 // Function: send Telegram message
 msg.method = "POST";
@@ -228,7 +228,7 @@ msg.headers = { "Content-Type": "application/json" };
 return msg;
 ```
 
-### Telegram — send photo
+### Telegram - send photo
 ```javascript
 msg.url = `https://api.telegram.org/bot${env.get("TELEGRAM_TOKEN")}/sendPhoto`;
 msg.payload = JSON.stringify({
@@ -238,7 +238,7 @@ msg.payload = JSON.stringify({
 });
 ```
 
-### GitHub — latest release check
+### GitHub - latest release check
 ```javascript
 // HTTP GET: https://api.github.com/repos/{owner}/{repo}/releases/latest
 // Headers: Authorization: Bearer {token}, Accept: application/vnd.github+json
@@ -249,7 +249,7 @@ if (latest !== current) {
 }
 ```
 
-### Google Calendar — check current events
+### Google Calendar - check current events
 ```javascript
 // HTTP GET: https://www.googleapis.com/calendar/v3/calendars/primary/events
 // ?maxResults=5&singleEvents=true&orderBy=startTime&timeMin={now ISO}
@@ -268,7 +268,7 @@ return msg;
 
 ## Env Variable Storage
 
-Store all API keys in Node-RED environment variables — never hardcode them in function nodes:
+Store all API keys in Node-RED environment variables - never hardcode them in function nodes:
 
 **Node-RED → Settings → Environment Variables:**
 ```

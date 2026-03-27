@@ -852,7 +852,7 @@ sensor:
 
 ### Dew Point (since 2026.3)
 
-Native computed dew point sensor — no need for template sensors:
+Native computed dew point sensor - no need for template sensors:
 
 ```yaml
 sensor:

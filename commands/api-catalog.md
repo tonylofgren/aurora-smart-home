@@ -1,5 +1,5 @@
 ---
-description: Connect external APIs to Home Assistant — Tibber, SMHI, SL, OpenAI, Spotify, Telegram, Shelly, Hue, and more
+description: Connect external APIs to Home Assistant - Tibber, SMHI, SL, OpenAI, Spotify, Telegram, Shelly, Hue, and more
 ---
 
 **Why ask first:** API integrations vary by target platform (Node-RED vs HA YAML vs Python integration),
@@ -17,7 +17,7 @@ Ask these questions BEFORE generating any code:
 **Example correct response:**
 > I'll help you connect Tibber to Home Assistant. Let me clarify:
 > 1. Do you want a Node-RED flow or a YAML REST sensor?
-> 2. What data — current price only, or also today's hourly prices?
+> 2. What data - current price only, or also today's hourly prices?
 > 3. Do you have a Tibber Personal Access Token from developer.tibber.com?
 
 THEN STOP. Wait for answers.
@@ -29,4 +29,4 @@ THEN STOP. Wait for answers.
 - Covers energy (Tibber, Nordpool), weather (SMHI, OWM, yr.no), transport (SL, Trafikverket, Resrobot, Entur)
 - Smart home clouds (Shelly, Tuya, Philips Hue, IKEA Dirigera)
 - Global APIs (OpenAI, Spotify, Google Calendar, Telegram, GitHub)
-- Always puts credentials in `!secret` / env vars — never hardcoded
+- Always puts credentials in `!secret` / env vars - never hardcoded

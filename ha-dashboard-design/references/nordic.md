@@ -364,7 +364,7 @@ conditions:
     state: "on"
 card:
   type: custom:button-card
-  name: Alert — Check required
+  name: Alert - Check required
   icon: mdi:alert-circle-outline
   styles:
     card:

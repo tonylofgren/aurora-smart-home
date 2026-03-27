@@ -53,7 +53,7 @@ speaker:
     sample_rate: 16000
     bits_per_sample: 16
 
-# --- Microphone Input (INMP441) — optional, remove if not needed ---
+# --- Microphone Input (INMP441) - optional, remove if not needed ---
 
 microphone:
   - platform: i2s_audio

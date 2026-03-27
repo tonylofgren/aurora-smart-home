@@ -620,4 +620,4 @@ packages:
       lambda: 'return ${has_battery};'
 ```
 
-This is powerful for maintaining a single config that adapts to hardware variants — same firmware repo, different feature sets based on build-time flags.
+This is powerful for maintaining a single config that adapts to hardware variants - same firmware repo, different feature sets based on build-time flags.

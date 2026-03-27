@@ -6,7 +6,7 @@
 
 > **75,000+ lines** of documentation | **900+ example prompts** | **1,500+ code examples**
 
-The most comprehensive Claude Code skill pack for smart home development — from YAML automations to designing and manufacturing professional ESPHome-based IoT products.
+The most comprehensive Claude Code skill pack for smart home development - from YAML automations to designing and manufacturing professional ESPHome-based IoT products.
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skills-7c3aed.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Home Assistant](https://img.shields.io/badge/Home_Assistant-2024.x--2026.x-41BDF5.svg)](https://www.home-assistant.io/)
@@ -28,21 +28,21 @@ The most comprehensive Claude Code skill pack for smart home development — fro
 
 ---
 
-> **v1.2.0 — Action required if you installed before 2026-03-14:**
+> **v1.2.0 - Action required if you installed before 2026-03-14:**
 > The plugin structure was updated. Run `/plugin marketplace add tonylofgren/aurora-smart-home` again to reinstall. Takes 30 seconds.
 
 ### What's New in ESPHome v1.2.0
 
 Coverage updated through **ESPHome 2026.3**:
 
-- **Alarm Control Panel** — Template-based alarm state machine with zones, bypass, and code support
-- **Media Player redesign** — Speaker Media Player with dual pipelines, mixer, resampler, Ogg Opus
-- **Lock & Valve** — Template lock/unlock, valve control for irrigation and gas
-- **RP2040/RP2350** — First-class Raspberry Pi Pico support (143+ boards, WiFi, BLE, OTA)
-- **MIPI DSI displays** — High-performance displays for ESP32-P4
-- **Z-Wave Proxy** — Network-based Z-Wave serial over WiFi/Ethernet
-- **Zigbee expansion** — More device types on ESP32-C6/H2
-- **3 new templates** — Alarm panel, media player, irrigation controller
+- **Alarm Control Panel** - Template-based alarm state machine with zones, bypass, and code support
+- **Media Player redesign** - Speaker Media Player with dual pipelines, mixer, resampler, Ogg Opus
+- **Lock & Valve** - Template lock/unlock, valve control for irrigation and gas
+- **RP2040/RP2350** - First-class Raspberry Pi Pico support (143+ boards, WiFi, BLE, OTA)
+- **MIPI DSI displays** - High-performance displays for ESP32-P4
+- **Z-Wave Proxy** - Network-based Z-Wave serial over WiFi/Ethernet
+- **Zigbee expansion** - More device types on ESP32-C6/H2
+- **3 new templates** - Alarm panel, media player, irrigation controller
 
 See [CHANGELOG.md](CHANGELOG.md) for full details.
 
@@ -75,7 +75,7 @@ See [CHANGELOG.md](CHANGELOG.md) for full details.
 /plugin install ha-integration@aurora-smart-home
 ```
 
-That's it — skills are now available in all your projects.
+That's it - skills are now available in all your projects.
 
 <details>
 <summary><strong>Advanced: install per-project or per-team instead</strong></summary>
@@ -268,7 +268,7 @@ Develop **Python custom components** for Home Assistant (custom_components, HACS
 - **Complete coverage** - From beginner to advanced use cases
 
 <details>
-<summary><strong>Full Capability Map — everything these skills can do</strong></summary>
+<summary><strong>Full Capability Map - everything these skills can do</strong></summary>
 
 ### Home Assistant YAML
 
@@ -290,7 +290,7 @@ Develop **Python custom components** for Home Assistant (custom_components, HACS
 | Modern syntax | `action:` (not `service:`), plural keys, `template:` integration |
 | Integrations | MQTT, Zigbee2MQTT, ZHA, Z-Wave, Matter, Bluetooth, Frigate, Shelly, Tuya, Tasmota |
 
-### ESPHome — Device Configuration
+### ESPHome - Device Configuration
 
 | Capability | Details |
 |-----------|---------|
@@ -306,7 +306,7 @@ Develop **Python custom components** for Home Assistant (custom_components, HACS
 | OTA | Local, HA-managed (dashboard_import), HTTP self-update, fleet management |
 | Devices | Shelly, Sonoff, Tuya conversion, Arduino migration |
 
-### ESPHome — Product Development
+### ESPHome - Product Development
 
 | Capability | Details |
 |-----------|---------|

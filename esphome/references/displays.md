@@ -866,7 +866,7 @@ The MIPI DSI Display Driver enables high-performance displays on ESP32-P4 proces
 
 ### Requirements
 
-- **ESP32-P4 only** — MIPI DSI hardware is exclusive to ESP32-P4
+- **ESP32-P4 only** - MIPI DSI hardware is exclusive to ESP32-P4
 - **ESP-IDF framework required**
 - Typically paired with LVGL for UI rendering
 
@@ -921,6 +921,6 @@ Waveshare ESP32-P4 panels (added in 2026.2) and other MIPI DSI-compatible displa
 
 ### Key Notes
 
-- **Performance**: MIPI DSI is significantly faster than SPI — suitable for video, animations, and responsive UIs
+- **Performance**: MIPI DSI is significantly faster than SPI - suitable for video, animations, and responsive UIs
 - **Power**: Higher bandwidth means higher power consumption than SPI displays
 - **Complexity**: Requires correct timing parameters from the display datasheet

@@ -719,7 +719,7 @@ button:
 
 ## Cover Movement Triggers (since 2026.2)
 
-New triggers that fire based on movement state — useful for controlling relays, LEDs, or logging.
+New triggers that fire based on movement state - useful for controlling relays, LEDs, or logging.
 
 ```yaml
 cover:

@@ -2,7 +2,7 @@
 description: Create ESPHome device configurations for ESP32, ESP8266, Shelly, Sonoff, and Tuya devices
 ---
 
-**Why ask first:** ESPHome configs are hardware-specific — GPIO mappings, flash size, and available
+**Why ask first:** ESPHome configs are hardware-specific - GPIO mappings, flash size, and available
 features differ between ESP32 variants (S3, C3, C6), ESP8266, and commercial devices (Shelly, Sonoff).
 Generating code without knowing the exact board produces broken configs. Always clarify before generating.
 

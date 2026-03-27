@@ -4,7 +4,7 @@ Covers SL (Stockholm), Trafikverket, Resrobot (national Sweden), and Entur (Norw
 
 ---
 
-## SL — Stockholms Lokaltrafik
+## SL - Stockholms Lokaltrafik
 
 **What it provides:** Real-time departures, journey planning, disruptions for Stockholm public transit.
 
@@ -59,7 +59,7 @@ Headers: (no API key needed for departures endpoint since 2024!)
   → [api-call-service: update sensor.next_bus]
 ```
 
-**Function node — extract next departures for line 42:**
+**Function node - extract next departures for line 42:**
 ```javascript
 const departures = msg.payload.departures;
 const myLine = "42"; // Change to your line
@@ -170,7 +170,7 @@ Body:
 ### Node-RED implementation
 
 ```javascript
-// Function node — build Trafikverket request
+// Function node - build Trafikverket request
 msg.payload = JSON.stringify({
     REQUEST: {
         LOGIN: { id: env.get("TRAFIKVERKET_KEY") },
@@ -202,7 +202,7 @@ return msg;
 }
 ```
 
-**Function node — extract delays:**
+**Function node - extract delays:**
 ```javascript
 const trains = msg.payload.RESPONSE.RESULT[0].TrainAnnouncement || [];
 const delayed = trains.filter(t => t.Delay && t.Delay !== "PT0S");
@@ -293,14 +293,14 @@ rest:
 
 ## Entur (Norway)
 
-**What it provides:** All Norwegian public transit — NSB/Vy trains, Ruter (Oslo),
+**What it provides:** All Norwegian public transit - NSB/Vy trains, Ruter (Oslo),
 Skyss (Bergen), Kolumbus (Stavanger). Journey planning and real-time departures.
 
 **Auth:** None required for basic use (include `ET-Client-Name` header)
 **Base URL:** `https://api.entur.io/journey-planner/v3/graphql`
 **Rate limit:** Polite use, no official limit
 
-### GraphQL query — next departures
+### GraphQL query - next departures
 
 ```graphql
 {
@@ -327,7 +327,7 @@ Common stop IDs:
 ### Node-RED implementation
 
 ```javascript
-// Function node — build Entur request
+// Function node - build Entur request
 msg.payload = JSON.stringify({
     query: `{
         stopPlace(id: "NSR:StopPlace:337") {
@@ -360,7 +360,7 @@ return msg;
 ```
 
 ```javascript
-// Function node — extract next departures
+// Function node - extract next departures
 const calls = msg.payload.data.stopPlace.estimatedCalls;
 const departures = calls.map(c => {
     const t = new Date(c.expectedDepartureTime);

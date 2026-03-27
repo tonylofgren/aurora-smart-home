@@ -17,7 +17,7 @@ Build Node-RED flows using node-red-contrib-home-assistant-websocket nodes (v0.8
 ## The Iron Law
 
 ```
-USE CURRENT NODE NAMES — NEVER OUTDATED ONES
+USE CURRENT NODE NAMES - NEVER OUTDATED ONES
 ```
 
 The node-red-contrib-home-assistant-websocket package has renamed several nodes. Using old names produces broken flows that silently fail.
@@ -125,10 +125,10 @@ The following nodes require `hass-node-red` integration (separate from the webso
 ## Stable Entity Nodes (v0.71.0+)
 
 These nodes were promoted from beta to stable in September 2024:
-- `number` — expose HA number entities
-- `select` — expose HA select entities
-- `text` — expose HA text entities
-- `time-entity` — expose HA time entities
+- `number` - expose HA number entities
+- `select` - expose HA select entities
+- `text` - expose HA text entities
+- `time-entity` - expose HA time entities
 
 These support "Expose as" listening modes and input override blocking (v0.70.0+).
 
@@ -304,8 +304,8 @@ Before outputting flow JSON:
 For Node-RED flows that call external APIs (weather, energy, transport, smart home clouds,
 OpenAI, Spotify, Telegram, GitHub), see:
 
-- `references/popular-apis.md` — Node-RED function node snippets for all popular APIs
-- `api-catalog` skill — deep documentation, auth setup, and HA YAML sensors per API
+- `references/popular-apis.md` - Node-RED function node snippets for all popular APIs
+- `api-catalog` skill - deep documentation, auth setup, and HA YAML sensors per API
 
 ## Integration
 

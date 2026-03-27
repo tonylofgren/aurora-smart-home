@@ -104,7 +104,7 @@ alarm_control_panel:
       - logger.log: "Alarm arming..."
       - rtttl.play: "arming:d=16,o=5,b=100:c,p,c,p,c"
     on_pending:
-      - logger.log: "Entry detected — pending disarm"
+      - logger.log: "Entry detected - pending disarm"
       - rtttl.play: "pending:d=8,o=5,b=200:c,p,c,p,c,p,c"
     on_triggered:
       - logger.log: "ALARM TRIGGERED!"

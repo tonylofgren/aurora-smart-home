@@ -1,6 +1,6 @@
 # Warm Home Style
 
-Amber, terracotta, and warm neutrals. Cozy, inviting feel — like candlelight on plaster walls.
+Amber, terracotta, and warm neutrals. Cozy, inviting feel - like candlelight on plaster walls.
 Perfect for living rooms and evening use. Inspired by Scandinavian hygge and Mediterranean interiors.
 
 ---

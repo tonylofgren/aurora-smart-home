@@ -21,7 +21,7 @@ Reference skill for ESPHome device configuration and firmware.
 
 **Core principle:** Never generate ESPHome configuration without knowing the exact hardware. Board selection determines GPIO mapping, flash size, available features, and component compatibility.
 
-**Context:** This skill requires hardware confirmation before any YAML generation. Different ESP chips have vastly different capabilities — ESP32-S3 supports USB and cameras, ESP32-C6 supports Thread/Matter/WiFi 6, ESP32-H2 is BLE+Thread only (no WiFi), ESP32-P4 is high-performance with MIPI DSI displays, and ESP8266 has limited GPIO and memory. ESPHome also supports nRF52 (Zephyr), RP2040, and LibreTiny (BK72xx/RTL87xx) platforms.
+**Context:** This skill requires hardware confirmation before any YAML generation. Different ESP chips have vastly different capabilities - ESP32-S3 supports USB and cameras, ESP32-C6 supports Thread/Matter/WiFi 6, ESP32-H2 is BLE+Thread only (no WiFi), ESP32-P4 is high-performance with MIPI DSI displays, and ESP8266 has limited GPIO and memory. ESPHome also supports nRF52 (Zephyr), RP2040, and LibreTiny (BK72xx/RTL87xx) platforms.
 
 ## The Iron Law
 
@@ -74,8 +74,8 @@ Watch out for these assumptions:
 ## First Step: Determine Scope
 
 Before generating anything, determine if this is:
-- **A. Configure an existing device** — ask about hardware & output (below), save file to current directory
-- **B. Design a new product** — read `references/product-development.md`, create a named project folder (e.g., `my-product/`) with firmware, hardware, and production subdirectories. Print a file summary when done so the user knows where everything is.
+- **A. Configure an existing device** - ask about hardware & output (below), save file to current directory
+- **B. Design a new product** - read `references/product-development.md`, create a named project folder (e.g., `my-product/`) with firmware, hardware, and production subdirectories. Print a file summary when done so the user knows where everything is.
 
 For existing devices, ask:
 
@@ -84,13 +84,13 @@ For existing devices, ask:
    - ESP32-S3 (voice, cameras, USB, PSRAM)
    - ESP32-C3 (compact, RISC-V, budget)
    - ESP32-C6 (Thread/Matter, WiFi 6, Zigbee)
-   - ESP32-H2 (BLE + Thread/Zigbee only — no WiFi)
-   - ESP32-P4 (high-performance, MIPI DSI displays — no integrated BLE)
+   - ESP32-H2 (BLE + Thread/Zigbee only - no WiFi)
+   - ESP32-P4 (high-performance, MIPI DSI displays - no integrated BLE)
    - ESP8266 / D1 Mini (legacy, limited GPIO/memory)
    - Shelly / Sonoff / Tuya (specify model)
    - RP2040 (Raspberry Pi Pico)
-   - nRF52 (Zephyr RTOS — Zigbee, BLE)
-   - LibreTiny (BK72xx, RTL87xx — Tuya replacements)
+   - nRF52 (Zephyr RTOS - Zigbee, BLE)
+   - LibreTiny (BK72xx, RTL87xx - Tuya replacements)
 
 2. **Output method?**
    - **Save to folder** - Write .yaml file to the current working directory
@@ -195,35 +195,35 @@ ota:
 logger:
 ```
 
-## Breaking Changes (ESPHome 2025.2 — 2026.3)
+## Breaking Changes (ESPHome 2025.2 - 2026.3)
 
 ### 2025.2+
-- **"Old style" board config removed** — must use new-style platform config (e.g., `esp32:` block with `board:`)
-- **Custom components support removed** — use `external_components:` instead
-- **ESP32-C6, H2, P4 require ESP-IDF** — Arduino framework not supported for these chips
-- **OTA split into platform** — use `ota: platform: esphome` (not bare `ota:`)
-- **safe_mode is top-level** — no longer under `ota:`
+- **"Old style" board config removed** - must use new-style platform config (e.g., `esp32:` block with `board:`)
+- **Custom components support removed** - use `external_components:` instead
+- **ESP32-C6, H2, P4 require ESP-IDF** - Arduino framework not supported for these chips
+- **OTA split into platform** - use `ota: platform: esphome` (not bare `ota:`)
+- **safe_mode is top-level** - no longer under `ota:`
 
 ### 2025.10+
-- **SHA256 OTA authentication** — available for enhanced OTA security
-- **Z-Wave Proxy** — new component for network-based Z-Wave serial proxy
+- **SHA256 OTA authentication** - available for enhanced OTA security
+- **Z-Wave Proxy** - new component for network-based Z-Wave serial proxy
 
 ### 2025.12+
-- **API action responses** — services can now return data to Home Assistant (bidirectional)
-- **Conditional package inclusion** — `!include` with `condition:` for dynamic configs
+- **API action responses** - services can now return data to Home Assistant (bidirectional)
+- **Conditional package inclusion** - `!include` with `condition:` for dynamic configs
 
 ### 2026.1+
-- **Sprinkler latching valve removed** — use H-Bridge switch with standard valve config instead
+- **Sprinkler latching valve removed** - use H-Bridge switch with standard valve config instead
 
 ### 2026.2+
-- **Cover movement triggers** — new `on_open_started`, `on_close_completed`, etc. triggers
-- **Zigbee platform expansion** — more device types supported on ESP32-C6/H2
+- **Cover movement triggers** - new `on_open_started`, `on_close_completed`, etc. triggers
+- **Zigbee platform expansion** - more device types supported on ESP32-C6/H2
 
 ### 2026.3+
-- **Media Player redesign** — Speaker Media Player replaces I2S Media Player as primary platform. Pluggable sources, playlists, Ogg Opus support. See `references/media-audio.md`
-- **RP2350 (Pico 2 W) verified** — WiFi, debug sensors, OTA all working
-- **nRF52 BLE OTA** — BLE and serial OTA via mcumgr protocol
-- **Dew Point sensor** — native computed sensor (no longer needs template)
+- **Media Player redesign** - Speaker Media Player replaces I2S Media Player as primary platform. Pluggable sources, playlists, Ogg Opus support. See `references/media-audio.md`
+- **RP2350 (Pico 2 W) verified** - WiFi, debug sensors, OTA all working
+- **nRF52 BLE OTA** - BLE and serial OTA via mcumgr protocol
+- **Dew Point sensor** - native computed sensor (no longer needs template)
 
 ## New Components (2024-2026)
 

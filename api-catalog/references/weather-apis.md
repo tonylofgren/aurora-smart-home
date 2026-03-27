@@ -6,10 +6,10 @@ Covers SMHI, OpenWeatherMap, yr.no, and Tomorrow.io.
 
 ## SMHI Open Data (Sweden)
 
-**What it provides:** Official Swedish meteorological data — current conditions, 10-day forecast,
+**What it provides:** Official Swedish meteorological data - current conditions, 10-day forecast,
 warnings, historical data. Highest accuracy for Sweden.
 
-**Auth:** None — completely free and public
+**Auth:** None - completely free and public
 **Base URL:** `https://opendata-download-metfcst.smhi.se/api`
 **Rate limit:** None stated, reasonable use expected
 **Coverage:** Sweden only
@@ -32,8 +32,8 @@ Replace `{lon}` and `{lat}` with your coordinates (e.g., Stockholm: lon=18.0686,
 | `ws` | Wind speed | m/s |
 | `wd` | Wind direction | degrees |
 | `prec1h` | Precipitation last hour | mm |
-| `pcat` | Precipitation category (0=none, 1=snow, 2=snow+rain, 3=rain, 4=drizzle, 5=freezing rain, 6=freezing drizzle) | — |
-| `Wsymb2` | Weather symbol (1=clear sky, 2=nearly clear, ... 27=thunderstorm) | — |
+| `pcat` | Precipitation category (0=none, 1=snow, 2=snow+rain, 3=rain, 4=drizzle, 5=freezing rain, 6=freezing drizzle) | - |
+| `Wsymb2` | Weather symbol (1=clear sky, 2=nearly clear, ... 27=thunderstorm) | - |
 | `vis` | Visibility | km |
 | `gust` | Wind gust speed | m/s |
 
@@ -62,7 +62,7 @@ Replace `{lon}` and `{lat}` with your coordinates (e.g., Stockholm: lon=18.0686,
   → [api-call-service: update HA sensors]
 ```
 
-**Function node — extract current conditions:**
+**Function node - extract current conditions:**
 ```javascript
 const series = msg.payload.timeSeries;
 const now = new Date();
@@ -126,7 +126,7 @@ rest:
 
 ## OpenWeatherMap
 
-**What it provides:** Global weather data — current conditions, 5-day forecast, air quality, UV index,
+**What it provides:** Global weather data - current conditions, 5-day forecast, air quality, UV index,
 historical data. Widely used, good global coverage.
 
 **Auth:** API key in URL parameter (`appid`)
@@ -185,7 +185,7 @@ GET https://api.openweathermap.org/data/2.5/air_pollution
 }
 ```
 
-**Function node — extract key values:**
+**Function node - extract key values:**
 ```javascript
 const c = msg.payload.current;
 const tomorrow = msg.payload.daily[1]; // [0] is today

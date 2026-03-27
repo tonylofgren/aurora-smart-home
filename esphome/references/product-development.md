@@ -1,6 +1,6 @@
 # ESPHome Product Development Guide
 
-From idea to finished product — how to design professional Home Assistant devices with ESPHome.
+From idea to finished product - how to design professional Home Assistant devices with ESPHome.
 
 ## Table of Contents
 
@@ -40,7 +40,7 @@ my-product/                          ← Named after the product
 After creating files, always print a summary:
 ```
 Project created: my-product/
-├── firmware/my-product.yaml      (ESPHome config — ready to flash)
+├── firmware/my-product.yaml      (ESPHome config - ready to flash)
 ├── hardware/bom.md               (12 components, est. $8.50/unit)
 ├── hardware/schematic-notes.md   (pin mapping, I2C addresses)
 ├── production/test-plan.md       (8 test cases)
@@ -63,7 +63,7 @@ Idea → Requirements → Component Selection → Breadboard Prototype
   → 3D Print Enclosure → Validation → Small Batch → Production
 ```
 
-Each phase has a **gate** — don't proceed until the gate criteria are met.
+Each phase has a **gate** - don't proceed until the gate criteria are met.
 
 ## Phase 1: Concept & Requirements
 
@@ -115,11 +115,11 @@ See `hardware-selection.md` for detailed component recommendations.
 
 ### Selection Process
 
-1. **Start with the MCU** — determines available GPIO, protocols, flash/RAM
-2. **Select sensors/actuators** — match to requirements, check ESPHome support
-3. **Design power supply** — voltage regulation, battery management if needed
-4. **Plan connectivity** — antenna type, range, protocol
-5. **List external circuits** — level shifters, protection, drivers
+1. **Start with the MCU** - determines available GPIO, protocols, flash/RAM
+2. **Select sensors/actuators** - match to requirements, check ESPHome support
+3. **Design power supply** - voltage regulation, battery management if needed
+4. **Plan connectivity** - antenna type, range, protocol
+5. **List external circuits** - level shifters, protection, drivers
 
 ### Key Decision: MCU Selection
 
@@ -164,7 +164,7 @@ See `hardware-selection.md` for detailed component recommendations.
   - Decoupling capacitors: 100nF on every VCC pin, 10µF on regulator output
   - Route I2C/SPI traces short and direct
   - Add ESD protection on exposed connectors
-- Order prototype PCBs (JLCPCB, PCBWay — $2-5 for 5 boards)
+- Order prototype PCBs (JLCPCB, PCBWay - $2-5 for 5 boards)
 - Assemble and test
 
 ### Gate 3: Prototype works reliably for 48+ hours, OTA works, sensors accurate.
@@ -195,12 +195,12 @@ esphome:
 
 ### Production Firmware Features
 
-- **`project:` block** — enables device discovery and firmware updates via HA
-- **`dashboard_import:`** — lets users adopt device without manual YAML
-- **`esp32_improv:`** or **`improv_serial:`** — WiFi provisioning via Bluetooth/serial
-- **Fallback AP** — always include `ap:` block for recovery
-- **Safe mode** — enables OTA recovery from bad configs
-- **Status LED** — visual feedback for WiFi/API connection status
+- **`project:` block** - enables device discovery and firmware updates via HA
+- **`dashboard_import:`** - lets users adopt device without manual YAML
+- **`esp32_improv:`** or **`improv_serial:`** - WiFi provisioning via Bluetooth/serial
+- **Fallback AP** - always include `ap:` block for recovery
+- **Safe mode** - enables OTA recovery from bad configs
+- **Status LED** - visual feedback for WiFi/API connection status
 
 ### Firmware Template for Products
 
@@ -318,7 +318,7 @@ docker run -d --name esphome \
 
 **Important considerations:**
 - Always include `safe_mode:` so a bad update can be recovered
-- Version your firmware with `project.version` — track what's deployed
+- Version your firmware with `project.version` - track what's deployed
 - Test OTA updates as part of your test matrix (Phase 5)
 - Consider a staged rollout: update 10% of devices, verify, then roll out to all
 

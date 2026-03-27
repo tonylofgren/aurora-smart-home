@@ -1,7 +1,7 @@
 # Neon / Cyberpunk Style
 
 Dark background with vivid neon accents, glow effects, and pulse animations.
-Maximum visual impact — perfect for dedicated wall-mounted displays and night mode.
+Maximum visual impact - perfect for dedicated wall-mounted displays and night mode.
 
 ---
 
@@ -431,7 +431,7 @@ conditions:
     state: "on"
 card:
   type: custom:button-card
-  name: SYSTEM ALERT — INTRUSION DETECTED
+  name: SYSTEM ALERT - INTRUSION DETECTED
   icon: mdi:shield-alert
   styles:
     card:
@@ -457,7 +457,7 @@ card:
 
 ```yaml
 type: custom:button-card
-name: SECTOR 01 — LIVING ROOM
+name: SECTOR 01 - LIVING ROOM
 icon: mdi:map-marker
 styles:
   card:

@@ -204,7 +204,7 @@ Fallout terminal UI aesthetic, professional UI screenshot, 16:9 landscape
 **Midjourney:** Append `--ar 16:9 --v 6 --style raw` to background prompts
 **DALL-E 3:** These prompts work as-is. Add "no watermark, no signature" at end
 **Stable Diffusion:** Add `masterpiece, best quality` at start; negative: `text, watermark, blurry`
-**Flux:** Works best with descriptive prompts — no special parameters needed
+**Flux:** Works best with descriptive prompts - no special parameters needed
 
 **Background sizing for HA:**
 - Dashboard: 1920×1080 or 2560×1440

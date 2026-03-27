@@ -1,6 +1,6 @@
 # Material You Style
 
-Google Material Design 3 — dynamic color, generous rounded corners, tonal surfaces.
+Google Material Design 3 - dynamic color, generous rounded corners, tonal surfaces.
 Familiar, polished, and accessible. Works great in both light and dark mode.
 
 ---

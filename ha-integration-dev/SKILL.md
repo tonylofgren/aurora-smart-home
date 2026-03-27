@@ -27,7 +27,7 @@ ASYNC: aiohttp FOR HTTP - NEVER requests
 STORAGE: entry.runtime_data - NEVER hass.data[DOMAIN]
 ```
 
-The first three rules cause 90% of integration bugs. The fourth rule (`runtime_data`) is the modern pattern since HA 2024.4 — it provides type safety and cleaner lifecycle management.
+The first three rules cause 90% of integration bugs. The fourth rule (`runtime_data`) is the modern pattern since HA 2024.4 - it provides type safety and cleaner lifecycle management.
 
 ## The Process
 

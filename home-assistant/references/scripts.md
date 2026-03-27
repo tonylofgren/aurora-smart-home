@@ -16,7 +16,7 @@
 
 ## Core Concepts
 
-Scripts are reusable sequences of actions that can be called from automations, other scripts, or manually. Unlike automations, scripts don't have triggers—they run when explicitly called.
+Scripts are reusable sequences of actions that can be called from automations, other scripts, or manually. Unlike automations, scripts don't have triggers-they run when explicitly called.
 
 ### Scripts vs Automations
 

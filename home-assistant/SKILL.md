@@ -222,7 +222,7 @@ Wait for user answers before generating YAML.
 - **`platform:` → `trigger:`** - Inside triggers, e.g. `trigger: state` replaces `platform: state`
 - Old syntax still works but is deprecated. Always use modern syntax.
 
-### Legacy Template Entity Migration (CRITICAL — deadline HA 2026.6)
+### Legacy Template Entity Migration (CRITICAL - deadline HA 2026.6)
 - **`platform: template` sensors stop working in HA 2026.6**
 - Must migrate to the `template:` integration format
 - See Modern Syntax section below for before/after examples
@@ -365,7 +365,7 @@ template:
 - [ ] Uses plural keys: `triggers:`, `conditions:`, `actions:` (HA 2024.10)
 - [ ] Uses `trigger: state` not `platform: state` inside triggers
 - [ ] No deprecated `service_template` or `data_template`
-- [ ] No `platform: template` sensors (use `template:` integration — deadline 2026.6)
+- [ ] No `platform: template` sensors (use `template:` integration - deadline 2026.6)
 - [ ] `entity_id` under `target:` block (not in `data:`)
 - [ ] All template syntax uses `{{ }}` correctly
 - [ ] Quotes around string states: `to: "on"` not `to: on`

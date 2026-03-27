@@ -46,10 +46,10 @@ POST https://api.openai.com/v1/images/generations
 Body: {"model": "dall-e-3", "prompt": "cozy smart home interior", "size": "1024x1024"}
 ```
 
-### Node-RED implementation — voice command parser
+### Node-RED implementation - voice command parser
 
 ```javascript
-// Function node — build OpenAI request for command parsing
+// Function node - build OpenAI request for command parsing
 const command = msg.payload; // e.g., "make the living room dim and warm"
 
 msg.payload = JSON.stringify({
@@ -75,7 +75,7 @@ return msg;
 ```
 
 ```javascript
-// Function node — parse response and call HA service
+// Function node - parse response and call HA service
 const response = JSON.parse(msg.payload.choices[0].message.content);
 
 msg.payload = {
@@ -89,7 +89,7 @@ return msg;
 ### HA YAML notify
 
 ```yaml
-# Summarize a sensor history via OpenAI — call from automation
+# Summarize a sensor history via OpenAI - call from automation
 rest_command:
   openai_chat:
     url: https://api.openai.com/v1/chat/completions
@@ -116,7 +116,7 @@ openai_bearer: "Bearer sk-..."
 management, search. Great for music automations (play music when you arrive home, stop when
 you leave, etc.).
 
-**Auth:** OAuth2 — authorization code flow. Access token expires after 1 hour, refresh token
+**Auth:** OAuth2 - authorization code flow. Access token expires after 1 hour, refresh token
 is long-lived.
 **Base URL:** `https://api.spotify.com/v1`
 **Get credentials:** developer.spotify.com → Create App → Client ID + Secret
@@ -166,7 +166,7 @@ GET  /v1/search?q={query}&type=playlist → search
 ```
 
 ```javascript
-// Function node — play a specific playlist on device
+// Function node - play a specific playlist on device
 msg.method = "PUT";
 msg.url = "https://api.spotify.com/v1/me/player/play";
 msg.headers = {
@@ -181,7 +181,7 @@ return msg;
 ```
 
 ```javascript
-// Function node — extract current track for display
+// Function node - extract current track for display
 const item = msg.payload.item;
 if (!item) { msg.payload = null; return msg; }
 
@@ -189,7 +189,7 @@ msg.payload = {
     action: "input_text.set_value",
     target: { entity_id: "input_text.now_playing" },
     data: {
-        value: `${item.name} — ${item.artists.map(a => a.name).join(", ")}`
+        value: `${item.name} - ${item.artists.map(a => a.name).join(", ")}`
     }
 };
 return msg;
@@ -216,7 +216,7 @@ rest:
           {% if value_json and value_json.item %}
             {{ value_json.item.artists[0].name }}
           {% else %}
-            —
+            -
           {% endif %}
       - name: "Spotify Is Playing"
         value_template: "{{ value_json.is_playing | default(false) }}"
@@ -233,7 +233,7 @@ rest:
 **What it provides:** Read/write Google Calendar events. Useful for presence-based automations,
 "do not disturb" mode when in a meeting, scheduling heating/cooling around your calendar.
 
-**Auth:** OAuth2 — service account (server-to-server) or user OAuth2.
+**Auth:** OAuth2 - service account (server-to-server) or user OAuth2.
 For home automation, service account is simplest.
 **Base URL:** `https://www.googleapis.com/calendar/v3`
 **Get credentials:** console.cloud.google.com → Calendar API → Service Account + JSON key
@@ -273,7 +273,7 @@ GET /calendars/{calendarId}/events
 ### Node-RED implementation
 
 ```javascript
-// Function node — check if currently in a meeting
+// Function node - check if currently in a meeting
 const events = msg.payload.items || [];
 const now = new Date();
 
@@ -307,7 +307,7 @@ rest:
       - name: "Next Event Start"
         value_template: >-
           {% set events = value_json.items %}
-          {% if events %}{{ events[0].start.dateTime | default(events[0].start.date) }}{% else %}—{% endif %}
+          {% if events %}{{ events[0].start.dateTime | default(events[0].start.date) }}{% else %}-{% endif %}
 ```
 
 > **Tip:** The [Google Calendar integration](https://www.home-assistant.io/integrations/google/)
@@ -321,7 +321,7 @@ rest:
 interactive commands ("Are you sure you want to unlock the front door? [Yes] [No]"),
 and security alerts with camera snapshots.
 
-**Auth:** Bot token in URL — no OAuth2 needed
+**Auth:** Bot token in URL - no OAuth2 needed
 **Base URL:** `https://api.telegram.org/bot{TOKEN}`
 **Get token:** Telegram → @BotFather → /newbot → copy token
 **Rate limit:** 30 messages/s to different users, 20 messages/min to same chat
@@ -351,10 +351,10 @@ POST /answerCallbackQuery           → respond to inline button presses
 POST /sendMessage with reply_markup → send messages with inline buttons
 ```
 
-### Node-RED implementation — alert with buttons
+### Node-RED implementation - alert with buttons
 
 ```javascript
-// Function node — send alert with Yes/No buttons
+// Function node - send alert with Yes/No buttons
 msg.method = "POST";
 msg.url = `https://api.telegram.org/bot${env.get("TELEGRAM_TOKEN")}/sendMessage`;
 msg.payload = JSON.stringify({
@@ -373,7 +373,7 @@ return msg;
 ```
 
 ```javascript
-// Function node — poll for button presses (runs every 2s)
+// Function node - poll for button presses (runs every 2s)
 const updates = msg.payload.result;
 if (!updates || updates.length === 0) return null;
 
@@ -392,7 +392,7 @@ if (action === "unlock_door") {
 return null;
 ```
 
-### HA YAML — Telegram notify + bot
+### HA YAML - Telegram notify + bot
 
 ```yaml
 # configuration.yaml
@@ -415,7 +415,7 @@ telegram_chat_id: 123456789
 ```
 
 ```yaml
-# Example automation — motion alert
+# Example automation - motion alert
 automation:
   - alias: "Motion alert with photo"
     trigger:
@@ -441,7 +441,7 @@ automation:
 release monitoring. Useful for OTA firmware automation (trigger build when you push), and
 monitoring home automation project updates.
 
-**Auth:** Personal Access Token (PAT) in header — classic or fine-grained
+**Auth:** Personal Access Token (PAT) in header - classic or fine-grained
 **Base URL:** `https://api.github.com`
 **Get token:** github.com → Settings → Developer Settings → Personal Access Tokens → Fine-grained
 **Rate limit:** 5,000 req/hour (authenticated), 60 req/hour (unauthenticated)
@@ -457,10 +457,10 @@ GET  /repos/{owner}/{repo}/issues          → issues list
 POST /repos/{owner}/{repo}/issues          → create issue
 ```
 
-### Node-RED — check for firmware updates
+### Node-RED - check for firmware updates
 
 ```javascript
-// Function node — check latest release vs installed version
+// Function node - check latest release vs installed version
 const latest = msg.payload.tag_name; // e.g., "v1.3.2"
 const installed = flow.get("firmwareVersion") || "v1.0.0";
 
@@ -477,10 +477,10 @@ if (latest !== installed) {
 return null;
 ```
 
-### Node-RED — trigger CI build on code push
+### Node-RED - trigger CI build on code push
 
 ```javascript
-// Function node — dispatch GitHub Actions workflow
+// Function node - dispatch GitHub Actions workflow
 msg.method = "POST";
 msg.url = "https://api.github.com/repos/myuser/myrepo/dispatches";
 msg.headers = {
@@ -498,7 +498,7 @@ msg.payload = JSON.stringify({
 return msg;
 ```
 
-### HA YAML REST sensor — latest release monitor
+### HA YAML REST sensor - latest release monitor
 
 ```yaml
 rest:
@@ -521,7 +521,7 @@ rest:
 github_token: "Bearer github_pat_..."
 ```
 
-### Automation — notify on new HA release
+### Automation - notify on new HA release
 
 ```yaml
 automation:

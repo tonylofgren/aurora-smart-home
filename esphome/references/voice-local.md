@@ -499,7 +499,7 @@ packages:
 
 ## Se även
 
-- `references/media-audio.md` - **New media player architecture (2026.3)** — Speaker Media Player, Audio DAC, microphone/speaker platforms. If building a media player or updating existing I2S config, see this reference.
+- `references/media-audio.md` - **New media player architecture (2026.3)** - Speaker Media Player, Audio DAC, microphone/speaker platforms. If building a media player or updating existing I2S config, see this reference.
 - `references/displays.md` - Lägg till display för visuell feedback
 - `references/bluetooth.md` - Bluetooth-högtalare
 - `../home-assistant/references/assist-patterns.md` - Assist pipeline patterns

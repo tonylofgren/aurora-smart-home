@@ -1,6 +1,6 @@
 # Enclosures, PCB Design & Manufacturing Guide
 
-From prototype to production — enclosures, PCB design with KiCad, certification, and manufacturing.
+From prototype to production - enclosures, PCB design with KiCad, certification, and manufacturing.
 
 ## Table of Contents
 
@@ -57,7 +57,7 @@ For faster time-to-market, consider pre-made enclosures:
 | Bud Industries | Various | IP65 | $3-8 | Mouser |
 | Gainta G-series | Various | IP65 | $2-6 | TME |
 | Sonoff IP66 box | 100x68x50 | IP66 | $3 | AliExpress |
-| DIN rail module | Various | — | $1-3 | AliExpress |
+| DIN rail module | Various | - | $1-3 | AliExpress |
 
 ## IP Ratings
 
@@ -92,7 +92,7 @@ Schematic (Eeschema) → Footprint assignment → PCB layout (Pcbnew) → Gerber
 
 ### Schematic Checklist for ESP32 Products
 
-1. **MCU module** (use module, not bare chip — saves layout complexity)
+1. **MCU module** (use module, not bare chip - saves layout complexity)
    - Decoupling: 100nF + 10µF on each VCC
    - EN pin: 10kΩ pullup + 100nF to GND (RC delay for power-on reset)
    - Boot pin (GPIO0): 10kΩ pullup (pulled low only for flashing)
@@ -181,7 +181,7 @@ If KiCad feels complex, EasyEDA (free, web-based) integrates directly with JLCPC
 | MacroFab | $0 | $10+ per board | 1 | 10-15 days |
 | Elecrow | $10 | $0.004/joint | 10 | 7-14 days |
 
-**Tip:** JLCPCB's "Economic PCBA" option is cheapest for small runs. Use their "Basic Parts" (common resistors, caps, ICs) for lowest cost — "Extended Parts" have a $3/unique part fee.
+**Tip:** JLCPCB's "Economic PCBA" option is cheapest for small runs. Use their "Basic Parts" (common resistors, caps, ICs) for lowest cost - "Extended Parts" have a $3/unique part fee.
 
 ### Design for Assembly (DFA)
 
@@ -199,14 +199,14 @@ If KiCad feels complex, EasyEDA (free, web-based) integrates directly with JLCPC
 |----------|---------|----------|-------|
 | Personal use | No | No | |
 | Gift/prototype | No | No | |
-| Selling in EU | Yes | — | Required for commercial sale |
-| Selling in US | — | Yes | Required for commercial sale |
+| Selling in EU | Yes | - | Required for commercial sale |
+| Selling in US | - | Yes | Required for commercial sale |
 | Selling in both | Yes | Yes | |
 | Selling on Amazon/Etsy | Yes or Yes | Yes or Yes | Marketplace policies require it |
 
 ### Using Pre-Certified Modules
 
-**This is the most important cost-saving tip:** ESP32 modules (WROOM, MINI, S3-WROOM) are already FCC/CE certified by Espressif. If you use the module without modifying the antenna or RF circuitry, you can reference their certification — this dramatically reduces your testing costs.
+**This is the most important cost-saving tip:** ESP32 modules (WROOM, MINI, S3-WROOM) are already FCC/CE certified by Espressif. If you use the module without modifying the antenna or RF circuitry, you can reference their certification - this dramatically reduces your testing costs.
 
 **Requirements for "modular" certification approach:**
 - Use the exact certified module (not bare chip)
@@ -229,18 +229,18 @@ If KiCad feels complex, EasyEDA (free, web-based) integrates directly with JLCPC
 
 ### Reducing Certification Cost
 
-1. **Use pre-certified WiFi/BLE module** (biggest savings — avoids RF testing)
+1. **Use pre-certified WiFi/BLE module** (biggest savings - avoids RF testing)
 2. **Low-voltage DC only** (avoid mains → skip LVD safety testing)
-3. **EMC pre-scan first** ($500) — fix issues before paying for formal test
-4. **Test one product, certify variants** — similar products can share test reports
-5. **Self-declare RoHS** — based on component datasheets, no lab needed
+3. **EMC pre-scan first** ($500) - fix issues before paying for formal test
+4. **Test one product, certify variants** - similar products can share test reports
+5. **Self-declare RoHS** - based on component datasheets, no lab needed
 
 ### Documentation Required
 
 - Technical file with schematics, PCB layout, BOM
 - Risk assessment (basic for low-voltage products)
 - Test reports from accredited lab (ILAC/ISO 17025)
-- Declaration of Conformity (CE) — template available online
+- Declaration of Conformity (CE) - template available online
 - User manual with safety information
 - Product label with CE mark, FCC ID (module), model number
 

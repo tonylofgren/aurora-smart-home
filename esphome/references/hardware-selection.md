@@ -183,9 +183,9 @@ USB-C connector → ESD protection (USBLC6-2) → AMS1117-3.3 → ESP32
                 → ME6211 (LDO, 500mA, low dropout) → ESP32 (recommended)
 ```
 
-- **AMS1117-3.3**: $0.10, 1A, 1V dropout — cheap but wastes heat
-- **ME6211C33**: $0.15, 500mA, 0.1V dropout — efficient, recommended
-- **AP2112K-3.3**: $0.20, 600mA, low noise — good for analog sensors
+- **AMS1117-3.3**: $0.10, 1A, 1V dropout - cheap but wastes heat
+- **ME6211C33**: $0.15, 500mA, 0.1V dropout - efficient, recommended
+- **AP2112K-3.3**: $0.20, 600mA, low noise - good for analog sensors
 
 ### Battery Power (LiPo/Li-Ion)
 
@@ -223,7 +223,7 @@ Solar panel (6V/1W+) → Schottky diode → TP4056 → LiPo → ME6211 → ESP32
 | Component | Specs | Price |
 |-----------|-------|-------|
 | Solar panel | 6V, 1-3W (110x60mm to 150x130mm) | $3-6 |
-| Schottky diode | SS34 (3A, 40V) — reverse protection | $0.05 |
+| Schottky diode | SS34 (3A, 40V) - reverse protection | $0.05 |
 | LiPo cell | 3.7V, 2000-6000mAh | $3-8 |
 
 ### PoE (Power over Ethernet)
@@ -236,7 +236,7 @@ Solar panel (6V/1W+) → Schottky diode → TP4056 → LiPo → ME6211 → ESP32
 
 ## Communication & External Peripherals
 
-### I2C Devices — Address Planning
+### I2C Devices - Address Planning
 
 When using multiple I2C devices, check for address conflicts:
 
@@ -266,7 +266,7 @@ When using multiple I2C devices, check for address conflicts:
 | 400kHz | < 10cm | 2.2kΩ |
 | Any | > 30cm | 1kΩ (with caution) |
 
-Most breakout boards have pullups built in. Check before adding external pullups — too many paralleled reduces the resistance too much.
+Most breakout boards have pullups built in. Check before adding external pullups - too many paralleled reduces the resistance too much.
 
 ### Level Shifters
 
@@ -315,7 +315,7 @@ ESP32 ADC is 12-bit but non-linear. For accurate analog readings:
 | **Mouser** | Western brands, datasheets | $5-20 (2-5 days) | 1 pc |
 | **DigiKey** | Largest selection, fast | $5-20 (2-5 days) | 1 pc |
 | **AliExpress** | Breakout boards, dev kits | Free (15-30 days) | 1 pc |
-| **JLCPCB Parts** | Combined with PCB order | Free (with PCB) | — |
+| **JLCPCB Parts** | Combined with PCB order | Free (with PCB) | - |
 | **TME** | European stock, fast EU ship | $3-10 (1-3 days EU) | 1 pc |
 | **Reichelt** | German stock, fast DE ship | $5 (1-2 days DE) | 1 pc |
 
@@ -343,7 +343,7 @@ When building a BOM for the user, fetch current prices using WebSearch with thes
 - Stock availability (in stock / lead time)
 - Source URL so the user can order directly
 
-**Do not look up prices** for casual browsing — only when the user is actively making purchasing decisions. The reference prices in this file are sufficient for initial planning.
+**Do not look up prices** for casual browsing - only when the user is actively making purchasing decisions. The reference prices in this file are sufficient for initial planning.
 
 ---
 

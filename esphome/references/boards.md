@@ -723,11 +723,11 @@ logger:
 
 ### Key Differences from ESP32
 
-- **No BLE scanning** — RP2040 WiFi chip does not support BLE (RP2350 has BLE foundations in 2026.3)
-- **No ESP-IDF** — uses pico-sdk framework only
-- **GPIO** — 26 GPIO pins (GP0-GP25), 3 ADC channels (GP26-GP28)
-- **No strapping pins** — simpler GPIO usage than ESP32
-- **Dual-core** — both RP2040 and RP2350 are dual-core (Cortex-M0+ / Cortex-M33)
+- **No BLE scanning** - RP2040 WiFi chip does not support BLE (RP2350 has BLE foundations in 2026.3)
+- **No ESP-IDF** - uses pico-sdk framework only
+- **GPIO** - 26 GPIO pins (GP0-GP25), 3 ADC channels (GP26-GP28)
+- **No strapping pins** - simpler GPIO usage than ESP32
+- **Dual-core** - both RP2040 and RP2350 are dual-core (Cortex-M0+ / Cortex-M33)
 
 ### RP2040 with Sensors Example
 
@@ -761,7 +761,7 @@ nRF52-based devices run on the Zephyr RTOS platform. Primarily used for Zigbee a
 nrf52:
   board: adafruit_nrf52840
 
-# nRF52 does NOT support WiFi — uses BLE or Thread for connectivity
+# nRF52 does NOT support WiFi - uses BLE or Thread for connectivity
 ```
 
 ### BLE + Serial OTA (since 2026.3)
@@ -776,10 +776,10 @@ ota:
 
 ### Key Notes
 
-- **No WiFi** — nRF52 chips have no WiFi, use BLE or Thread/Zigbee
-- **Zephyr RTOS** — different build system than ESP-IDF/Arduino
-- **Thread/Zigbee** — primary use case for Matter-over-Thread devices
-- **Limited component support** — not all ESPHome components work on nRF52
+- **No WiFi** - nRF52 chips have no WiFi, use BLE or Thread/Zigbee
+- **Zephyr RTOS** - different build system than ESP-IDF/Arduino
+- **Thread/Zigbee** - primary use case for Matter-over-Thread devices
+- **Limited component support** - not all ESPHome components work on nRF52
 
 ---
 

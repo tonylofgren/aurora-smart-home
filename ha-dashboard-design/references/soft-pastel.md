@@ -1,7 +1,7 @@
 # Soft Pastel Style
 
 Gentle pinks, lilacs, mint greens, and sky blues. Friendly, approachable, and cheerful.
-Great for family homes — welcoming without being overwhelming.
+Great for family homes - welcoming without being overwhelming.
 
 ---
 

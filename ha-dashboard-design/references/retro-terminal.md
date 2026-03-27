@@ -1,7 +1,7 @@
 # Retro Terminal Style
 
 Green phosphor on black, monospace fonts, scanline effects.
-Pure geek aesthetic — looks like a 1980s mainframe running your smart home.
+Pure geek aesthetic - looks like a 1980s mainframe running your smart home.
 
 ---
 
@@ -301,7 +301,7 @@ conditions:
     state: "on"
 card:
   type: custom:button-card
-  name: "!! SYSTEM ALERT — BREACH DETECTED !!"
+  name: "!! SYSTEM ALERT - BREACH DETECTED !!"
   icon: mdi:alert
   styles:
     card:

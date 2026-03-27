@@ -55,7 +55,7 @@ Body: auth_key={CLOUD_KEY}&id={device-id}&channel=0&turn=on
   → [debug: confirm]
 ```
 
-**Function node — read Shelly status:**
+**Function node - read Shelly status:**
 ```javascript
 // Parse Shelly Gen1 status response
 const status = msg.payload;
@@ -93,17 +93,17 @@ rest_command:
 ```
 
 > **Tip:** The official [Shelly integration](https://www.home-assistant.io/integrations/shelly/) in
-> Home Assistant handles Shelly devices natively over local network via CoAP/MQTT — no REST needed.
+> Home Assistant handles Shelly devices natively over local network via CoAP/MQTT - no REST needed.
 > Use the REST approach only for devices the integration doesn't support.
 
 ---
 
 ## Tuya IoT Platform
 
-**What it provides:** Cloud control of Tuya/Smart Life devices — a huge range of Chinese smart home
+**What it provides:** Cloud control of Tuya/Smart Life devices - a huge range of Chinese smart home
 products sold under hundreds of brands. Also exposes device state, scenes, and IR blasters.
 
-**Auth:** OAuth2 (client credentials flow) — access token rotates every 2 hours
+**Auth:** OAuth2 (client credentials flow) - access token rotates every 2 hours
 **Base URL:** `https://openapi.tuyaeu.com` (EU), `https://openapi.tuyaus.com` (US)
 **Get credentials:** iot.tuya.com → Cloud → Create project → Get Access ID + Secret
 **Rate limit:** Varies by plan. Free tier: 10,000 API calls/month
@@ -117,12 +117,12 @@ products sold under hundreds of brands. Also exposes device state, scenes, and I
 POST https://openapi.tuyaeu.com/v1.0/token?grant_type=1
 Headers:
   client_id: {ACCESS_ID}
-  sign: {HMAC-SHA256 signature — see below}
+  sign: {HMAC-SHA256 signature - see below}
   t: {unix timestamp ms}
   sign_method: HMAC-SHA256
 ```
 
-The signature is: `HMAC-SHA256(ACCESS_ID + t + "" + ACCESS_SECRET)` — Tuya's auth is complex.
+The signature is: `HMAC-SHA256(ACCESS_ID + t + "" + ACCESS_SECRET)` - Tuya's auth is complex.
 Use the [tinytuya](https://github.com/jasonacox/tinytuya) Python library or the HA integration instead.
 
 ### Node-RED implementation (simplified via tinytuya service)
@@ -171,7 +171,7 @@ Poll status every 30 seconds."
 ## Philips Hue (Local Bridge API)
 
 **What it provides:** Full control of Hue lights, groups, scenes, sensors, and schedules via
-local Bridge — no cloud required, very low latency.
+local Bridge - no cloud required, very low latency.
 
 **Auth:** One-time button-press to create a username token
 **Base URL:** `https://{bridge-ip}/api`  (also `https://{bridge-ip}/clip/v2` for v2 API)
@@ -230,7 +230,7 @@ Body: {"scene": "abc123"}
   → [debug: confirm response]
 ```
 
-**Function node — adaptive brightness based on time:**
+**Function node - adaptive brightness based on time:**
 ```javascript
 const hour = new Date().getHours();
 let bri, ct;
@@ -292,12 +292,12 @@ HACS-ready."
 
 ## IKEA Dirigera (local API)
 
-**What it provides:** Control IKEA TRÅDFRI/Dirigera smart home products — bulbs, sockets, blinds,
-air purifiers, sensors — via the local Dirigera hub. No cloud required.
+**What it provides:** Control IKEA TRÅDFRI/Dirigera smart home products - bulbs, sockets, blinds,
+air purifiers, sensors - via the local Dirigera hub. No cloud required.
 
 **Auth:** OAuth-like: PKCE challenge + button press on hub → access token (long-lived)
 **Base URL:** `https://{dirigera-ip}:8443/v1`
-**Self-signed cert:** Hub uses self-signed TLS — skip cert verification in requests
+**Self-signed cert:** Hub uses self-signed TLS - skip cert verification in requests
 **Requirement:** IKEA Dirigera hub (not the old TRÅDFRI gateway)
 
 ### Step 1: Discover hub IP
@@ -351,7 +351,7 @@ Body: [{"attributes": {"isOn": true, "lightLevel": 80}}]
 ### Node-RED implementation
 
 ```javascript
-// Function node — build IKEA Dirigera request
+// Function node - build IKEA Dirigera request
 msg.method = "PATCH";
 msg.url = `https://192.168.1.60:8443/v1/devices/${env.get("IKEA_DEVICE_ID")}`;
 msg.headers = {

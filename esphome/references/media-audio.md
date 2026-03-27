@@ -47,7 +47,7 @@ i2s_audio:
 | `i2s_bclk_pin` | pin | **Required.** Bit Clock (BCK/BCLK) pin |
 | `i2s_mclk_pin` | pin | Master Clock pin (some DACs require this) |
 
-> **Note:** ESP32-S3 supports two I2S peripherals — you can have separate buses for input (mic) and output (speaker) simultaneously.
+> **Note:** ESP32-S3 supports two I2S peripherals - you can have separate buses for input (mic) and output (speaker) simultaneously.
 
 ---
 
@@ -234,7 +234,7 @@ External audio codec chips for higher quality output.
 
 ### ES8311 (Mono Codec)
 
-Single-channel codec — speaker output OR microphone input via I2S Audio.
+Single-channel codec - speaker output OR microphone input via I2S Audio.
 
 ```yaml
 i2c:
@@ -254,7 +254,7 @@ audio_dac:
 
 ### ES8388 (Stereo Codec)
 
-Dual-channel codec — supports BOTH speaker output AND microphone input simultaneously (full-duplex).
+Dual-channel codec - supports BOTH speaker output AND microphone input simultaneously (full-duplex).
 
 ```yaml
 audio_dac:
@@ -277,7 +277,7 @@ select:
 
 ## 5. Media Player
 
-### Speaker Media Player (Primary — 2026.3+)
+### Speaker Media Player (Primary - 2026.3+)
 
 The new primary media player platform with dual pipeline support.
 
@@ -336,7 +336,7 @@ media_player:
 Still supported but no longer recommended. Use Speaker Media Player for new projects.
 
 ```yaml
-# LEGACY — prefer speaker media player
+# LEGACY - prefer speaker media player
 media_player:
   - platform: i2s_audio
     name: "Speaker"
@@ -574,7 +574,7 @@ media_player:
 1. I2S bus is now configured separately
 2. Speaker is its own component
 3. Media player references the speaker by ID
-4. More flexibility — same speaker can be used by voice_assistant and media_player
+4. More flexibility - same speaker can be used by voice_assistant and media_player
 5. Dual pipelines possible (media + announcements)
 
 ---
@@ -592,6 +592,6 @@ media_player:
 
 ## See Also
 
-- `references/voice-local.md` — Voice assistant setup with wake words, STT, TTS
-- `references/displays.md` — Add display for now-playing UI
-- `references/bluetooth.md` — Bluetooth audio
+- `references/voice-local.md` - Voice assistant setup with wake words, STT, TTS
+- `references/displays.md` - Add display for now-playing UI
+- `references/bluetooth.md` - Bluetooth audio

@@ -261,7 +261,7 @@ Each skill has a non-negotiable rule:
 | esphome | `CONFIRM BOARD BEFORE GENERATING ANY CONFIGURATION` |
 | ha-integration | `TIMESTAMPS: dt_util.now()` / `ATTRIBUTES: JSON-SERIALIZABLE` / `ASYNC: aiohttp` |
 | ha-yaml | `CLARIFY INTENT BEFORE GENERATING ANY YAML` |
-| node-red | `USE CURRENT NODE NAMES — NEVER OUTDATED ONES` |
+| node-red | `USE CURRENT NODE NAMES - NEVER OUTDATED ONES` |
 
 ## Quick Selection Guide
 

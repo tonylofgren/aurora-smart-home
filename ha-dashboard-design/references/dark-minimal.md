@@ -1,6 +1,6 @@
 # Dark Minimal Style
 
-Pure black background, razor-thin borders, clean typography. No decorations — only information.
+Pure black background, razor-thin borders, clean typography. No decorations - only information.
 Inspired by Linear, Vercel, and high-end developer tools.
 
 ---

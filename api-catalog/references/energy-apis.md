@@ -9,7 +9,7 @@ Covers Tibber, Nordpool (Energi Data Service), and Vattenfall open data.
 **What it provides:** Real-time electricity price (your personal tariff including grid fees), hourly
 price forecast, energy consumption from Tibber Pulse, cost history.
 
-**Auth:** Bearer token — personal access token from developer.tibber.com
+**Auth:** Bearer token - personal access token from developer.tibber.com
 **Protocol:** GraphQL over HTTPS
 **Base URL:** `https://api.tibber.com/v1-beta/gql`
 **Rate limit:** ~1 req/s, practical: poll every 60s is fine
@@ -83,7 +83,7 @@ price forecast, energy consumption from Tibber Pulse, cost history.
   → [api-call-service: set input_number.electricity_price]
 ```
 
-**Function node — build request:**
+**Function node - build request:**
 ```javascript
 msg.payload = JSON.stringify({
     query: `{
@@ -115,7 +115,7 @@ return msg;
 }
 ```
 
-**Function node — extract and route:**
+**Function node - extract and route:**
 ```javascript
 const price = msg.payload.data.viewer.homes[0]
     .currentSubscription.priceInfo.current;
@@ -185,12 +185,12 @@ HACS-ready. GitHub: myuser.
 
 ## Nordpool via Energi Data Service
 
-**What it provides:** Wholesale Nordpool spot prices (no personal tariff — raw market price),
+**What it provides:** Wholesale Nordpool spot prices (no personal tariff - raw market price),
 hourly for all Nordic/Baltic price areas. Free, public, no API key needed.
 
 **Auth:** None
 **Base URL:** `https://api.energidataservice.dk/dataset/Elspotprices`
-**Rate limit:** None stated, be polite — poll at most every 5 minutes
+**Rate limit:** None stated, be polite - poll at most every 5 minutes
 **Price areas:** SE1, SE2, SE3, SE4 (Sweden), NO1–NO5 (Norway), DK1, DK2, FI
 
 ### Key endpoints
@@ -230,7 +230,7 @@ GET https://api.energidataservice.dk/dataset/Elspotprices
   → [api-call-service: set input_number + notify if spike]
 ```
 
-**Function node — extract current price:**
+**Function node - extract current price:**
 ```javascript
 const records = msg.payload.records;
 const now = new Date();

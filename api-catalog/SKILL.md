@@ -7,7 +7,7 @@ description: >
   (SL, Trafikverket, Resrobot), smart home clouds (Shelly, Tuya, Philips Hue, IKEA),
   and global APIs (OpenAI, Spotify, Google Calendar, Telegram, GitHub).
   Use this skill whenever the user mentions a specific external service, API, or data source
-  they want to connect to Home Assistant — even if they don't say "API".
+  they want to connect to Home Assistant - even if they don't say "API".
 source: https://github.com/tonylofgren/aurora-smart-home
 ---
 
@@ -20,14 +20,14 @@ Reference skill for connecting external APIs and services to Home Assistant.
 This skill covers authentication patterns and working code examples for connecting popular
 APIs to Home Assistant via three methods:
 
-- **Node-RED** — HTTP request node flows (fastest to get running)
-- **HA YAML** — `rest` sensor and `rest_command` (good for simple polling)
-- **Custom integration** — Full HACS-publishable Python component (use `ha-integration` skill)
+- **Node-RED** - HTTP request node flows (fastest to get running)
+- **HA YAML** - `rest` sensor and `rest_command` (good for simple polling)
+- **Custom integration** - Full HACS-publishable Python component (use `ha-integration` skill)
 
 ## The Iron Law
 
 ```
-CREDENTIALS IN SECRETS — NEVER HARDCODED IN FLOWS OR YAML
+CREDENTIALS IN SECRETS - NEVER HARDCODED IN FLOWS OR YAML
 ```
 
 API keys belong in Node-RED credentials, ESPHome secrets.yaml, or HA `secrets.yaml`.
@@ -112,7 +112,7 @@ rest:
 
 ## Pre-Output Checklist
 
-- [ ] Credentials use `!secret` (YAML), Node-RED credentials, or env vars — never hardcoded
+- [ ] Credentials use `!secret` (YAML), Node-RED credentials, or env vars - never hardcoded
 - [ ] Rate limits respected (include `scan_interval` or flow timer accordingly)
 - [ ] Error handling included (Node-RED catch node or YAML timeout)
 - [ ] For OAuth2: refresh token flow explained
@@ -121,6 +121,6 @@ rest:
 ## Integration
 
 **Pairs with:**
-- `node-red` skill — for flow JSON implementation
-- `ha-yaml` skill — for YAML sensor and automation using the fetched data
-- `ha-integration` skill — for building a full HACS-publishable Python integration
+- `node-red` skill - for flow JSON implementation
+- `ha-yaml` skill - for YAML sensor and automation using the fetched data
+- `ha-integration` skill - for building a full HACS-publishable Python integration
