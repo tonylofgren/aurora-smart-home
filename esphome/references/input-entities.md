@@ -273,7 +273,7 @@ binary_sensor:
 | `datetime` (date) | template | `datetime.date.set` |
 | `datetime` (time) | template | `datetime.time.set` |
 | `datetime` (datetime) | template | `datetime.datetime.set` |
-| `event` | template | `event.trigger` |
+| `event` | template | `event.fire` |
 
 ## See Also
 

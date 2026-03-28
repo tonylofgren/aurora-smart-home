@@ -125,6 +125,9 @@ For existing devices, ask:
 | Alarm, Lock & Valve | `references/alarm-security.md` |
 | Media & Audio | `references/media-audio.md` |
 | Datetime & Event | `references/input-entities.md` |
+| Buttons & Inputs | `references/buttons-inputs.md` |
+| Solar & Energy | `references/solar-energy.md` |
+| Weight Sensors | `references/weight-sensors.md` |
 
 ### Protocols & Integration
 
