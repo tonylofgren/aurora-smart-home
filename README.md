@@ -125,13 +125,9 @@ By default, skills install globally (`--scope user`). You can also scope them:
 
 ### Primary: `/aurora`
 
-Start with `/aurora` for any smart home task. Aurora reads your intent, picks the right specialist(s), and recommends the right Claude model for your subscription tier.
+Type `/aurora` for any smart home task. Aurora opens, asks what you want to build, and routes to the right specialist(s) — recommending the right Claude model for your subscription tier.
 
-```
-/aurora "I want a CO2 sensor on ESP32-S3 that alerts me when air quality drops"
-```
-
-Works for single tasks and multi-step projects alike. Aurora handles the routing.
+Works for single tasks and multi-step projects alike.
 
 ### Also: Automatic (Contextual)
 
@@ -150,20 +146,22 @@ Individual skills also activate automatically when you mention relevant keywords
 
 ## Getting Started with Your First Project
 
-Start with `/aurora` and describe what you want in plain language:
+Type `/aurora` — Aurora opens and asks what you want to build. Then describe your project:
 
 ```
-💬 /aurora "I want a temperature sensor with OLED display on ESP32"
-   → Aurora routes to Volt, confirms board, generates ESPHome config
+Aurora: What do you want to build or fix?
 
-💬 /aurora "Automation that turns lights on at sunset and off at midnight"
-   → Aurora routes to Sage, clarifies format, creates YAML automation
+💬 "I want a temperature sensor with OLED display on ESP32"
+   → Routes to Volt, confirms board, generates ESPHome config
 
-💬 /aurora "Motion-activated lights — sensor on ESP32, automation in HA"
-   → Aurora plans the full workflow: Volt (firmware) → Sage (automation)
+💬 "Automation that turns lights on at sunset and off at midnight"
+   → Routes to Sage, clarifies format, creates YAML automation
 
-💬 /aurora "Python integration for the Acme cloud API, publishable to HACS"
-   → Aurora routes to Ada, guides through architecture and config flow
+💬 "Motion-activated lights — sensor on ESP32, automation in HA"
+   → Plans full workflow: Volt (firmware) → Sage (automation)
+
+💬 "Python integration for the Acme cloud API, publishable to HACS"
+   → Routes to Ada, guides through architecture and config flow
 ```
 
 You can also skip Aurora and invoke skills directly by mentioning keywords like "ESPHome", "Node-RED flow", or "YAML automation" — the right skill activates automatically.
