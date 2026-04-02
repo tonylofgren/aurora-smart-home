@@ -35,28 +35,28 @@ The most comprehensive Claude Code skill pack for smart home development - from 
 
 #### Aurora - A New Way to Work
 
-Start with `/aurora` — Aurora opens, asks what you want to build, and takes it from there.
+Start with `/aurora` - Aurora opens, asks what you want to build, and takes it from there.
 
 No need to know which skill to use. Describe your project in plain language and Aurora routes to the right specialist(s), recommends the right Claude model for your subscription tier, and builds a step-by-step workflow if the task spans multiple skills.
 
-**19 specialist agents** — Volt (ESP32 firmware), Sage (automations), Ada (custom integrations), Iris (dashboards), Glitch (debugging), Grid (network/VLANs), Forge (infrastructure), and 12 more. Each agent has a defined domain, a soul, and a voice.
+**19 specialist agents** - Volt (ESP32 firmware), Sage (automations), Ada (custom integrations), Iris (dashboards), Glitch (debugging), Grid (network/VLANs), Forge (infrastructure), and 12 more. Each agent has a defined domain, a soul, and a voice.
 
 #### Home Assistant 2026.4
 
-- **IR Proxy** — Native infrared entity platform. ESPHome IR devices expose `InfraredEntity`, HA sends commands through them
-- **Cross-domain automation triggers** — More intuitive trigger syntax aligned to how people think (Labs)
-- **Matter lock PIN management** — Full PIN code control for Matter locks
-- **Dashboard** — Section background colors and card favorites
-- **Voice** — Ask Assist to clean a specific room area
-- **New integrations** — UniFi Access, WiiM, Solarman, TRMNL (e-paper display)
+- **IR Proxy** - Native infrared entity platform. ESPHome IR devices expose `InfraredEntity`, HA sends commands through them
+- **Cross-domain automation triggers** - More intuitive trigger syntax aligned to how people think (Labs)
+- **Matter lock PIN management** - Full PIN code control for Matter locks
+- **Dashboard** - Section background colors and card favorites
+- **Voice** - Ask Assist to clean a specific room area
+- **New integrations** - UniFi Access, WiiM, Solarman, TRMNL (e-paper display)
 
 #### ESPHome 2026.3
 
-- **IR/RF Proxy** (`ir_rf_proxy`) — Runtime IR/RF without reflashing. Learns and replays commands via `remote_transmitter` / `remote_receiver`
-- **RP2040/RP2350** — First-class Raspberry Pi Pico support (143+ boards, WiFi, BLE, OTA)
-- **Media Player redesign** — Pluggable sources, playlists, Ogg Opus support
-- **Performance** — Main loop up to 99x faster, API protobuf 6-12x faster, 11-20KB flash savings. Just reflash — no config changes needed
-- **ESP8266 heap crash fix** — Long-standing LWIP use-after-free bug resolved
+- **IR/RF Proxy** (`ir_rf_proxy`) - Runtime IR/RF without reflashing. Learns and replays commands via `remote_transmitter` / `remote_receiver`
+- **RP2040/RP2350** - First-class Raspberry Pi Pico support (143+ boards, WiFi, BLE, OTA)
+- **Media Player redesign** - Pluggable sources, playlists, Ogg Opus support
+- **Performance** - Main loop up to 99x faster, API protobuf 6-12x faster, 11-20KB flash savings. Just reflash - no config changes needed
+- **ESP8266 heap crash fix** - Long-standing LWIP use-after-free bug resolved
 - **Alarm Control Panel**, **Lock & Valve**, **MIPI DSI displays**, **Z-Wave Proxy**, **Zigbee expansion**
 
 See [CHANGELOG.md](CHANGELOG.md) for full details.
@@ -73,7 +73,7 @@ See [CHANGELOG.md](CHANGELOG.md) for full details.
 | Configure **ESP device firmware** or **design a new IoT product** | `esphome` |
 | Develop **Python custom components** (HACS) | `ha-integration` |
 
-> **New to Aurora?** Start with `/aurora` — it routes to the right skill and recommends the right model for your task.
+> **New to Aurora?** Start with `/aurora` - it routes to the right skill and recommends the right model for your task.
 
 ---
 
@@ -125,13 +125,13 @@ By default, skills install globally (`--scope user`). You can also scope them:
 
 ### Primary: `/aurora`
 
-Type `/aurora` for any smart home task. Aurora opens, asks what you want to build, and routes to the right specialist(s) — recommending the right Claude model for your subscription tier.
+Type `/aurora` for any smart home task. Aurora opens, asks what you want to build, and routes to the right specialist(s) - recommending the right Claude model for your subscription tier.
 
 Works for single tasks and multi-step projects alike.
 
 ### Also: Automatic (Contextual)
 
-Individual skills also activate automatically when you mention relevant keywords — without going through Aurora:
+Individual skills also activate automatically when you mention relevant keywords - without going through Aurora:
 
 | Skill | Triggers on |
 |-------|-------------|
@@ -146,7 +146,7 @@ Individual skills also activate automatically when you mention relevant keywords
 
 ## Getting Started with Your First Project
 
-Type `/aurora` — Aurora opens and asks what you want to build. Then describe your project:
+Type `/aurora` - Aurora opens and asks what you want to build. Then describe your project:
 
 ```
 Aurora: What do you want to build or fix?
@@ -157,14 +157,14 @@ Aurora: What do you want to build or fix?
 💬 "Automation that turns lights on at sunset and off at midnight"
    → Routes to Sage, clarifies format, creates YAML automation
 
-💬 "Motion-activated lights — sensor on ESP32, automation in HA"
+💬 "Motion-activated lights - sensor on ESP32, automation in HA"
    → Plans full workflow: Volt (firmware) → Sage (automation)
 
 💬 "Python integration for the Acme cloud API, publishable to HACS"
    → Routes to Ada, guides through architecture and config flow
 ```
 
-You can also skip Aurora and invoke skills directly by mentioning keywords like "ESPHome", "Node-RED flow", or "YAML automation" — the right skill activates automatically.
+You can also skip Aurora and invoke skills directly by mentioning keywords like "ESPHome", "Node-RED flow", or "YAML automation" - the right skill activates automatically.
 
 ### Example Projects
 
@@ -456,15 +456,15 @@ Aurora's agent personas are inspired by the people building the Open Home.
 
 | Agent | Inspired by |
 |-------|-------------|
-| **Aurora** | Otto Privacyhaus — believes your home should work without asking the cloud for permission. |
-| **Ada** + **Lens** | Hendrik Nomerge — your PR is not ready. He knows. He will tell you. |
-| **Atlas** | Lars Hacsworth — built the store everyone uses to share their builds. |
-| **Iris** + **Lore** | Penelope Crowwhisperer — tamer of crows. Bridge between humans and their smart homes. |
-| **Mira** | François Backlogeau — has opinions about roadmaps. Very French ones. |
+| **Aurora** | Otto Privacyhaus - believes your home should work without asking the cloud for permission. |
+| **Ada** + **Lens** | Hendrik Nomerge - your PR is not ready. He knows. He will tell you. |
+| **Atlas** | Lars Hacsworth - built the store everyone uses to share their builds. |
+| **Iris** + **Lore** | Penelope Crowwhisperer - tamer of crows. Bridge between humans and their smart homes. |
+| **Mira** | François Backlogeau - has opinions about roadmaps. Very French ones. |
 
 ---
 
-Every release, every fix, every new integration — funded by Nabu Casa. If your home runs on HA, consider giving back. [nabucasa.com](https://www.nabucasa.com)
+Every release, every fix, every new integration - funded by Nabu Casa. If your home runs on HA, consider giving back. [nabucasa.com](https://www.nabucasa.com)
 
 *Community project. Not affiliated with or endorsed by Nabu Casa or the Open Home Foundation. Agent personas are fictional.*
 
