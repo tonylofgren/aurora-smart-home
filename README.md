@@ -91,7 +91,12 @@ See [CHANGELOG.md](CHANGELOG.md) for full details.
 /plugin install ha-integration@aurora-smart-home
 ```
 
-That's it - skills are now available in all your projects.
+```
+# 3. Start here
+/aurora
+```
+
+Aurora asks what you want to build and takes it from there.
 
 <details>
 <summary><strong>Advanced: install per-project or per-team instead</strong></summary>
@@ -118,50 +123,50 @@ By default, skills install globally (`--scope user`). You can also scope them:
 
 ## How Skills Activate
 
-Skills activate in two ways:
+### Primary: `/aurora`
 
-### 1. Automatic (Contextual)
+Start with `/aurora` for any smart home task. Aurora reads your intent, picks the right specialist(s), and recommends the right Claude model for your subscription tier.
 
-Just mention keywords naturally - skills load automatically:
+```
+/aurora "I want a CO2 sensor on ESP32-S3 that alerts me when air quality drops"
+```
+
+Works for single tasks and multi-step projects alike. Aurora handles the routing.
+
+### Also: Automatic (Contextual)
+
+Individual skills also activate automatically when you mention relevant keywords — without going through Aurora:
 
 | Skill | Triggers on |
 |-------|-------------|
-| `node-red` | "node-red" anywhere (even "node-redflöde", "Node-RED-flow") |
 | `esphome` | "ESPHome", "ESP32", "ESP8266", device firmware |
 | `ha-yaml` | "YAML automation", "blueprint", "automations.yaml" |
+| `node-red` | "Node-RED", "flow", "function node" |
 | `ha-integration` | "custom integration", "HACS", "custom_components" |
 
-> **Language-independent:** Product names like "Node-RED" and "ESPHome" work in any language.
-
-### 2. Explicit (Slash Command)
-
-Use `/aurora` when you're not sure which skill fits, or when your task spans multiple skills:
-
-```
-/aurora
-```
-
-Aurora asks what you want to build and routes to the right specialist.
+> **Language-independent:** Product names like "Node-RED" and "ESPHome" trigger skills in any language.
 
 ---
 
 ## Getting Started with Your First Project
 
-After installation, be explicit about which platform you want. Examples:
+Start with `/aurora` and describe what you want in plain language:
 
 ```
-💬 "Create an ESPHome config for an ESP32 temperature sensor with OLED display"
-   → ESPHome skill activates, asks about board, generates complete config
+💬 /aurora "I want a temperature sensor with OLED display on ESP32"
+   → Aurora routes to Volt, confirms board, generates ESPHome config
 
-💬 "Create a Home Assistant automation that turns on lights at sunset"
-   → HA-YAML skill activates, clarifies format, creates YAML automation
+💬 /aurora "Automation that turns lights on at sunset and off at midnight"
+   → Aurora routes to Sage, clarifies format, creates YAML automation
 
-💬 "Create a Node-RED flow for motion-activated lights"
-   → Node-RED skill activates, generates importable JSON flow
+💬 /aurora "Motion-activated lights — sensor on ESP32, automation in HA"
+   → Aurora plans the full workflow: Volt (firmware) → Sage (automation)
 
-💬 "Create a Python custom integration for the Acme cloud API"
-   → HA-Integration skill activates, guides through architecture
+💬 /aurora "Python integration for the Acme cloud API, publishable to HACS"
+   → Aurora routes to Ada, guides through architecture and config flow
 ```
+
+You can also skip Aurora and invoke skills directly by mentioning keywords like "ESPHome", "Node-RED flow", or "YAML automation" — the right skill activates automatically.
 
 ### Example Projects
 
