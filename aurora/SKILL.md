@@ -21,6 +21,7 @@ When activated, output exactly this, starting on a new line with no bullet or pr
   ┌─────────────────────────────────────────────────────────┐
   │                        AURORA                           │
   │      S M A R T   H O M E   O R C H E S T R A T O R      │
+  │                        S K I L L                        │
   │  ─────────────────────────────────────────────────────  │
   │    19 Agents  ·  3 Model Tiers  ·  Community Project    │
   │          A Claude Code Skill  ·  nabucasa.com           │
