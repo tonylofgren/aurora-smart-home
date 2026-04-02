@@ -28,21 +28,36 @@ The most comprehensive Claude Code skill pack for smart home development - from 
 
 ---
 
-> **v1.2.0 - Action required if you installed before 2026-03-14:**
-> The plugin structure was updated. Run `/plugin marketplace add tonylofgren/aurora-smart-home` again to reinstall. Takes 30 seconds.
+> **v1.3.0 - Reinstall recommended:**
+> Individual skill commands (`/aurora:ha-yaml`, `/aurora:esphome`, etc.) have been replaced by the `/aurora` orchestrator. Run `/plugin marketplace add tonylofgren/aurora-smart-home` to update.
 
-### What's New in ESPHome v1.2.0
+### What's New in v1.3.0
 
-Coverage updated through **ESPHome 2026.3**:
+#### Aurora - A New Way to Work
 
-- **Alarm Control Panel** - Template-based alarm state machine with zones, bypass, and code support
-- **Media Player redesign** - Speaker Media Player with dual pipelines, mixer, resampler, Ogg Opus
-- **Lock & Valve** - Template lock/unlock, valve control for irrigation and gas
-- **RP2040/RP2350** - First-class Raspberry Pi Pico support (143+ boards, WiFi, BLE, OTA)
-- **MIPI DSI displays** - High-performance displays for ESP32-P4
-- **Z-Wave Proxy** - Network-based Z-Wave serial over WiFi/Ethernet
-- **Zigbee expansion** - More device types on ESP32-C6/H2
-- **3 new templates** - Alarm panel, media player, irrigation controller
+Start with `/aurora` — Aurora opens, asks what you want to build, and takes it from there.
+
+No need to know which skill to use. Describe your project in plain language and Aurora routes to the right specialist(s), recommends the right Claude model for your subscription tier, and builds a step-by-step workflow if the task spans multiple skills.
+
+**19 specialist agents** — Volt (ESP32 firmware), Sage (automations), Ada (custom integrations), Iris (dashboards), Glitch (debugging), Grid (network/VLANs), Forge (infrastructure), and 12 more. Each agent has a defined domain, a soul, and a voice.
+
+#### Home Assistant 2026.4
+
+- **IR Proxy** — Native infrared entity platform. ESPHome IR devices expose `InfraredEntity`, HA sends commands through them
+- **Cross-domain automation triggers** — More intuitive trigger syntax aligned to how people think (Labs)
+- **Matter lock PIN management** — Full PIN code control for Matter locks
+- **Dashboard** — Section background colors and card favorites
+- **Voice** — Ask Assist to clean a specific room area
+- **New integrations** — UniFi Access, WiiM, Solarman, TRMNL (e-paper display)
+
+#### ESPHome 2026.3
+
+- **IR/RF Proxy** (`ir_rf_proxy`) — Runtime IR/RF without reflashing. Learns and replays commands via `remote_transmitter` / `remote_receiver`
+- **RP2040/RP2350** — First-class Raspberry Pi Pico support (143+ boards, WiFi, BLE, OTA)
+- **Media Player redesign** — Pluggable sources, playlists, Ogg Opus support
+- **Performance** — Main loop up to 99x faster, API protobuf 6-12x faster, 11-20KB flash savings. Just reflash — no config changes needed
+- **ESP8266 heap crash fix** — Long-standing LWIP use-after-free bug resolved
+- **Alarm Control Panel**, **Lock & Valve**, **MIPI DSI displays**, **Z-Wave Proxy**, **Zigbee expansion**
 
 See [CHANGELOG.md](CHANGELOG.md) for full details.
 
@@ -431,6 +446,28 @@ Contributions are welcome! Please feel free to submit issues or pull requests.
 ## License
 
 MIT License - see [LICENSE](LICENSE) for details.
+
+---
+
+---
+
+## Credits
+
+Aurora's agent personas are inspired by the people building the Open Home.
+
+| Agent | Inspired by |
+|-------|-------------|
+| **Aurora** | Otto Privacyhaus — believes your home should work without asking the cloud for permission. |
+| **Ada** + **Lens** | Hendrik Nomerge — your PR is not ready. He knows. He will tell you. |
+| **Atlas** | Lars Hacsworth — built the store everyone uses to share their builds. |
+| **Iris** + **Lore** | Penelope Crowwhisperer — tamer of crows. Bridge between humans and their smart homes. |
+| **Mira** | François Backlogeau — has opinions about roadmaps. Very French ones. |
+
+---
+
+Every release, every fix, every new integration — funded by Nabu Casa. If your home runs on HA, consider giving back. [nabucasa.com](https://www.nabucasa.com)
+
+*Community project. Not affiliated with or endorsed by Nabu Casa or the Open Home Foundation. Agent personas are fictional.*
 
 ---
 
