@@ -67,12 +67,13 @@ See [CHANGELOG.md](CHANGELOG.md) for full details.
 
 | I want to... | Use this skill |
 |--------------|----------------|
+| **Not sure, or task spans multiple areas** | `aurora` |
 | Create **YAML automations** (automations.yaml, blueprints, dashboards) | `ha-yaml` |
 | Build **visual Node-RED flows** (drag-and-drop, JSON) | `node-red` |
 | Configure **ESP device firmware** or **design a new IoT product** | `esphome` |
 | Develop **Python custom components** (HACS) | `ha-integration` |
 
-> **Tip:** If your request is ambiguous (e.g., "make a motion light"), the skill will ask which platform you prefer.
+> **New to Aurora?** Start with `/aurora` — it routes to the right skill and recommends the right model for your task.
 
 ---
 
