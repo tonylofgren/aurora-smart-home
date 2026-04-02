@@ -18,6 +18,7 @@ allowed-tools: Read, Glob, Grep, Bash, Agent, Write, Edit
 When activated, display this banner before your first response:
 
 ```
+
   ┌─────────────────────────────────────────────────────────┐
   │                        AURORA                           │
   │      S M A R T   H O M E   O R C H E S T R A T O R      │
