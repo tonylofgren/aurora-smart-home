@@ -15,10 +15,9 @@ allowed-tools: Read, Glob, Grep, Bash, Agent, Write, Edit
 
 # /aurora — Smart Home Orchestrator
 
-When activated, display this banner before your first response:
+When activated, output exactly this, starting on a new line with no bullet or prefix:
 
 ```
-
   ┌─────────────────────────────────────────────────────────┐
   │                        AURORA                           │
   │      S M A R T   H O M E   O R C H E S T R A T O R      │
