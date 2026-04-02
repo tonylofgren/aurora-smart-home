@@ -1,16 +1,16 @@
 # Multi-Coordinator Patterns
 
-Guide för att använda flera DataUpdateCoordinators i en Home Assistant-integration.
+Guide for using multiple DataUpdateCoordinators in a Home Assistant integration.
 
-## Översikt
+## Overview
 
-En integration kan behöva flera coordinators när:
-- Olika data behöver olika uppdateringsintervall
-- Olika API-endpoints har olika rate limits
-- Vissa data är mer kritisk och behöver snabbare uppdatering
-- Data kommer från olika källor (API + WebSocket)
+An integration may need multiple coordinators when:
+- Different data requires different update intervals
+- Different API endpoints have different rate limits
+- Some data is more critical and needs faster updates
+- Data comes from different sources (API + WebSocket)
 
-## Arkitektur
+## Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -40,9 +40,9 @@ En integration kan behöva flera coordinators när:
 └─────────────────────────────────────────────────────────┘
 ```
 
-## Grundläggande Multi-Coordinator
+## Basic Multi-Coordinator
 
-### Dataclass för Runtime Data
+### Dataclass for Runtime Data
 
 ```python
 """Data classes for multi-coordinator integration.
@@ -190,7 +190,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: MyConfigEntry) -> bool:
     return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
 ```
 
-### Entity med flera Coordinators
+### Entity with Multiple Coordinators
 
 ```python
 """Sensor entities using multiple coordinators.
@@ -280,9 +280,9 @@ class TotalEnergySensor(CoordinatorEntity[HistoryCoordinator], SensorEntity):
         return sum(item.get("energy", 0) for item in self.coordinator.data)
 ```
 
-## Entity som använder BÅDA Coordinators
+## Entity Using BOTH Coordinators
 
-När en entity behöver data från flera coordinators:
+When an entity needs data from multiple coordinators:
 
 ```python
 """Entity that combines data from multiple coordinators.
@@ -363,9 +363,9 @@ class CombinedSensor(CoordinatorEntity[StatusCoordinator], SensorEntity):
         }
 ```
 
-## Koordinerad Refresh
+## Coordinated Refresh
 
-Trigga uppdatering av alla coordinators:
+Trigger updates for all coordinators:
 
 ```python
 """Service to refresh all coordinators.
@@ -409,7 +409,7 @@ async def async_setup_services(hass: HomeAssistant) -> None:
 
 ## Conditional Coordinator
 
-Coordinator som bara körs under vissa förhållanden:
+Coordinator that only runs under certain conditions:
 
 ```python
 """Conditional coordinator that pauses when not needed.
@@ -456,9 +456,9 @@ class ConditionalCoordinator(DataUpdateCoordinator):
         return await self.client.async_get_data()
 ```
 
-## Prioriterad Coordinator
+## Adaptive Coordinator
 
-Coordinator som anpassar intervall baserat på aktivitet:
+Coordinator that adjusts its interval based on activity:
 
 ```python
 """Adaptive coordinator with dynamic update interval.
@@ -507,16 +507,16 @@ class AdaptiveCoordinator(DataUpdateCoordinator):
 
 ## Best Practices
 
-### Namngivning
+### Naming
 
 ```python
-# Använd prefix för tydlighet
+# Use prefix for clarity
 name=f"{DOMAIN}_status"      # my_integration_status
 name=f"{DOMAIN}_history"     # my_integration_history
 name=f"{DOMAIN}_realtime"    # my_integration_realtime
 ```
 
-### Felhantering
+### Error Handling
 
 ```python
 async def _async_update_data(self):
@@ -534,7 +534,7 @@ async def _async_update_data(self):
         raise UpdateFailed(f"Error: {err}") from err
 ```
 
-### Resurshantering
+### Resource Management
 
 ```python
 async def async_unload_entry(hass, entry):
@@ -547,22 +547,22 @@ async def async_unload_entry(hass, entry):
     return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
 ```
 
-## Exempelprompts
+## Example Prompts
 
 ```
-"Skapa en integration med separata coordinators för status och historik"
+"Create an integration with separate coordinators for status and history"
 
-"Jag vill ha snabb uppdatering för realtidsdata och långsam för statistik"
+"I want fast updates for real-time data and slow updates for statistics"
 
-"Hur gör jag en entity som lyssnar på två coordinators?"
+"How do I make an entity that listens to two coordinators?"
 
-"Implementera en coordinator som pausar när ingen är hemma"
+"Implement a coordinator that pauses when nobody is home"
 
-"Skapa en adaptiv coordinator som ökar frekvensen vid aktivitet"
+"Create an adaptive coordinator that increases frequency during activity"
 ```
 
-## Se även
+## See Also
 
-- `references/coordinator.md` - Grundläggande DataUpdateCoordinator
-- `references/architecture.md` - Integration-arkitektur
-- `references/entities.md` - Entity-plattformar
+- `references/coordinator.md` - Basic DataUpdateCoordinator
+- `references/architecture.md` - Integration architecture
+- `references/entities.md` - Entity platforms

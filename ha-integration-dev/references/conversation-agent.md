@@ -1,12 +1,12 @@
 # Conversation Agent
 
-Guide för att utveckla conversation agents (röstassistenter) för Home Assistant Assist.
+Guide for developing conversation agents (voice assistants) for Home Assistant Assist.
 
-## Översikt
+## Overview
 
-En conversation agent tolkar användarens intentioner och utför åtgärder. Home Assistant använder conversation agents i Assist pipeline för röst- och textkommandon.
+A conversation agent interprets the user's intentions and performs actions. Home Assistant uses conversation agents in the Assist pipeline for voice and text commands.
 
-## Arkitektur
+## Architecture
 
 ```
 ┌──────────────────────────────────────────────────┐
@@ -22,11 +22,11 @@ En conversation agent tolkar användarens intentioner och utför åtgärder. Hom
 
 ## Conversation Agent Types
 
-| Typ | Beskrivning | Användning |
-|-----|-------------|------------|
-| `ConversationEntity` | Custom intent parsing | Full kontroll |
-| `AbstractConversationAgent` | LLM-baserad | AI/OpenAI |
-| Built-in | Home Assistants egna | Standard |
+| Type | Description | Usage |
+|------|-------------|-------|
+| `ConversationEntity` | Custom intent parsing | Full control |
+| `AbstractConversationAgent` | LLM-based | AI/OpenAI |
+| Built-in | Home Assistant's own | Standard |
 
 ## Minimal Conversation Agent
 
@@ -86,12 +86,12 @@ class MyConversationAgent(ConversationEntity):
         # Simple intent matching
         if "status" in text:
             response = await self._get_home_status()
-        elif "tänd" in text or "turn on" in text:
+        elif "turn on" in text:
             response = await self._handle_turn_on(text)
-        elif "släck" in text or "turn off" in text:
+        elif "turn off" in text:
             response = await self._handle_turn_off(text)
         else:
-            response = "Jag förstod inte. Försök igen."
+            response = "I did not understand. Please try again."
 
         intent_response = conversation.IntentResponse(language=user_input.language)
         intent_response.async_set_speech(response)
@@ -109,7 +109,7 @@ class MyConversationAgent(ConversationEntity):
             for state in hass.states.async_all("light")
             if state.state == "on"
         )
-        return f"Du har {lights_on} lampor tända."
+        return f"You have {lights_on} lights on."
 
     async def _handle_turn_on(self, text: str) -> str:
         """Handle turn on command."""
@@ -117,19 +117,19 @@ class MyConversationAgent(ConversationEntity):
         await self.hass.services.async_call(
             "light", "turn_on", {"entity_id": "light.living_room"}
         )
-        return "Lampan är tänd."
+        return "The light is on."
 
     async def _handle_turn_off(self, text: str) -> str:
         """Handle turn off command."""
         await self.hass.services.async_call(
             "light", "turn_off", {"entity_id": "light.living_room"}
         )
-        return "Lampan är släckt."
+        return "The light is off."
 ```
 
-## LLM-baserad Conversation Agent
+## LLM-based Conversation Agent
 
-Med OpenAI, Anthropic, eller lokal LLM:
+With OpenAI, Anthropic, or a local LLM:
 
 ```python
 """LLM Conversation Agent.
@@ -233,17 +233,17 @@ class LLMConversationAgent(AbstractConversationAgent):
 
     def _build_system_prompt(self, entities: list[dict]) -> str:
         """Build system prompt with HA context."""
-        return f"""Du är en smart hemassistent för Home Assistant.
+        return f"""You are a smart home assistant for Home Assistant.
 
-Tillgängliga enheter:
+Available devices:
 {json.dumps(entities, ensure_ascii=False, indent=2)}
 
-Du kan utföra följande åtgärder genom att svara med JSON:
+You can perform the following actions by responding with JSON:
 {{"action": "call_service", "domain": "light", "service": "turn_on", "entity_id": "light.living_room"}}
 {{"action": "call_service", "domain": "climate", "service": "set_temperature", "entity_id": "climate.bedroom", "data": {{"temperature": 22}}}}
 
-Om ingen åtgärd behövs, svara bara med text.
-Svara alltid på samma språk som användaren."""
+If no action is needed, just respond with text.
+Always respond in the same language as the user."""
 
     async def _get_entities_context(self) -> list[dict]:
         """Get entities for LLM context."""
@@ -289,15 +289,15 @@ Svara alltid på samma språk som användaren."""
                         action["service"],
                         {"entity_id": action["entity_id"], **action.get("data", {})},
                     )
-                    return f"Utfört: {action['service']} på {action['entity_id']}"
+                    return f"Done: {action['service']} on {action['entity_id']}"
         except json.JSONDecodeError:
             pass
         return None
 ```
 
-## Registrera Conversation Agent
+## Register Conversation Agent
 
-I `__init__.py`:
+In `__init__.py`:
 
 ```python
 """My integration with conversation agent.
@@ -352,7 +352,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 ## Intent Handlers
 
-Registrera custom intents:
+Register custom intents:
 
 ```python
 """Custom intents.
@@ -389,9 +389,9 @@ class GetWeatherIntent(intent.IntentHandler):
         weather = intent_obj.hass.states.get(f"weather.{location}")
         if weather:
             temp = weather.attributes.get("temperature")
-            response = f"Temperaturen i {location} är {temp} grader."
+            response = f"The temperature in {location} is {temp} degrees."
         else:
-            response = f"Kunde inte hitta väder för {location}."
+            response = f"Could not find weather for {location}."
 
         response_obj = intent_obj.create_response()
         response_obj.async_set_speech(response)
@@ -418,47 +418,47 @@ class SetRoomModeIntent(intent.IntentHandler):
         )
 
         response_obj = intent_obj.create_response()
-        response_obj.async_set_speech(f"{room.title()} är nu i {mode}-läge.")
+        response_obj.async_set_speech(f"{room.title()} is now in {mode} mode.")
         return response_obj
 ```
 
 ## Custom Sentences
 
-Lägg till `custom_sentences/sv/sentences.yaml`:
+Add `custom_sentences/en/sentences.yaml`:
 
 ```yaml
-language: sv
+language: en
 intents:
   GetWeather:
     data:
       - sentences:
-          - "vad är vädret i {location}"
-          - "hur är vädret i {location}"
-          - "temperatur i {location}"
+          - "what is the weather in {location}"
+          - "how is the weather in {location}"
+          - "temperature in {location}"
         slots:
           location:
-            - vardagsrummet
-            - köket
-            - ute
+            - living room
+            - kitchen
+            - outside
   SetRoomMode:
     data:
       - sentences:
-          - "sätt {room} i {mode} läge"
-          - "aktivera {mode} i {room}"
+          - "set {room} to {mode} mode"
+          - "activate {mode} in {room}"
         slots:
           room:
-            - vardagsrummet
-            - sovrummet
-            - köket
+            - living room
+            - bedroom
+            - kitchen
           mode:
-            - film
-            - middag
-            - natt
+            - movie
+            - dinner
+            - night
 ```
 
 ## Conversation History
 
-Hantera konversationshistorik:
+Manage conversation history:
 
 ```python
 class ConversationHistory:
@@ -479,7 +479,7 @@ class ConversationHistory:
             "content": content,
         })
 
-        # Trim history
+        # Trim history to max size
         if len(self._history[conversation_id]) > self._max_history:
             self._history[conversation_id] = self._history[conversation_id][-self._max_history:]
 
@@ -551,14 +551,14 @@ async def test_turn_on_light(hass: HomeAssistant) -> None:
     agent = MyConversationAgent(hass, mock_config_entry)
 
     user_input = conversation.ConversationInput(
-        text="tänd lampan i vardagsrummet",
-        language="sv",
+        text="turn on the light in the living room",
+        language="en",
         conversation_id="test",
     )
 
     result = await agent.async_process(user_input)
 
-    assert result.response.speech["plain"]["speech"] == "Lampan är tänd."
+    assert result.response.speech["plain"]["speech"] == "The light is on."
 
 
 async def test_get_status(hass: HomeAssistant) -> None:
@@ -570,19 +570,19 @@ async def test_get_status(hass: HomeAssistant) -> None:
     agent = MyConversationAgent(hass, mock_config_entry)
 
     user_input = conversation.ConversationInput(
-        text="vad är status hemma",
-        language="sv",
+        text="what is the status at home",
+        language="en",
         conversation_id="test",
     )
 
     result = await agent.async_process(user_input)
 
-    assert "1 lampor tända" in result.response.speech["plain"]["speech"]
+    assert "1 lights on" in result.response.speech["plain"]["speech"]
 ```
 
-## Se även
+## See Also
 
-- `references/services-events.md` - Anropa tjänster
-- `references/entities.md` - Hantera entiteter
+- `references/services-events.md` - Calling services
+- `references/entities.md` - Managing entities
 - `../home-assistant/references/assist-patterns.md` - Assist pipeline patterns
 - `../esphome/references/voice-local.md` - ESPHome voice assistant

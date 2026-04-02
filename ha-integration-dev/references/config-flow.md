@@ -1024,9 +1024,9 @@ async def async_step_user(self, user_input: dict | None = None) -> ConfigFlowRes
 ```
 translations/
 ├── en.json     # English (required)
-├── sv.json     # Swedish
-├── de.json     # German
-└── fr.json     # French
+├── sv.json     # Swedish (optional)
+├── de.json     # German (optional)
+└── fr.json     # French (optional)
 ```
 
 ### Translation File Format
@@ -1036,25 +1036,25 @@ translations/
   "config": {
     "step": {
       "user": {
-        "title": "Anslut till enhet",
-        "description": "Ange anslutningsuppgifter.",
+        "title": "Connect to device",
+        "description": "Enter connection details.",
         "data": {
-          "host": "Värd",
-          "api_key": "API-nyckel"
+          "host": "Host",
+          "api_key": "API Key"
         }
       }
     },
     "error": {
-      "cannot_connect": "Kunde inte ansluta",
-      "invalid_auth": "Ogiltig autentisering"
+      "cannot_connect": "Failed to connect",
+      "invalid_auth": "Invalid authentication"
     }
   },
   "options": {
     "step": {
       "init": {
-        "title": "Inställningar",
+        "title": "Options",
         "data": {
-          "scan_interval": "Uppdateringsintervall"
+          "scan_interval": "Update Interval"
         }
       }
     }

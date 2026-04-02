@@ -1,14 +1,14 @@
 # Assist Patterns
 
-Guide för att konfigurera och använda Home Assistant Assist (röstassistent).
+Guide for configuring and using Home Assistant Assist (voice assistant).
 
-## Översikt
+## Overview
 
-Home Assistant Assist är den inbyggda röstassistenten som:
-- Förstår naturligt språk
-- Styr enheter via röst eller text
-- Kan köras helt lokalt utan molntjänster
-- Stöder flera språk inklusive svenska
+Home Assistant Assist is the built-in voice assistant that:
+- Understands natural language
+- Controls devices via voice or text
+- Can run entirely locally without cloud services
+- Supports multiple languages including English
 
 ## Assist Pipeline
 
@@ -26,39 +26,39 @@ Home Assistant Assist är den inbyggda röstassistenten som:
 └────────────────────────────────────────────────────┘
 ```
 
-## Grundläggande Konfiguration
+## Basic Configuration
 
-### Aktivera Assist
+### Enable Assist
 
 1. Settings → Voice assistants
-2. Klicka på "Add assistant"
-3. Konfigurera komponenterna
+2. Click "Add assistant"
+3. Configure the components
 
-### Komponenter
+### Components
 
-| Komponent | Lokalt | Moln | Rekommendation |
-|-----------|--------|------|----------------|
-| **STT** | Whisper | Google | Whisper för privatliv |
-| **TTS** | Piper | Google | Piper för svenska |
-| **Wake Word** | openWakeWord | - | Endast lokalt |
-| **Conversation** | HA built-in | OpenAI | Built-in för kontroll |
+| Component | Local | Cloud | Recommendation |
+|-----------|-------|-------|----------------|
+| **STT** | Whisper | Google | Whisper for privacy |
+| **TTS** | Piper | Google | Piper for local TTS |
+| **Wake Word** | openWakeWord | - | Local only |
+| **Conversation** | HA built-in | OpenAI | Built-in for control |
 
 ## Custom Sentences
 
-Skapa egna röstkommandon i `config/custom_sentences/sv/`:
+Create your own voice commands in `config/custom_sentences/en/`:
 
-### Grundläggande Syntax
+### Basic Syntax
 
 ```yaml
-# config/custom_sentences/sv/lights.yaml
-language: sv
+# config/custom_sentences/en/lights.yaml
+language: en
 
 intents:
   HassLightSet:
     data:
       - sentences:
-          - "[sätt|ställ] {name} [på|till] {brightness} [procent]"
-          - "{name} [på|till] {brightness} [procent]"
+          - "[set] {name} [to] {brightness} [percent]"
+          - "{name} [to] {brightness} [percent]"
 
 lists:
   brightness:
@@ -67,71 +67,71 @@ lists:
       to: 100
 ```
 
-### Rum och Områden
+### Rooms and Areas
 
 ```yaml
-# config/custom_sentences/sv/rooms.yaml
-language: sv
+# config/custom_sentences/en/rooms.yaml
+language: en
 
 intents:
   HassLightSet:
     data:
       - sentences:
-          - "tänd [alla] [lampor|lamporna] [i|på] {area}"
-          - "släck [alla] [lampor|lamporna] [i|på] {area}"
+          - "turn on [all] [light|lights] [in|at] {area}"
+          - "turn off [all] [light|lights] [in|at] {area}"
 
   HassTurnOn:
     data:
       - sentences:
-          - "starta {name}"
-          - "sätt på {name}"
-          - "slå på {name}"
+          - "start {name}"
+          - "turn on {name}"
+          - "switch on {name}"
 
   HassTurnOff:
     data:
       - sentences:
-          - "stäng av {name}"
-          - "stoppa {name}"
+          - "turn off {name}"
+          - "stop {name}"
 ```
 
-### Avancerade Mönster
+### Advanced Patterns
 
 ```yaml
-# config/custom_sentences/sv/scenes.yaml
-language: sv
+# config/custom_sentences/en/scenes.yaml
+language: en
 
 intents:
   HassSceneTurnOn:
     data:
       - sentences:
-          - "[aktivera|starta|sätt på] {scene_mode} [läge|mode] [i|på] {area}"
-          - "[jag vill ha] {scene_mode} [i|på] {area}"
+          - "[activate|start|set] {scene_mode} [mode] [in|at] {area}"
+          - "[I want] {scene_mode} [in|at] {area}"
 
 lists:
   scene_mode:
     values:
-      - in: "film"
+      - in: "movie"
         out: "movie"
-      - in: "middag"
+      - in: "dinner"
         out: "dinner"
-      - in: "romantik"
+      - in: "romantic"
         out: "romantic"
-      - in: "fest"
+      - in: "party"
         out: "party"
 ```
 
-### Wildcards och Slots
+### Wildcards and Slots
 
 ```yaml
-# config/custom_sentences/sv/custom.yaml
-language: sv
+# config/custom_sentences/en/custom.yaml
+language: en
 
 intents:
   SetTemperature:
     data:
       - sentences:
-          - "sätt temperaturen [i|på] {area} [till|på] {temperature} grader"
-          - "{temperature} grader [i|på] {area}"
+          - "set the temperature [in|at] {area} [to] {temperature} degrees"
+          - "{temperature} degrees [in|at] {area}"
 
 lists:
   temperature:
@@ -142,7 +142,7 @@ lists:
 
 ## Intent Scripts
 
-Koppla intents till automationer:
+Connect intents to automations:
 
 ```yaml
 # config/intent_script.yaml
@@ -150,12 +150,12 @@ intent_script:
   GetWeatherForecast:
     speech:
       text: >
-        Vädret imorgon blir {{ states('weather.home') }}
-        med {{ state_attr('weather.home', 'temperature') }} grader.
+        Tomorrow's weather will be {{ states('weather.home') }}
+        with {{ state_attr('weather.home', 'temperature') }} degrees.
 
   GoodMorning:
     speech:
-      text: "God morgon! Jag förbereder huset."
+      text: "Good morning! I am preparing the house."
     action:
       - service: scene.turn_on
         target:
@@ -169,115 +169,115 @@ intent_script:
 
   LeaveHome:
     speech:
-      text: "Ha en bra dag! Jag stänger av allt."
+      text: "Have a great day! I am turning everything off."
     action:
       - service: script.leave_home
 ```
 
-Registrera i `configuration.yaml`:
+Register in `configuration.yaml`:
 
 ```yaml
 intent_script: !include intent_script.yaml
 ```
 
-Och skapa sentences:
+And create sentences:
 
 ```yaml
-# config/custom_sentences/sv/routines.yaml
-language: sv
+# config/custom_sentences/en/routines.yaml
+language: en
 
 intents:
   GoodMorning:
     data:
       - sentences:
-          - "god morgon"
-          - "vakna huset"
-          - "starta morgonrutin"
+          - "good morning"
+          - "wake up house"
+          - "start morning routine"
 
   LeaveHome:
     data:
       - sentences:
-          - "jag går nu"
-          - "hejdå"
-          - "stäng av allt"
+          - "I am leaving now"
+          - "goodbye"
+          - "turn everything off"
 ```
 
-## Områdesbaserade Kommandon
+## Area-based Commands
 
 ```yaml
-# config/custom_sentences/sv/area_commands.yaml
-language: sv
+# config/custom_sentences/en/area_commands.yaml
+language: en
 
 intents:
   HassLightSet:
     data:
       - sentences:
-          - "dämpa [belysningen|ljuset] [i|på] {area}"
+          - "dim [the] [light|lights] [in|at] {area}"
         slots:
           brightness: 30
 
       - sentences:
-          - "full belysning [i|på] {area}"
-          - "max ljus [i|på] {area}"
+          - "full brightness [in|at] {area}"
+          - "max light [in|at] {area}"
         slots:
           brightness: 100
 
       - sentences:
-          - "mysbelysning [i|på] {area}"
+          - "cozy lighting [in|at] {area}"
         slots:
           brightness: 20
 
   HassTurnOn:
     data:
       - sentences:
-          - "starta [alla] {device_class} [i|på] {area}"
+          - "start [all] {device_class} [in|at] {area}"
 
   HassTurnOff:
     data:
       - sentences:
-          - "[stäng av|stoppa] [alla] {device_class} [i|på] {area}"
+          - "[turn off|stop] [all] {device_class} [in|at] {area}"
 
 lists:
   device_class:
     values:
-      - in: "lampor"
+      - in: "lights"
         out: "light"
-      - in: "fläktar"
+      - in: "fans"
         out: "fan"
       - in: "tv"
         out: "media_player"
 ```
 
-## Mediakontroll
+## Media Control
 
 ```yaml
-# config/custom_sentences/sv/media.yaml
-language: sv
+# config/custom_sentences/en/media.yaml
+language: en
 
 intents:
   HassMediaPause:
     data:
       - sentences:
-          - "pausa [musiken|videon|media]"
-          - "stopp [musiken|videon]"
+          - "pause [the] [music|video|media]"
+          - "stop [the] [music|video]"
 
   HassMediaUnpause:
     data:
       - sentences:
-          - "fortsätt [spela]"
+          - "continue [playing]"
           - "play"
 
   HassMediaNext:
     data:
       - sentences:
-          - "nästa [låt|spår|video]"
-          - "hoppa över"
+          - "next [song|track|video]"
+          - "skip"
 
   HassSetVolume:
     data:
       - sentences:
-          - "[sätt] volymen [till] {volume} [procent]"
-          - "{volume} [procent] volym"
+          - "[set] [the] volume [to] {volume} [percent]"
+          - "{volume} [percent] volume"
 
 lists:
   volume:
@@ -286,26 +286,26 @@ lists:
       to: 100
 ```
 
-## Timer och Påminnelser
+## Timers and Reminders
 
 ```yaml
-# config/custom_sentences/sv/timers.yaml
-language: sv
+# config/custom_sentences/en/timers.yaml
+language: en
 
 intents:
   HassTimerStart:
     data:
       - sentences:
-          - "sätt [en] timer [på] {minutes} minuter"
-          - "påminn mig om {minutes} minuter"
-          - "väck mig om {minutes} minuter"
+          - "set [a] timer [for] {minutes} minutes"
+          - "remind me in {minutes} minutes"
+          - "wake me in {minutes} minutes"
 
   HassTimerCancel:
     data:
       - sentences:
-          - "avbryt timer[n]"
-          - "stoppa timer[n]"
-          - "stäng av timer[n]"
+          - "cancel [the] timer"
+          - "stop [the] timer"
+          - "turn off [the] timer"
 
 lists:
   minutes:
@@ -314,32 +314,33 @@ lists:
       to: 120
 ```
 
-## Konversationsflöden
+## Conversation Flows
 
 Multi-turn conversations:
 
 ```yaml
-# config/custom_sentences/sv/conversation.yaml
-language: sv
+# config/custom_sentences/en/conversation.yaml
+language: en
 
 intents:
   StartVacuum:
     data:
       - sentences:
-          - "städa {area}"
+          - "clean {area}"
+          - "vacuum {area}"
 
   ConfirmVacuum:
     data:
       - sentences:
-          - "ja [tack]"
-          - "kör [på]"
-          - "starta"
+          - "yes [please]"
+          - "go [ahead]"
+          - "start"
 
   CancelVacuum:
     data:
       - sentences:
-          - "nej [tack]"
-          - "avbryt"
+          - "no [thanks]"
+          - "cancel"
 ```
 
 ```yaml
@@ -347,38 +348,38 @@ intents:
 intent_script:
   StartVacuum:
     speech:
-      text: "Ska jag starta dammsugaren i {{ area }}? Säg ja eller nej."
+      text: "Should I start the vacuum in {{ area }}? Say yes or no."
     # Store context for follow-up
 
   ConfirmVacuum:
     speech:
-      text: "Dammsugaren startar nu."
+      text: "The vacuum is starting now."
     action:
       - service: vacuum.start
         target:
           entity_id: vacuum.roborock
 ```
 
-## Felsökning
+## Troubleshooting
 
 ### Debug Sentences
 
-Testa dina sentences i Developer Tools → Assist:
+Test your sentences in Developer Tools → Assist:
 
-1. Skriv in ditt kommando
-2. Se vilken intent som matchas
-3. Kontrollera slots och values
+1. Type your command
+2. See which intent is matched
+3. Check slots and values
 
-### Vanliga Problem
+### Common Issues
 
-| Problem | Lösning |
+| Problem | Solution |
 |---------|---------|
-| "Jag förstår inte" | Kontrollera sentence syntax |
-| Fel intent matchas | Gör sentences mer specifika |
-| Entity hittas inte | Använd friendly_name eller alias |
-| Timeout | Kontrollera STT/TTS tjänster |
+| "I don't understand" | Check sentence syntax |
+| Wrong intent matched | Make sentences more specific |
+| Entity not found | Use friendly_name or alias |
+| Timeout | Check STT/TTS services |
 
-### Logga Conversation
+### Log Conversation
 
 ```yaml
 logger:
@@ -387,26 +388,26 @@ logger:
     homeassistant.components.intent: debug
 ```
 
-## Alias för Enheter
+## Aliases for Entities
 
-Ge enheter alternativa namn:
+Give entities alternative names:
 
 ```yaml
 # Settings → Devices & Services → Entities → [Entity] → Edit
-# Eller via customize.yaml:
+# Or via customize.yaml:
 
 homeassistant:
   customize:
     light.living_room_ceiling:
       aliases:
-        - taklampan
-        - stora lampan
-        - vardagsrumslampan
+        - ceiling light
+        - big light
+        - living room lamp
 ```
 
 ## Expose Configuration
 
-Begränsa vilka enheter som kan styras:
+Limit which entities can be controlled:
 
 ```yaml
 # Settings → Voice assistants → Expose
@@ -432,35 +433,35 @@ intents:
     data:
       - sentences:
           - "set {name} to {brightness} percent"
-          - "dim {name} to {brightness}"
+          - "dim {name} to {brightness} percent"
 ```
 
-## Exempelprompts
+## Example Prompts
 
 ```
-"Skapa svenska röstkommandon för att styra lampor i olika rum"
+"Create voice commands to control lights in different rooms"
 
-"Jag vill kunna säga 'god morgon' och starta en rutin"
+"I want to be able to say 'good morning' and start a routine"
 
-"Konfigurera Assist för att hantera timer och påminnelser"
+"Configure Assist to handle timers and reminders"
 
-"Skapa custom sentences för mediakontroll på svenska"
+"Create custom sentences for media control"
 
-"Felsök varför mitt röstkommando inte fungerar"
+"Debug why my voice command is not working"
 ```
 
 ## Best Practices
 
-1. **Använd synonymer** - `[tänd|slå på|starta]`
-2. **Gör sentences naturliga** - Tänk på hur du faktiskt pratar
-3. **Testa i Developer Tools** - Verifiera innan produktion
-4. **Använd areas** - `{area}` istället för rumsnamn i sentences
-5. **Begränsa exposed entities** - Säkerhet och prestanda
-6. **Alias för friendly names** - Enklare att säga
+1. **Use synonyms** - `[turn on|switch on|start]`
+2. **Make sentences natural** - Think about how you actually speak
+3. **Test in Developer Tools** - Verify before production
+4. **Use areas** - `{area}` instead of room names in sentences
+5. **Limit exposed entities** - Security and performance
+6. **Aliases for friendly names** - Easier to say
 
-## Se även
+## See Also
 
-- `references/jinja2-templates.md` - Jinja2 för dynamiska svar
-- `references/automations.md` - Koppla till automationer
+- `references/jinja2-templates.md` - Jinja2 for dynamic responses
+- `references/automations.md` - Connect to automations
 - `../esphome/references/voice-local.md` - ESPHome voice devices
 - `../ha-integration-dev/references/conversation-agent.md` - Custom agents
