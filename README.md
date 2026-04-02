@@ -29,14 +29,16 @@ The most comprehensive Claude Code skill pack for smart home development - from 
 ---
 
 > **v1.3.0 - Breaking change:**
-> Individual skill plugins have been removed. Uninstall them to clear errors:
+> Individual skill plugins have been removed. If you're upgrading from a previous version, copy and paste this entire block to reinstall:
 > ```
 > /plugin uninstall esphome@aurora-smart-home
 > /plugin uninstall ha-yaml@aurora-smart-home
 > /plugin uninstall node-red@aurora-smart-home
 > /plugin uninstall ha-integration@aurora-smart-home
+> /plugin marketplace add tonylofgren/aurora-smart-home
+> /plugin install aurora@aurora-smart-home
+> /reload-plugins
 > ```
-> Then reinstall Aurora: `/plugin marketplace add tonylofgren/aurora-smart-home` then `/plugin install aurora@aurora-smart-home`
 
 ### What's New in v1.3.0
 
