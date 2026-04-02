@@ -29,13 +29,13 @@ The most comprehensive Claude Code skill pack for smart home development - from 
 ---
 
 > **v1.3.0 - Reinstall recommended:**
-> Individual skill commands (`/aurora:ha-yaml`, `/aurora:esphome`, etc.) have been replaced by the `/aurora` orchestrator. Run `/plugin marketplace add tonylofgren/aurora-smart-home` then `/plugin install aurora@aurora-smart-home` to update.
+> Individual skill commands (`/aurora:ha-yaml`, `/aurora:esphome`, etc.) have been replaced by the `/aurora:aurora` orchestrator. Run `/plugin marketplace add tonylofgren/aurora-smart-home` then `/plugin install aurora@aurora-smart-home` to update.
 
 ### What's New in v1.3.0
 
 #### Aurora - A New Way to Work
 
-Start with `/aurora` - Aurora opens, asks what you want to build, and takes it from there.
+Start with `/aurora:aurora` - Aurora opens, asks what you want to build, and takes it from there.
 
 No need to know which skill to use. Describe your project in plain language and Aurora routes to the right specialist(s), recommends the right Claude model for your subscription tier, and builds a step-by-step workflow if the task spans multiple skills.
 
@@ -73,7 +73,7 @@ See [CHANGELOG.md](CHANGELOG.md) for full details.
 | Configure **ESP device firmware** or **design a new IoT product** | `esphome` |
 | Develop **Python custom components** (HACS) | `ha-integration` |
 
-> **New to Aurora?** Start with `/aurora` - it routes to the right skill and recommends the right model for your task.
+> **New to Aurora?** Start with `/aurora:aurora` - it routes to the right skill and recommends the right model for your task.
 
 ---
 
@@ -93,7 +93,7 @@ See [CHANGELOG.md](CHANGELOG.md) for full details.
 
 ```
 # 3. Start here
-/aurora
+/aurora:aurora
 ```
 
 Aurora asks what you want to build and takes it from there.
@@ -123,9 +123,9 @@ By default, skills install globally (`--scope user`). You can also scope them:
 
 ## How Skills Activate
 
-### Primary: `/aurora`
+### Primary: `/aurora:aurora`
 
-Type `/aurora` for any smart home task. Aurora opens, asks what you want to build, and routes to the right specialist(s) - recommending the right Claude model for your subscription tier.
+Type `/aurora:aurora` for any smart home task. Aurora opens, asks what you want to build, and routes to the right specialist(s) - recommending the right Claude model for your subscription tier.
 
 Works for single tasks and multi-step projects alike.
 
@@ -146,7 +146,7 @@ Individual skills also activate automatically when you mention relevant keywords
 
 ## Getting Started with Your First Project
 
-Type `/aurora` - Aurora opens and asks what you want to build. Then describe your project:
+Type `/aurora:aurora` - Aurora opens and asks what you want to build. Then describe your project:
 
 ```
 Aurora: What do you want to build or fix?
