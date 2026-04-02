@@ -40,15 +40,6 @@ After the banner, ask one short question. Keep it to 2 lines max:
 
 What do you want to build or fix? Type `help` for examples.
 
-If this appears to be the user's first time (no prior context in the conversation), add this note after the question:
-
-> *First time? Make sure all skills are installed:*
-> ```
-> /plugin install ha-yaml@aurora-smart-home
-> /plugin install esphome@aurora-smart-home
-> /plugin install node-red@aurora-smart-home
-> /plugin install ha-integration@aurora-smart-home
-> ```
 
 *Independent community project. Not affiliated with or endorsed by Home
 Assistant, Nabu Casa, or the Open Home Foundation.*

@@ -28,8 +28,15 @@ The most comprehensive Claude Code skill pack for smart home development - from 
 
 ---
 
-> **v1.3.0 - Reinstall recommended:**
-> Individual skill commands (`/aurora:ha-yaml`, `/aurora:esphome`, etc.) have been replaced by the `/aurora:aurora` orchestrator. Run `/plugin marketplace add tonylofgren/aurora-smart-home` then `/plugin install aurora@aurora-smart-home` to update.
+> **v1.3.0 - Breaking change:**
+> Individual skill plugins have been removed. Uninstall them to clear errors:
+> ```
+> /plugin uninstall esphome@aurora-smart-home
+> /plugin uninstall ha-yaml@aurora-smart-home
+> /plugin uninstall node-red@aurora-smart-home
+> /plugin uninstall ha-integration@aurora-smart-home
+> ```
+> Then reinstall Aurora: `/plugin marketplace add tonylofgren/aurora-smart-home` then `/plugin install aurora@aurora-smart-home`
 
 ### What's New in v1.3.0
 
@@ -83,12 +90,8 @@ See [CHANGELOG.md](CHANGELOG.md) for full details.
 # 1. Add the marketplace
 /plugin marketplace add tonylofgren/aurora-smart-home
 
-# 2. Install all skills
+# 2. Install Aurora
 /plugin install aurora@aurora-smart-home
-/plugin install ha-yaml@aurora-smart-home
-/plugin install esphome@aurora-smart-home
-/plugin install node-red@aurora-smart-home
-/plugin install ha-integration@aurora-smart-home
 ```
 
 ```
