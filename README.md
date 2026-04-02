@@ -82,7 +82,7 @@ See [CHANGELOG.md](CHANGELOG.md) for full details.
 # 1. Add the marketplace
 /plugin marketplace add tonylofgren/aurora-smart-home
 
-# 2. Install slash commands + all skills
+# 2. Install all skills
 /plugin install aurora@aurora-smart-home
 /plugin install ha-yaml@aurora-smart-home
 /plugin install esphome@aurora-smart-home
@@ -132,18 +132,15 @@ Just mention keywords naturally - skills load automatically:
 
 > **Language-independent:** Product names like "Node-RED" and "ESPHome" work in any language.
 
-### 2. Explicit (Slash Commands)
+### 2. Explicit (Slash Command)
 
-Use slash commands when contextual activation misses:
+Use `/aurora` when you're not sure which skill fits, or when your task spans multiple skills:
 
 ```
-/aurora:node-red       - Node-RED flows
-/aurora:esphome        - ESPHome configs
-/aurora:ha-yaml        - Home Assistant YAML
-/aurora:ha-integration - Python custom integrations
+/aurora
 ```
 
-> **Tip:** Type `/aurora:` to see all available commands.
+Aurora asks what you want to build and routes to the right specialist.
 
 ---
 
@@ -277,7 +274,7 @@ Develop **Python custom components** for Home Assistant (custom_components, HACS
 ## Why This Skill Pack?
 
 - **Saves hours** - No more searching through docs and forums
-- **Always current** - Covers HA 2024.x-2026.x, ESPHome 2026.2, Node-RED 4.x
+- **Always current** - Covers HA 2024.x-2026.x, ESPHome 2026.3, Node-RED 4.x
 - **Copy-paste ready** - 54 templates you can use immediately
 - **Battle-tested patterns** - Based on community best practices
 - **Complete coverage** - From beginner to advanced use cases
@@ -446,8 +443,6 @@ Contributions are welcome! Please feel free to submit issues or pull requests.
 ## License
 
 MIT License - see [LICENSE](LICENSE) for details.
-
----
 
 ---
 
