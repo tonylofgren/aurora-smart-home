@@ -29,7 +29,7 @@ The most comprehensive Claude Code skill pack for smart home development - from 
 ---
 
 > **v1.3.0 - Reinstall recommended:**
-> Individual skill commands (`/aurora:ha-yaml`, `/aurora:esphome`, etc.) have been replaced by the `/aurora` orchestrator. Run `/plugin marketplace add tonylofgren/aurora-smart-home` to update.
+> Individual skill commands (`/aurora:ha-yaml`, `/aurora:esphome`, etc.) have been replaced by the `/aurora` orchestrator. Run `/plugin marketplace add tonylofgren/aurora-smart-home` then `/plugin install aurora@aurora-smart-home` to update.
 
 ### What's New in v1.3.0
 
