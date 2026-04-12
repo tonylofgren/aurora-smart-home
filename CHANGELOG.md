@@ -41,7 +41,65 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
-## [Unreleased]
+## [1.4.0] - 2026-04-12
+
+### Added
+
+#### Aurora: Hardware Documentation Layer (IoT/ESPHome)
+
+Closes the gap between firmware generation and physical hardware — Aurora now
+delivers all three layers for IoT projects: hardware/dimensioning, installation,
+and software.
+
+**New agents (2):**
+- `aurora/souls/watt.md` — **Watt**: Power budget specialist. Calculates full
+  current draw table (µA/mA per state × time), battery runtime in days, and solar
+  panel sizing with seasonal correction. Triggered automatically for any project
+  using `deep_sleep`, battery, solar, or power bank. Model: haiku.
+- `aurora/souls/manual.md` — **Manual**: Installation documentation specialist.
+  Generates `INSTALL.md` and `TROUBLESHOOTING.md` with actual entity IDs and file
+  names from the project — never generic placeholders. Model: haiku.
+
+**New Iron Laws:**
+- Volt: Generate wiring diagram for every GPIO — no GPIO without a diagram
+- Volt: Generate calibration procedure (with actual entity IDs) for sensors that require it
+- Volt: Flag Watt before finalising any BOM with battery, solar, or deep sleep
+- Vera: Hardware Safety Review mandatory BEFORE Volt for battery/actuator/outdoor/>5V
+- Watt: No battery/solar recommendation without a full power budget table
+- Manual: Reference actual entity IDs and file names — never generic placeholders
+
+**Updated agents:**
+- `aurora/souls/volt.md` — 5 Iron Laws added (board-first, wiring diagram,
+  calibration, power budget, troubleshooting)
+- `aurora/souls/vera.md` — Hardware Safety Review (Mode 1) added: reviews battery
+  protection, high-current safety, mixed voltages, ADC limits, outdoor IP rating,
+  and mains isolation; blocks Volt if critical risks found
+
+**ESPHome SKILL.md:**
+- Updated process flow: Safety check → Power budget → YAML → Wiring diagram →
+  Calibration → Troubleshooting → Checklist
+- New **Wiring Diagrams** section with ASCII format and required additions table
+  (flyback diodes, voltage dividers, pull-ups, common GND strategy)
+- New **Calibration Register**: 7 sensor types with procedure template and
+  entity ID references (capacitive moisture, NTC, CO₂, water level, pressure,
+  LDR, CT clamp)
+- Extended Pre-Completion Checklist with wiring, calibration, power, and
+  troubleshooting categories
+
+**Aurora SKILL.md:**
+- Registry updated: 19 → 21 agents
+- Watt added to Smart Home Hardware table
+- Manual added to Development Support table
+- 7 new Iron Laws in Iron Laws Reference section
+
+**workflows.md:**
+- New **Battery/Outdoor IoT Project** workflow:
+  Vera (Safety) → Watt → Volt → Sage → Manual → Vera (WAF)
+- Note added to New Sensor Device workflow for battery/actuator/outdoor projects
+
+---
+
+## [1.3.0] - 2026-04-09
 
 ### Added
 

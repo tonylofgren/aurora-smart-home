@@ -48,7 +48,7 @@ Start with `/aurora:aurora` - Aurora opens, asks what you want to build, and tak
 
 No need to know which skill to use. Describe your project in plain language and Aurora routes to the right specialist(s), recommends the right Claude model for your subscription tier, and builds a step-by-step workflow if the task spans multiple skills.
 
-**19 specialist agents** - Volt (ESP32 firmware), Sage (automations), Ada (custom integrations), Iris (dashboards), Glitch (debugging), Grid (network/VLANs), Forge (infrastructure), and 12 more. Each agent has a defined domain, a soul, and a voice.
+**21 specialist agents** - Volt (ESP32 firmware), Sage (automations), Ada (custom integrations), Iris (dashboards), Glitch (debugging), Grid (network/VLANs), Forge (infrastructure), and 14 more. Each agent has a defined domain, a soul, and a voice.
 
 #### Home Assistant 2026.4
 
