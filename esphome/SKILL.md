@@ -43,13 +43,28 @@ Ask: What board?
 Board confirmed? ──no──▶ Ask again
     │ yes
     ▼
-Ask: Output method?
+Battery/actuator/outdoor/>5V? ──yes──▶ Vera: Hardware Safety Review
+    │ no (or cleared by Vera)              │ blocks if critical risk found
+    ▼                                      ▼
+Ask: Output method?              ◀── safety cleared
     │
+    ▼
+deep_sleep / battery / solar / power bank? ──yes──▶ Flag Watt for power budget
+    │ no (or after Watt)
     ▼
 Read relevant references
     │
     ▼
 Generate YAML config
+    │
+    ▼
+Generate wiring diagram (every GPIO — no exceptions)
+    │
+    ▼
+Calibration procedure needed? ──yes──▶ Generate procedure with actual entity IDs
+    │ no
+    ▼
+Generate troubleshooting section (3 most likely failure points)
     │
     ▼
 Run pre-completion checklist
@@ -272,6 +287,90 @@ Key additions to be aware of (read relevant reference files for details):
 - Enable `api: encryption:` for production devices
 - Set OTA password for remote update protection
 
+## Wiring Diagrams
+
+Generate a wiring diagram for **every** GPIO connection in the configuration.
+No GPIO without a diagram — this is non-negotiable.
+
+### Format
+
+```
+[COMPONENT]──[R/C if needed]──GPIO[N]  ([board pin label])
+                                   │
+                              [PULL-UP/DOWN Ω if needed]
+                                   │
+                              [GND / VCC: X.XV]
+```
+
+### Required additions
+
+| Situation | What to add |
+|-----------|-------------|
+| Relay, motor, solenoid, pump on GPIO | Flyback diode (1N4007) across coil terminals |
+| ADC reading a voltage > 3.3V | Voltage divider or 3.3V zener clamp — document resistor values |
+| I2C sensor | Pull-up resistors on SDA + SCL (typically 4.7kΩ to 3.3V) |
+| Mixed voltage levels (e.g., 12V + 3.3V) | Common GND strategy — document the shared GND wire |
+| Input pin that may float | Pull-up or pull-down resistor (10kΩ typical) |
+
+### Example (capacitive soil moisture sensor on ADC + pump relay)
+
+```
+Soil Moisture Sensor
+  VCC  ──────────────────────────── 3.3V
+  GND  ──────────────────────────── GND
+  AOUT ── (voltage divider not needed, sensor is 3.3V native) ── GPIO34 (ADC1_CH6)
+
+Pump Relay (12V coil)
+  IN   ──────────────────────────── GPIO26
+  VCC  ──────────────────────────── 5V (relay module VCC)
+  GND  ──────────────────────────── GND (shared with ESP GND)
+  COM  ──────────────────────────── 12V+
+  NO   ──────────────────────────── Pump+
+  Pump- ─────────────────────────── 12V−
+
+  ⚠ Flyback diode: 1N4007 across pump motor terminals (cathode to +)
+  ⚠ Common GND: ESP GND and 12V supply GND must be connected
+```
+
+---
+
+## Calibration Register
+
+Sensors that **always** require a calibration procedure — generate steps automatically.
+
+| Sensor type | ESPHome component | What to calibrate |
+|-------------|-------------------|-------------------|
+| Capacitive soil moisture | `adc` + `filters` | `min_value` (dry) and `max_value` (wet) voltages |
+| NTC thermistor | `ntc` | Beta coefficient or two-point reference temperatures |
+| CO₂ — MH-Z19, SCD40 | `mhz19`, `scd4x` | Zero-point calibration at 400 ppm (outdoor air) |
+| Water level sensor | `adc` | Empty (min ADC) and full (max ADC) reference points |
+| Pressure sensor (analog) | `adc` + `filters` | Zero-point and full-scale against reference pressure |
+| LDR / photodiode | `adc` + `filters` | Lux calibration against reference meter |
+| Current sensor (CT clamp) | `ct_clamp` | Zero-load baseline offset |
+
+### Calibration procedure template
+
+Replace `[placeholders]` with actual values from the generated config:
+
+```markdown
+## Calibration: [Sensor Name]
+
+**Tool:** ESPHome logs OR HA → Developer Tools → States → search `[entity_id]`
+
+**Steps:**
+1. [Place sensor in reference condition — e.g., "insert sensor in dry soil"]
+2. Open HA → Developer Tools → States → search `[entity_id]`
+   OR run: `esphome logs [device-name].yaml`
+3. Wait [X seconds] for value to stabilise
+4. Note the raw value → set as `[config_key]: [value]` in firmware
+5. [Place sensor in second reference condition if two-point calibration]
+6. Note second value → set as `[config_key_2]: [value]` in firmware
+7. Reflash: `esphome run [device-name].yaml`
+8. Verify: [expected output after calibration]
+```
+
+---
+
 ## Pre-Completion Checklist
 
 **Before declaring the configuration complete, verify:**
@@ -281,6 +380,13 @@ Key additions to be aware of (read relevant reference files for details):
 - [ ] GPIO pins avoid strapping pins for outputs
 - [ ] ADC pins avoid ADC2 if WiFi is used (ESP32)
 - [ ] Input-only pins (34-39) not used for outputs
+
+### Wiring & Safety
+- [ ] Wiring diagram provided for every GPIO connection (no exceptions)
+- [ ] Flyback diode noted for all inductive loads (relays, motors, solenoids)
+- [ ] ADC inputs verified ≤ 3.3V (or voltage divider documented)
+- [ ] Common GND strategy documented for mixed-voltage projects
+- [ ] Vera Hardware Safety Review completed for battery/actuator/outdoor/>5V projects
 
 ### Configuration
 - [ ] Device name is lowercase, hyphen-separated
@@ -292,6 +398,15 @@ Key additions to be aware of (read relevant reference files for details):
 - [ ] I2C address matches user's hardware (if applicable)
 - [ ] Update intervals are reasonable (not too frequent)
 - [ ] Filters applied for noisy sensors
+- [ ] Calibration procedure provided for all sensors in the Calibration Register
+
+### Power
+- [ ] Watt flagged if project uses deep_sleep, battery, solar, or power bank
+- [ ] Power budget calculated before battery/panel size committed to BOM
+
+### Troubleshooting
+- [ ] Troubleshooting section included covering 3 most likely failure points
+- [ ] Each failure point references actual entity IDs and GPIO numbers from this config
 
 ### Safety
 - [ ] No hardcoded passwords or API keys
