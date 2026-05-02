@@ -41,6 +41,36 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.5.0] - 2026-05-02
+
+### Added
+
+#### ESPHome: 2026.4.0 Updates
+
+**Breaking Changes section (ESPHome 2026.4+):**
+- ESP32 max CPU frequency as default — 33% faster API, no config changes required
+- 40KB extra IRAM unlocked for ESP32
+- Signed OTA verification (`ota: verify_signature: true`)
+- Custom partition tables support in `esp32:` block
+- GPIO Expander `interrupt_pin` — eliminates I2C/SPI polling entirely
+- W5500/W5100/W5100S SPI Ethernet — five new chip types incl. RP2040 (WIZnet EVB-Pico)
+- Client-side state logging — up to 46x faster sensor publishing, auto-enabled
+- ESP8266 crash handler — now matches ESP32/RP2040
+
+**New Components table:**
+- `W5500/W5100 SPI Ethernet` — wired networking for ESP32/RP2040 without WiFi
+
+**ESPHome SKILL.md:**
+- Version bump to v1.3.0
+- Breaking Changes heading updated to cover 2025.2 - 2026.4
+
+**Aurora SKILL.md:**
+- Version bump to v1.5.0
+- Platform version updated to ESPHome 2026.4
+- What's New highlight added after banner with ESPHome 2026.4 key features
+
+---
+
 ## [1.4.0] - 2026-04-12
 
 ### Added
