@@ -136,20 +136,19 @@ The most common and versatile ESP32 variant. Dual-core with WiFi and Bluetooth.
 |---|---|
 | WiFi | 802.11 b/g/n |
 | Bluetooth | Classic + BLE 4.2 |
-| GPIO | 34 usable (GPIO0-39) |
-| ADC | 18 channels (12-bit) |
+| GPIO count | 34 usable (GPIO0-39) |
+| ADC | 18 channels (12-bit), ADC1 (GPIO32-39) + ADC2 (GPIO0,2,4,12-15,25-27) |
+| Touch | 10 capacitive touch pins |
 | DAC | 2 channels, 8-bit (GPIO25, GPIO26) |
-| Capacitive touch | 10 pins |
-| ULP | ULP coprocessor |
-| Peripherals | CAN, I2S, SPI x3, I2C x2, UART x3, Hall sensor |
+| USB | None (requires external USB-UART bridge) |
+| Special | CAN, ULP coprocessor, Hall sensor, SPI x3, I2C x2, UART x3 |
 
-### Limitations & Gotchas
+### Limitations and Gotchas
 
-- **ADC2 + WiFi**: ADC2 (GPIO0, 2, 4, 12-15, 25-27, 33) CANNOT be used while WiFi is active - use ADC1 only
-- **Input-only GPIO**: GPIO34, 35, 36, 39 are INPUT ONLY - no output, no hardware pullup/pulldown
-- **Strapping pins**: GPIO0 (boot mode), GPIO2 (must be low at boot), GPIO5 (SDIO timing), GPIO12 (flash voltage), GPIO15 (UART log at boot) - avoid for outputs
-- **Reserved GPIO**: GPIO6-11 connected to internal flash - never use
-- **ADC accuracy**: Poor without calibration (+-6% typical)
+- **Strapping pins**: GPIO0 (boot mode), GPIO2 (must be low at boot), GPIO5 (SDIO timing), GPIO12 (flash voltage, 3.3V when low), GPIO15 (UART0 log when high) - avoid for outputs
+- **Reserved GPIO**: GPIO6-11 used by internal flash on WROOM modules - never use
+- **ADC restriction**: ADC2 (GPIO0, 2, 4, 12-15, 25-27, 33) unavailable while WiFi active - use ADC1 only
+- **Input-only pins**: GPIO34, 35, 36, 39 are INPUT ONLY - no output, no internal pullup/pulldown
 - **No native USB**: Requires USB-UART bridge chip for flashing/serial
 
 **Pin Categories:**
@@ -217,22 +216,21 @@ Single-core with native USB. No Bluetooth support.
 |---|---|
 | WiFi | 802.11 b/g/n |
 | Bluetooth | None |
-| USB | Native USB OTG |
-| GPIO | 43 pins (GPIO0-21, GPIO26-46) |
-| ADC | ADC1 (GPIO1-10) + ADC2 (GPIO11-20) |
+| GPIO count | 43 pins (GPIO0-21, GPIO26-46) |
+| ADC | ADC1 (GPIO1-10) + ADC2 (GPIO11-20), 20 channels total |
+| Touch | 20 capacitive touch pins (T1-T14 on GPIO1-14) |
 | DAC | 2 channels (GPIO17, GPIO18) |
-| Capacitive touch | 20 pins (GPIO1-14 + more) |
-| ULP | ULP-FSM + ULP-RISC-V coprocessors |
-| Temperature sensor | Built-in |
+| USB | Native USB OTG |
+| Special | Dual ULP (FSM + RISC-V), built-in temperature sensor, camera interface |
 
-### Limitations & Gotchas
+### Limitations and Gotchas
 
+- **Strapping pins**: GPIO0 (boot, must be HIGH), GPIO45 (VDD_SPI voltage), GPIO46 (ROM log, INPUT ONLY)
+- **Reserved GPIO**: GPIO33-37 used by SPI flash/PSRAM on WROOM modules - do not use
+- **ADC restriction**: ADC2 unavailable while WiFi active
+- **Input-only pins**: GPIO46 is input-only (ROM log strapping pin)
 - **No Bluetooth**: No BLE at all - important distinction from S3
-- **ADC2 + WiFi**: ADC2 unavailable while WiFi is active (same as classic ESP32)
-- **No CAN bus**
-- **Single-core**: CPU-intensive tasks may block network
-- **Strapping pins**: GPIO0 (boot), GPIO45 (VDD_SPI voltage), GPIO46 (ROM log)
-- **GPIO0 boot**: GPIO0 must be high during normal boot
+- **Single core**: CPU-intensive tasks can block WiFi
 
 **Example Configuration:**
 
@@ -282,26 +280,23 @@ Dual-core with AI acceleration. Best for voice assistants and cameras.
 | Feature | Details |
 |---|---|
 | WiFi | 802.11 b/g/n |
-| Bluetooth | BLE 5.0 (including BLE Long Range) |
-| USB | Native USB OTG (high-speed with external PHY) |
-| GPIO | 45 pins (GPIO0-21, GPIO26-48) |
+| Bluetooth | BLE 5.0 (Long Range) |
+| GPIO count | 45 pins (GPIO0-21, GPIO26-48) |
 | ADC | ADC1 (GPIO1-10) + ADC2 (GPIO11-20) |
+| Touch | 14 capacitive touch pins (GPIO1-14) |
 | DAC | None |
-| Capacitive touch | 14 pins (GPIO1-14) |
-| AI/ML | Vector instructions for edge inference |
-| PSRAM | Octal/Quad PSRAM support |
-| Camera | Parallel camera interface |
-| Peripherals | SPI x4, I2S x2, ULP |
+| USB | Native USB OTG (GPIO19-20) |
+| Special | AI/ML vector instructions (PIE), Octal/Quad PSRAM, camera interface, SPI x4, I2S x2, ULP |
 
-### Limitations & Gotchas
+### Limitations and Gotchas
 
-- **ADC2 + WiFi**: ADC2 unavailable while WiFi is active
+- **Strapping pins**: GPIO0 (boot), GPIO45 (VDD_SPI), GPIO46 (ROM log, INPUT ONLY)
+- **Reserved GPIO**: GPIO35-37 reserved for Octal PSRAM on WROOM-2 modules - check your module variant
+- **ADC restriction**: ADC2 unavailable while WiFi active
+- **Input-only pins**: GPIO46 is input-only
 - **No DAC**: Unlike classic ESP32, S3 has no DAC channels
-- **GPIO35-37 reserved**: Used for Octal PSRAM/Flash on WROOM modules - check your module variant before using
-- **GPIO38 reserved**: On some modules also reserved for PSRAM
-- **Strapping pins**: GPIO0 (boot), GPIO45 (VDD_SPI), GPIO46 (ROM log)
-- **USB + UART0**: USB OTG and UART0 share boot strapping - one is disabled when the other is in use
-- **JTAG pins**: GPIO39-42 are JTAG pins (can be reused but complicates debugging)
+- **USB OTG on GPIO19-20**: Disable USB OTG if using GPIO19-20 as general GPIO
+- **JTAG pins**: GPIO39-42 are JTAG pins - usable but complicates debugging
 
 **Example Configuration:**
 
@@ -364,24 +359,23 @@ RISC-V single-core. Low power and compact.
 | Feature | Details |
 |---|---|
 | WiFi | 802.11 b/g/n |
-| Bluetooth | BLE 5.0 (BLE Long Range) |
-| USB | Built-in USB Serial/JTAG (GPIO18/GPIO19) |
-| GPIO | 22 pins (GPIO0-21) |
-| ADC | ADC1 (GPIO0-4); ADC2 is GPIO5 only |
+| Bluetooth | BLE 5.0 (Long Range) |
+| GPIO count | 22 pins (GPIO0-21) |
+| ADC | ADC1 (GPIO0-4); ADC2 = GPIO5 only |
+| Touch | None |
 | DAC | None |
-| Capacitive touch | None |
-| Low power | Multiple sleep modes |
+| USB | Built-in USB Serial/JTAG (GPIO18/GPIO19) |
+| Special | Low-power sleep modes, RISC-V 160MHz, small package |
 
-### Limitations & Gotchas
+### Limitations and Gotchas
 
-- **Very limited GPIO**: Only 22 GPIO total - constrained for complex projects
-- **No touch pins**
-- **No DAC**
-- **ADC2 + WiFi**: ADC2 (GPIO5 only) unavailable while WiFi is active
-- **USB pins**: GPIO18/GPIO19 = USB Serial/JTAG - repurposing them disables USB debugging
-- **Strapping pins**: GPIO2 (boot), GPIO8 (boot mode), GPIO9 (boot - must be high)
-- **Reserved GPIO on WROOM modules**: GPIO11 = VDD_SPI, GPIO12-17 = SPI flash/PSRAM - do NOT use
-- **Single-core RISC-V**: Slower than Xtensa for float-heavy code
+- **Strapping pins**: GPIO2 (boot), GPIO8 (boot mode), GPIO9 (must be HIGH at boot - boot button)
+- **Reserved GPIO**: GPIO11-17 used by SPI flash on WROOM modules - do not use
+- **ADC restriction**: ADC2 (GPIO5 only) unavailable while WiFi active - use ADC1 only
+- **Input-only pins**: None beyond strapping constraints
+- **No touch pins, no DAC**
+- **GPIO18/19 = USB JTAG**: Repurposing disables USB debugging
+- **RISC-V slower than Xtensa** for floating-point operations
 
 **Pin Notes:**
 - GPIO0-10: General purpose (some have boot functions)
@@ -430,25 +424,24 @@ WiFi 6 with Thread/Zigbee support. Matter-ready.
 
 | Feature | Details |
 |---|---|
-| WiFi | 802.11ax (WiFi 6), MU-MIMO |
+| WiFi | 802.11ax (WiFi 6), MU-MIMO, TWT |
 | Bluetooth | BLE 5.3 |
-| 802.15.4 | Thread, Zigbee |
-| USB | Built-in USB Serial/JTAG (GPIO12/GPIO13) |
-| GPIO | 31 pins (GPIO0-30) |
+| GPIO count | 31 pins (GPIO0-30) |
 | ADC | ADC1 only (GPIO0-6, 7 channels) |
+| Touch | None |
 | DAC | None |
-| Capacitive touch | None |
-| LP core | Low-power RISC-V coprocessor |
+| USB | Built-in USB Serial/JTAG (GPIO12/GPIO13) |
+| Special | Thread/Matter (802.15.4), Zigbee, LP core coprocessor, LP GPIO (GPIO0-7 survive deep sleep) |
 
-### Limitations & Gotchas
+### Limitations and Gotchas
 
-- **Single ADC bank only**: Only ADC1 (7 channels) - no ADC2, no ADC+WiFi conflict
-- **No touch pins**
-- **No DAC**
-- **Thread/Zigbee + WiFi**: Cannot run simultaneously - they share the 802.15.4/WiFi radio in time-sliced mode
-- **Strapping pins**: GPIO8 (boot), GPIO9 (boot mode), GPIO15 (JTAG source)
-- **LP GPIO limited**: GPIO24-30 = LP (low-power) GPIO - limited function in normal mode
-- **USB JTAG pins**: GPIO12/GPIO13 - avoid for GPIO use when debugging
+- **Strapping pins**: GPIO8 (boot mode), GPIO9 (boot button), GPIO15 (JTAG source)
+- **Reserved GPIO**: GPIO25-30 used by SPI flash on WROOM modules - do not use
+- **ADC restriction**: ADC1 only (no ADC2), no ADC+WiFi conflict
+- **Input-only pins**: None beyond strapping constraints
+- **No touch pins, no DAC**
+- **Thread/Zigbee and WiFi cannot run simultaneously**: Time-multiplexed radio
+- **GPIO12/13 = USB JTAG**: Avoid when debugging
 
 **Example Configuration:**
 
@@ -494,22 +487,22 @@ Thread/Zigbee only. No WiFi.
 |---|---|
 | WiFi | None |
 | Bluetooth | BLE 5.3 |
-| 802.15.4 | Thread, Zigbee |
-| USB | Built-in USB Serial/JTAG (GPIO26/GPIO27) |
-| GPIO | 28 pins (GPIO0-27) |
+| GPIO count | 28 pins (GPIO0-27) |
 | ADC | ADC1 (GPIO0-4, 5 channels) |
+| Touch | None |
 | DAC | None |
-| Capacitive touch | None |
-| LP core | Low-power coprocessor |
+| USB | Built-in USB Serial/JTAG (GPIO26/GPIO27) |
+| Special | Thread/Matter (802.15.4), Zigbee, LP core, LP GPIO (GPIO0-7) |
 
-### Limitations & Gotchas
+### Limitations and Gotchas
 
-- **No WiFi whatsoever**: Thread/Zigbee/BLE only - must use a Thread border router (ESP32-C6 or external) to reach IP network
-- **Very few ADC channels**: Only 5 channels (GPIO0-4)
+- **Strapping pins**: GPIO8 (boot mode), GPIO9 (boot button)
+- **Reserved GPIO**: GPIO12-17 used by SPI flash - do not use
+- **ADC restriction**: Only 5 ADC channels (GPIO0-4)
+- **Input-only pins**: None beyond strapping constraints
+- **No WiFi**: Thread/Zigbee/BLE only - needs border router (e.g. ESP32-C6) for IP connectivity
 - **No touch pins, no DAC**
-- **Low GPIO count**: 28 total - limited for complex wiring
-- **Strapping pins**: GPIO8 (boot), GPIO9 (boot mode)
-- **USB JTAG pins**: GPIO26/GPIO27
+- **GPIO26/27 = USB JTAG**: Must pair with WiFi-capable device for Home Assistant integration via Thread
 
 **Example Configuration:**
 
@@ -551,15 +544,22 @@ New ESP32 variant with RISC-V core (same architecture as C3/C6) and PSRAM suppor
 |---|---|
 | WiFi | 802.11 b/g/n |
 | Bluetooth | BLE 5.0 |
-| PSRAM | Quad-mode, 40 MHz or 80 MHz |
-| GPIO | Similar set to C3 family |
+| GPIO count | Similar to C3 family (verify with your module) |
+| ADC | ADC1 (verify channels with datasheet) |
+| Touch | None |
+| DAC | None |
+| USB | Built-in USB Serial/JTAG |
+| Special | PSRAM quad-mode (40 MHz or 80 MHz), RISC-V core |
 
-### Limitations & Gotchas
+### Limitations and Gotchas
 
-- **esp-idf required**: Arduino framework not supported; PSRAM requires esp-idf
-- **Very new chip**: Limited community board support and limited ESPHome component validation
+- **Strapping pins**: GPIO2 (boot), GPIO8 (boot mode), GPIO9 (must be HIGH at boot) - follow C3 family conventions
+- **Reserved GPIO**: Verify SPI flash pins with your specific module datasheet
+- **ADC restriction**: ADC2 + WiFi conflict expected - verify with datasheet
+- **Input-only pins**: Verify with module datasheet
 - **No touch pins, no DAC**
-- **Strapping pins**: Similar to C3 family - confirm with datasheet for your specific module
+- **esp-idf required**: Arduino framework not supported; PSRAM requires esp-idf
+- **Very new chip**: Limited community board support, limited ESPHome component validation
 
 **Example Configuration:**
 
@@ -612,27 +612,26 @@ High-performance Xtensa LX7 dual-core chip focused on multimedia and display. No
 
 | Feature | Details |
 |---|---|
-| CPU | Dual-core Xtensa LX7 up to 400 MHz |
-| PSRAM | Up to 32 MB |
-| GPIO | 55 pins (GPIO0-54) |
-| USB | USB OTG 2.0 high-speed |
-| Display | MIPI DSI (up to 1080p) |
-| Camera | MIPI CSI interface |
-| Video | H.264 hardware encoder |
-| Image | JPEG hardware codec |
-| Peripherals | Multiple SPI/I2C/UART/I2S |
-| LP core | Low-power coprocessor |
-| Security | Hardware crypto accelerators |
+| WiFi | None (requires companion chip) |
+| Bluetooth | None (requires companion chip) |
+| GPIO count | 55 pins (GPIO0-54) |
+| ADC | Available (verify channels with datasheet) |
+| Touch | None |
+| DAC | None |
+| USB | USB OTG 2.0 high-speed (GPIO24/GPIO25 = D-/D+) |
+| Special | Dual-core Xtensa LX7 400MHz, up to 32MB PSRAM, MIPI DSI display (1080p), MIPI CSI camera, H.264 HW encoder, JPEG HW codec, hardware crypto accelerators, LP core |
 
-### Limitations & Gotchas
+### Limitations and Gotchas
 
-- **No integrated wireless**: No WiFi or Bluetooth - REQUIRES a companion chip (e.g. ESP32-C6 via SPI) for any wireless connectivity
-- **ESPHome framework**: Use `esp32:` platform with `esp-idf` framework only - Arduino not supported
-- **MIPI DSI display**: Requires specific display modules - not compatible with standard SPI TFT displays
+- **Strapping pins**: GPIO28, GPIO29, GPIO30 - avoid for outputs
+- **Reserved GPIO**: GPIO24/GPIO25 = USB D-/D+
+- **ADC restriction**: High power draw may affect analog accuracy - verify with your design
+- **Input-only pins**: Verify with datasheet
+- **No integrated WiFi or Bluetooth**: Requires companion chip (e.g. ESP32-C6 via SPI for WiFi/BLE/Thread)
+- **MIPI DSI requires compatible display modules**: Not compatible with standard SPI TFT displays
 - **High power consumption**: Significantly higher than other variants; plan power budget accordingly
-- **Strapping pins**: GPIO24, GPIO25, GPIO28
-- **Limited ESPHome support**: Very new - fewer ESPHome components validated vs S3/C3
-- **Dual-chip design**: Most development boards pair P4 with ESP32-C6 for wireless (two-chip PCB)
+- **ESPHome component support still maturing (2026)**: Fewer validated components vs S3/C3
+- **Most dev boards are dual-chip designs**: P4 + C6 two-chip PCB for wireless
 
 **Example Configuration:**
 
