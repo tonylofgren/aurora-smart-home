@@ -1,0 +1,358 @@
+# ESPHome Template - emonTx / emonPi Energy Monitor Bridge
+#
+# OpenEnergyMonitor emonTx is a standalone energy monitor with CT clamps -
+# this ESPHome config bridges it to Home Assistant via UART.
+#
+# NOTE: This is NOT the same as using CT clamps directly with ESPHome ADC sensors.
+# The emonTx does all the AC sampling and power calculations in its own firmware.
+# This ESP32 acts as a gateway: it reads JSON output from the emonTx over UART
+# and exposes the values as Home Assistant sensors via the native API.
+#
+# Hardware:
+#   - ESP32 dev board (bridge/gateway)
+#   - OpenEnergyMonitor emonTx v3 or emonTx4 (connected via UART TX -> ESP32 RX)
+#   - emonTx must be configured for serial JSON output
+#
+# Wiring:
+#   emonTx TX  -> ESP32 GPIO16 (UART2 RX)
+#   emonTx GND -> ESP32 GND
+#   (One-way communication: emonTx sends, ESP32 listens)
+#
+# emonTx serial output format (JSON, 9600 baud):
+#   {"P1":230,"P2":0,"P3":0,"V1":240.1,"V2":0,"V3":0,"I1":0.96,"I2":0,"I3":0,"E1":1.23,"pf1":0.99,"ap1":221}
+#
+# Supports: single-phase and 3-phase (CT1/CT2/CT3) setups.
+# Unused phases will report 0 - filter in Home Assistant if needed.
+
+substitutions:
+  device_name: "energy-monitor"
+  friendly_name: "Energy Monitor"
+
+esphome:
+  name: ${device_name}
+  friendly_name: ${friendly_name}
+
+esp32:
+  board: esp32dev
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: "${device_name}-fallback"
+    password: !secret wifi_ap_password
+
+captive_portal:
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+logger:
+  level: INFO
+  # UART2 is used for emonTx - logger uses UART0 (USB), no conflict
+
+# UART2: receives JSON lines from emonTx at 9600 baud
+uart:
+  id: emontx_uart
+  rx_pin: GPIO16
+  baud_rate: 9600
+  data_bits: 8
+  parity: NONE
+  stop_bits: 1
+
+# Globals hold the latest parsed values between UART messages
+globals:
+  # Phase 1
+  - id: g_power1
+    type: float
+    initial_value: "0.0"
+  - id: g_voltage1
+    type: float
+    initial_value: "0.0"
+  - id: g_current1
+    type: float
+    initial_value: "0.0"
+  - id: g_energy1
+    type: float
+    initial_value: "0.0"
+  - id: g_pf1
+    type: float
+    initial_value: "0.0"
+  - id: g_apparent1
+    type: float
+    initial_value: "0.0"
+  # Phase 2
+  - id: g_power2
+    type: float
+    initial_value: "0.0"
+  - id: g_voltage2
+    type: float
+    initial_value: "0.0"
+  - id: g_current2
+    type: float
+    initial_value: "0.0"
+  - id: g_energy2
+    type: float
+    initial_value: "0.0"
+  - id: g_pf2
+    type: float
+    initial_value: "0.0"
+  - id: g_apparent2
+    type: float
+    initial_value: "0.0"
+  # Phase 3
+  - id: g_power3
+    type: float
+    initial_value: "0.0"
+  - id: g_voltage3
+    type: float
+    initial_value: "0.0"
+  - id: g_current3
+    type: float
+    initial_value: "0.0"
+  - id: g_energy3
+    type: float
+    initial_value: "0.0"
+  - id: g_pf3
+    type: float
+    initial_value: "0.0"
+  - id: g_apparent3
+    type: float
+    initial_value: "0.0"
+
+# Read UART lines and parse JSON from emonTx
+# on_message fires for each complete newline-terminated string
+uart_device:
+  uart_id: emontx_uart
+  on_message:
+    - lambda: |-
+        // Parse JSON fields from emonTx serial output
+        // Expected format: {"P1":230,"P2":0,"P3":0,"V1":240.1,...}
+        std::string msg(x.begin(), x.end());
+
+        auto extract = [&](const std::string &key) -> float {
+          size_t pos = msg.find("\"" + key + "\":");
+          if (pos == std::string::npos) return 0.0f;
+          pos += key.size() + 3;
+          return std::stof(msg.substr(pos));
+        };
+
+        // Phase 1
+        id(g_power1)    = extract("P1");
+        id(g_voltage1)  = extract("V1");
+        id(g_current1)  = extract("I1");
+        id(g_energy1)   = extract("E1");
+        id(g_pf1)       = extract("pf1");
+        id(g_apparent1) = extract("ap1");
+
+        // Phase 2
+        id(g_power2)    = extract("P2");
+        id(g_voltage2)  = extract("V2");
+        id(g_current2)  = extract("I2");
+        id(g_energy2)   = extract("E2");
+        id(g_pf2)       = extract("pf2");
+        id(g_apparent2) = extract("ap2");
+
+        // Phase 3
+        id(g_power3)    = extract("P3");
+        id(g_voltage3)  = extract("V3");
+        id(g_current3)  = extract("I3");
+        id(g_energy3)   = extract("E3");
+        id(g_pf3)       = extract("pf3");
+        id(g_apparent3) = extract("ap3");
+
+        // Trigger sensor updates
+        id(sensor_power1).publish_state(id(g_power1));
+        id(sensor_voltage1).publish_state(id(g_voltage1));
+        id(sensor_current1).publish_state(id(g_current1));
+        id(sensor_energy1).publish_state(id(g_energy1));
+        id(sensor_pf1).publish_state(id(g_pf1));
+        id(sensor_apparent1).publish_state(id(g_apparent1));
+
+        id(sensor_power2).publish_state(id(g_power2));
+        id(sensor_voltage2).publish_state(id(g_voltage2));
+        id(sensor_current2).publish_state(id(g_current2));
+        id(sensor_energy2).publish_state(id(g_energy2));
+        id(sensor_pf2).publish_state(id(g_pf2));
+        id(sensor_apparent2).publish_state(id(g_apparent2));
+
+        id(sensor_power3).publish_state(id(g_power3));
+        id(sensor_voltage3).publish_state(id(g_voltage3));
+        id(sensor_current3).publish_state(id(g_current3));
+        id(sensor_energy3).publish_state(id(g_energy3));
+        id(sensor_pf3).publish_state(id(g_pf3));
+        id(sensor_apparent3).publish_state(id(g_apparent3));
+
+sensor:
+  # --- Phase 1 ---
+  - platform: template
+    id: sensor_power1
+    name: "Phase 1 Power"
+    unit_of_measurement: W
+    accuracy_decimals: 1
+    device_class: power
+    state_class: measurement
+
+  - platform: template
+    id: sensor_voltage1
+    name: "Phase 1 Voltage"
+    unit_of_measurement: V
+    accuracy_decimals: 1
+    device_class: voltage
+    state_class: measurement
+
+  - platform: template
+    id: sensor_current1
+    name: "Phase 1 Current"
+    unit_of_measurement: A
+    accuracy_decimals: 3
+    device_class: current
+    state_class: measurement
+
+  - platform: template
+    id: sensor_energy1
+    name: "Phase 1 Energy"
+    unit_of_measurement: kWh
+    accuracy_decimals: 3
+    device_class: energy
+    state_class: total_increasing
+
+  - platform: template
+    id: sensor_pf1
+    name: "Phase 1 Power Factor"
+    unit_of_measurement: ""
+    accuracy_decimals: 2
+    device_class: power_factor
+    state_class: measurement
+
+  - platform: template
+    id: sensor_apparent1
+    name: "Phase 1 Apparent Power"
+    unit_of_measurement: VA
+    accuracy_decimals: 1
+    state_class: measurement
+
+  # --- Phase 2 ---
+  - platform: template
+    id: sensor_power2
+    name: "Phase 2 Power"
+    unit_of_measurement: W
+    accuracy_decimals: 1
+    device_class: power
+    state_class: measurement
+
+  - platform: template
+    id: sensor_voltage2
+    name: "Phase 2 Voltage"
+    unit_of_measurement: V
+    accuracy_decimals: 1
+    device_class: voltage
+    state_class: measurement
+
+  - platform: template
+    id: sensor_current2
+    name: "Phase 2 Current"
+    unit_of_measurement: A
+    accuracy_decimals: 3
+    device_class: current
+    state_class: measurement
+
+  - platform: template
+    id: sensor_energy2
+    name: "Phase 2 Energy"
+    unit_of_measurement: kWh
+    accuracy_decimals: 3
+    device_class: energy
+    state_class: total_increasing
+
+  - platform: template
+    id: sensor_pf2
+    name: "Phase 2 Power Factor"
+    unit_of_measurement: ""
+    accuracy_decimals: 2
+    device_class: power_factor
+    state_class: measurement
+
+  - platform: template
+    id: sensor_apparent2
+    name: "Phase 2 Apparent Power"
+    unit_of_measurement: VA
+    accuracy_decimals: 1
+    state_class: measurement
+
+  # --- Phase 3 ---
+  - platform: template
+    id: sensor_power3
+    name: "Phase 3 Power"
+    unit_of_measurement: W
+    accuracy_decimals: 1
+    device_class: power
+    state_class: measurement
+
+  - platform: template
+    id: sensor_voltage3
+    name: "Phase 3 Voltage"
+    unit_of_measurement: V
+    accuracy_decimals: 1
+    device_class: voltage
+    state_class: measurement
+
+  - platform: template
+    id: sensor_current3
+    name: "Phase 3 Current"
+    unit_of_measurement: A
+    accuracy_decimals: 3
+    device_class: current
+    state_class: measurement
+
+  - platform: template
+    id: sensor_energy3
+    name: "Phase 3 Energy"
+    unit_of_measurement: kWh
+    accuracy_decimals: 3
+    device_class: energy
+    state_class: total_increasing
+
+  - platform: template
+    id: sensor_pf3
+    name: "Phase 3 Power Factor"
+    unit_of_measurement: ""
+    accuracy_decimals: 2
+    device_class: power_factor
+    state_class: measurement
+
+  - platform: template
+    id: sensor_apparent3
+    name: "Phase 3 Apparent Power"
+    unit_of_measurement: VA
+    accuracy_decimals: 1
+    state_class: measurement
+
+  # --- Diagnostics ---
+  - platform: wifi_signal
+    name: "WiFi Signal"
+    update_interval: 60s
+    entity_category: diagnostic
+
+  - platform: uptime
+    name: "Uptime"
+    entity_category: diagnostic
+
+binary_sensor:
+  - platform: status
+    name: "Status"
+
+text_sensor:
+  - platform: version
+    name: "ESPHome Version"
+    entity_category: diagnostic
+
+button:
+  - platform: restart
+    name: "Restart"
+    entity_category: config

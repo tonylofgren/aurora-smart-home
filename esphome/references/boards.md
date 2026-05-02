@@ -14,6 +14,9 @@ Complete reference for ESP32 and ESP8266 boards supported by ESPHome.
   - [ESP32-C3](#esp32-c3)
   - [ESP32-C6](#esp32-c6)
   - [ESP32-H2](#esp32-h2)
+  - [ESP32-C61](#esp32-c61)
+- [LibreTiny Family](#libretiny-family)
+  - [LN882H](#ln882h)
 - [ESP8266 Family](#esp8266-family)
   - [ESP-01 / ESP-01S](#esp-01--esp-01s)
   - [ESP-12E/F (NodeMCU)](#esp-12ef-nodemcu)
@@ -23,6 +26,10 @@ Complete reference for ESP32 and ESP8266 boards supported by ESPHome.
 - [Board Comparison Table](#board-comparison-table)
 - [Common Development Boards](#common-development-boards)
 - [Framework Selection](#framework-selection)
+- [RP2040 / RP2350 (Raspberry Pi Pico)](#rp2040--rp2350-raspberry-pi-pico)
+  - [RP2040 BLE (`rp2040_ble`)](#rp2040-ble-rp2040_ble)
+- [nRF52 (Zephyr RTOS)](#nrf52-zephyr-rtos)
+  - [Device Firmware Update (DFU)](#device-firmware-update-dfu)
 
 ---
 
@@ -353,6 +360,72 @@ esp32:
 ```
 
 **Best For:** Thread endpoints, Zigbee devices, low-power sensors
+
+---
+
+### ESP32-C61
+
+*Added ESPHome 2026.4.0*
+
+New ESP32 variant with RISC-V core (same architecture as C3/C6) and PSRAM support. Both quad-mode at 40 MHz and 80 MHz are supported.
+
+**Specifications:**
+- Cores: 1 (RISC-V)
+- WiFi: 802.11 b/g/n
+- Bluetooth: BLE
+- PSRAM: Yes (quad-mode, 40 MHz or 80 MHz)
+- Requires esp-idf framework
+
+**Common Board IDs:**
+
+| Board | ID | Notes |
+|-------|-----|-------|
+| ESP32-C61 DevKit | `esp32c61dev` | Generic dev board |
+
+**Example Configuration:**
+
+```yaml
+esp32:
+  board: esp32c61dev
+  framework:
+    type: esp-idf
+
+psram:
+  mode: quad
+  speed: 80MHz
+```
+
+**Notes:**
+- Requires `esp-idf` framework (Arduino not supported)
+- Board ID `esp32c61dev` is the generic fallback; verify with your specific module supplier
+
+**Best For:** Projects requiring PSRAM with RISC-V core
+
+---
+
+## LibreTiny Family
+
+### LN882H
+
+*Added ESPHome 2026.4.0*
+
+Lightning Semi LN882H is a newer LibreTiny-compatible chip, supported via the `libretiny:` platform block.
+
+**Platform:** LibreTiny
+
+**Example Configuration:**
+
+```yaml
+libretiny:
+  board: ln882h-evb  # Verify board ID for your specific module
+```
+
+**Notes:**
+- Uses `libretiny:` platform, not `esp32:` or `esp8266:`
+- Part of the LibreTiny-supported family alongside BK7231, RTL8710, and similar chips
+- Check the LibreTiny board catalog for available board IDs
+
+**Best For:** Commercial IoT modules using the LN882H chip
 
 ---
 
@@ -721,9 +794,24 @@ logger:
 | `rpipico` | RP2040 | No | Requires external WiFi module |
 | `rpipico2` | RP2350 | No | Requires external WiFi module |
 
+### RP2040 BLE (`rp2040_ble`)
+
+*Added ESPHome 2026.3.0*
+
+Enables BLE on Raspberry Pi Pico W and Pico 2 W via BTstack (the CYW43 combo WiFi+BT chip). Required for BLE proxy functionality on RP2040/RP2350.
+
+**Important:** Only works on Pico W and Pico 2 W. The plain Pico and Pico 2 have no wireless chip and cannot use BLE.
+
+```yaml
+rp2040_ble:
+
+bluetooth_proxy:
+  active: true
+```
+
 ### Key Differences from ESP32
 
-- **No BLE scanning** - RP2040 WiFi chip does not support BLE (RP2350 has BLE foundations in 2026.3)
+- **BLE requires `rp2040_ble` component** - Pico W / Pico 2 W only (CYW43 chip). Plain Pico has no wireless.
 - **No ESP-IDF** - uses pico-sdk framework only
 - **GPIO** - 26 GPIO pins (GP0-GP25), 3 ADC channels (GP26-GP28)
 - **No strapping pins** - simpler GPIO usage than ESP32
@@ -764,9 +852,25 @@ nrf52:
 # nRF52 does NOT support WiFi - uses BLE or Thread for connectivity
 ```
 
+### Device Firmware Update (DFU)
+
+*Added ESPHome 2025.9.0*
+
+nRF52 supports Device Firmware Update under Zephyr RTOS via the mcumgr protocol. Both BLE DFU and serial DFU are supported.
+
+```yaml
+ota:
+  platform: nrf52
+  # Supports both BLE-based and serial-based DFU via mcumgr
+```
+
+**Compatible tools:**
+- **nRF Connect** (mobile app) - BLE-based DFU, easiest for end users
+- **mcumgr CLI** - command-line tool for both BLE and serial DFU
+
 ### BLE + Serial OTA (since 2026.3)
 
-nRF52 now supports OTA updates via BLE and serial using the mcumgr protocol:
+nRF52 also supports OTA updates via BLE and serial using the mcumgr protocol (builds on the same DFU stack):
 
 ```yaml
 ota:

@@ -6,12 +6,16 @@ Complete reference for display platforms, graphics, fonts, and LVGL.
 - [Display Basics](#display-basics)
 - [OLED Displays](#oled-displays)
 - [TFT Displays](#tft-displays)
+- [MIPI SPI Display Driver](#mipi-spi-display-driver)
 - [E-Paper/E-Ink](#e-paper-e-ink)
 - [LED Matrix](#led-matrix)
 - [Segment Displays](#segment-displays)
 - [Nextion HMI](#nextion-hmi)
 - [Fonts and Graphics](#fonts-and-graphics)
 - [LVGL Framework](#lvgl-framework)
+- [MIPI DSI Displays (ESP32-P4)](#mipi-dsi-displays-esp32-p4)
+- [Camera Encoder](#camera-encoder)
+- [HLK-FM22X Face Recognition](#hlk-fm22x-face-recognition)
 
 ---
 
@@ -188,6 +192,9 @@ display:
 | ST7735 | 128x160 | Small |
 
 ### ST7789V
+
+> **WARNING: DEPRECATED** - ST7789V is now supported by the MIPI SPI Display Driver and will be removed in a future ESPHome release. Use `mipi_spi` for new projects.
+
 ```yaml
 display:
   - platform: st7789v
@@ -199,6 +206,12 @@ display:
     lambda: |-
       it.print(0, 0, id(font), "ST7789V");
 ```
+
+### ST7701S
+
+> **WARNING: DEPRECATED** - ST7701S is now supported by the MIPI RGB driver and will be removed in a future ESPHome release.
+
+ST7701S was used for RGB parallel interface displays. For new projects, use the `mipi_rgb` platform.
 
 ### ST7735
 ```yaml
@@ -234,6 +247,74 @@ light:
     output: backlight_pwm
     restore_mode: ALWAYS_ON
 ```
+
+---
+
+## MIPI SPI Display Driver
+
+*Since ESPHome 2025.x - PREFERRED approach for new SPI display projects*
+
+The `mipi_spi` component is a universal driver for displays using the MIPI DBI interface over SPI. It replaces the old per-chip drivers (ST7789V, ST7701S, etc.) for SPI-connected displays and supports a wide range of ESP32-based display boards.
+
+### Interface Support
+
+- Standard SPI
+- Quad SPI (QSPI)
+- 8-bit parallel interface
+
+### Basic Configuration (240x320 SPI TFT)
+
+```yaml
+spi:
+  clk_pin: GPIO18
+  mosi_pin: GPIO23
+  miso_pin: GPIO19
+
+display:
+  - platform: mipi_spi
+    id: my_display
+    dimensions:
+      width: 240
+      height: 320
+    cs_pin: GPIO5
+    dc_pin: GPIO16
+    reset_pin: GPIO17
+    init_sequence:
+      - delay 120ms
+    lambda: |-
+      it.fill(Color::BLACK);
+      it.print(10, 10, id(font), Color::WHITE, "Hello MIPI SPI");
+```
+
+### With LVGL
+
+```yaml
+display:
+  - platform: mipi_spi
+    id: my_display
+    dimensions:
+      width: 240
+      height: 320
+    cs_pin: GPIO5
+    dc_pin: GPIO16
+    reset_pin: GPIO17
+
+lvgl:
+  displays:
+    - my_display
+  pages:
+    - id: main_page
+      widgets:
+        - label:
+            text: "Hello!"
+            align: CENTER
+```
+
+### Notes
+
+- Replaces the standalone `st7789v`, `st7735`, and related SPI display platforms
+- Check the ESPHome docs for the correct `init_sequence` for your specific display panel
+- Works with most ESP32, ESP32-S2, ESP32-S3, and ESP32-C3 boards
 
 ---
 
@@ -580,6 +661,8 @@ display:
 
 Light and Versatile Graphics Library for advanced UIs.
 
+*ESPHome 2026.4.0 updated to LVGL v9.5.0.*
+
 ### Basic Setup
 ```yaml
 lvgl:
@@ -924,3 +1007,89 @@ Waveshare ESP32-P4 panels (added in 2026.2) and other MIPI DSI-compatible displa
 - **Performance**: MIPI DSI is significantly faster than SPI - suitable for video, animations, and responsive UIs
 - **Power**: Higher bandwidth means higher power consumption than SPI displays
 - **Complexity**: Requires correct timing parameters from the display datasheet
+
+---
+
+## Camera Encoder
+
+*Since ESPHome 2025.9.0*
+
+The Camera Encoder component provides efficient JPEG compression for ESP32 camera implementations. It supports hardware acceleration on ESP32-S3 and software-based JPEG on standard ESP32.
+
+### Supported Platforms
+
+| Platform | JPEG Method |
+|----------|-------------|
+| ESP32-S3 | Hardware (fast) |
+| ESP32 | Software |
+
+### Basic Configuration
+
+```yaml
+esp32_camera:
+  name: "My Camera"
+  external_clock:
+    pin: GPIO0
+    frequency: 20MHz
+  i2c_pins:
+    sda: GPIO26
+    scl: GPIO27
+  data_pins: [GPIO5, GPIO18, GPIO19, GPIO21, GPIO36, GPIO39, GPIO34, GPIO35]
+  vsync_pin: GPIO25
+  href_pin: GPIO23
+  pixel_clock_pin: GPIO22
+  resolution: 640x480
+
+esp32_camera_web_server:
+  port: 8080
+  mode: stream
+```
+
+### JPEG Quality Settings
+
+```yaml
+esp32_camera:
+  # ...
+  jpeg_quality: 10  # 1 (best quality, large) to 63 (lowest quality, small)
+```
+
+Lower values produce larger files with better quality. Higher values reduce bandwidth and storage at the cost of image fidelity. Typical values: 10-15 for good quality, 30-40 for small size.
+
+### Notes
+
+- Hardware JPEG on ESP32-S3 significantly reduces CPU load during streaming
+- Adjust `jpeg_quality` to balance image quality against network bandwidth
+- Combine with `esp32_camera_web_server` for live MJPEG streaming
+
+---
+
+## HLK-FM22X Face Recognition
+
+*Since ESPHome 2025.11.0*
+
+The HLK-FM22X is a Hilink face recognition and detection module connected via UART. It can detect faces and recognize registered individuals, making it suitable for presence detection and access control.
+
+### Basic Configuration
+
+```yaml
+uart:
+  id: hlk_uart
+  rx_pin: GPIO16
+  tx_pin: GPIO17
+  baud_rate: 115200
+
+hlk_fpm383c:
+  id: face_sensor
+  uart_id: hlk_uart
+
+binary_sensor:
+  - platform: hlk_fpm383c
+    hlk_fpm383c_id: face_sensor
+    name: "Face Detected"
+```
+
+### Notes
+
+- UART-based communication, no SPI/I2C required
+- Supports face enrollment and recognition of multiple users
+- Suitable for door access, presence automation, and occupancy detection

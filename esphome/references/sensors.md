@@ -6,6 +6,7 @@
 - [Air Quality Sensors](#air-quality-sensors)
 - [Power & Energy Sensors](#power--energy-sensors)
 - [Distance & Presence Sensors](#distance--presence-sensors)
+- [Motion & Orientation Sensors](#motion--orientation-sensors)
 - [Light Sensors](#light-sensors)
 - [Wireless/BLE Sensors](#wirelessble-sensors)
 - [Template & Computed Sensors](#template--computed-sensors)
@@ -120,6 +121,82 @@ sensor:
     update_interval: 60s
 ```
 
+### BMP581 / BMP585 (I2C and SPI) (since 2026.4)
+High-precision barometric pressure and temperature sensor. Supports both I2C and SPI. BMP585 uses the same `bmp581` component (different ASIC ID, auto-detected).
+
+```yaml
+# I2C mode
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+
+sensor:
+  - platform: bmp581
+    address: 0x46  # or 0x47
+    temperature:
+      name: "Temperature"
+    pressure:
+      name: "Pressure"
+    update_interval: 60s
+```
+
+```yaml
+# SPI mode (added in 2026.4.0)
+spi:
+  clk_pin: GPIO18
+  mosi_pin: GPIO23
+  miso_pin: GPIO19
+
+sensor:
+  - platform: bmp581
+    cs_pin: GPIO5
+    temperature:
+      name: "Temperature"
+    pressure:
+      name: "Pressure"
+    update_interval: 60s
+```
+
+**Key options:**
+- `address`: I2C address, 0x46 (default) or 0x47
+- `cs_pin`: SPI chip select pin (use instead of `address` for SPI mode)
+- BMP585 is auto-detected by ASIC ID, no separate platform needed
+
+### SPA06 (I2C and SPI) (since 2026.4)
+Goermicro SPA06-003 pressure and temperature sensor. Available on Adafruit and Seeed Grove boards.
+
+```yaml
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+
+sensor:
+  - platform: spa06
+    address: 0x76  # or 0x77
+    temperature:
+      name: "Temperature"
+    pressure:
+      name: "Pressure"
+    update_interval: 60s
+```
+
+```yaml
+# SPI mode
+spi:
+  clk_pin: GPIO18
+  mosi_pin: GPIO23
+  miso_pin: GPIO19
+
+sensor:
+  - platform: spa06
+    cs_pin: GPIO5
+    temperature:
+      name: "Temperature"
+    pressure:
+      name: "Pressure"
+    update_interval: 60s
+```
+
 ### SHT3X-D / SHT4X (I2C)
 High-precision temperature and humidity.
 
@@ -156,6 +233,64 @@ sensor:
     update_interval: 60s
 ```
 
+### HDC302x (I2C) (since 2026.3)
+High-accuracy temperature and humidity sensor (Texas Instruments HDC3020, HDC3021, HDC3022). The HDC3022 variant features IP67-rated permanent PTFE dust and water protection, making it suitable for exposed outdoor installations.
+
+```yaml
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+
+sensor:
+  - platform: hdc302x
+    address: 0x44  # 0x44, 0x45, 0x46, or 0x47
+    temperature:
+      name: "Temperature"
+    humidity:
+      name: "Humidity"
+    update_interval: 60s
+```
+
+**Key options:**
+- `address`: Configurable via address pins, four addresses supported
+- HDC3022 is the waterproof variant (IP67, permanent PTFE membrane)
+
+### HDC2080 (I2C) (since 2026.4)
+Texas Instruments HDC2080 temperature and humidity sensor with interrupt support.
+
+```yaml
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+
+sensor:
+  - platform: hdc2080
+    address: 0x40  # or 0x41
+    temperature:
+      name: "Temperature"
+    humidity:
+      name: "Humidity"
+    update_interval: 60s
+```
+
+### HDC2010 (I2C) (since 2025.11)
+Texas Instruments HDC2010 temperature and humidity sensor.
+
+```yaml
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+
+sensor:
+  - platform: hdc2010
+    address: 0x40  # or 0x41
+    temperature:
+      name: "Temperature"
+    humidity:
+      name: "Humidity"
+    update_interval: 60s
+```
+
 ### Dallas DS18B20 (1-Wire)
 Waterproof temperature sensor.
 
@@ -169,6 +304,53 @@ sensor:
     address: 0x1234567890ABCDEF  # Use dallas_temp scan to find
     name: "Water Temperature"
     resolution: 12  # 9-12 bits
+```
+
+### WTS01 (I2C) (since 2025.10)
+WTS01 digital temperature sensor.
+
+```yaml
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+
+sensor:
+  - platform: wts01
+    name: "Temperature"
+    update_interval: 60s
+```
+
+### LM75 (I2C) (since 2025.10)
+LM75B industrial temperature sensor. Very common in industrial applications and evaluation boards.
+
+```yaml
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+
+sensor:
+  - platform: lm75
+    address: 0x48  # 0x48-0x4F depending on address pins
+    name: "Temperature"
+    update_interval: 60s
+```
+
+**Key options:**
+- `address`: Set by A0/A1/A2 pins, range 0x48 to 0x4F (8 devices per bus)
+
+### BH1900NUX (I2C) (since 2025.11)
+ROHM BH1900NUX temperature sensor.
+
+```yaml
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+
+sensor:
+  - platform: bh1900nux
+    address: 0x48
+    name: "Temperature"
+    update_interval: 60s
 ```
 
 ### NTC Thermistor (Analog)
@@ -307,6 +489,67 @@ sensor:
       name: "PM Size"
 ```
 
+### SEN6x (I2C) (since 2026.3)
+Sensirion SEN6x family all-in-one environmental sensor. Supports up to 7 measurement channels depending on model. Supported models: SEN62, SEN63C, SEN65, SEN66, SEN68, SEN69C.
+
+| Model | PM | Temp/RH | VOC | NOx | CO2 | HCHO |
+|-------|-----|---------|-----|-----|-----|------|
+| SEN62 | Yes | Yes | - | - | - | - |
+| SEN63C | Yes | Yes | - | - | Yes | - |
+| SEN65 | Yes | Yes | Yes | Yes | - | - |
+| SEN66 | Yes | Yes | Yes | Yes | Yes | - |
+| SEN68 | Yes | Yes | Yes | Yes | - | Yes |
+| SEN69C | Yes | Yes | Yes | Yes | Yes | Yes |
+
+```yaml
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+
+sensor:
+  - platform: sen6x
+    address: 0x6B
+    pm_1_0:
+      name: "PM 1.0"
+    pm_2_5:
+      name: "PM 2.5"
+    pm_4_0:
+      name: "PM 4.0"
+    pm_10_0:
+      name: "PM 10.0"
+    temperature:
+      name: "Temperature"
+    humidity:
+      name: "Humidity"
+    voc_index:
+      name: "VOC Index"
+    nox_index:
+      name: "NOx Index"
+    co2:
+      name: "CO2"           # SEN63C, SEN66, SEN69C only
+    formaldehyde:
+      name: "Formaldehyde"  # SEN68, SEN69C only
+    update_interval: 60s
+```
+
+### CUBIC PM2005 / PM2105 (UART) (since 2025.5)
+CUBIC laser particle sensor, PM2.5 and PM10 measurement.
+
+```yaml
+uart:
+  rx_pin: GPIO16
+  tx_pin: GPIO17
+  baud_rate: 9600
+
+sensor:
+  - platform: cubic_pm
+    pm_2_5:
+      name: "PM 2.5"
+    pm_10_0:
+      name: "PM 10.0"
+    update_interval: 60s
+```
+
 ---
 
 ## Power & Energy Sensors
@@ -324,6 +567,42 @@ sensor:
     filters:
       - multiply: 3.3  # Voltage divider compensation
 ```
+
+### nRF52 ADC (Zephyr) (since 2025.8)
+Built-in ADC on nRF52 microcontrollers running under the Zephyr platform. ADC-capable pins vary by board; on nRF52840 these are typically P0.02 through P0.07 (AIN0-AIN5) and P0.28/P0.29/P0.30/P0.31 (AIN4-AIN7).
+
+```yaml
+sensor:
+  - platform: adc
+    pin: P0.04  # AIN2 on nRF52840
+    name: "Analog Input"
+    attenuation: auto
+    update_interval: 5s
+```
+
+**Note:** Use the Zephyr pin notation (e.g. `P0.04`) on nRF52 targets. Check your board's pinout for which pins are ADC-capable.
+
+### MCP3221 (I2C) (since 2025.11)
+Microchip MCP3221, 12-bit single-channel I2C ADC. Useful for reading analog sensors on I2C-only platforms.
+
+```yaml
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+
+sensor:
+  - platform: mcp3221
+    address: 0x4D  # Fixed address, last nibble set by part number variant
+    name: "ADC Reading"
+    update_interval: 1s
+    filters:
+      - multiply: 0.000805  # Convert raw 12-bit to voltage (3.3V ref / 4096)
+```
+
+**Key options:**
+- Address is fixed per device variant (0x48-0x4F)
+- 12-bit resolution, single-ended input
+- Reference voltage is VDD (supply voltage)
 
 ### Pulse Meter
 High-resolution pulse counting for energy meters.
@@ -452,6 +731,43 @@ sensor:
       name: "Energy B"
 ```
 
+### emonTx / emonPi (UART) (since 2026.4)
+OpenEnergyMonitor emonTx and emonPi energy monitoring via UART serial bridge. Receives JSON data frames from the emon device and exposes individual channels as sensors. Supports JSON trigger actions and command sending.
+
+```yaml
+uart:
+  rx_pin: GPIO16
+  tx_pin: GPIO17
+  baud_rate: 38400
+
+sensor:
+  - platform: emontx
+    power1:
+      name: "Circuit Power 1"
+      unit_of_measurement: "W"
+      device_class: power
+      state_class: measurement
+    power2:
+      name: "Circuit Power 2"
+      unit_of_measurement: "W"
+      device_class: power
+      state_class: measurement
+    power3:
+      name: "Circuit Power 3"
+      unit_of_measurement: "W"
+      device_class: power
+      state_class: measurement
+    vrms:
+      name: "Mains Voltage"
+      unit_of_measurement: "V"
+      device_class: voltage
+```
+
+**Key options:**
+- Requires a UART connection to the emonTx/emonPi serial output
+- emonTx sends JSON frames at regular intervals
+- Additional channels (power4, pulse, temperature) available depending on emonTx firmware
+
 ---
 
 ## Distance & Presence Sensors
@@ -486,7 +802,7 @@ sensor:
 ```
 
 ### LD2410 (mmWave Radar Presence)
-Human presence detection via UART.
+Human presence detection via UART. Single-target detection.
 
 ```yaml
 uart:
@@ -544,8 +860,80 @@ sensor:
         name: "Target 1 Resolution"
 ```
 
+### RD-03D (mmWave Radar Multi-target) (since 2026.1)
+AI Thinker RD-03D 24 GHz mmWave radar with multi-target tracking via UART. Tracks multiple simultaneous targets with X/Y coordinates and speed. Unlike LD2410 (single target), RD-03D reports up to 3 targets simultaneously.
+
+```yaml
+uart:
+  tx_pin: GPIO17
+  rx_pin: GPIO16
+  baud_rate: 256000
+
+sensor:
+  - platform: rd03d
+    target_count:
+      name: "Target Count"
+    target_1:
+      x:
+        name: "Target 1 X"
+        unit_of_measurement: "mm"
+      y:
+        name: "Target 1 Y"
+        unit_of_measurement: "mm"
+      speed:
+        name: "Target 1 Speed"
+        unit_of_measurement: "cm/s"
+    target_2:
+      x:
+        name: "Target 2 X"
+        unit_of_measurement: "mm"
+      y:
+        name: "Target 2 Y"
+        unit_of_measurement: "mm"
+      speed:
+        name: "Target 2 Speed"
+        unit_of_measurement: "cm/s"
+```
+
+**Key options:**
+- Supports up to 3 simultaneous targets
+- Reports X/Y position (mm) and speed (cm/s) per target
+- Compare: LD2410 = single target presence/distance only; RD-03D = multi-target with coordinates
+
 ### PIR (Passive Infrared)
 Motion detection (see binary_sensors).
+
+---
+
+## Motion & Orientation Sensors
+
+### MSA311 / MSA301 (I2C) (since 2025.3)
+3-axis accelerometer from MEMSensing Microsystems. Common on small development boards.
+
+```yaml
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+
+sensor:
+  - platform: msa311
+    address: 0x62  # MSA311 default; MSA301 uses 0x26
+    acceleration_x:
+      name: "Acceleration X"
+      unit_of_measurement: "m/s2"
+    acceleration_y:
+      name: "Acceleration Y"
+      unit_of_measurement: "m/s2"
+    acceleration_z:
+      name: "Acceleration Z"
+      unit_of_measurement: "m/s2"
+    update_interval: 60s
+```
+
+**Key options:**
+- MSA311 address: 0x62
+- MSA301 address: 0x26
+- Range: configurable 2g / 4g / 8g / 16g
 
 ---
 
@@ -715,6 +1103,17 @@ sensor:
     update_interval: 60s
 ```
 
+### Dew Point (since 2026.3)
+Native computed dew point sensor - no need for template sensors.
+
+```yaml
+sensor:
+  - platform: dew_point
+    name: "Dew Point"
+    temperature: temperature_sensor_id
+    humidity: humidity_sensor_id
+```
+
 ### Copy Sensor
 Transform another sensor's value.
 
@@ -798,6 +1197,17 @@ sensor:
     name: "ESP32 Temperature"
 ```
 
+### Internal Temperature (nRF52 / Zephyr) (since 2026.4)
+Die temperature sensor built into nRF52 SoCs, available when running under the Zephyr platform.
+
+```yaml
+sensor:
+  - platform: internal_temperature
+    name: "nRF52 Die Temperature"
+```
+
+**Note:** Uses the same `internal_temperature` platform as ESP32. On nRF52/Zephyr the underlying driver reads from the TEMP peripheral. Useful for monitoring SoC operating conditions; not a substitute for ambient temperature measurement.
+
 ### Debug Sensors
 Memory and loop time.
 
@@ -845,61 +1255,3 @@ sensor:
 | measurement | Instantaneous value (temperature, power) |
 | total | Cumulative value that can reset (rain today) |
 | total_increasing | Always increasing (energy, gas usage) |
-
----
-
-## New Sensor Platforms (2025-2026)
-
-### Dew Point (since 2026.3)
-
-Native computed dew point sensor - no need for template sensors:
-
-```yaml
-sensor:
-  - platform: dew_point
-    name: "Dew Point"
-    temperature: temperature_sensor_id
-    humidity: humidity_sensor_id
-```
-
-### HDC302x (since 2025.11+)
-
-High-accuracy temperature and humidity sensor (TI HDC3020/HDC3021/HDC3022):
-
-```yaml
-sensor:
-  - platform: hdc302x
-    temperature:
-      name: "Temperature"
-    humidity:
-      name: "Humidity"
-    address: 0x44
-    update_interval: 60s
-```
-
-### SEN6x (since 2026.2+)
-
-Sensirion SEN60/SEN63/SEN65/SEN66 all-in-one environmental sensor (PM, VOC, NOx, T, RH, CO2):
-
-```yaml
-sensor:
-  - platform: sen6x
-    pm_1_0:
-      name: "PM 1.0"
-    pm_2_5:
-      name: "PM 2.5"
-    pm_10_0:
-      name: "PM 10"
-    temperature:
-      name: "Temperature"
-    humidity:
-      name: "Humidity"
-    voc:
-      name: "VOC Index"
-    nox:
-      name: "NOx Index"
-    co2:
-      name: "CO2"  # SEN66 only
-    address: 0x6B
-    update_interval: 60s
-```

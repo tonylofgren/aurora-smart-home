@@ -9,6 +9,9 @@ Complete reference for communication buses and protocols.
 - [1-Wire](#1-wire)
 - [CAN Bus](#can-bus)
 - [Modbus](#modbus)
+- [ESP-NOW](#esp-now)
+- [LoRa - SX126x / SX127x](#lora---sx126x--sx127x)
+- [USB CDC-ACM](#usb-cdc-acm)
 
 ---
 
@@ -526,6 +529,223 @@ on_...:
       uint16_t result;
       id(controller1).read_holding_register(0x0000, &result, 1);
 ```
+
+---
+
+## ESP-NOW
+
+*Since ESPHome 2025.8.0 -- ESP32 only*
+
+Device-to-device WiFi communication without a router or access point. Up to 250 bytes per message. Supports peer-to-peer and broadcast. Can coexist with WiFi on the same channel.
+
+Use cases: sensor nodes sending data directly to a hub device, mesh-like setups without infrastructure.
+
+### Basic Setup
+```yaml
+esp_now:
+  id: espnow_component
+  peers:
+    - mac_address: AA:BB:CC:DD:EE:FF
+      id: hub_peer
+
+sensor:
+  - platform: dht
+    pin: GPIO4
+    temperature:
+      name: "Temperature"
+      id: temp_sensor
+    humidity:
+      name: "Humidity"
+      id: hum_sensor
+
+interval:
+  - interval: 30s
+    then:
+      - esp_now.send:
+          peer_id: hub_peer
+          payload: !lambda |-
+            float t = id(temp_sensor).state;
+            float h = id(hum_sensor).state;
+            std::vector<uint8_t> data(8);
+            memcpy(data.data(), &t, 4);
+            memcpy(data.data() + 4, &h, 4);
+            return data;
+```
+
+### Receiving ESP-NOW Messages (Hub Side)
+```yaml
+esp_now:
+  id: espnow_hub
+  on_message:
+    - lambda: |-
+        if (message.size() == 8) {
+          float t, h;
+          memcpy(&t, message.data(), 4);
+          memcpy(&h, message.data() + 4, 4);
+          ESP_LOGI("espnow", "Temp: %.1f, Hum: %.1f from " MACSTR,
+                   t, h, MAC2STR(mac_address));
+        }
+```
+
+### ESP-NOW Key Config
+| Option | Description |
+|--------|-------------|
+| `peers` | List of peer MAC addresses to communicate with |
+| `on_message` | Trigger when a message is received |
+| `esp_now.send` | Action to send data to a peer or broadcast |
+
+**Notes:**
+- ESP32 only, not supported on ESP8266
+- Max 250 bytes per message
+- Both devices must use the same WiFi channel when coexisting with WiFi
+
+---
+
+## LoRa - SX126x / SX127x
+
+*Since ESPHome 2025.7.0*
+
+Long-range, low-power sub-GHz communication via SPI. Suitable for outdoor sensor nodes with 1-10 km range on battery power.
+
+- **SX127x family**: SX1276, SX1278 (older, very common)
+- **SX126x family**: SX1262, SX1268 (newer, better performance)
+
+### SX127x Setup
+```yaml
+spi:
+  clk_pin: GPIO18
+  mosi_pin: GPIO23
+  miso_pin: GPIO19
+
+sx127x:
+  id: lora_radio
+  cs_pin: GPIO5
+  rst_pin: GPIO14
+  dio0_pin: GPIO26
+  frequency: 868MHz      # 433MHz / 868MHz / 915MHz depending on region
+  bandwidth: 125kHz
+  spreading_factor: 7    # SF7-SF12, higher = longer range, lower data rate
+  tx_power: 17           # dBm
+
+sensor:
+  - platform: dht
+    pin: GPIO4
+    temperature:
+      name: "Temperature"
+      id: temp_sensor
+
+interval:
+  - interval: 60s
+    then:
+      - sx127x.transmit:
+          id: lora_radio
+          payload: !lambda |-
+            float t = id(temp_sensor).state;
+            std::vector<uint8_t> data(4);
+            memcpy(data.data(), &t, 4);
+            return data;
+```
+
+### SX126x Setup
+```yaml
+spi:
+  clk_pin: GPIO18
+  mosi_pin: GPIO23
+  miso_pin: GPIO19
+
+sx126x:
+  id: lora_radio
+  cs_pin: GPIO5
+  rst_pin: GPIO14
+  busy_pin: GPIO27
+  frequency: 915MHz
+  bandwidth: 125kHz
+  spreading_factor: 9
+  tx_power: 22
+```
+
+### Receiving LoRa Data
+```yaml
+sx127x:
+  id: lora_radio
+  # ... (connection settings as above)
+  on_receive:
+    - lambda: |-
+        if (packet.size() == 4) {
+          float t;
+          memcpy(&t, packet.data(), 4);
+          ESP_LOGI("lora", "Received temperature: %.1f (RSSI: %d dBm)", t, rssi);
+        }
+```
+
+### LoRa Key Config
+| Option | Description |
+|--------|-------------|
+| `frequency` | Regional frequency: 433MHz (Asia), 868MHz (EU), 915MHz (US) |
+| `spreading_factor` | SF7-SF12. Higher = longer range, lower throughput |
+| `bandwidth` | 125kHz / 250kHz / 500kHz |
+| `tx_power` | Transmit power in dBm |
+| `on_receive` | Trigger when a packet is received |
+
+---
+
+## USB CDC-ACM
+
+*Since ESPHome 2025.12.0 -- ESP32-S3 and ESP32-C3 only*
+
+Native USB serial communication on chips with built-in USB (ESP32-S3, ESP32-C3). Replaces a physical USB-to-serial converter for console logging and serial debugging.
+
+Use cases: USB gadgets, serial debugging without an external USB-UART adapter.
+
+**Requirements:**
+- `esp-idf` framework (not available with Arduino framework)
+- ESP32-S3 or ESP32-C3 with native USB hardware
+- Not supported on ESP8266 or classic ESP32
+
+### Enable USB CDC as Logger Output (ESP32-S3)
+```yaml
+esphome:
+  name: my-usb-device
+  friendly_name: My USB Device
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: esp-idf
+
+usb_cdc:
+
+logger:
+  hardware_uart: USB_CDC
+```
+
+### USB CDC Serial Console
+```yaml
+esphome:
+  name: usb-sensor
+  friendly_name: USB Sensor
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: esp-idf
+
+usb_cdc:
+
+uart:
+  id: usb_serial
+  tx_pin: USBCDC_TX
+  rx_pin: USBCDC_RX
+  baud_rate: 115200
+```
+
+### USB CDC-ACM Key Notes
+| Item | Detail |
+|------|--------|
+| Framework | `esp-idf` required, Arduino not supported |
+| Supported chips | ESP32-S3, ESP32-C3 |
+| Not supported | ESP8266, classic ESP32 (no native USB) |
+| Logger output | Set `hardware_uart: USB_CDC` in `logger:` |
 
 ---
 

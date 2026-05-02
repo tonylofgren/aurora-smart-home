@@ -1,0 +1,165 @@
+# ESP-NOW Node Template
+# Battery-powered sensor node that sends data to an ESP-NOW hub
+#
+# Architecture overview:
+#   See espnow-hub.yaml for the full system description.
+#
+#   This device:
+#     1. Wakes from deep sleep
+#     2. Reads a sensor
+#     3. Sends one ESP-NOW packet to the hub
+#     4. Returns to deep sleep immediately (no WiFi connection needed)
+#
+#   Channel requirement:
+#     ESP-NOW operates on the hub's active WiFi channel.
+#     Set wifi: channel: <N> below to match your router/hub channel.
+#     To discover the channel: check your router admin page, or read
+#     the hub's ESPHome log — it prints the channel on boot.
+#
+#   Hub MAC address:
+#     Set hub_mac_address substitution to the hub's MAC.
+#     The hub's MAC is shown in its ESPHome log and in HA device info.
+#
+#   Payload format (JSON):
+#     {"id":"node1","t":22.5,"h":61.2,"bat":87}
+#
+#   Power profile:
+#     Active (read + send): ~150 ms at ~80 mA  → ~3 µAh per wakeup
+#     Deep sleep: ~10 µA
+#     At 5-minute interval a 2000 mAh battery lasts ~2 years.
+
+substitutions:
+  device_name: "espnow-node1"
+  friendly_name: "ESP-NOW Node 1"
+  node_id: "node1"                          # Must match hub routing logic
+  hub_mac_address: "AA:BB:CC:DD:EE:FF"      # Replace with actual hub MAC
+  wifi_channel: "6"                         # Must match hub's WiFi channel
+  sleep_duration: "5min"                    # Interval between sensor readings
+
+esphome:
+  name: ${device_name}
+  friendly_name: ${friendly_name}
+  on_boot:
+    # Priority 600 runs after hardware init but before sensors settle.
+    # We wait for the sensor reading inside a script instead.
+    priority: 200
+    then:
+      - script.execute: send_reading
+
+esp32:
+  board: esp32dev
+
+# WiFi block is required so ESPHome can set the radio to the correct channel.
+# fast_connect + no AP means the chip never actually associates — it just
+# tunes to the channel and enables the radio for ESP-NOW use.
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  channel: ${wifi_channel}   # Must match hub channel — no AP handshake needed
+  fast_connect: true
+  power_save_mode: none       # Disable power saving during the brief active window
+
+# No API block — this node does not connect to Home Assistant directly.
+# OTA still works when the node happens to connect to WiFi (fast_connect).
+ota:
+  platform: esphome
+  on_begin:
+    then:
+      - deep_sleep.prevent: deep_sleep_1
+  on_end:
+    then:
+      - deep_sleep.allow: deep_sleep_1
+  on_error:
+    then:
+      - deep_sleep.allow: deep_sleep_1
+
+logger:
+  level: WARN
+  baud_rate: 0  # Disable serial output to save power
+
+deep_sleep:
+  id: deep_sleep_1
+  sleep_duration: ${sleep_duration}
+  # run_duration is intentionally omitted — the script triggers sleep explicitly
+  # after transmission to avoid a fixed timeout exceeding transmission time.
+
+esp_now:
+  peers:
+    - mac_address: ${hub_mac_address}
+      # id: hub_peer  # Uncomment if you need to reference the peer in automations
+
+globals:
+  - id: send_done
+    type: bool
+    initial_value: "false"
+
+script:
+  - id: send_reading
+    then:
+      # Small delay to let the sensor stabilise after boot
+      - delay: 200ms
+      - lambda: |-
+          float temp = id(temperature_sensor).state;
+          float hum  = id(humidity_sensor).state;
+          float bat  = id(battery_pct).state;
+
+          // Build JSON payload
+          char buf[128];
+          snprintf(buf, sizeof(buf),
+                   "{\"id\":\"%s\",\"t\":%.1f,\"h\":%.1f,\"bat\":%.0f}",
+                   "${node_id}", temp, hum, bat);
+
+          ESP_LOGI("espnow-node", "Sending: %s", buf);
+
+          // Send to hub — fire-and-forget (ESP-NOW is unacknowledged by default)
+          esp_now::send("${hub_mac_address}",
+                        reinterpret_cast<const uint8_t*>(buf),
+                        strlen(buf));
+
+          id(send_done) = true;
+
+      # Brief pause so the radio can transmit before we power down
+      - delay: 100ms
+      - deep_sleep.enter:
+          id: deep_sleep_1
+
+sensor:
+  # DHT22 temperature and humidity
+  # Replace with your preferred sensor (BME280, SHT31, etc.)
+  - platform: dht
+    pin: GPIO4
+    model: DHT22
+    temperature:
+      name: "${friendly_name} Temperature"
+      id: temperature_sensor
+    humidity:
+      name: "${friendly_name} Humidity"
+      id: humidity_sensor
+    update_interval: 10s   # Keep short — we sleep after first valid reading
+
+  # Battery voltage via ADC + resistor divider (100k / 100k → divide by 2)
+  - platform: adc
+    pin: GPIO34
+    name: "${friendly_name} Battery Voltage"
+    id: battery_voltage
+    attenuation: 11db
+    update_interval: 10s
+    filters:
+      - multiply: 2.0       # Adjust ratio for your specific voltage divider
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+
+  # Battery percentage derived from voltage
+  - platform: template
+    name: "${friendly_name} Battery"
+    id: battery_pct
+    unit_of_measurement: "%"
+    device_class: battery
+    accuracy_decimals: 0
+    update_interval: 10s
+    lambda: |-
+      float v = id(battery_voltage).state;
+      float pct = (v - 3.0f) / (4.2f - 3.0f) * 100.0f;
+      if (pct > 100.0f) return 100.0f;
+      if (pct < 0.0f)   return 0.0f;
+      return pct;

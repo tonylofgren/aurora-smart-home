@@ -30,6 +30,17 @@ Basic ESP8266 starter template with:
 
 ## Battery-Powered Devices
 
+### lora-sensor-node.yaml
+Battery-powered ESP32 LoRa sensor node (SX1276 / SX127x):
+- DHT22 temperature and humidity
+- LoRa transmission at 868 MHz (EU ISM band) — no WiFi required for data
+- Deep sleep between readings (configurable interval)
+- Battery voltage monitoring and low-battery protection
+
+**Use for:** Remote sensors beyond WiFi range, outdoor monitoring, field devices
+
+**Requirements:** ESP32 + SX1276 module (e.g. TTGO LoRa32, Heltec WiFi LoRa 32, or bare SX1276 breakout)
+
 ### battery-sensor.yaml
 Battery-powered sensor with deep sleep optimization:
 - DHT22 temperature/humidity sensor
@@ -44,6 +55,24 @@ Battery-powered sensor with deep sleep optimization:
 ---
 
 ## Bluetooth & Presence
+
+### mmwave-multi-target.yaml
+RD-03D mmWave radar — multi-target presence detection:
+- Tracks up to 3 simultaneous targets
+- Per-target X/Y position (cm) and speed (cm/s)
+- Binary sensor for any-presence (occupancy)
+- Count sensor for number of active targets
+- `on_target` trigger with example zone-based automation
+- UART connection via ESP32 UART2 (GPIO16/17)
+
+**Use for:** Multi-person room presence, desk occupancy, zone automation
+
+**Hardware:** ESP32 or ESP32-S3 + RD-03D radar module (5 V supply, UART)
+
+**vs LD2410/LD2450:** Use RD-03D when you need multi-target tracking;
+use LD2410/LD2450 for simpler single-zone presence detection.
+
+---
 
 ### ble-presence.yaml
 Bluetooth Low Energy presence detection:
@@ -139,6 +168,24 @@ Multi-sensor combination:
 
 ---
 
+## Energy Monitoring
+
+### energy-monitor-emontx.yaml
+OpenEnergyMonitor emonTx / emonPi bridge via UART:
+- ESP32 reads JSON lines from emonTx over UART (9600 baud)
+- Power (W), voltage (V), current (A), energy (kWh), power factor, apparent power
+- Full 3-phase support (CT1 / CT2 / CT3)
+- Template sensors with correct `device_class` and `state_class` for Energy dashboard
+
+**Use for:** Bridging emonTx v3 / emonTx4 / emonPi hardware to Home Assistant
+
+**Note:** The emonTx performs all AC sampling and power calculations internally.
+This is different from connecting CT clamps directly to ESPHome ADC pins.
+
+**Hardware:** ESP32 + OpenEnergyMonitor emonTx v3 or emonTx4 (emonTx TX -> ESP32 GPIO16)
+
+---
+
 ## Device Conversions
 
 ### shelly-1pm.yaml
@@ -158,6 +205,34 @@ Sonoff Basic relay switch:
 - Safe mode button
 
 **Use for:** Converting Sonoff Basic to ESPHome
+
+---
+
+## ESP-NOW (Wireless sensor mesh)
+
+### espnow-hub.yaml
+Central ESP-NOW receiver connected to Home Assistant:
+- Receives JSON payloads from multiple battery-powered nodes
+- Decodes temperature, humidity, and battery per node
+- Publishes values as individual Home Assistant sensors
+- Logs sender MAC address for diagnostics
+
+**Use for:** Low-power wireless sensor networks without per-node WiFi
+
+**Requirements:** ESP32, WiFi connection to HA
+
+### espnow-node.yaml
+Battery-powered ESP-NOW sensor node:
+- Reads DHT22 temperature/humidity
+- Sends one ESP-NOW packet to the hub MAC address
+- Returns to deep sleep immediately (no WiFi association)
+- ADC battery voltage monitoring with percentage calculation
+
+**Use for:** Remote sensors with multi-year battery life
+
+**Power consumption:** ~10 µA in deep sleep; ~150 ms active per reading
+
+**Requirements:** ESP32, DHT22 (or substitute), configure `hub_mac_address` and `wifi_channel`
 
 ---
 

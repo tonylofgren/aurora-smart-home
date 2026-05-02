@@ -1,0 +1,211 @@
+# ESP-NOW Hub Template
+# Central receiver that collects data from multiple ESP-NOW sensor nodes
+#
+# Architecture overview:
+#   Hub (this device):
+#     - Connected to WiFi and Home Assistant
+#     - Listens for ESP-NOW messages from any registered peer node
+#     - Parses JSON payloads and publishes values as HA sensors
+#
+#   Nodes (see espnow-node.yaml):
+#     - Battery-powered, no persistent WiFi connection needed
+#     - Wake from deep sleep, read sensor, send ESP-NOW packet, sleep again
+#     - Must be on the same WiFi channel as the hub
+#
+#   Channel requirement:
+#     The hub's WiFi channel determines which channel ESP-NOW uses.
+#     All nodes must be configured with the matching channel number.
+#     Check hub channel: esphome logs or router admin page.
+#     Nodes set channel via wifi: channel: <N> before connecting.
+#
+#   Pairing:
+#     Nodes target the hub by its MAC address (see espnow_peers below).
+#     The hub can receive from any peer without explicit pairing in ESPHome,
+#     but adding peers enables bidirectional communication if needed.
+#     Hub MAC address is printed in the ESPHome log on boot.
+#
+#   Payload format (JSON):
+#     Nodes send: {"id":"node1","t":22.5,"h":61.2,"bat":87}
+#       id  - node identifier string
+#       t   - temperature in °C
+#       h   - relative humidity in %
+#       bat - battery percentage (0-100)
+
+substitutions:
+  device_name: "espnow-hub"
+  friendly_name: "ESP-NOW Hub"
+
+esphome:
+  name: ${device_name}
+  friendly_name: ${friendly_name}
+
+esp32:
+  board: esp32dev
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  # The hub's WiFi channel is what ESP-NOW uses.
+  # Note this channel and configure all nodes to match.
+  fast_connect: false
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  platform: esphome
+
+logger:
+  level: INFO
+
+# Global variables to hold the most recent received values.
+# One set per expected node — duplicate for additional nodes.
+globals:
+  - id: node1_temperature
+    type: float
+    initial_value: "0.0"
+  - id: node1_humidity
+    type: float
+    initial_value: "0.0"
+  - id: node1_battery
+    type: float
+    initial_value: "0.0"
+  - id: node2_temperature
+    type: float
+    initial_value: "0.0"
+  - id: node2_humidity
+    type: float
+    initial_value: "0.0"
+  - id: node2_battery
+    type: float
+    initial_value: "0.0"
+
+esp_now:
+  # Optional: add known peer MAC addresses for bidirectional communication.
+  # The hub can receive from any sender without listing peers here,
+  # but adding peers allows the hub to send acknowledgements or commands back.
+  #
+  # peers:
+  #   - mac_address: "AA:BB:CC:DD:EE:01"  # node1
+  #   - mac_address: "AA:BB:CC:DD:EE:02"  # node2
+
+  on_message:
+    then:
+      - lambda: |-
+          // Null-terminate the received data to use as a C string
+          std::string payload(message.data.begin(), message.data.end());
+          ESP_LOGI("espnow", "Received from %s: %s",
+                   message.mac_address.str().c_str(), payload.c_str());
+
+          // --- JSON parsing ---
+          // ESPHome bundles ArduinoJson; use it to decode the payload.
+          // Adjust field names to match what your nodes actually send.
+          DynamicJsonDocument doc(256);
+          DeserializationError err = deserializeJson(doc, payload);
+          if (err) {
+            ESP_LOGE("espnow", "JSON parse error: %s", err.c_str());
+            return;
+          }
+
+          std::string node_id = doc["id"] | "";
+          float temp  = doc["t"]   | NAN;
+          float hum   = doc["h"]   | NAN;
+          float bat   = doc["bat"] | NAN;
+
+          // Route values to the correct globals based on node ID
+          if (node_id == "node1") {
+            if (!isnan(temp)) id(node1_temperature) = temp;
+            if (!isnan(hum))  id(node1_humidity)    = hum;
+            if (!isnan(bat))  id(node1_battery)     = bat;
+            id(sensor_node1_temperature).publish_state(temp);
+            id(sensor_node1_humidity).publish_state(hum);
+            id(sensor_node1_battery).publish_state(bat);
+          } else if (node_id == "node2") {
+            if (!isnan(temp)) id(node2_temperature) = temp;
+            if (!isnan(hum))  id(node2_humidity)    = hum;
+            if (!isnan(bat))  id(node2_battery)     = bat;
+            id(sensor_node2_temperature).publish_state(temp);
+            id(sensor_node2_humidity).publish_state(hum);
+            id(sensor_node2_battery).publish_state(bat);
+          } else {
+            ESP_LOGW("espnow", "Unknown node id: %s", node_id.c_str());
+          }
+
+sensor:
+  # --- Node 1 ---
+  - platform: template
+    name: "${friendly_name} Node1 Temperature"
+    id: sensor_node1_temperature
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    update_interval: never  # Published from on_message lambda
+
+  - platform: template
+    name: "${friendly_name} Node1 Humidity"
+    id: sensor_node1_humidity
+    unit_of_measurement: "%"
+    device_class: humidity
+    state_class: measurement
+    accuracy_decimals: 1
+    update_interval: never
+
+  - platform: template
+    name: "${friendly_name} Node1 Battery"
+    id: sensor_node1_battery
+    unit_of_measurement: "%"
+    device_class: battery
+    state_class: measurement
+    accuracy_decimals: 0
+    update_interval: never
+
+  # --- Node 2 ---
+  - platform: template
+    name: "${friendly_name} Node2 Temperature"
+    id: sensor_node2_temperature
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    update_interval: never
+
+  - platform: template
+    name: "${friendly_name} Node2 Humidity"
+    id: sensor_node2_humidity
+    unit_of_measurement: "%"
+    device_class: humidity
+    state_class: measurement
+    accuracy_decimals: 1
+    update_interval: never
+
+  - platform: template
+    name: "${friendly_name} Node2 Battery"
+    id: sensor_node2_battery
+    unit_of_measurement: "%"
+    device_class: battery
+    state_class: measurement
+    accuracy_decimals: 0
+    update_interval: never
+
+  # Hub's own WiFi signal — useful for diagnosing channel/range issues
+  - platform: wifi_signal
+    name: "${friendly_name} WiFi Signal"
+    update_interval: 60s
+
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: "${friendly_name} IP"
+    mac_address:
+      name: "${friendly_name} MAC"
+      # Note this MAC address — nodes must target it when sending ESP-NOW packets
+
+binary_sensor:
+  - platform: status
+    name: "${friendly_name} Status"
+
+button:
+  - platform: restart
+    name: "${friendly_name} Restart"
