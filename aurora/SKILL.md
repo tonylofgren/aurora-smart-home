@@ -44,7 +44,6 @@ What do you want to build or fix? Type `help` for examples.
 *Independent community project. Not affiliated with or endorsed by Home
 Assistant, Nabu Casa, or the Open Home Foundation.*
 
-**What's New — ESPHome 2026.4:** ESP32 now 33% faster (max CPU default), 40KB extra IRAM unlocked, signed OTA verification, SPI Ethernet on RP2040 (WIZnet W5500/W5100), GPIO expander interrupt_pin (zero polling), and 18x faster config loading. Bluetooth Proxy down to 1.8% of main loop time. 507 PRs, 40+ contributors.
 
 ## Step 1: Parse Intent
 

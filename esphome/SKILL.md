@@ -213,7 +213,7 @@ ota:
 logger:
 ```
 
-## Breaking Changes (ESPHome 2025.2 - 2026.4)
+## Version Changes (ESPHome 2025.2+)
 
 ### 2025.2+
 - **"Old style" board config removed** - must use new-style platform config (e.g., `esp32:` block with `board:`)
@@ -243,15 +243,16 @@ logger:
 - **nRF52 BLE OTA** - BLE and serial OTA via mcumgr protocol
 - **Dew Point sensor** - native computed sensor (no longer needs template)
 
-### 2026.4+
-- **ESP32 max CPU frequency as default** — 33% faster API operations, no config changes required
-- **40KB extra IRAM unlocked** — more space for time-critical ESP32 code
-- **Signed OTA verification** — `ota: verify_signature: true` for cryptographic firmware verification
-- **Custom partition tables** — `board_build.partitions:` in `esp32:` block for large configs
-- **GPIO Expander interrupt_pin** — `interrupt_pin:` on MCP23017/PCF8574 eliminates I2C/SPI polling entirely
-- **W5500/W5100/W5100S SPI Ethernet** — five new Ethernet chip types, including RP2040 support (WIZnet EVB-Pico)
-- **Client-side state logging** — up to 46x faster sensor publishing, enabled automatically
-- **ESP8266 crash handler** — now matches ESP32/RP2040
+### Breaking changes in 2026.4+
+
+None — all 2026.4 changes are backwards-compatible. Existing configs work unchanged.
+
+### New config options in 2026.4
+
+- **Signed OTA verification** — opt-in: `ota: verify_signature: true` for cryptographic firmware verification
+- **Custom partition tables** — `board_build.partitions:` in `esp32:` block when large configs overflow default flash layout
+- **GPIO Expander interrupt_pin** — add `interrupt_pin:` to MCP23017/PCF8574 expanders to eliminate polling; binary sensors read from cache between interrupts
+- **W5500/W5100/W5100S SPI Ethernet** — five new chip types; use `ethernet:` platform with `type: w5500` (or `w5100`/`w5100s`) for wired RP2040 or ESP32 without WiFi
 
 ## New Components (2024-2026)
 
@@ -267,6 +268,7 @@ Key additions to be aware of (read relevant reference files for details):
 | Z-Wave Proxy | Proxy Z-Wave serial over WiFi |
 | Packet Transport | Device-to-device UART/UDP communication |
 | W5500/W5100 SPI Ethernet | Wired networking for ESP32/RP2040 devices without WiFi |
+| HVAC Climate Component | Non-blocking UART climate control (power, mode, target temp, fan speed) |
 
 ## Common Mistakes
 
