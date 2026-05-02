@@ -52,3 +52,7 @@ htmlcov/
 *.db
 *.db-journal
 home-assistant.log
+
+# Second Brain (local only, never push to GitHub)
+second_brain/
+graphify-out/
