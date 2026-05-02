@@ -15,6 +15,7 @@ Complete reference for ESP32 and ESP8266 boards supported by ESPHome.
   - [ESP32-C6](#esp32-c6)
   - [ESP32-H2](#esp32-h2)
   - [ESP32-C61](#esp32-c61)
+  - [ESP32-P4](#esp32-p4)
 - [LibreTiny Family](#libretiny-family)
   - [LN882H](#ln882h)
 - [ESP8266 Family](#esp8266-family)
@@ -72,6 +73,7 @@ Complete reference for ESP32 and ESP8266 boards supported by ESPHome.
 | Camera project | ESP32-S3 |
 | USB device | ESP32-S2, ESP32-S3 |
 | Legacy/budget | ESP8266 |
+| High-performance media | ESP32-P4 |
 
 ### Quick Board ID Mapping
 
@@ -126,6 +128,30 @@ The most common and versatile ESP32 variant. Dual-core with WiFi and Bluetooth.
 | TTGO T-Display | `ttgo-t1` | Built-in TFT display |
 | M5Stack Core | `m5stack-core-esp32` | With display and buttons |
 
+**Capabilities & Limitations:**
+
+### Capabilities
+
+| Feature | Details |
+|---|---|
+| WiFi | 802.11 b/g/n |
+| Bluetooth | Classic + BLE 4.2 |
+| GPIO | 34 usable (GPIO0-39) |
+| ADC | 18 channels (12-bit) |
+| DAC | 2 channels, 8-bit (GPIO25, GPIO26) |
+| Capacitive touch | 10 pins |
+| ULP | ULP coprocessor |
+| Peripherals | CAN, I2S, SPI x3, I2C x2, UART x3, Hall sensor |
+
+### Limitations & Gotchas
+
+- **ADC2 + WiFi**: ADC2 (GPIO0, 2, 4, 12-15, 25-27, 33) CANNOT be used while WiFi is active - use ADC1 only
+- **Input-only GPIO**: GPIO34, 35, 36, 39 are INPUT ONLY - no output, no hardware pullup/pulldown
+- **Strapping pins**: GPIO0 (boot mode), GPIO2 (must be low at boot), GPIO5 (SDIO timing), GPIO12 (flash voltage), GPIO15 (UART log at boot) - avoid for outputs
+- **Reserved GPIO**: GPIO6-11 connected to internal flash - never use
+- **ADC accuracy**: Poor without calibration (+-6% typical)
+- **No native USB**: Requires USB-UART bridge chip for flashing/serial
+
 **Pin Categories:**
 
 | Category | Pins | Notes |
@@ -168,10 +194,10 @@ Single-core with native USB. No Bluetooth support.
 - Flash: 4 MB+ (external)
 - WiFi: 802.11 b/g/n
 - Bluetooth: None
-- GPIOs: 43
+- GPIOs: 43 (GPIO0-21, GPIO26-46)
 - ADC: 20 channels
-- DAC: 2 channels
-- Touch: 14 capacitive touch pins
+- DAC: 2 channels (GPIO17-18)
+- Touch: 20 capacitive touch pins (GPIO1-14 + more)
 - USB: Native USB OTG
 
 **Common Board IDs:**
@@ -182,6 +208,31 @@ Single-core with native USB. No Bluetooth support.
 | LOLIN S2 Mini | `lolin_s2_mini` | Compact form factor |
 | Adafruit Feather S2 | `adafruit_feather_esp32s2` | Feather form factor |
 | Unexpected Maker TinyS2 | `um_tinys2` | Ultra compact |
+
+**Capabilities & Limitations:**
+
+### Capabilities
+
+| Feature | Details |
+|---|---|
+| WiFi | 802.11 b/g/n |
+| Bluetooth | None |
+| USB | Native USB OTG |
+| GPIO | 43 pins (GPIO0-21, GPIO26-46) |
+| ADC | ADC1 (GPIO1-10) + ADC2 (GPIO11-20) |
+| DAC | 2 channels (GPIO17, GPIO18) |
+| Capacitive touch | 20 pins (GPIO1-14 + more) |
+| ULP | ULP-FSM + ULP-RISC-V coprocessors |
+| Temperature sensor | Built-in |
+
+### Limitations & Gotchas
+
+- **No Bluetooth**: No BLE at all - important distinction from S3
+- **ADC2 + WiFi**: ADC2 unavailable while WiFi is active (same as classic ESP32)
+- **No CAN bus**
+- **Single-core**: CPU-intensive tasks may block network
+- **Strapping pins**: GPIO0 (boot), GPIO45 (VDD_SPI voltage), GPIO46 (ROM log)
+- **GPIO0 boot**: GPIO0 must be high during normal boot
 
 **Example Configuration:**
 
@@ -207,9 +258,9 @@ Dual-core with AI acceleration. Best for voice assistants and cameras.
 - Flash: 8-16 MB
 - WiFi: 802.11 b/g/n
 - Bluetooth: BLE 5.0
-- GPIOs: 45
+- GPIOs: 45 (GPIO0-21, GPIO26-48)
 - ADC: 20 channels
-- Touch: 14 capacitive touch pins
+- Touch: 14 capacitive touch pins (GPIO1-14)
 - USB: Native USB OTG
 - Special: Vector instructions for AI/ML
 
@@ -223,6 +274,34 @@ Dual-core with AI acceleration. Best for voice assistants and cameras.
 | Adafruit Feather S3 | `adafruit_feather_esp32s3` | Feather form factor |
 | M5Stack AtomS3 | `m5stack-atoms3` | Ultra compact |
 | LILYGO T-Display S3 | `lilygo-t-display-s3` | Built-in display |
+
+**Capabilities & Limitations:**
+
+### Capabilities
+
+| Feature | Details |
+|---|---|
+| WiFi | 802.11 b/g/n |
+| Bluetooth | BLE 5.0 (including BLE Long Range) |
+| USB | Native USB OTG (high-speed with external PHY) |
+| GPIO | 45 pins (GPIO0-21, GPIO26-48) |
+| ADC | ADC1 (GPIO1-10) + ADC2 (GPIO11-20) |
+| DAC | None |
+| Capacitive touch | 14 pins (GPIO1-14) |
+| AI/ML | Vector instructions for edge inference |
+| PSRAM | Octal/Quad PSRAM support |
+| Camera | Parallel camera interface |
+| Peripherals | SPI x4, I2S x2, ULP |
+
+### Limitations & Gotchas
+
+- **ADC2 + WiFi**: ADC2 unavailable while WiFi is active
+- **No DAC**: Unlike classic ESP32, S3 has no DAC channels
+- **GPIO35-37 reserved**: Used for Octal PSRAM/Flash on WROOM modules - check your module variant before using
+- **GPIO38 reserved**: On some modules also reserved for PSRAM
+- **Strapping pins**: GPIO0 (boot), GPIO45 (VDD_SPI), GPIO46 (ROM log)
+- **USB + UART0**: USB OTG and UART0 share boot strapping - one is disabled when the other is in use
+- **JTAG pins**: GPIO39-42 are JTAG pins (can be reused but complicates debugging)
 
 **Example Configuration:**
 
@@ -264,8 +343,9 @@ RISC-V single-core. Low power and compact.
 - Flash: 4 MB
 - WiFi: 802.11 b/g/n
 - Bluetooth: BLE 5.0
-- GPIOs: 22
+- GPIOs: 22 (GPIO0-21)
 - ADC: 6 channels
+- USB: Built-in USB Serial/JTAG (GPIO18/GPIO19)
 
 **Common Board IDs:**
 
@@ -276,6 +356,32 @@ RISC-V single-core. Low power and compact.
 | ESP32-C3-MINI-1 | `esp32-c3-devkitc-02` | Module-based |
 | LOLIN C3 Mini | `lolin_c3_mini` | D1 Mini form factor |
 | Adafruit QT Py C3 | `adafruit_qtpy_esp32c3` | STEMMA QT connector |
+
+**Capabilities & Limitations:**
+
+### Capabilities
+
+| Feature | Details |
+|---|---|
+| WiFi | 802.11 b/g/n |
+| Bluetooth | BLE 5.0 (BLE Long Range) |
+| USB | Built-in USB Serial/JTAG (GPIO18/GPIO19) |
+| GPIO | 22 pins (GPIO0-21) |
+| ADC | ADC1 (GPIO0-4); ADC2 is GPIO5 only |
+| DAC | None |
+| Capacitive touch | None |
+| Low power | Multiple sleep modes |
+
+### Limitations & Gotchas
+
+- **Very limited GPIO**: Only 22 GPIO total - constrained for complex projects
+- **No touch pins**
+- **No DAC**
+- **ADC2 + WiFi**: ADC2 (GPIO5 only) unavailable while WiFi is active
+- **USB pins**: GPIO18/GPIO19 = USB Serial/JTAG - repurposing them disables USB debugging
+- **Strapping pins**: GPIO2 (boot), GPIO8 (boot mode), GPIO9 (boot - must be high)
+- **Reserved GPIO on WROOM modules**: GPIO11 = VDD_SPI, GPIO12-17 = SPI flash/PSRAM - do NOT use
+- **Single-core RISC-V**: Slower than Xtensa for float-heavy code
 
 **Pin Notes:**
 - GPIO0-10: General purpose (some have boot functions)
@@ -305,10 +411,11 @@ WiFi 6 with Thread/Zigbee support. Matter-ready.
 - RAM: 512 KB SRAM
 - Flash: 4 MB
 - WiFi: 802.11ax (WiFi 6)
-- Bluetooth: BLE 5.0
+- Bluetooth: BLE 5.3
 - 802.15.4: Thread, Zigbee
-- GPIOs: 30
-- ADC: 7 channels
+- GPIOs: 31 (GPIO0-30)
+- ADC: 7 channels (ADC1 only)
+- USB: Built-in USB Serial/JTAG (GPIO12/GPIO13)
 
 **Common Board IDs:**
 
@@ -316,6 +423,32 @@ WiFi 6 with Thread/Zigbee support. Matter-ready.
 |-------|-----|-------|
 | ESP32-C6-DevKitC-1 | `esp32-c6-devkitc-1` | Standard dev board |
 | Seeed XIAO ESP32C6 | `seeed_xiao_esp32c6` | Tiny form factor |
+
+**Capabilities & Limitations:**
+
+### Capabilities
+
+| Feature | Details |
+|---|---|
+| WiFi | 802.11ax (WiFi 6), MU-MIMO |
+| Bluetooth | BLE 5.3 |
+| 802.15.4 | Thread, Zigbee |
+| USB | Built-in USB Serial/JTAG (GPIO12/GPIO13) |
+| GPIO | 31 pins (GPIO0-30) |
+| ADC | ADC1 only (GPIO0-6, 7 channels) |
+| DAC | None |
+| Capacitive touch | None |
+| LP core | Low-power RISC-V coprocessor |
+
+### Limitations & Gotchas
+
+- **Single ADC bank only**: Only ADC1 (7 channels) - no ADC2, no ADC+WiFi conflict
+- **No touch pins**
+- **No DAC**
+- **Thread/Zigbee + WiFi**: Cannot run simultaneously - they share the 802.15.4/WiFi radio in time-sliced mode
+- **Strapping pins**: GPIO8 (boot), GPIO9 (boot mode), GPIO15 (JTAG source)
+- **LP GPIO limited**: GPIO24-30 = LP (low-power) GPIO - limited function in normal mode
+- **USB JTAG pins**: GPIO12/GPIO13 - avoid for GPIO use when debugging
 
 **Example Configuration:**
 
@@ -340,15 +473,43 @@ Thread/Zigbee only. No WiFi.
 - RAM: 320 KB SRAM
 - Flash: 4 MB
 - WiFi: None
-- Bluetooth: BLE 5.0
+- Bluetooth: BLE 5.3
 - 802.15.4: Thread, Zigbee
-- GPIOs: 25
+- GPIOs: 28 (GPIO0-27)
+- ADC: 5 channels (GPIO0-4)
+- USB: Built-in USB Serial/JTAG (GPIO26/GPIO27)
+- LP core: Yes
 
 **Common Board IDs:**
 
 | Board | ID | Notes |
 |-------|-----|-------|
 | ESP32-H2-DevKitM-1 | `esp32-h2-devkitm-1` | Standard dev board |
+
+**Capabilities & Limitations:**
+
+### Capabilities
+
+| Feature | Details |
+|---|---|
+| WiFi | None |
+| Bluetooth | BLE 5.3 |
+| 802.15.4 | Thread, Zigbee |
+| USB | Built-in USB Serial/JTAG (GPIO26/GPIO27) |
+| GPIO | 28 pins (GPIO0-27) |
+| ADC | ADC1 (GPIO0-4, 5 channels) |
+| DAC | None |
+| Capacitive touch | None |
+| LP core | Low-power coprocessor |
+
+### Limitations & Gotchas
+
+- **No WiFi whatsoever**: Thread/Zigbee/BLE only - must use a Thread border router (ESP32-C6 or external) to reach IP network
+- **Very few ADC channels**: Only 5 channels (GPIO0-4)
+- **No touch pins, no DAC**
+- **Low GPIO count**: 28 total - limited for complex wiring
+- **Strapping pins**: GPIO8 (boot), GPIO9 (boot mode)
+- **USB JTAG pins**: GPIO26/GPIO27
 
 **Example Configuration:**
 
@@ -372,7 +533,7 @@ New ESP32 variant with RISC-V core (same architecture as C3/C6) and PSRAM suppor
 **Specifications:**
 - Cores: 1 (RISC-V)
 - WiFi: 802.11 b/g/n
-- Bluetooth: BLE
+- Bluetooth: BLE 5.0
 - PSRAM: Yes (quad-mode, 40 MHz or 80 MHz)
 - Requires esp-idf framework
 
@@ -381,6 +542,24 @@ New ESP32 variant with RISC-V core (same architecture as C3/C6) and PSRAM suppor
 | Board | ID | Notes |
 |-------|-----|-------|
 | ESP32-C61 DevKit | `esp32c61dev` | Generic dev board |
+
+**Capabilities & Limitations:**
+
+### Capabilities
+
+| Feature | Details |
+|---|---|
+| WiFi | 802.11 b/g/n |
+| Bluetooth | BLE 5.0 |
+| PSRAM | Quad-mode, 40 MHz or 80 MHz |
+| GPIO | Similar set to C3 family |
+
+### Limitations & Gotchas
+
+- **esp-idf required**: Arduino framework not supported; PSRAM requires esp-idf
+- **Very new chip**: Limited community board support and limited ESPHome component validation
+- **No touch pins, no DAC**
+- **Strapping pins**: Similar to C3 family - confirm with datasheet for your specific module
 
 **Example Configuration:**
 
@@ -400,6 +579,71 @@ psram:
 - Board ID `esp32c61dev` is the generic fallback; verify with your specific module supplier
 
 **Best For:** Projects requiring PSRAM with RISC-V core
+
+---
+
+### ESP32-P4
+
+High-performance Xtensa LX7 dual-core chip focused on multimedia and display. No integrated wireless.
+
+**Specifications:**
+- Cores: 2 (Xtensa LX7)
+- Clock: up to 400 MHz
+- RAM: large (varies by module)
+- PSRAM: up to 32 MB
+- WiFi: None (requires companion chip)
+- Bluetooth: None (requires companion chip)
+- GPIOs: 55 (GPIO0-54)
+- USB: USB OTG 2.0 high-speed
+- Display: MIPI DSI (up to 1080p)
+- Camera: MIPI CSI interface
+- Video: H.264 hardware encoder, JPEG hardware codec
+- LP core: Yes
+
+**Common Board IDs:**
+
+| Board | ID | Notes |
+|-------|-----|-------|
+| ESP32-P4 DevKit | (varies by supplier) | Verify with your module vendor |
+
+**Capabilities & Limitations:**
+
+### Capabilities
+
+| Feature | Details |
+|---|---|
+| CPU | Dual-core Xtensa LX7 up to 400 MHz |
+| PSRAM | Up to 32 MB |
+| GPIO | 55 pins (GPIO0-54) |
+| USB | USB OTG 2.0 high-speed |
+| Display | MIPI DSI (up to 1080p) |
+| Camera | MIPI CSI interface |
+| Video | H.264 hardware encoder |
+| Image | JPEG hardware codec |
+| Peripherals | Multiple SPI/I2C/UART/I2S |
+| LP core | Low-power coprocessor |
+| Security | Hardware crypto accelerators |
+
+### Limitations & Gotchas
+
+- **No integrated wireless**: No WiFi or Bluetooth - REQUIRES a companion chip (e.g. ESP32-C6 via SPI) for any wireless connectivity
+- **ESPHome framework**: Use `esp32:` platform with `esp-idf` framework only - Arduino not supported
+- **MIPI DSI display**: Requires specific display modules - not compatible with standard SPI TFT displays
+- **High power consumption**: Significantly higher than other variants; plan power budget accordingly
+- **Strapping pins**: GPIO24, GPIO25, GPIO28
+- **Limited ESPHome support**: Very new - fewer ESPHome components validated vs S3/C3
+- **Dual-chip design**: Most development boards pair P4 with ESP32-C6 for wireless (two-chip PCB)
+
+**Example Configuration:**
+
+```yaml
+esp32:
+  board: esp32p4dev  # Verify board ID with your supplier
+  framework:
+    type: esp-idf
+```
+
+**Best For:** High-performance displays, camera/video processing, multimedia edge applications where wireless is handled by a companion chip
 
 ---
 
@@ -635,9 +879,13 @@ esp8266:
 | ESP32-S2 | 1 | 240 | 320KB | 4MB+ | Yes | No | OTG | No | $ |
 | ESP32-S3 | 2 | 240 | 512KB | 8MB+ | Yes | 5.0 | OTG | No | $$$ |
 | ESP32-C3 | 1 | 160 | 400KB | 4MB | Yes | 5.0 | CDC | No | $ |
-| ESP32-C6 | 1 | 160 | 512KB | 4MB | WiFi 6 | 5.0 | CDC | Yes | $$ |
-| ESP32-H2 | 1 | 96 | 320KB | 4MB | No | 5.0 | CDC | Yes | $ |
+| ESP32-C6 | 1 | 160 | 512KB | 4MB | WiFi 6 | 5.3 | CDC | Yes | $$ |
+| ESP32-H2 | 1 | 96 | 320KB | 4MB | No | 5.3 | CDC | Yes | $ |
+| ESP32-C61 | 1 | 160 | 400KB | 4MB | Yes | 5.0 | CDC | No | $ |
+| ESP32-P4 | 2 | 400 | varies | varies | No* | No* | OTG HS | No | $$$ |
 | ESP8266 | 1 | 80 | 80KB | 1-4MB | Yes | No | No | No | $ |
+
+*ESP32-P4 requires external companion chip (e.g. ESP32-C6) for WiFi/BLE.
 
 ### Use Case Recommendations
 
@@ -653,6 +901,7 @@ esp8266:
 | Zigbee Device | ESP32-H2 | ESP32-C6 |
 | Budget/Simple | ESP8266 | ESP32-C3 |
 | Commercial Device | ESP8285 | - |
+| High-perf multimedia | ESP32-P4 | - |
 
 ---
 
