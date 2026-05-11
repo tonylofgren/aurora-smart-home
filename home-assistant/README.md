@@ -349,7 +349,20 @@ The skill activates when you want to:
 
 ## Target Version
 
-This skill targets **Home Assistant 2024.x / 2025.x** and follows current best practices. Deprecated syntax is noted where relevant, with migration guides included.
+This skill targets **Home Assistant 2024.x through 2026.5** and follows current best practices. Deprecated syntax is noted where relevant, with migration guides included.
+
+### What's new in HA 2026.5 (2026-05-06)
+
+- Radio Frequency (RF) integration (Broadlink RM4 Pro + ESPHome CC1101)
+- Serial Port Proxy integration (consumes ESPHome `serial_proxy`)
+- Battery Maintenance Dashboard
+- Media Player Tile features (transport, volume, source selection)
+- Vacuum and Lawn Mower more-info redesign
+- Dashboard background colors and card favorites
+- Code editor autocomplete in Developer Tools and Automations editor
+- 12 new integrations (EARN-E P1, OMIE, Denon RS232, Duco, Eurotronic, Fumis, Honeywell String Lights, Kiosker, Victron GX, OpenDisplay, Novy Cooker Hood, Radio Frequency)
+
+Reminder: HA 2026.6 removes `platform: template` sensors. Migrate to the `template:` integration before that release.
 
 ## Documentation
 

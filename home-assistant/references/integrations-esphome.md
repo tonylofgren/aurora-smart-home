@@ -1128,3 +1128,68 @@ http://device-ip/
 # Error: OTA authentication failed
 # Fix: Check OTA password
 ```
+
+---
+
+## Radio Frequency (RF) Integration
+
+*Since Home Assistant 2026.5*
+
+Home Assistant 2026.5 adds a Radio Frequency integration built on top of the Infrared integration. It controls proprietary sub-GHz RC devices (blinds, garage doors, RF outlets, doorbells, Honeywell String Lights, Novy cooker hoods) on the common 315/433/868/915 MHz bands.
+
+### Supported transmitters
+
+| Transmitter | Cost | Setup |
+|---|---|---|
+| Broadlink RM4 Pro | Commercial | Adopt via the Broadlink integration; RF learning is performed in the device settings panel |
+| ESPHome with CC1101 module | Around 10 USD per device | Flash any ESP32 with a CC1101; HA auto-discovers via the ESPHome integration. See `esphome/references/remote-rf-ir.md` for the firmware-side configuration |
+
+### ESPHome CC1101 adoption flow
+
+1. Wire CC1101 to ESP32 over SPI plus GDO0/GDO2 (see `esphome/references/remote-rf-ir.md`)
+2. Flash an ESPHome config that includes the `cc1101:` component plus `remote_transmitter:` and `remote_receiver:` platforms set to `cc1101`
+3. After boot, the device appears in Settings → Devices & Services → ESPHome
+4. Open the device, click Configure, and the Radio Frequency entities (cover, switch, button, binary_sensor) become available alongside any other exposed entities
+5. For each RF-controlled device (e.g., a roller blind), use Configure → Learn to capture the rc_switch or raw code, then attach an entity name
+
+### Learning unknown RF codes
+
+If a device uses an unsupported protocol, set `dump: raw` on `remote_receiver` in the ESPHome config and tail the device logs while pressing the original remote. Copy the raw timing array into a `button:` entity using `remote_transmitter.transmit_raw`.
+
+### Cross-references
+
+- ESPHome side: `esphome/references/remote-rf-ir.md` (CC1101 SPI setup, transmit/receive YAML)
+- Existing protocols: rc_switch, somfy, came, nice_flor_s, mertik_maxitrol
+- Alternative path: Broadlink RM4 Pro integration (no firmware required)
+
+---
+
+## Serial Port Proxy Integration
+
+*Since Home Assistant 2026.5*
+
+Home Assistant 2026.5 adds a Serial Port Proxy integration that auto-discovers ESPHome devices running the `serial_proxy` component (stable in ESPHome since 2026.3). The proxied UART then appears to other HA integrations as if it were locally attached.
+
+### Use cases
+
+- Modbus RS485 energy meters located in a remote distribution cabinet
+- DLMS smart meters in metering rooms without a wired Ethernet drop
+- Legacy RS232 audio receivers (e.g., the new Denon RS232 integration in HA 2026.5 pairs naturally with this)
+- Any serial sensor or actuator otherwise requiring a USB-to-serial cable into the HA host
+
+### ESPHome serial_proxy adoption flow
+
+1. Wire the serial device's TX/RX/GND to an ESP32 UART (use a level shifter for RS232 voltages; use a MAX485 transceiver for RS485)
+2. Flash an ESPHome config with the `serial_proxy:` component bound to `uart_id:` and a `port:` (default `6638`). See `esphome/references/communication.md` for the YAML block
+3. The device appears in Settings → Devices & Services → ESPHome
+4. The Serial Port Proxy integration auto-discovers the proxied port and exposes it under Settings → System → Hardware → Serial Ports as `tcp://<device-ip>:6638`
+5. Configure the consuming integration (Modbus, DLMS, Denon RS232, etc.) to use the proxy URL instead of a local `/dev/ttyUSB0`
+
+### Security considerations
+
+The serial_proxy listens on a TCP port and does not authenticate clients. Keep proxy devices on an isolated IoT VLAN. Never expose the proxy port to the internet. For sensitive serial traffic (utility meters), use a firewall rule restricting access to the HA host's IP.
+
+### Cross-references
+
+- ESPHome side: `esphome/references/communication.md#serial-proxy`
+- Related integrations: Modbus, DLMS, Denon RS232 (new in HA 2026.5), Zigbee-over-serial bridges

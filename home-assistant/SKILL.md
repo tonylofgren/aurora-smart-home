@@ -222,6 +222,17 @@ Wait for user answers before generating YAML.
 - **`platform:` → `trigger:`** - Inside triggers, e.g. `trigger: state` replaces `platform: state`
 - Old syntax still works but is deprecated. Always use modern syntax.
 
+### What's new in HA 2026.5 (released 2026-05-06)
+
+- **Radio Frequency (RF) integration** - sub-GHz RC device control via Broadlink RM4 Pro or ESPHome with CC1101 (~10 USD module). See `references/integrations-esphome.md` for the adoption flow and `esphome/references/remote-rf-ir.md` for the firmware side.
+- **Serial Port Proxy integration** - auto-discovers ESPHome devices running `serial_proxy` and exposes the UART as if locally attached. Useful for Modbus RS485 meters, DLMS smart meters, and the new Denon RS232 integration.
+- **Battery Maintenance Dashboard** - central low-battery view at Settings → System → Battery Maintenance. Entities must declare both `device_class: battery` and `unit_of_measurement: "%"` to appear.
+- **Media Player Tile features** - transport, volume, and source selectors live directly in the tile card. See `references/dashboard-cards.md`.
+- **Vacuum and Lawn Mower more-info redesign** - automatic for compatible integrations; no YAML changes needed.
+- **Dashboard background colors and card favorites** - per-view background color, plus a Favorites section surfaced at the top of dashboards.
+- **Code editor autocomplete** - YAML editor in Developer Tools now offers entity, service, and attribute completion.
+- **12 new integrations** - EARN-E P1 Meter, OMIE energy prices, Denon RS232, Duco, Eurotronic, Fumis, Honeywell String Lights, Kiosker, Victron GX, OpenDisplay, Novy Cooker Hood, and the Radio Frequency integration itself.
+
 ### Legacy Template Entity Migration (CRITICAL - deadline HA 2026.6)
 - **`platform: template` sensors stop working in HA 2026.6**
 - Must migrate to the `template:` integration format

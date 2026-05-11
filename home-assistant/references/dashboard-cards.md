@@ -1909,3 +1909,66 @@ features:
   - type: lock-open-door
 ```
 
+---
+
+## HA 2026.5 Card Features
+
+### Media Player Tile (2026.5+)
+
+Transport controls and source selection now live directly in the tile card, replacing the need for a separate media-control card next to it.
+
+```yaml
+type: tile
+entity: media_player.living_room
+features:
+  - type: media-player-playback
+  - type: media-player-volume-slider
+  - type: media-player-source-select
+```
+
+Stack multiple `features:` entries to expose play/pause/next, volume, and source picker without leaving the tile.
+
+### Battery Maintenance Dashboard (2026.5+)
+
+Settings → System → Battery Maintenance now lists every entity with `device_class: battery` plus a unit of `%`. Low-battery thresholds aggregate across all devices and surface a single notification.
+
+For ESPHome battery sensors to land in the dashboard, make sure the YAML declares both attributes:
+
+```yaml
+sensor:
+  - platform: adc
+    pin: GPIO34
+    name: "Door Sensor Battery"
+    device_class: battery
+    unit_of_measurement: "%"
+    filters:
+      - calibrate_linear:
+          - 1.8 -> 0
+          - 2.1 -> 100
+```
+
+Devices missing either attribute will not appear in the central view.
+
+### Vacuum and Lawn Mower More-info (2026.5+)
+
+The more-info dialogs for `vacuum.*` and `lawn_mower.*` entities now display a map view (if the integration provides one), zone selection, and direct command buttons. No YAML changes required; the redesign is automatic for compatible integrations (Roborock, Dreame, Husqvarna Automower, Worx Landroid).
+
+### Dashboard background colors and card favorites (2026.5+)
+
+Dashboards now accept per-view background colors via the Edit Dashboard → View → Settings panel. Cards can be marked as favorites to surface them in the new "Favorites" section at the top of the dashboard.
+
+```yaml
+views:
+  - title: Living Room
+    background:
+      color: "#1a1a2e"
+    cards:
+      - type: tile
+        entity: light.couch
+        favorite: true
+```
+
+### Code editor autocomplete (2026.5+)
+
+The Developer Tools → YAML editor and the Automations YAML editor now provide autocomplete for entity IDs, services, and attribute names. No configuration required; works in any browser supporting modern JS.
+
