@@ -896,6 +896,8 @@ zwave_proxy:
 
 Generic serial port proxy over the network. Useful for any device with a serial interface that needs network access.
 
+> **HA 2026.5 compatibility:** Home Assistant 2026.5 introduces a Serial Port Proxy integration that auto-discovers ESPHome devices running `serial_proxy` and exposes the proxied UART as if it were locally attached. Useful for Modbus RS485 meters, DLMS smart meters, or any RS232/RS485 device adoptable by HA integrations such as Denon RS232 (also new in HA 2026.5). See `home-assistant/references/integrations-esphome.md` for the adoption flow. Keep the proxy on an isolated VLAN to avoid exposing raw UART traffic on untrusted networks.
+
 ```yaml
 uart:
   tx_pin: GPIO17

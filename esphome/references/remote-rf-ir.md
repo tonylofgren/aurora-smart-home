@@ -303,6 +303,8 @@ binary_sensor:
 
 Sub-GHz transceiver for 315/433/868/915 MHz.
 
+> **HA 2026.5 compatibility:** An ESP32 with a CC1101 set up as in this section is consumable by Home Assistant 2026.5's Radio Frequency integration. After flashing, add the device in HA and the RF transmit/receive entities expose covers, switches, buttons, and binary sensors for sub-GHz RC devices (blinds, garage doors, RF outlets, doorbells, Honeywell String Lights, Novy cooker hoods). See `home-assistant/references/integrations-esphome.md` for the adoption flow.
+
 ### CC1101 Setup
 ```yaml
 spi:

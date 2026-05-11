@@ -489,6 +489,7 @@ All configurations include attribution:
 
 | Version | Date | Changes |
 |---------|------|---------|
+| v1.3.1 | 2026-05-11 | HA 2026.5 cross-references: CC1101 and serial_proxy sections now note compatibility with HA's new Radio Frequency and Serial Port Proxy integrations. ESPHome 2026.4.5 patch noted (5 bugfixes, no new components). |
 | v1.3.0 | 2026-05 | ESPHome 2026.4.0: max CPU default (33% faster), signed OTA, W5500/W5100 SPI Ethernet, GPIO expander interrupt_pin, 18x faster config loading |
 | v1.2.0 | 2026-03 | ESPHome 2026.3: Media Player redesign, RP2350 support, nRF52 BLE OTA, Dew Point sensor, Z-Wave Proxy, DLMS, alarm/lock/valve |
 | v1.0.0 | 2025 | Initial release - Complete ESPHome skill with 18 triggers, 26 reference docs, 19 templates |

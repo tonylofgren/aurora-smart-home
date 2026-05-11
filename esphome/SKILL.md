@@ -249,6 +249,23 @@ No breaking changes for most configurations. Existing configs work unchanged.
 
 Note: ESP32 now defaults to maximum CPU frequency. Timing-sensitive components (IR remote, precise delay loops, bitbanging protocols) may behave differently. Test before deploying.
 
+### 2026.4.5 patch (2026-05-06)
+
+Bugfix-only patch. No new components, no config changes required.
+- HA add-on: opt-in toggle for the new ESPHome Device Builder
+- Bundle: `secrets.yaml` now included when `!secret` keys are quoted
+- Substitutions: sibling references inside dict-valued substitutions now resolve correctly
+- Core: WiFi connection in safe mode fixed
+- Nextion: text sensor state now updates on string response
+
+### HA 2026.5 cross-platform compatibility
+
+Released the same day as ESPHome 2026.4.5 (2026-05-06), Home Assistant 2026.5 introduces two integrations that consume already-stable ESPHome components:
+- **Radio Frequency (RF)** integration adopts ESPHome devices running `cc1101` (see `references/remote-rf-ir.md`) and exposes sub-GHz RC devices as covers, switches, and buttons.
+- **Serial Port Proxy** integration auto-discovers ESPHome devices running `serial_proxy` (see `references/communication.md`) and exposes the proxied UART as if locally attached.
+
+No firmware changes required; existing CC1101 and serial_proxy configurations work as-is once HA is upgraded to 2026.5.
+
 ### New config options in 2026.4
 
 - **Signed OTA verification** — opt-in: `ota: verify_signature: true` for cryptographic firmware verification
