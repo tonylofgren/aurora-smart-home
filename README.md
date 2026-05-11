@@ -10,7 +10,7 @@ The most comprehensive Claude Code skill pack for smart home development - from 
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skills-7c3aed.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Home Assistant](https://img.shields.io/badge/Home_Assistant-2024.x--2026.x-41BDF5.svg)](https://www.home-assistant.io/)
-[![ESPHome](https://img.shields.io/badge/ESPHome-2026.3-000000.svg)](https://esphome.io/)
+[![ESPHome](https://img.shields.io/badge/ESPHome-2026.4.5-000000.svg)](https://esphome.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
@@ -39,6 +39,25 @@ The most comprehensive Claude Code skill pack for smart home development - from 
 > /plugin install aurora@aurora-smart-home
 > /reload-plugins
 > ```
+
+### What's New in v1.5.1 (2026-05-11)
+
+#### Home Assistant 2026.5
+
+- **Radio Frequency (RF) integration** - sub-GHz RC device control via Broadlink RM4 Pro or ESPHome with a CC1101 module (around 10 USD)
+- **Serial Port Proxy integration** - auto-discovers ESPHome devices running `serial_proxy` and exposes the UART as if locally attached
+- **Battery Maintenance Dashboard** - central low-battery view across all devices
+- **Media Player Tile features** - transport, volume, and source selection in the tile card
+- **Vacuum and Lawn Mower more-info redesign** - automatic map view and zone selection
+- **12 new integrations** including EARN-E P1, OMIE energy prices, Denon RS232, Honeywell String Lights, Novy Cooker Hood, Victron GX
+
+#### ESPHome 2026.4.5
+
+Bugfix-only patch (no new components). Cross-references added so CC1101 (`references/remote-rf-ir.md`) and serial_proxy (`references/communication.md`) sections note compatibility with HA 2026.5's new integrations.
+
+ESPHome 2026.5.0 stable is expected the first Wednesday of June 2026; any new components will be covered in a follow-up release.
+
+---
 
 ### What's New in v1.3.0
 

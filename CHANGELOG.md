@@ -6,6 +6,38 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.5.1] - 2026-05-11
+
+### Added
+
+#### Home Assistant: 2026.5 Coverage
+
+- `references/integrations-esphome.md` - Radio Frequency (RF) Integration section: Broadlink RM4 Pro flow plus ESPHome CC1101 adoption flow, sub-GHz protocols (rc_switch, somfy, came, nice_flor_s), learning unknown codes
+- `references/integrations-esphome.md` - Serial Port Proxy Integration section: auto-discovery flow for ESPHome `serial_proxy`, use cases (Modbus RS485, DLMS, Denon RS232), security considerations
+- `references/dashboard-cards.md` - HA 2026.5 Card Features section: Media Player Tile features, Battery Maintenance Dashboard, Vacuum and Lawn Mower more-info redesign, dashboard background colors and card favorites, code editor autocomplete
+- HA SKILL.md - What's new in HA 2026.5 section listing 12 new integrations plus core feature changes
+- HA README.md - Target Version updated to 2024.x through 2026.5
+
+#### ESPHome: HA 2026.5 Cross-references
+
+- `references/remote-rf-ir.md` - CC1101 section now notes compatibility with HA 2026.5 Radio Frequency integration
+- `references/communication.md` - Serial Proxy section now notes compatibility with HA 2026.5 Serial Port Proxy integration plus security guidance
+- ESPHome SKILL.md - 2026.4.5 patch note (5 bugfixes: ha-addon toggle, secrets bundle, substitutions sibling refs, WiFi safe mode, Nextion text sensor) and HA 2026.5 cross-platform compatibility section
+- ESPHome README.md - v1.3.1 entry covering the cross-references and patch note
+
+### Changed
+
+- Plugin version: 1.5.0 → 1.5.1
+- ESPHome skill: v1.3.0 → v1.3.1 (cross-references only; no firmware-side changes)
+
+### Notes
+
+- ESPHome 2026.4.5 is the latest stable ESPHome release as of 2026-05-11. It is a bugfix-only patch with no new components or breaking changes.
+- HA 2026.5's RF and Serial Port Proxy integrations consume already-stable ESPHome components (`cc1101` and `serial_proxy`), so no firmware upgrade is required.
+- ESPHome 2026.5.0 stable release is expected the first Wednesday of June 2026. Any new components introduced there will be covered in a follow-up release.
+
+---
+
 ## [1.2.0] - 2026-03-26
 
 ### Added

@@ -15,7 +15,7 @@ allowed-tools: Read, Glob, Grep, Bash, Agent, Write, Edit
 
 # /aurora — Smart Home Orchestrator
 
-When activated, first output `v1.5.0` on its own line, then output the banner:
+When activated, first output `v1.5.1` on its own line, then output the banner:
 
 ```
   ┌─────────────────────────────────────────────────────────┐
@@ -113,7 +113,7 @@ Read the user's request and identify:
 
 ## Current Platform Versions
 
-HA 2026.4 + ESPHome 2026.4. Read `aurora/references/platform-versions.md` for full feature list and routing hints.
+HA 2026.5 + ESPHome 2026.4.5. Read `aurora/references/platform-versions.md` for full feature list and routing hints.
 
 ## Step 3: Classify Mode
 
