@@ -1,0 +1,116 @@
+{
+  "$schema": "../../schemas/board-profile.schema.json",
+  "schema_version": "1.0",
+  "board_id": "esp32-c6-devkit",
+  "display_name": "ESP32-C6 DevKit",
+  "chip": "ESP32-C6",
+  "manufacturer": "Espressif",
+  "wireless": {
+    "wifi": ["2.4GHz"],
+    "wifi_standard": "WiFi 6 (ax)",
+    "bluetooth": "BLE 5.0",
+    "bluetooth_classic": false,
+    "thread": true,
+    "zigbee": true,
+    "lora": null,
+    "ethernet": null
+  },
+  "power": {
+    "usb_type": "USB-C",
+    "operating_voltage": 3.3,
+    "input_voltage_range": "5V (USB) or 3.3V",
+    "battery_connector": null,
+    "charging_ic": null,
+    "vbat_monitor_pin": null,
+    "deep_sleep_current_ua": 7,
+    "light_sleep_current_ma": 0.65,
+    "modem_sleep_current_ma": 15,
+    "solar_input": false,
+    "gpio_5v_tolerant": false
+  },
+  "memory": {
+    "flash_mb": 4,
+    "psram_mb": 0,
+    "psram_type": null,
+    "ram_kb": 512
+  },
+  "gpio": {
+    "valid_pins": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],
+    "strapping_pins": [4,5,8,9,15],
+    "reserved_for_usb": [12,13],
+    "reserved_for_flash": [24,25,26,27,28,29,30],
+    "input_only": [],
+    "adc1_pins": [0,1,2,3,4,5,6],
+    "adc2_pins": [],
+    "touch_pins": [],
+    "dac_pins": [],
+    "wake_source_pins": [0,1,2,3,4,5,6,7],
+    "i2c_default": {"sda": 6, "scl": 7},
+    "spi_default": {"mosi": 19, "miso": 20, "sck": 18, "cs": 9}
+  },
+  "onboard_components": {
+    "led_gpio": 8,
+    "led_type": "RGB WS2812",
+    "boot_button_gpio": 9,
+    "reset_button": "EN pin",
+    "display": null,
+    "imu": null,
+    "buzzer": null
+  },
+  "smart_home_capabilities": {
+    "bluetooth_proxy": true,
+    "voice_assistant": false,
+    "matter_controller": true,
+    "matter_device": true,
+    "zigbee_coordinator": true,
+    "thread_border_router": true,
+    "ble_tracker": true,
+    "camera_support": false,
+    "battery_powered": false,
+    "ir_blaster": true,
+    "rf_proxy_cc1101": true
+  },
+  "ota_safety": {
+    "factory_reset_pin": 9,
+    "external_programmer_needed": false,
+    "usb_cdc_recovery": true,
+    "min_required_features_for_unbricking": ["wifi", "ota OR usb_cdc"]
+  },
+  "form_factor": {
+    "antenna": "PCB",
+    "ipex_connector": false,
+    "dimensions_mm": "54 x 26",
+    "certifications": ["FCC", "CE"],
+    "operating_temp_c": "-40 to +85"
+  },
+  "limitations": {
+    "max_cpu_mhz": 160,
+    "no_dac": true,
+    "usb_blocks_gpio": [12,13],
+    "psram_blocks_gpio": [],
+    "adc2_blocked_when_wifi_active": false,
+    "strapping_conflict_warnings": [
+      "GPIO 4 controls MTMS (JTAG) — may affect debug interface at boot",
+      "GPIO 5 controls MTDI (JTAG) — may affect debug interface at boot",
+      "GPIO 8 must be HIGH at boot for normal operation",
+      "GPIO 9 is the boot button — must be HIGH at boot for normal flash execution",
+      "GPIO 15 controls chip enable for LP core"
+    ]
+  },
+  "lifecycle": {
+    "status": "active",
+    "released": "2023-01",
+    "deprecated_since": null,
+    "reason": null,
+    "successor": null
+  },
+  "esphome": {
+    "platform": "esp32",
+    "variant": "ESP32C6",
+    "framework": "esp-idf",
+    "min_version": "2023.11.0"
+  },
+  "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-c6_datasheet_en.pdf",
+  "last_verified": "2026-05-13",
+  "verified_source": "Espressif ESP32-C6 Datasheet v1.4 + esphome/references/pinouts.md"
+}
