@@ -219,6 +219,79 @@ Read `aurora/references/check-in-format.md` for full examples.
 
 Soul is a one-liner — never a paragraph that delays output.
 
+## Step 7: DEEP Mode Hand-Off
+
+DEEP mode involves 2 or more specialists in sequence. Without structured
+hand-off, each agent has to re-derive project state from chat history, which
+breaks under context window compaction and produces silent disagreements
+between agents.
+
+For every DEEP mode invocation, Aurora MUST manage a **project snapshot** — a
+JSON file that travels between specialists. The schema and per-field
+ownership rules live in `aurora/references/handoff/_protocol.md` and
+`aurora/references/schemas/project-snapshot.schema.json`. Read both before
+the first specialist runs.
+
+### 7.1 Create the snapshot before the first specialist
+
+Before dispatching the first agent in a DEEP plan, write
+`aurora-project.json` at the project root (or another path the user prefers).
+Populate at minimum:
+
+- `schema_version: "1.0"`
+- `project_id`: a fresh UUID v4
+- `project_name`: short label derived from the user's request
+- `created_at` and `updated_at`: current ISO 8601 timestamp
+- `current_agent`: soul name of the first specialist about to run
+- `agents_completed`: empty list
+- `agents_pending`: ordered list of specialists in the plan
+- `user_requirements`: list of strings carried verbatim from the user
+- `validation_results`: object with one `{"status": "pending"}` entry per
+  pending agent
+
+Validate the file against the schema before the first specialist starts.
+
+### 7.2 Update the snapshot between specialists
+
+After each specialist reports completion:
+
+1. Read the snapshot file.
+2. Confirm the specialist appended itself to `agents_completed`,
+   recorded its `validation_results[<soul>]`, and updated `updated_at`.
+3. If `agents_pending` still has entries: pick the next specialist, set
+   `current_agent` to that soul name, remove it from `agents_pending`,
+   set its `validation_results` status to `pending`, write the file.
+4. If `agents_pending` is empty and `conflict_log` has no unresolved entries,
+   DEEP mode is complete.
+
+### 7.3 Respect per-field ownership
+
+Each snapshot field has exactly one owner agent (table in `_protocol.md`).
+The orchestrator NEVER writes a field owned by a specialist. For example:
+
+- `selected_board`, `gpio_allocation`, `esphome_filename` → Volt
+- `ha_yaml_files` → Sage
+- `entity_ids_generated` → Volt (sensors), Ada (custom integrations), Sage
+  (helpers); Iris reads only, never appends
+- `validation_results[<soul>]` → the named agent
+
+If a specialist needs to overwrite another agent's field, raise a
+`conflict_log` entry instead.
+
+### 7.4 Handle conflicts
+
+If any specialist (or Vera) adds an entry to `conflict_log` with
+`resolution: null`, DEEP mode pauses. Surface the conflict to the user,
+collect a resolution, update the relevant field, set `resolution` and
+`resolved_at` on the conflict entry, then resume from `current_agent`.
+
+DEEP mode does NOT complete with unresolved conflict entries.
+
+### 7.5 QUICK mode does NOT use snapshots
+
+If only one specialist is involved, do not create a snapshot file.
+Carrying a snapshot for a single-agent task is overhead with no payoff.
+
 ## Iron Laws Reference
 
 Forward these to the user when the relevant agent is assigned:
@@ -252,10 +325,19 @@ authoritative specs instead of relying on training memory:
   Tests in `aurora/tests/` validate that every reference file conforms.
 - `aurora/references/validators/`: validator modules consumed by Volt and
   other agents. Current modules: `pin-validator.md`, `conflict-validator.md`.
+- `aurora/references/handoff/`: cross-agent hand-off protocol for DEEP
+  mode. Contains `_protocol.md` (how snapshots flow between agents),
+  the JSON Schema at `aurora/references/schemas/project-snapshot.schema.json`,
+  and `examples/` showing valid multi-agent snapshots.
 
 When Volt produces output, it MUST follow Iron Law 6: load the relevant
 profiles, run pin-validator and conflict-validator, and refuse to generate
 YAML if either reports failures.
+
+For DEEP mode (2+ specialists), Aurora MUST manage a project snapshot as
+described in Step 7 above. Specialists read the snapshot at the start of
+their turn, perform their work, then update the fields they own before
+handing off.
 
 ## Common Multi-Skill Workflows
 

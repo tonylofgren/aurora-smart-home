@@ -49,10 +49,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - JSON Schema for project snapshots (`aurora/references/schemas/project-snapshot.schema.json`)
 - Hand-off protocol documentation (`aurora/references/handoff/_protocol.md`) defining storage location, lifecycle, per-field ownership, conflict handling
 - Example multi-agent snapshot (`aurora/references/handoff/examples/living-room-sensor.json`) covering Volt → Sage → Iris workflow
-- Foundation for DEEP mode (2+ agents collaborating); per-agent Iron Law 6 propagation parked for later phases pending per-agent reference data
+- Orchestrator wiring in `aurora/SKILL.md` (Step 7: DEEP Mode Hand-Off) — when to create the snapshot, what initial fields to write, how to update between specialists, per-field ownership reminder, conflict handling, QUICK mode exemption
+- `aurora/references/handoff/` registered in the Reference Data section so specialists discover the protocol
+- Per-agent Iron Law propagation across specialist souls parked for the next phase
 
 **Testing infrastructure:**
-- pytest test suite covering schemas, data integrity, Volt workflow simulation, and project snapshot hand-off (250 tests)
+- pytest test suite covering schemas, data integrity, Volt workflow simulation, project snapshot hand-off, and SKILL.md wiring (261 tests)
 - Schema validation in CI, negative tests, URI format enforcement
 
 **Documentation and disclaimers:**
