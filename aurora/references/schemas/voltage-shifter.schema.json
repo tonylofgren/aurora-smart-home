@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aurora-smart-home.dev/schemas/voltage-shifter.schema.json",
+  "title": "Aurora Voltage Level Shifter Profile",
+  "type": "object",
+  "required": [
+    "schema_version", "shifter_id", "display_name",
+    "channels", "direction", "voltage_a_range", "voltage_b_range"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "pattern": "^\\d+\\.\\d+(\\.\\d+)?$"},
+    "shifter_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "display_name": {"type": "string", "minLength": 1},
+    "channels": {"type": "integer", "minimum": 1},
+    "direction": {"enum": ["bidirectional", "unidirectional", "rx_only"]},
+    "voltage_a_range": {"type": "string", "minLength": 1},
+    "voltage_b_range": {"type": "string", "minLength": 1},
+    "speed_max_mhz": {"type": "number"},
+    "use_cases": {"type": "array", "items": {"type": "string"}},
+    "limitations": {
+      "type": "object",
+      "properties": {
+        "no_open_drain_pulls_strongly": {"type": "boolean"},
+        "auto_direction_can_oscillate_on_i2c": {"type": "boolean"},
+        "prefer_bss138_for_i2c": {"type": "boolean"}
+      }
+    },
+    "datasheet_url": {"type": "string", "format": "uri"},
+    "last_verified": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"}
+  }
+}

@@ -8,6 +8,8 @@ REFERENCES_DIR = AURORA_ROOT / "references"
 SCHEMAS_DIR = REFERENCES_DIR / "schemas"
 BOARDS_DIR = REFERENCES_DIR / "boards"
 COMPONENTS_DIR = REFERENCES_DIR / "components"
+EXPANDERS_DIR = REFERENCES_DIR / "expanders"
+VOLTAGE_SHIFTERS_DIR = REFERENCES_DIR / "voltage-shifters"
 
 
 @pytest.fixture(scope="session")
@@ -48,4 +50,42 @@ def all_component_profiles():
     for path in find_json_files(COMPONENTS_DIR):
         with path.open(encoding="utf-8") as f:
             profiles.append((str(path.relative_to(AURORA_ROOT)), json.load(f)))
+    return profiles
+
+
+@pytest.fixture(scope="session")
+def expander_schema():
+    """Load the GPIO expander profile JSON Schema."""
+    schema_path = SCHEMAS_DIR / "expander-profile.schema.json"
+    with schema_path.open(encoding="utf-8") as f:
+        return json.load(f)
+
+
+@pytest.fixture(scope="session")
+def voltage_shifter_schema():
+    """Load the voltage level shifter profile JSON Schema."""
+    schema_path = SCHEMAS_DIR / "voltage-shifter.schema.json"
+    with schema_path.open(encoding="utf-8") as f:
+        return json.load(f)
+
+
+@pytest.fixture(scope="session")
+def all_expander_profiles():
+    """Load all GPIO expander profile JSON files."""
+    profiles = []
+    if EXPANDERS_DIR.exists():
+        for path in find_json_files(EXPANDERS_DIR):
+            with path.open(encoding="utf-8") as f:
+                profiles.append((str(path.relative_to(AURORA_ROOT)), json.load(f)))
+    return profiles
+
+
+@pytest.fixture(scope="session")
+def all_voltage_shifter_profiles():
+    """Load all voltage level shifter profile JSON files."""
+    profiles = []
+    if VOLTAGE_SHIFTERS_DIR.exists():
+        for path in find_json_files(VOLTAGE_SHIFTERS_DIR):
+            with path.open(encoding="utf-8") as f:
+                profiles.append((str(path.relative_to(AURORA_ROOT)), json.load(f)))
     return profiles
