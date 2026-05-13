@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aurora-smart-home.dev/schemas/component-profile.schema.json",
+  "title": "Aurora Component Profile",
+  "type": "object",
+  "required": [
+    "schema_version", "component_id", "display_name", "type", "category",
+    "protocol", "pin_requirements", "power", "esphome"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "pattern": "^\\d+\\.\\d+(\\.\\d+)?$"},
+    "component_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "display_name": {"type": "string", "minLength": 1},
+    "type": {"type": "string"},
+    "category": {"type": "string"},
+    "protocol": {
+      "enum": ["i2c", "spi", "single_wire_digital", "uart", "onewire",
+               "analog", "digital_io", "i2s", "pwm"]
+    },
+    "variants": {
+      "type": "object",
+      "properties": {
+        "primary": {"type": "string"},
+        "easily_confused_with": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["component_id", "difference"],
+            "properties": {
+              "component_id": {"type": "string"},
+              "difference": {"type": "string"}
+            }
+          }
+        },
+        "knockoffs_known": {"type": "boolean"},
+        "verification_method": {"type": "string"}
+      }
+    },
+    "i2c": {
+      "type": "object",
+      "properties": {
+        "default_addresses": {"type": "array", "items": {"type": "string"}},
+        "address_strap_pin": {"type": ["string", "null"]},
+        "max_speed_khz": {"type": "integer"}
+      }
+    },
+    "pin_requirements": {
+      "type": "object",
+      "required": ["count", "type"],
+      "properties": {
+        "count": {"type": "integer", "minimum": 1},
+        "type": {"type": "string"},
+        "must_use_default_i2c_pins": {"type": "boolean"},
+        "adc_required": {"type": "boolean"},
+        "input_only_ok": {"type": "boolean"},
+        "strapping_pin_ok": {"type": "boolean"},
+        "5v_tolerant_required": {"type": "boolean"},
+        "interrupt_capable_required": {"type": "boolean"}
+      }
+    },
+    "external_components": {
+      "type": "object",
+      "properties": {
+        "pullup_resistor": {"type": ["object", "null"]},
+        "decoupling_cap": {"type": ["object", "null"]}
+      }
+    },
+    "power": {
+      "type": "object",
+      "required": ["voltage_min", "voltage_max"],
+      "properties": {
+        "voltage_min": {"type": "number"},
+        "voltage_max": {"type": "number"},
+        "tolerates_5v": {"type": "boolean"},
+        "level_shifter_required_on_5v_board": {"type": "boolean"},
+        "current_ma_active": {"type": "number"},
+        "current_sleep_ua": {"type": "number"}
+      }
+    },
+    "limitations": {"type": "object"},
+    "calibration": {
+      "type": "object",
+      "properties": {
+        "required": {"type": "boolean"},
+        "type": {"type": ["string", "null"]}
+      }
+    },
+    "esphome": {
+      "type": "object",
+      "required": ["platform", "min_version"],
+      "properties": {
+        "platform": {"type": "string"},
+        "min_version": {"type": "string"},
+        "config_template": {"type": "string"}
+      }
+    },
+    "datasheet_url": {"type": "string", "format": "uri"}
+  }
+}
