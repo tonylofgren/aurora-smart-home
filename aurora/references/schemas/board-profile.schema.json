@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aurora-smart-home.dev/schemas/board-profile.schema.json",
+  "title": "Aurora Board Profile",
+  "type": "object",
+  "required": [
+    "schema_version", "board_id", "display_name", "chip", "manufacturer",
+    "wireless", "power", "memory", "gpio", "smart_home_capabilities",
+    "lifecycle", "esphome", "last_verified"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "pattern": "^\\d+\\.\\d+(\\.\\d+)?$"},
+    "board_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "display_name": {"type": "string", "minLength": 1},
+    "chip": {"type": "string", "minLength": 1},
+    "manufacturer": {"type": "string", "minLength": 1},
+    "wireless": {
+      "type": "object",
+      "required": ["wifi", "bluetooth", "thread", "zigbee"],
+      "properties": {
+        "wifi": {"type": "array", "items": {"type": "string"}},
+        "wifi_standard": {"type": ["string", "null"]},
+        "bluetooth": {"type": ["string", "null"]},
+        "bluetooth_classic": {"type": "boolean"},
+        "thread": {"type": "boolean"},
+        "zigbee": {"type": "boolean"},
+        "lora": {"type": ["string", "null"]},
+        "ethernet": {"type": ["string", "null"]}
+      }
+    },
+    "power": {
+      "type": "object",
+      "required": ["usb_type", "operating_voltage", "deep_sleep_current_ua"],
+      "properties": {
+        "usb_type": {"type": ["string", "null"]},
+        "operating_voltage": {"type": "number"},
+        "input_voltage_range": {"type": "string"},
+        "battery_connector": {"type": ["string", "null"]},
+        "charging_ic": {"type": ["string", "null"]},
+        "vbat_monitor_pin": {"type": ["integer", "null"]},
+        "deep_sleep_current_ua": {"type": "number"},
+        "light_sleep_current_ma": {"type": ["number", "null"]},
+        "modem_sleep_current_ma": {"type": ["number", "null"]},
+        "solar_input": {"type": "boolean"},
+        "gpio_5v_tolerant": {"type": "boolean"}
+      }
+    },
+    "memory": {
+      "type": "object",
+      "required": ["flash_mb", "psram_mb", "ram_kb"],
+      "properties": {
+        "flash_mb": {"type": "number"},
+        "psram_mb": {"type": "number"},
+        "psram_type": {"type": ["string", "null"]},
+        "ram_kb": {"type": "number"}
+      }
+    },
+    "gpio": {
+      "type": "object",
+      "required": ["valid_pins", "strapping_pins", "adc1_pins"],
+      "properties": {
+        "valid_pins": {"type": "array", "items": {"type": "integer"}, "uniqueItems": true},
+        "strapping_pins": {"type": "array", "items": {"type": "integer"}, "uniqueItems": true},
+        "reserved_for_usb": {"type": "array", "items": {"type": "integer"}},
+        "reserved_for_flash": {"type": "array", "items": {"type": "integer"}},
+        "input_only": {"type": "array", "items": {"type": "integer"}},
+        "adc1_pins": {"type": "array", "items": {"type": "integer"}},
+        "adc2_pins": {"type": "array", "items": {"type": "integer"}},
+        "touch_pins": {"type": "array", "items": {"type": "integer"}},
+        "dac_pins": {"type": "array", "items": {"type": "integer"}},
+        "wake_source_pins": {"type": "array", "items": {"type": "integer"}},
+        "i2c_default": {
+          "type": "object",
+          "properties": {"sda": {"type": "integer"}, "scl": {"type": "integer"}}
+        },
+        "spi_default": {
+          "type": "object",
+          "properties": {
+            "mosi": {"type": "integer"}, "miso": {"type": "integer"},
+            "sck": {"type": "integer"}, "cs": {"type": "integer"}
+          }
+        }
+      }
+    },
+    "onboard_components": {
+      "type": "object",
+      "properties": {
+        "led_gpio": {"type": ["integer", "null"]},
+        "led_type": {"type": ["string", "null"]},
+        "boot_button_gpio": {"type": ["integer", "null"]},
+        "reset_button": {"type": ["string", "null"]},
+        "display": {"type": ["string", "null"]},
+        "imu": {"type": ["string", "null"]},
+        "buzzer": {"type": ["string", "null"]}
+      }
+    },
+    "smart_home_capabilities": {
+      "type": "object",
+      "required": ["bluetooth_proxy", "voice_assistant", "matter_controller"],
+      "properties": {
+        "bluetooth_proxy": {"type": "boolean"},
+        "voice_assistant": {"type": "boolean"},
+        "matter_controller": {"type": "boolean"},
+        "matter_device": {"type": "boolean"},
+        "zigbee_coordinator": {"type": "boolean"},
+        "thread_border_router": {"type": "boolean"},
+        "ble_tracker": {"type": "boolean"},
+        "camera_support": {"type": "boolean"},
+        "battery_powered": {"type": "boolean"},
+        "ir_blaster": {"type": "boolean"},
+        "rf_proxy_cc1101": {"type": "boolean"}
+      }
+    },
+    "ota_safety": {
+      "type": "object",
+      "properties": {
+        "factory_reset_pin": {"type": ["integer", "null"]},
+        "external_programmer_needed": {"type": "boolean"},
+        "usb_cdc_recovery": {"type": "boolean"},
+        "min_required_features_for_unbricking": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "form_factor": {
+      "type": "object",
+      "properties": {
+        "antenna": {"type": "string"},
+        "ipex_connector": {"type": "boolean"},
+        "dimensions_mm": {"type": "string"},
+        "certifications": {"type": "array", "items": {"type": "string"}},
+        "operating_temp_c": {"type": "string"}
+      }
+    },
+    "limitations": {
+      "type": "object",
+      "properties": {
+        "max_cpu_mhz": {"type": "integer"},
+        "no_dac": {"type": "boolean"},
+        "usb_blocks_gpio": {"type": "array", "items": {"type": "integer"}},
+        "psram_blocks_gpio": {"type": "array", "items": {"type": "integer"}},
+        "adc2_blocked_when_wifi_active": {"type": "boolean"},
+        "strapping_conflict_warnings": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {"enum": ["active", "legacy", "deprecated", "obsolete"]},
+        "released": {"type": "string"},
+        "deprecated_since": {"type": ["string", "null"]},
+        "reason": {"type": ["string", "null"]},
+        "successor": {"type": ["string", "null"]}
+      }
+    },
+    "esphome": {
+      "type": "object",
+      "required": ["platform", "variant", "framework", "min_version"],
+      "properties": {
+        "platform": {"type": "string"},
+        "variant": {"type": "string"},
+        "framework": {"enum": ["arduino", "esp-idf"]},
+        "min_version": {"type": "string"}
+      }
+    },
+    "datasheet_url": {"type": "string", "format": "uri"},
+    "last_verified": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+    "verified_source": {"type": "string"}
+  }
+}
