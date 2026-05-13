@@ -1,0 +1,117 @@
+{
+  "$schema": "../../schemas/board-profile.schema.json",
+  "schema_version": "1.0",
+  "board_id": "d1-mini",
+  "display_name": "Wemos D1 Mini (ESP8266)",
+  "chip": "ESP8266EX",
+  "manufacturer": "Espressif (Wemos clone form factor)",
+  "wireless": {
+    "wifi": ["2.4GHz"],
+    "wifi_standard": "WiFi 4 (b/g/n)",
+    "bluetooth": null,
+    "bluetooth_classic": false,
+    "thread": false,
+    "zigbee": false,
+    "lora": null,
+    "ethernet": null
+  },
+  "power": {
+    "usb_type": "Micro USB",
+    "operating_voltage": 3.3,
+    "input_voltage_range": "5V (USB) or 3.3V",
+    "battery_connector": null,
+    "charging_ic": null,
+    "vbat_monitor_pin": null,
+    "deep_sleep_current_ua": 20,
+    "light_sleep_current_ma": 0.9,
+    "modem_sleep_current_ma": 15,
+    "solar_input": false,
+    "gpio_5v_tolerant": false
+  },
+  "memory": {
+    "flash_mb": 4,
+    "psram_mb": 0,
+    "psram_type": null,
+    "ram_kb": 80
+  },
+  "gpio": {
+    "valid_pins": [0,1,2,3,4,5,12,13,14,15,16,17],
+    "strapping_pins": [0,2,15],
+    "reserved_for_usb": [],
+    "reserved_for_flash": [6,7,8,9,10,11],
+    "input_only": [],
+    "adc1_pins": [17],
+    "adc2_pins": [],
+    "touch_pins": [],
+    "dac_pins": [],
+    "wake_source_pins": [16],
+    "i2c_default": {"sda": 4, "scl": 5},
+    "spi_default": {"mosi": 13, "miso": 12, "sck": 14, "cs": 15}
+  },
+  "onboard_components": {
+    "led_gpio": 2,
+    "led_type": "Single blue LED (inverted)",
+    "boot_button_gpio": 0,
+    "reset_button": "RST pin",
+    "display": null,
+    "imu": null,
+    "buzzer": null
+  },
+  "smart_home_capabilities": {
+    "bluetooth_proxy": false,
+    "voice_assistant": false,
+    "matter_controller": false,
+    "matter_device": false,
+    "zigbee_coordinator": false,
+    "thread_border_router": false,
+    "ble_tracker": false,
+    "camera_support": false,
+    "battery_powered": true,
+    "ir_blaster": true,
+    "rf_proxy_cc1101": true
+  },
+  "ota_safety": {
+    "factory_reset_pin": 0,
+    "external_programmer_needed": false,
+    "usb_cdc_recovery": false,
+    "min_required_features_for_unbricking": ["wifi", "ota"]
+  },
+  "form_factor": {
+    "antenna": "PCB",
+    "ipex_connector": false,
+    "dimensions_mm": "34.2 x 25.6",
+    "certifications": ["FCC", "CE"],
+    "operating_temp_c": "-40 to +125"
+  },
+  "limitations": {
+    "max_cpu_mhz": 160,
+    "no_dac": true,
+    "usb_blocks_gpio": [],
+    "psram_blocks_gpio": [],
+    "adc2_blocked_when_wifi_active": false,
+    "strapping_conflict_warnings": [
+      "GPIO 0 must be HIGH at boot for normal start, LOW for flash mode",
+      "GPIO 2 must be HIGH at boot, controls internal LED",
+      "GPIO 15 must be LOW at boot via external pull-down",
+      "GPIO 17 (A0) is ADC only with 0-1V range, requires external voltage divider for 3.3V",
+      "Only one ADC pin available, 10-bit resolution",
+      "GPIO 6-11 are hardwired to SPI flash and cannot be used"
+    ]
+  },
+  "lifecycle": {
+    "status": "legacy",
+    "released": "2016",
+    "deprecated_since": "2024",
+    "reason": "ESP8266 lacks BLE, Thread, and Matter. Limited RAM (80KB). Choose ESP32-C3 Super Mini for new projects: same form factor, BLE 5.0, more RAM, lower power.",
+    "successor": "esp32-c3-mini"
+  },
+  "esphome": {
+    "platform": "esp8266",
+    "variant": "ESP8266",
+    "framework": "arduino",
+    "min_version": "2022.1.0"
+  },
+  "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/0a-esp8266ex_datasheet_en.pdf",
+  "last_verified": "2026-05-13",
+  "verified_source": "Espressif ESP8266 datasheet + Wemos D1 Mini schematic"
+}
