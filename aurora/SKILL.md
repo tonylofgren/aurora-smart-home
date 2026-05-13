@@ -15,7 +15,7 @@ allowed-tools: Read, Glob, Grep, Bash, Agent, Write, Edit
 
 # /aurora — Smart Home Orchestrator
 
-When activated, first output `v1.6.3 (released 2026-05-13)` on its own line, then output the banner:
+When activated, first output `v1.6.4 (released 2026-05-14)` on its own line, then output the banner:
 
 ```
   ┌─────────────────────────────────────────────────────────┐
@@ -33,7 +33,7 @@ When activated, first output `v1.6.3 (released 2026-05-13)` on its own line, the
 
 ## Freshness Check
 
-The release date of this version is `2026-05-13`.
+The release date of this version is `2026-05-14`.
 
 After the banner, compare today's date (available in your conversation context)
 to that release date. If more than 90 days have passed, output this line BEFORE

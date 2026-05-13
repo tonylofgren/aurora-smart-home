@@ -49,6 +49,29 @@ NEW_VALIDATORS = {
         "key_fields": ["datetime.now()", "requests", "time.sleep"],
         "must_mention": ["aiohttp", "dt_util.now()", "asyncio.sleep"],
     },
+    "llm-config": {
+        "title": "LLM Config Validator",
+        "owner_agents": ["mira"],
+        "key_fields": [
+            "openai_conversation",
+            "anthropic",
+            "ollama",
+            "expose",
+            "api_key",
+        ],
+        "must_mention": ["streaming", "prompt", "snake_case", "local_llm_conversation"],
+    },
+    "node-red-syntax": {
+        "title": "Node-RED Syntax Validator",
+        "owner_agents": ["river"],
+        "key_fields": [
+            "trigger-state",
+            "api-call-service",
+            "server",
+            "function",
+        ],
+        "must_mention": ["legacy", "node-red-contrib-home-assistant-websocket", "domain"],
+    },
 }
 
 REQUIRED_SECTIONS = ["When to Run", "Inputs", "Output", "Examples"]
@@ -195,4 +218,74 @@ def test_async_correctness_exempts_imports():
     assert re.search(r"import.{0,40}exempt", text_lower), (
         "async-correctness-validator.md does not exempt 'import' lines from "
         "the pattern check. Every legitimate import would be flagged."
+    )
+
+
+def test_llm_config_enumerates_known_providers():
+    """The provider list must be explicit and enumerated, not 'whatever the
+    LLM thinks is a provider'."""
+    text = (VALIDATORS_DIR / "llm-config-validator.md").read_text(encoding="utf-8")
+    required = [
+        "openai_conversation",
+        "anthropic",
+        "google_generative_ai_conversation",
+        "ollama",
+        "local_llm_conversation",
+    ]
+    missing = [p for p in required if p not in text]
+    assert not missing, (
+        f"llm-config-validator.md does not enumerate required providers: {missing}. "
+        "Without an explicit list, casing rules and cloud-vs-local checks fail."
+    )
+
+
+def test_llm_config_addresses_cloud_privacy_warning():
+    """Cloud LLMs receive entity state. The validator must flag this so
+    Mira can present a local alternative."""
+    text = (VALIDATORS_DIR / "llm-config-validator.md").read_text(encoding="utf-8")
+    text_lower = text.lower()
+    assert "privacy" in text_lower, (
+        "llm-config-validator.md does not document the cloud-LLM privacy "
+        "warning. Users may expose sensor data to OpenAI/Anthropic without "
+        "being prompted."
+    )
+
+
+def test_node_red_syntax_lists_legacy_aliases():
+    """Migration from old node names is the validator's load-bearing job.
+    The current/legacy mapping must be explicit."""
+    text = (VALIDATORS_DIR / "node-red-syntax-validator.md").read_text(encoding="utf-8")
+    required = [
+        "trigger-state",
+        "api-call-service",
+        "ha-state-changed",  # legacy
+        "ha-call-service",   # legacy
+    ]
+    missing = [t for t in required if t not in text]
+    assert not missing, (
+        f"node-red-syntax-validator.md does not enumerate required node types: "
+        f"{missing}. Without both current and legacy names, the migration "
+        "check has no anchor."
+    )
+
+
+def test_node_red_syntax_requires_server_reference():
+    """HA nodes in Node-RED must reference a configured HA server config
+    node. The validator must enforce this."""
+    text = (VALIDATORS_DIR / "node-red-syntax-validator.md").read_text(encoding="utf-8")
+    text_lower = text.lower()
+    assert re.search(r"server.{0,50}reference|server.{0,30}field", text_lower), (
+        "node-red-syntax-validator.md does not enforce the 'server' field "
+        "on HA nodes. Without it, deployed flows have no HA connection."
+    )
+
+
+def test_node_red_syntax_addresses_function_node_credentials():
+    """Function nodes can hold literal credentials in the `func` string.
+    The validator must scan them with the secrets-validator key list."""
+    text = (VALIDATORS_DIR / "node-red-syntax-validator.md").read_text(encoding="utf-8")
+    text_lower = text.lower()
+    assert "function node" in text_lower and "credential" in text_lower, (
+        "node-red-syntax-validator.md does not address literal credentials "
+        "in function nodes. They are a documented exfiltration risk."
     )

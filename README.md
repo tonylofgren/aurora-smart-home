@@ -7,14 +7,14 @@
 > **75,000+ lines** of documentation | **900+ example prompts** | **1,500+ code examples**
 > **21 agents** | **6 Iron Laws** | **JSON-validated reference data**
 
-The most comprehensive Claude Code skill pack for smart home development. **New in v1.6.3:** every validator now emits **tiered error messages** — `❌ Problem` (short) / `📚 Explanation` (medium) / `🔧 Fix` (concrete) / `💡 Deeper` (optional) — so beginners get a clear "what's wrong + what to do" pair and curious users get the underlying constraint. Builds on v1.6.2's expanded validator suite and v1.6.1's cross-agent hand-off. Covers automations, custom integrations, Node-RED flows, dashboards, and full product development from idea to manufacturing.
+The most comprehensive Claude Code skill pack for smart home development. **New in v1.6.4:** two more validators land — `llm-config-validator` (Mira) and `node-red-syntax-validator` (River) — and both specialists pick up Iron Law 2. Every DEEP-mode specialist now has both Iron Laws: snapshot-aware coordination + validate-before-generating. Builds on v1.6.3's tiered errors, v1.6.2's expanded validator suite, and v1.6.1's cross-agent hand-off. Covers automations, custom integrations, Node-RED flows, dashboards, and full product development from idea to manufacturing.
 
 > **No runtime dependencies.** Aurora is a Claude Code plugin made of markdown and JSON. The agents (Claude) read the files directly; nothing is executed on your machine. Python + pytest are only needed if a developer wants to run the test suite locally.
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skills-7c3aed.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Home Assistant](https://img.shields.io/badge/Home_Assistant-2024.x--2026.x-41BDF5.svg)](https://www.home-assistant.io/)
 [![ESPHome](https://img.shields.io/badge/ESPHome-2026.4.5-000000.svg)](https://esphome.io/)
-[![Version](https://img.shields.io/badge/Version-v1.6.3-success.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-v1.6.4-success.svg)](CHANGELOG.md)
 [![Validated](https://img.shields.io/badge/Validated-against_datasheets-success.svg)](aurora/references/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -24,7 +24,7 @@ The most comprehensive Claude Code skill pack for smart home development. **New 
 
 ---
 
-## 🔄 Already Installed? Update to v1.6.3
+## 🔄 Already Installed? Update to v1.6.4
 
 Claude Code does **not** auto-update installed plugins by default. New aurora releases ship validated boards, sensors, templates, and validator improvements regularly.
 
@@ -123,6 +123,19 @@ Aurora runs like a small smart home agency. 1 orchestrator + 20 named specialist
 - 🎨 **Canvas** — Graphic design, UI beyond dashboards. *"The layout works but it has seven things asking for attention at once."*
 
 ---
+
+### What's New in v1.6.4
+
+**llm-config and node-red-syntax validators**
+
+The last two domain validators for DEEP-mode specialists ship:
+
+- `llm-config-validator` (Mira) — enumerates the known LLM providers (`openai_conversation`, `anthropic`, `google_generative_ai_conversation`, `ollama`, `local_llm_conversation`), flags casing errors on provider keys, malformed local endpoints, missing `api_key` references on cloud providers, prompt templates past the token budget, and `expose:` lists that reference entities not in the snapshot. Includes a privacy warning when cloud providers receive sensitive entity state.
+- `node-red-syntax-validator` (River) — catches the legacy node type names (`ha-state-changed` → `trigger-state`, `ha-call-service` → `api-call-service`, etc.) that silently fail to deploy in `node-red-contrib-home-assistant-websocket` 4.x. Confirms every HA-side node has a `server` reference, every `api-call-service` has both `domain` and `service`, and warns on function nodes that import sync HTTP libraries or contain literal credentials.
+
+**Iron Law 2 reaches the last two specialists**
+
+With their domain validators shipped, Mira and River now have Iron Law 2 (Validate Before Generating). Every DEEP-mode specialist — Volt, Ada, Sage, Iris, Vera, Atlas, Mira, River — now carries both Iron Laws: snapshot-aware coordination (Law 1, from v1.6.1) and validate-before-generating (Law 2). No DEEP-mode soul stays at Law 1 only.
 
 ### What's New in v1.6.3
 
@@ -266,7 +279,7 @@ When data is not yet available for the requested hardware, Volt warns explicitly
 
 Volt's validators check assignments against machine-readable profiles. When a profile exists, Volt cannot generate YAML that breaks against it. When a profile does not yet exist, Volt warns explicitly and falls back to training memory with extra caution.
 
-**Validated today (v1.6.3):**
+**Validated today (v1.6.4):**
 
 | Category | Hardware |
 |----------|----------|

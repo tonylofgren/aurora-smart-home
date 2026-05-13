@@ -8,6 +8,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.6.4] - 2026-05-14
+
+### Added
+
+**Two more validators (Plan 5 Phase 3, completing the Mira / River cut):**
+- `aurora/references/validators/llm-config-validator.md` — Mira validator that enumerates the known LLM providers, flags provider-key casing errors, malformed local endpoint URLs, missing `api_key` on cloud providers, prompt-template token budget warnings, streaming-flag mismatches, `expose:` lists referencing entities not in `snapshot.entity_ids_generated`, intent-script-action mismatches with the expose list, and privacy warnings when cloud LLMs receive sensitive entity state.
+- `aurora/references/validators/node-red-syntax-validator.md` — River validator that catches the legacy node type names (`ha-state-changed` → `trigger-state`, `ha-call-service` → `api-call-service`, etc.) that silently fail to deploy in node-red-contrib-home-assistant-websocket 4.x, plus missing `server` references, missing `domain` / `service` on `api-call-service`, entity ID format errors on `trigger-state`, function nodes that import sync HTTP libraries (warning), and function nodes that contain literal credentials.
+
+**Iron Law 2 propagation completed (Plan 5 Phase 4 — Mira + River):**
+- **Mira** gains Iron Law 2: invokes `llm-config-validator`, `entity-id-validator` in consumer mode for `expose:` lists and intent script `action:` blocks, `secrets-validator` for cloud LLM API keys in YAML, and `async-correctness-validator` for custom `llm_api` Python integrations.
+- **River** gains Iron Law 2: invokes `node-red-syntax-validator` and `entity-id-validator` in consumer mode for every entity referenced in `trigger-state`, `api-current-state`, or `api-call-service` `target.entity_id`.
+- Every DEEP-mode specialist (Volt, Ada, Sage, Iris, Vera, Atlas, Mira, River) now carries both Iron Laws: snapshot-aware coordination and validate-before-generating. No DEEP-mode soul stays at Law 1 only.
+
+### Testing infrastructure
+
+- New tests for the two new validators (per the test_phase3_validators_docs parametrized suite).
+- The Iron Law 2 propagation test moves Mira and River out of the parked-souls list. `PARKED_SOULS` is now empty.
+- The tiered-errors validator-count minimum bumps from 9 to 11 so silent removal of a validator fails the test.
+- 482 tests total (plus 5 intentionally-skipped tests where planned-validator acknowledgement is not applicable).
+
 ## [1.6.3] - 2026-05-13
 
 ### Added

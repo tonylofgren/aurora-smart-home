@@ -35,10 +35,26 @@ IRON_LAW_2_SOULS = {
         "must_mention_concepts": ["!secret"],
         "must_acknowledge_planned": [],
     },
+    "mira": {
+        "must_invoke": [
+            "llm-config-validator",
+            "entity-id-validator",
+            "secrets-validator",
+            "async-correctness-validator",
+        ],
+        "must_mention_concepts": ["consumer mode", "conflict_log"],
+        "must_acknowledge_planned": [],
+    },
+    "river": {
+        "must_invoke": ["node-red-syntax-validator", "entity-id-validator"],
+        "must_mention_concepts": ["consumer mode", "conflict_log"],
+        "must_acknowledge_planned": [],
+    },
 }
 
-# Souls that intentionally STAY at Iron Law 1 only.
-PARKED_SOULS = ["mira", "river"]
+# Souls that intentionally STAY at Iron Law 1 only. After 1.6.4, every
+# DEEP-mode specialist has both laws; the parked list is empty.
+PARKED_SOULS = []
 
 
 @pytest.fixture(scope="module", params=list(IRON_LAW_2_SOULS.keys()))

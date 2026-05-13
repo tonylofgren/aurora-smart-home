@@ -111,10 +111,11 @@ def test_every_validator_links_tiered_format_in_output_block(validator_doc):
 
 
 def test_validator_count_meets_minimum():
-    """Sanity check: we expect at least 9 validators (the post-1.6.2 count)."""
+    """Sanity check: we expect at least 11 validators (post-1.6.4: nine
+    from 1.6.2 plus llm-config and node-red-syntax)."""
     docs = _all_validator_docs()
-    assert len(docs) >= 9, (
-        f"Expected at least 9 validators, found {len(docs)}: "
+    assert len(docs) >= 11, (
+        f"Expected at least 11 validators, found {len(docs)}: "
         f"{[p.name for p in docs]}. If validators were removed, update "
         "this test together with the removal."
     )
