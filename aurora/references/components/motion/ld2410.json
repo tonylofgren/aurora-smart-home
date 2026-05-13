@@ -1,0 +1,61 @@
+{
+  "$schema": "../../../schemas/component-profile.schema.json",
+  "schema_version": "1.0",
+  "component_id": "ld2410",
+  "display_name": "LD2410 24GHz mmWave Presence Radar",
+  "type": "presence_radar",
+  "category": "motion",
+  "protocol": "uart",
+  "last_verified": "2026-05-13",
+  "variants": {
+    "primary": "ld2410",
+    "easily_confused_with": [
+      {
+        "component_id": "ld2410b",
+        "difference": "LD2410B adds Bluetooth configuration; functionally identical UART protocol"
+      },
+      {
+        "component_id": "ld2410c",
+        "difference": "LD2410C is smaller form factor with same detection capabilities"
+      }
+    ],
+    "knockoffs_known": false,
+    "verification_method": "Check Hi-Link silkscreen; genuine units have LD2410 clearly marked on the module"
+  },
+  "pin_requirements": {
+    "count": 2,
+    "type": "uart_tx_rx",
+    "adc_required": false,
+    "input_only_ok": false,
+    "strapping_pin_ok": false,
+    "5v_tolerant_required": false,
+    "interrupt_capable_required": false
+  },
+  "external_components": {
+    "pullup_resistor": null,
+    "decoupling_cap": null
+  },
+  "power": {
+    "voltage_min": 4.5,
+    "voltage_max": 5.5,
+    "tolerates_5v": true,
+    "level_shifter_required_on_5v_board": false,
+    "current_ma_active": 130,
+    "current_sleep_ua": 0
+  },
+  "limitations": {
+    "detection_range_m": 5,
+    "detection_type": "sub-mm motion including breathing and micro-movements",
+    "logic_level_v": 3.3,
+    "vcc_must_be_5v": true,
+    "operating_temp_c": "-40 to +85"
+  },
+  "calibration": {
+    "required": false,
+    "type": null
+  },
+  "esphome": {
+    "platform": "ld2410",
+    "min_version": "2023.11.0"
+  }
+}
