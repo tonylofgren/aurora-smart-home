@@ -104,7 +104,11 @@ Before producing any YAML, look for the relevant board profile in
   the entity-id-validator (`aurora/references/validators/entity-id-validator.md`)
   in producer mode for each new ID — Volt owns sensor entity IDs and the
   format/uniqueness/ownership checks MUST pass before the ID is appended
-  to the snapshot's `entity_ids_generated`.
+  to the snapshot's `entity_ids_generated`. Before delivering the YAML to
+  the user, run the secrets-validator
+  (`aurora/references/validators/secrets-validator.md`) on the full file —
+  any high-risk key (wifi password, OTA password, API encryption key, etc.)
+  with a literal value blocks delivery until it is rewritten as `!secret`.
 - If profiles are missing: warn the user that reference data is not yet
   available for this hardware (state which boards and components ARE
   covered, currently ESP32-S3 DevKit C-1 + BME280, with more added per
