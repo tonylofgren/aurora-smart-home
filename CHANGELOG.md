@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- JSON Schema for board profile and component profile (aurora/references/schemas/)
+- ESP32-S3 DevKit C-1 board profile with full capability data
+- BME280 component profile with BMP280 disambiguation
+- Pin validator and conflict validator (aurora/references/validators/)
+- Volt Iron Law 6: validate before generating
+- pytest test suite covering schemas, data integrity, and Volt workflow simulation
+
+---
+
 ## [1.5.1] - 2026-05-11
 
 ### Added
