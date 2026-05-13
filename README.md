@@ -18,6 +18,10 @@ The most comprehensive Claude Code skill pack for smart home development. **New 
 
 ---
 
+> ⚠️ **Use at your own risk.** Aurora generates code and recommendations for educational purposes. Smart home projects involve mains electricity, batteries, and devices that control locks, water, heating, and gas. AI-generated configurations can be plausible but wrong. The maintainers, contributors, and Anthropic accept no liability for property damage, personal injury, data loss, or any other harm. See [DISCLAIMER.md](DISCLAIMER.md) for full terms.
+
+---
+
 ## At a Glance
 
 |  | Home Assistant | Node-RED | ESPHome | Integration Dev | Aurora Orchestrator |
@@ -111,24 +115,28 @@ Volt's validators check assignments against machine-readable profiles. When a pr
 
 **Validated today (v1.6.0):**
 
-| Hardware | Status |
-|----------|--------|
-| ESP32-S3 DevKit C-1 board | ✅ Validated |
-| BME280 temperature/humidity/pressure sensor | ✅ Validated |
+| Category | Hardware |
+|----------|----------|
+| **ESP boards** | ESP32 DevKit V1, ESP32-S2 Mini, ESP32-S3 DevKit C-1, ESP32-C3 Super Mini, ESP32-C6 DevKit, ESP32-H2 DevKit, Wemos D1 Mini (ESP8266, legacy) |
+| **Temperature sensors** | BME280, BMP280, DHT22, DS18B20, NTC thermistor 10K |
+| **Air quality sensors** | MH-Z19B, SCD40 |
+| **Motion sensors** | PIR AM312, LD2410 radar |
+| **Moisture sensors** | Capacitive soil v1.2 |
+| **GPIO expanders** | PCF8574, MCP23017, PCA9685, TCA9548A multiplexer |
+| **Level shifters** | TXS0108E, BSS138 |
 
-**Coming soon:**
+Every profile carries pin layouts, capability matrices, voltage requirements, `recommended_for` / `not_recommended_for` use cases, and lifecycle status. Volt uses the board selector to pick the right board for a project, or to tell users what an existing board can and cannot do.
 
-| Hardware | When |
-|----------|------|
-| ESP32 classic, S2, C3, C6, H2, P4, C61, ESP8266 | Next release |
-| Common sensors (DHT22, DS18B20, BMP280, MH-Z19, SCD40, etc.) | Next release |
-| GPIO expanders (PCF8574, MCP23017, PCA9685, TCA9548A) | Next release |
-| Voltage level shifters (TXS0108E, BSS138) | Next release |
-| Smart home boards (Shelly Plus, Sonoff, LilyGo, M5Stack, Heltec) | Future release |
-| RP2040 / RP2350 | Future release |
-| Project templates (bluetooth proxy, voice assistant, etc.) | Future release |
-| Retroactive YAML validation for existing configs | Future release |
-| Cross-agent validation (Ada, Sage, River) | Future release |
+**Coming in future releases:**
+
+| Hardware | Notes |
+|----------|-------|
+| Smart home boards (Shelly Plus, Sonoff, LilyGo, M5Stack, Heltec) | Product-specific pinouts |
+| RP2040 / RP2350 | Raspberry Pi Pico family |
+| ESP32-P4, ESP32-C61 | Pending stable ESPHome support (currently experimental) |
+| Project templates (bluetooth proxy, voice assistant, etc.) | Quick-start scaffolds |
+| Retroactive YAML validation for existing configs | "Does my YAML look right?" mode |
+| Cross-agent validation (Ada, Sage, River) | Same pattern for other agents |
 
 The full development roadmap with technical detail lives in [ROADMAP.md](ROADMAP.md).
 

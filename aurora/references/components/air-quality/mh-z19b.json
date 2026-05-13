@@ -1,0 +1,57 @@
+{
+  "$schema": "../../../schemas/component-profile.schema.json",
+  "schema_version": "1.0",
+  "component_id": "mh-z19b",
+  "display_name": "MH-Z19B CO2 Sensor",
+  "type": "co2",
+  "category": "air-quality",
+  "protocol": "uart",
+  "last_verified": "2026-05-13",
+  "variants": {
+    "primary": "mh-z19b",
+    "easily_confused_with": [
+      {
+        "component_id": "mh-z19c",
+        "difference": "MH-Z19C has automatic baseline calibration (ABC) enabled by default; MH-Z19B requires manual zero-point calibration outdoors at 400ppm"
+      }
+    ],
+    "knockoffs_known": false,
+    "verification_method": "Check silkscreen marking on sensor; B vs C suffix denotes different calibration behavior"
+  },
+  "pin_requirements": {
+    "count": 2,
+    "type": "uart_tx_rx",
+    "adc_required": false,
+    "input_only_ok": false,
+    "strapping_pin_ok": false,
+    "5v_tolerant_required": false,
+    "interrupt_capable_required": false
+  },
+  "external_components": {
+    "pullup_resistor": null,
+    "decoupling_cap": null
+  },
+  "power": {
+    "voltage_min": 4.5,
+    "voltage_max": 5.5,
+    "tolerates_5v": true,
+    "level_shifter_required_on_5v_board": false,
+    "current_ma_active": 150,
+    "current_sleep_ua": 0
+  },
+  "limitations": {
+    "vcc_must_be_5v": true,
+    "logic_level_v": 3.3,
+    "co2_range_ppm": "400-5000",
+    "warmup_s": 60,
+    "operating_temp_c": "0 to +50"
+  },
+  "calibration": {
+    "required": true,
+    "type": "zero_point_400ppm_outdoors"
+  },
+  "esphome": {
+    "platform": "mhz19",
+    "min_version": "2022.1.0"
+  }
+}

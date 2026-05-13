@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "expander_id": "tca9548a",
+  "display_name": "TCA9548A 1-to-8 I2C Multiplexer",
+  "protocol": "i2c",
+  "channels": 8,
+  "channel_type": "i2c_multiplex",
+  "i2c": {
+    "default_addresses": [
+      "0x70", "0x71", "0x72", "0x73", "0x74", "0x75", "0x76", "0x77"
+    ],
+    "address_pins": ["A0", "A1", "A2"],
+    "max_speed_khz": 400
+  },
+  "limitations": {
+    "no_pwm": true,
+    "open_drain_only": false,
+    "no_adc": true,
+    "interrupt_pin_available": false
+  },
+  "use_cases": [
+    "8 identical I2C sensors (e.g. 8 BME280 at 0x76)",
+    "Isolating slow downstream devices"
+  ],
+  "esphome": {
+    "platform": "tca9548a",
+    "min_version": "2022.1.0"
+  },
+  "last_verified": "2026-05-13",
+  "verified_source": "Texas Instruments TCA9548A datasheet SCPS206"
+}

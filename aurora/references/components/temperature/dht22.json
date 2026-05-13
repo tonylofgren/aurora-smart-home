@@ -1,0 +1,62 @@
+{
+  "$schema": "../../schemas/component-profile.schema.json",
+  "schema_version": "1.0",
+  "component_id": "dht22",
+  "display_name": "DHT22 / AM2302 Temperature & Humidity",
+  "type": "temperature_humidity",
+  "category": "environment",
+  "protocol": "single_wire_digital",
+  "last_verified": "2026-05-13",
+  "variants": {
+    "primary": "dht22",
+    "easily_confused_with": [
+      {
+        "component_id": "dht11",
+        "difference": "DHT11 has lower accuracy (+/-2C temp, +/-5% humidity) and lower cost; same single-wire protocol"
+      }
+    ],
+    "knockoffs_known": true,
+    "verification_method": "Genuine DHT22 has white casing with 4 pins; check markings for AM2302 designation on bare module"
+  },
+  "pin_requirements": {
+    "count": 1,
+    "type": "gpio",
+    "adc_required": false,
+    "input_only_ok": false,
+    "strapping_pin_ok": false,
+    "5v_tolerant_required": false,
+    "interrupt_capable_required": false
+  },
+  "external_components": {
+    "pullup_resistor": {
+      "value_ohm": 4700,
+      "required": true,
+      "note": "4.7kΩ pullup between data pin and VCC is required for reliable communication"
+    },
+    "decoupling_cap": null
+  },
+  "power": {
+    "voltage_min": 3.0,
+    "voltage_max": 5.5,
+    "tolerates_5v": false,
+    "level_shifter_required_on_5v_board": false,
+    "current_ma_active": 1.5,
+    "current_sleep_ua": 40
+  },
+  "limitations": {
+    "min_read_interval_s": 2,
+    "operating_temp_c": "-40 to +80",
+    "humidity_range": "0-100%",
+    "accuracy_temp_c": "+/- 0.5",
+    "accuracy_humidity": "+/- 2-5%"
+  },
+  "calibration": {
+    "required": false,
+    "type": null
+  },
+  "esphome": {
+    "platform": "dht",
+    "min_version": "2022.1.0"
+  },
+  "datasheet_url": "https://www.sparkfun.com/datasheets/Sensors/Temperature/DHT22.pdf"
+}

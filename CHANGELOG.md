@@ -12,12 +12,38 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
-- JSON Schema for board profile and component profile (aurora/references/schemas/)
-- ESP32-S3 DevKit C-1 board profile with full capability data
-- BME280 component profile with BMP280 disambiguation
-- Pin validator and conflict validator (aurora/references/validators/)
-- Volt Iron Law 6: validate before generating
-- pytest test suite covering schemas, data integrity, and Volt workflow simulation
+**Schemas and validators:**
+- JSON Schema for board profile, component profile, GPIO expander, and voltage shifter (`aurora/references/schemas/`)
+- Pin validator and conflict validator (`aurora/references/validators/`)
+- Board selector validator for picking the right board per project requirements
+- Volt Iron Law 6: validate before generating (with graceful fallback when reference data is missing)
+
+**Board profiles (7 boards):**
+- ESP32-S3 DevKit C-1, ESP32 DevKit V1, ESP32-S2 Mini, ESP32-C3 Super Mini
+- ESP32-C6 DevKit, ESP32-H2 DevKit, Wemos D1 Mini (ESP8266, marked legacy with C3 Mini as successor)
+- Each profile carries: GPIO layout, capability matrix, OTA safety, lifecycle status, `recommended_for` / `not_recommended_for` use cases
+
+**Component profiles (10 sensors):**
+- Temperature: BME280, BMP280 (with mutual disambiguation), DHT22, DS18B20, NTC thermistor 10K
+- Air quality: MH-Z19B, SCD40
+- Motion: PIR AM312, LD2410 radar
+- Moisture: capacitive soil v1.2
+
+**GPIO expanders (4 chips):**
+- PCF8574 (8-bit I2C IO), MCP23017 (16-bit I2C IO), PCA9685 (16-channel PWM), TCA9548A (I2C multiplexer)
+
+**Voltage level shifters (2 chips):**
+- TXS0108E (8-channel bidirectional), BSS138 (MOSFET-based, recommended for I2C)
+
+**Testing infrastructure:**
+- pytest test suite covering schemas, data integrity, and Volt workflow simulation (160+ tests)
+- Schema validation in CI, negative tests, URI format enforcement
+
+**Documentation and disclaimers:**
+- DISCLAIMER.md with no-warranty, hardware safety, AI-content, and no-liability clauses
+- ROADMAP.md with phased development plan
+- README hero disclaimer block
+- README validation flow diagram and hardware coverage tables
 
 ---
 

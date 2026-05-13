@@ -1,0 +1,128 @@
+{
+  "$schema": "../../schemas/board-profile.schema.json",
+  "schema_version": "1.0",
+  "board_id": "esp32-c3-mini",
+  "display_name": "ESP32-C3 Super Mini",
+  "chip": "ESP32-C3",
+  "manufacturer": "various",
+  "wireless": {
+    "wifi": ["2.4GHz"],
+    "wifi_standard": "WiFi 4 (b/g/n)",
+    "bluetooth": "BLE 5.0",
+    "bluetooth_classic": false,
+    "thread": false,
+    "zigbee": false,
+    "lora": null,
+    "ethernet": null
+  },
+  "power": {
+    "usb_type": "USB-C",
+    "operating_voltage": 3.3,
+    "input_voltage_range": "5V (USB) or 3.3V",
+    "battery_connector": null,
+    "charging_ic": null,
+    "vbat_monitor_pin": null,
+    "deep_sleep_current_ua": 5,
+    "light_sleep_current_ma": 0.8,
+    "modem_sleep_current_ma": 15,
+    "solar_input": false,
+    "gpio_5v_tolerant": false
+  },
+  "memory": {
+    "flash_mb": 4,
+    "psram_mb": 0,
+    "psram_type": null,
+    "ram_kb": 400
+  },
+  "gpio": {
+    "valid_pins": [0,1,2,3,4,5,6,7,8,9,10,18,19,20,21],
+    "strapping_pins": [2,8,9],
+    "reserved_for_usb": [18,19],
+    "reserved_for_flash": [11,12,13,14,15,16,17],
+    "input_only": [],
+    "adc1_pins": [0,1,2,3,4],
+    "adc2_pins": [5],
+    "touch_pins": [],
+    "dac_pins": [],
+    "wake_source_pins": [0,1,2,3,4,5,6,7,8,9,10],
+    "i2c_default": {"sda": 8, "scl": 9},
+    "spi_default": {"mosi": 6, "miso": 5, "sck": 4, "cs": 7}
+  },
+  "onboard_components": {
+    "led_gpio": 8,
+    "led_type": "single LED",
+    "boot_button_gpio": 9,
+    "reset_button": "EN pin",
+    "display": null,
+    "imu": null,
+    "buzzer": null
+  },
+  "smart_home_capabilities": {
+    "bluetooth_proxy": true,
+    "voice_assistant": false,
+    "matter_controller": true,
+    "matter_device": true,
+    "zigbee_coordinator": false,
+    "thread_border_router": false,
+    "ble_tracker": true,
+    "camera_support": false,
+    "battery_powered": false,
+    "ir_blaster": true,
+    "rf_proxy_cc1101": true
+  },
+  "ota_safety": {
+    "factory_reset_pin": 9,
+    "external_programmer_needed": false,
+    "usb_cdc_recovery": true,
+    "min_required_features_for_unbricking": ["wifi", "ota OR usb_cdc"]
+  },
+  "form_factor": {
+    "antenna": "PCB",
+    "ipex_connector": false,
+    "dimensions_mm": "22.52 x 18",
+    "certifications": ["FCC", "CE"],
+    "operating_temp_c": "-40 to +85"
+  },
+  "limitations": {
+    "max_cpu_mhz": 160,
+    "no_dac": true,
+    "usb_blocks_gpio": [18,19],
+    "psram_blocks_gpio": [],
+    "adc2_blocked_when_wifi_active": true,
+    "strapping_conflict_warnings": [
+      "GPIO 2 must be HIGH at boot for normal operation",
+      "GPIO 8 controls ROM log printing — pull LOW to silence boot messages",
+      "GPIO 9 is the boot button (BOOT/DOWNLOAD mode) — must be HIGH at boot for normal flash execution"
+    ]
+  },
+  "lifecycle": {
+    "status": "active",
+    "released": "2021-06",
+    "deprecated_since": null,
+    "reason": null,
+    "successor": null
+  },
+  "esphome": {
+    "platform": "esp32",
+    "variant": "ESP32C3",
+    "framework": "esp-idf",
+    "min_version": "2022.6.0"
+  },
+  "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-c3_datasheet_en.pdf",
+  "last_verified": "2026-05-13",
+  "verified_source": "Espressif ESP32-C3 Datasheet v1.9 + esphome/references/pinouts.md",
+  "recommended_for": [
+    "Compact battery-powered sensors (small form factor + deep sleep)",
+    "Single-relay smart switches",
+    "Bluetooth proxy in tight spaces",
+    "Matter device commissioning",
+    "Replacement for legacy ESP8266 D1 Mini (same form factor, modern radio)",
+    "Mass production builds (lowest cost ESP32 with BLE 5.0)"
+  ],
+  "not_recommended_for": [
+    "Voice assistant (single RISC-V core, small RAM 400KB)",
+    "Camera projects (no PSRAM, limited GPIO)",
+    "Projects needing 10+ GPIO simultaneously (only 22 valid pins total)",
+    "Thread or Zigbee (no 802.15.4 radio)"
+  ]
+}

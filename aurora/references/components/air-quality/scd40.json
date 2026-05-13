@@ -1,0 +1,72 @@
+{
+  "$schema": "../../../schemas/component-profile.schema.json",
+  "schema_version": "1.0",
+  "component_id": "scd40",
+  "display_name": "SCD40 CO2 / Temperature / Humidity",
+  "type": "co2_temperature_humidity",
+  "category": "air-quality",
+  "protocol": "i2c",
+  "last_verified": "2026-05-13",
+  "variants": {
+    "primary": "scd40",
+    "easily_confused_with": [
+      {
+        "component_id": "scd41",
+        "difference": "SCD41 extends CO2 range to 5000ppm and supports single-shot low-power mode; SCD40 tops out at 2000ppm"
+      }
+    ],
+    "knockoffs_known": false,
+    "verification_method": "Check Sensirion silkscreen; both SCD40 and SCD41 use identical I2C address 0x62"
+  },
+  "i2c": {
+    "default_addresses": ["0x62"],
+    "address_strap_pin": null,
+    "max_speed_khz": 100
+  },
+  "pin_requirements": {
+    "count": 2,
+    "type": "i2c",
+    "must_use_default_i2c_pins": false,
+    "adc_required": false,
+    "input_only_ok": false,
+    "strapping_pin_ok": false,
+    "5v_tolerant_required": false,
+    "interrupt_capable_required": false
+  },
+  "external_components": {
+    "pullup_resistor": {
+      "value_ohm": 10000,
+      "required": true,
+      "note": "10kΩ I2C pull-ups; many breakout boards include them"
+    },
+    "decoupling_cap": {
+      "value_uf": 100,
+      "required": true
+    }
+  },
+  "power": {
+    "voltage_min": 2.4,
+    "voltage_max": 5.5,
+    "tolerates_5v": true,
+    "level_shifter_required_on_5v_board": false,
+    "current_ma_active": 18,
+    "current_sleep_ua": 0.5
+  },
+  "limitations": {
+    "co2_range_ppm": "400-2000",
+    "operating_temp_c": "-10 to +60",
+    "warmup_s": 0,
+    "accuracy_co2_ppm": "+/- 50 ppm + 5%",
+    "accuracy_temp_c": "+/- 1.5",
+    "accuracy_humidity": "+/- 9%"
+  },
+  "calibration": {
+    "required": false,
+    "type": "forced_recalibration_at_known_co2_reference"
+  },
+  "esphome": {
+    "platform": "scd4x",
+    "min_version": "2022.5.0"
+  },
+  "datasheet_url": "https://www.sensirion.com/products/catalog/SCD40/"
+}

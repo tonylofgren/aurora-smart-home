@@ -167,6 +167,16 @@
     },
     "datasheet_url": {"type": "string", "format": "uri"},
     "last_verified": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
-    "verified_source": {"type": "string"}
+    "verified_source": {"type": "string"},
+    "recommended_for": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Use cases where this board is a top choice."
+    },
+    "not_recommended_for": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Use cases where this board is a poor fit or has known limitations."
+    }
   }
 }
