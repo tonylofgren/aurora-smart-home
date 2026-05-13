@@ -7,12 +7,12 @@
 > **75,000+ lines** of documentation | **900+ example prompts** | **1,500+ code examples**
 > **21 agents** | **6 Iron Laws** | **JSON-validated reference data**
 
-The most comprehensive Claude Code skill pack for smart home development. **New in v1.6.0:** Volt validates ESPHome configs against machine-readable hardware profiles before generating YAML, instead of guessing from training memory. Covers automations, custom integrations, Node-RED flows, dashboards, and full product development from idea to manufacturing.
+The most comprehensive Claude Code skill pack for smart home development. **New in v1.6.1:** cross-agent DEEP mode now flows through a schema-validated project snapshot so Volt → Sage → Iris stay in sync instead of re-deriving state from chat history. Builds on v1.6.0's validation-before-generation foundation. Covers automations, custom integrations, Node-RED flows, dashboards, and full product development from idea to manufacturing.
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skills-7c3aed.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Home Assistant](https://img.shields.io/badge/Home_Assistant-2024.x--2026.x-41BDF5.svg)](https://www.home-assistant.io/)
 [![ESPHome](https://img.shields.io/badge/ESPHome-2026.4.5-000000.svg)](https://esphome.io/)
-[![Version](https://img.shields.io/badge/Version-v1.6.0-success.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-v1.6.1-success.svg)](CHANGELOG.md)
 [![Validated](https://img.shields.io/badge/Validated-against_datasheets-success.svg)](aurora/references/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -22,7 +22,7 @@ The most comprehensive Claude Code skill pack for smart home development. **New 
 
 ---
 
-## 🔄 Already Installed? Update to v1.6.0
+## 🔄 Already Installed? Update to v1.6.1
 
 Claude Code does **not** auto-update installed plugins by default. New aurora releases ship validated boards, sensors, templates, and validator improvements regularly.
 
@@ -72,6 +72,27 @@ Then restart Claude Code so the new files load.
 > /plugin install aurora@aurora-smart-home
 > /reload-plugins
 > ```
+
+### What's New in v1.6.1
+
+**Cross-agent DEEP mode hand-off**
+
+When two or more specialists collaborate on the same project (Volt builds firmware, Sage wires automations, Iris designs the dashboard), they previously had to re-derive shared context from chat history. v1.6.1 introduces a structured **project snapshot** that travels between agents on disk:
+
+- JSON Schema for the snapshot (`aurora/references/schemas/project-snapshot.schema.json`) with format-checked UUIDs, ISO 8601 timestamps, and Home Assistant entity_id patterns
+- Hand-off protocol document (`aurora/references/handoff/_protocol.md`) defining storage location, lifecycle, per-field ownership table, and conflict handling
+- Runnable example covering a full Volt → Sage → Iris flow (`aurora/references/handoff/examples/`)
+- Aurora orchestrator wired to create, update, and complete snapshots in DEEP mode (Step 7 in `aurora/SKILL.md`)
+- Snapshot-Aware Iron Law in every DEEP-mode specialist soul (Volt, Ada, Sage, Iris, Vera, Atlas, Mira, River), each tailored to that agent's per-field ownership
+- 95 new pytest contract tests (333 total) verifying the schema, the SKILL.md wiring, and per-soul snapshot awareness
+- QUICK mode (single-agent task) is explicitly exempted — no overhead for trivial requests
+
+The protocol prevents three failure modes: lost context between agents, stale assumptions after upstream edits, and silent conflicts where one agent quietly overrides another. Unresolved conflict_log entries block DEEP mode from completing.
+
+**Documentation cleanup**
+
+- Replaced the broken `/plugin update <name>` slash command in update instructions with `/reload-plugins` (inside Claude Code) and `claude plugin update aurora@aurora-smart-home` (CLI) — both verified working
+- Consolidated stale pre-v1.3 plugin install instructions (`ha-yaml`, `ha-integration`, `esphome`, `node-red`, `supercharge-*`) to the single `aurora@aurora-smart-home` plugin across README, MANUAL, and all INSTALLATION docs
 
 ### What's New in v1.6.0
 
@@ -139,7 +160,7 @@ When data is not yet available for the requested hardware, Volt warns explicitly
 
 Volt's validators check assignments against machine-readable profiles. When a profile exists, Volt cannot generate YAML that breaks against it. When a profile does not yet exist, Volt warns explicitly and falls back to training memory with extra caution.
 
-**Validated today (v1.6.0):**
+**Validated today (v1.6.1):**
 
 | Category | Hardware |
 |----------|----------|

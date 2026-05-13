@@ -8,6 +8,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.6.1] - 2026-05-13
+
+### Added
+
+**Cross-agent hand-off protocol (DEEP mode):**
+- JSON Schema for project snapshots (`aurora/references/schemas/project-snapshot.schema.json`) with format-checked UUIDs, ISO 8601 timestamps, and Home Assistant `entity_id` patterns
+- Hand-off protocol documentation (`aurora/references/handoff/_protocol.md`) defining storage location, lifecycle, per-field ownership table, and conflict handling
+- Runnable example multi-agent snapshot (`aurora/references/handoff/examples/living-room-sensor.json`) covering Volt → Sage → Iris workflow
+- Orchestrator wiring in `aurora/SKILL.md` (Step 7: DEEP Mode Hand-Off) — when to create the snapshot, what initial fields to write, how to update between specialists, per-field ownership reminder, conflict handling, QUICK mode exemption
+- `aurora/references/handoff/` registered in the Reference Data section so specialists discover the protocol
+- Snapshot-Aware Coordination Iron Law added to every DEEP-mode specialist soul (Volt, Ada, Sage, Iris, Vera, Atlas, Mira, River). Each law is tailored to the agent's per-field ownership: writers list the fields they own, read-only agents (Iris, Vera) state the prohibition explicitly. All agents share the QUICK-mode exemption and the `conflict_log` escape hatch instead of overwriting peer fields.
+
+**Testing infrastructure:**
+- 95 new pytest tests covering snapshot schema validity, example correctness, SKILL.md wiring (Step 7 contract), and per-soul snapshot awareness (333 total)
+
+### Changed / Fixed
+
+- Update instructions across README, SKILL.md, MANUAL, and all INSTALLATION docs now show the two methods that actually work: `/reload-plugins` (inside Claude Code, refreshes all installed plugins) and `claude plugin update aurora@aurora-smart-home` (CLI). The previously documented `/plugin update <name>` slash command does not accept arguments in Claude Code and silently did nothing.
+- Stale references to pre-v1.3 plugin names (`ha-yaml`, `ha-integration`, `esphome`, `node-red`, `supercharge-*`) collapsed to the single `aurora@aurora-smart-home` plugin across README, MANUAL, skill READMEs, and all INSTALLATION docs.
+- Removed redundant freshness note from README update section; the banner and SKILL.md freshness check already cover that information.
+
 ## [1.6.0] - 2026-05-13
 
 ### Added
@@ -45,16 +66,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 **Voltage level shifters (2 chips):**
 - TXS0108E (8-channel bidirectional), BSS138 (MOSFET-based, recommended for I2C)
 
-**Cross-agent hand-off protocol:**
-- JSON Schema for project snapshots (`aurora/references/schemas/project-snapshot.schema.json`)
-- Hand-off protocol documentation (`aurora/references/handoff/_protocol.md`) defining storage location, lifecycle, per-field ownership, conflict handling
-- Example multi-agent snapshot (`aurora/references/handoff/examples/living-room-sensor.json`) covering Volt → Sage → Iris workflow
-- Orchestrator wiring in `aurora/SKILL.md` (Step 7: DEEP Mode Hand-Off) — when to create the snapshot, what initial fields to write, how to update between specialists, per-field ownership reminder, conflict handling, QUICK mode exemption
-- `aurora/references/handoff/` registered in the Reference Data section so specialists discover the protocol
-- Snapshot-Aware Coordination Iron Law added to every DEEP-mode specialist soul (Volt, Ada, Sage, Iris, Vera, Atlas, Mira, River). Each law is tailored to the agent's per-field ownership: writers list the fields they own, read-only agents (Iris, Vera) state the prohibition explicitly. All agents share the same QUICK-mode exemption and the `conflict_log` escape hatch instead of overwriting peer fields.
-
 **Testing infrastructure:**
-- pytest test suite covering schemas, data integrity, Volt workflow simulation, project snapshot hand-off, SKILL.md wiring, and per-soul snapshot awareness (333 tests)
+- pytest test suite covering schemas, data integrity, and Volt workflow simulation (238 tests at 1.6.0 release)
 - Schema validation in CI, negative tests, URI format enforcement
 
 **Documentation and disclaimers:**
