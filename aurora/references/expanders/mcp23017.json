@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "expander_id": "mcp23017",
+  "display_name": "MCP23017 16-bit I2C GPIO Expander",
+  "protocol": "i2c",
+  "channels": 16,
+  "channel_type": "digital_io",
+  "i2c": {
+    "default_addresses": [
+      "0x20", "0x21", "0x22", "0x23", "0x24", "0x25", "0x26", "0x27"
+    ],
+    "address_pins": ["A0", "A1", "A2"],
+    "max_speed_khz": 1700
+  },
+  "limitations": {
+    "no_pwm": true,
+    "open_drain_only": false,
+    "max_current_per_pin_ma": 25,
+    "no_adc": true,
+    "interrupt_pin_available": true
+  },
+  "use_cases": [
+    "32 relays via two chips",
+    "Keypads with interrupt-driven scanning"
+  ],
+  "esphome": {
+    "platform": "mcp23017",
+    "min_version": "2022.1.0"
+  },
+  "last_verified": "2026-05-13",
+  "verified_source": "Microchip MCP23017 datasheet DS20001952"
+}
