@@ -1,0 +1,125 @@
+{
+  "$schema": "../../schemas/board-profile.schema.json",
+  "schema_version": "1.0",
+  "board_id": "shelly-plus-2pm",
+  "display_name": "Shelly Plus 2PM",
+  "chip": "ESP32-WROOM-32",
+  "manufacturer": "Allterco Robotics",
+  "wireless": {
+    "wifi": ["2.4GHz"],
+    "wifi_standard": "WiFi 4 (b/g/n)",
+    "bluetooth": "BLE 4.2",
+    "bluetooth_classic": true,
+    "thread": false,
+    "zigbee": false,
+    "lora": null,
+    "ethernet": null
+  },
+  "power": {
+    "usb_type": null,
+    "operating_voltage": 3.3,
+    "input_voltage_range": "110-240V AC mains",
+    "battery_connector": null,
+    "charging_ic": null,
+    "vbat_monitor_pin": null,
+    "deep_sleep_current_ua": 0,
+    "light_sleep_current_ma": null,
+    "modem_sleep_current_ma": null,
+    "solar_input": false,
+    "gpio_5v_tolerant": false
+  },
+  "memory": {
+    "flash_mb": 4,
+    "psram_mb": 0,
+    "psram_type": null,
+    "ram_kb": 520
+  },
+  "gpio": {
+    "valid_pins": [0, 5, 12, 13, 18, 19, 23],
+    "strapping_pins": [0, 2, 5, 12, 15],
+    "reserved_for_usb": [],
+    "reserved_for_flash": [6, 7, 8, 9, 10, 11],
+    "input_only": [],
+    "adc1_pins": [32, 33, 34, 35, 36, 39],
+    "adc2_pins": [0, 2, 4, 12, 13, 14, 15, 25, 26, 27],
+    "touch_pins": [],
+    "dac_pins": [],
+    "wake_source_pins": [0, 5, 12, 13],
+    "i2c_default": {"sda": 19, "scl": 23},
+    "spi_default": {"mosi": 13, "miso": 12, "sck": 14, "cs": 15}
+  },
+  "onboard_components": {
+    "led_gpio": null,
+    "led_type": null,
+    "boot_button_gpio": 0,
+    "reset_button": null,
+    "display": null,
+    "imu": null,
+    "buzzer": null
+  },
+  "smart_home_capabilities": {
+    "bluetooth_proxy": true,
+    "voice_assistant": false,
+    "matter_controller": false,
+    "matter_device": true,
+    "zigbee_coordinator": false,
+    "thread_border_router": false,
+    "ble_tracker": true,
+    "camera_support": false,
+    "battery_powered": false,
+    "ir_blaster": false,
+    "rf_proxy_cc1101": false
+  },
+  "ota_safety": {
+    "factory_reset_pin": 0,
+    "external_programmer_needed": true,
+    "usb_cdc_recovery": false,
+    "min_required_features_for_unbricking": ["wifi", "ota"]
+  },
+  "form_factor": {
+    "antenna": "PCB",
+    "ipex_connector": false,
+    "dimensions_mm": "52 x 41.8 x 19.5",
+    "certifications": ["CE", "FCC", "RCM"],
+    "operating_temp_c": "-20 to +40"
+  },
+  "limitations": {
+    "max_cpu_mhz": 240,
+    "no_dac": false,
+    "usb_blocks_gpio": [],
+    "psram_blocks_gpio": [],
+    "adc2_blocked_when_wifi_active": true,
+    "strapping_conflict_warnings": [
+      "Shelly Plus 2PM is a closed-hardware device. GPIO mapping is fixed: relay 1 GPIO 12, relay 2 GPIO 13, input 1 GPIO 5, input 2 GPIO 18, ADE7953 I2C on GPIO 19/23.",
+      "Flashing custom firmware requires opening the case and connecting a UART programmer.",
+      "Roller/blind mode requires software interlock to prevent both relays energizing simultaneously."
+    ]
+  },
+  "lifecycle": {
+    "status": "active",
+    "released": "2021",
+    "deprecated_since": null,
+    "reason": null,
+    "successor": null
+  },
+  "esphome": {
+    "platform": "esp32",
+    "variant": "ESP32",
+    "framework": "esp-idf",
+    "min_version": "2023.4.0"
+  },
+  "datasheet_url": "https://www.shelly.com/documents/user_guide/shelly_plus_2pm.pdf",
+  "last_verified": "2026-05-13",
+  "verified_source": "Shelly hardware documentation",
+  "recommended_for": [
+    "Two-channel mains switch (e.g. ceiling fan + light)",
+    "Power consumption monitoring per channel",
+    "Roller shutter or window blind control (with proper interlock!)",
+    "Energy dashboards via the per-channel power data"
+  ],
+  "not_recommended_for": [
+    "Single-channel installs (Plus 1 is cheaper)",
+    "DIY GPIO projects (hardware locked)",
+    "High-frequency switching (relay rated for normal AC loads)"
+  ]
+}
