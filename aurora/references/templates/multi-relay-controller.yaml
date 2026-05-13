@@ -1,0 +1,102 @@
+# Multi-Relay Controller (8 relays via PCF8574)
+# Recommended board: ESP32-C3 Super Mini (low pin count is fine with expander)
+# External hardware: PCF8574 I2C expander + 8-relay board
+# Variables: ${device_name}, ${friendly_name}, ${relay_1_name} ... ${relay_8_name}
+
+esphome:
+  name: ${device_name}
+  friendly_name: ${friendly_name}
+
+esp32:
+  board: esp32-c3-mini
+  framework:
+    type: esp-idf
+
+logger:
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+i2c:
+  sda: GPIO4
+  scl: GPIO5
+  scan: true
+
+pcf8574:
+  - id: relay_bank
+    address: 0x20
+
+switch:
+  - platform: gpio
+    name: "${relay_1_name}"
+    pin:
+      pcf8574: relay_bank
+      number: 0
+      mode:
+        output: true
+      inverted: true
+  - platform: gpio
+    name: "${relay_2_name}"
+    pin:
+      pcf8574: relay_bank
+      number: 1
+      mode:
+        output: true
+      inverted: true
+  - platform: gpio
+    name: "${relay_3_name}"
+    pin:
+      pcf8574: relay_bank
+      number: 2
+      mode:
+        output: true
+      inverted: true
+  - platform: gpio
+    name: "${relay_4_name}"
+    pin:
+      pcf8574: relay_bank
+      number: 3
+      mode:
+        output: true
+      inverted: true
+  - platform: gpio
+    name: "${relay_5_name}"
+    pin:
+      pcf8574: relay_bank
+      number: 4
+      mode:
+        output: true
+      inverted: true
+  - platform: gpio
+    name: "${relay_6_name}"
+    pin:
+      pcf8574: relay_bank
+      number: 5
+      mode:
+        output: true
+      inverted: true
+  - platform: gpio
+    name: "${relay_7_name}"
+    pin:
+      pcf8574: relay_bank
+      number: 6
+      mode:
+        output: true
+      inverted: true
+  - platform: gpio
+    name: "${relay_8_name}"
+    pin:
+      pcf8574: relay_bank
+      number: 7
+      mode:
+        output: true
+      inverted: true
