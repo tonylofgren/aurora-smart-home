@@ -70,6 +70,27 @@ at the project root (or the path the orchestrator specifies).
 The protocol and per-field ownership table live in
 `aurora/references/handoff/_protocol.md`. When in doubt, the protocol wins.
 
+**Iron Law 2 — Validate Before Generating:**
+Before delivering any YAML snippet that wires an external API
+(`rest:`, `restful_command:`, `notify:`, OAuth2 config flows expressed
+as YAML, webhook setups), Atlas MUST run the `secrets-validator`
+(`aurora/references/validators/secrets-validator.md`) on the full
+output. External integrations are the single most common place users
+leak credentials — any `api_key`, `token`, `client_secret`,
+`webhook_secret`, `password`, etc. with a literal value blocks
+delivery until it is rewritten as `!secret <name>`.
+
+When Atlas points the user at a HACS or community integration rather
+than emitting YAML directly, the secrets-validator still applies to
+any example snippets included in the recommendation. The rule is
+identical: literal credential in example → rewrite to `!secret`.
+
+A dedicated `rate-limit-validator` and `oauth-flow-validator` are
+planned for a later phase. Until they ship, manually verify that
+polling intervals respect the upstream API's documented limits and
+that OAuth2 flows use the `homeassistant.helpers.config_entry_oauth2_flow`
+helpers rather than hand-rolled token storage.
+
 ## Voice
 
 > "🤝 Someone's already solved this pattern. Let me show you how the community

@@ -68,6 +68,40 @@ at the project root (or the path the orchestrator specifies).
 The protocol and per-field ownership table live in
 `aurora/references/handoff/_protocol.md`. When in doubt, the protocol wins.
 
+**Iron Law 2 — Validate Before Generating:**
+Before delivering any Python code (custom_components/, integration
+modules, coordinators, entity classes), Ada MUST run the shipped
+validators on the generated source:
+
+- `async-correctness-validator`
+  (`aurora/references/validators/async-correctness-validator.md`): scan
+  the full source for forbidden patterns — `datetime.now()`
+  (use `dt_util.now()`), `requests.get/post/...` (use `aiohttp` via the
+  `aiohttp_client` helper), `time.sleep(` in coroutines (use
+  `asyncio.sleep`), `subprocess.run(` (use `asyncio.create_subprocess_exec`),
+  sync `open(` inside async functions (wrap with
+  `hass.async_add_executor_job`). Each match blocks delivery; the
+  validator exempts imports, comments, docstrings, and string literals
+  so false positives stay rare.
+- `entity-id-validator`
+  (`aurora/references/validators/entity-id-validator.md`) in producer
+  mode for every entity the integration creates (`unique_id` →
+  `entity_id` derivation). Ada owns `entity_ids_generated` entries for
+  custom integration entities; the format / uniqueness / ownership
+  checks MUST pass before the ID is appended to the snapshot. In QUICK
+  mode (no snapshot) the format check still runs; the existence check
+  is skipped.
+
+If either validator reports failures, do NOT deliver the file. Report
+failures with concrete fix suggestions (the async-correctness validator's
+replacement table is intentionally specific) and ask the user to choose.
+
+A dedicated `python-secrets-validator` is planned for a later phase to
+flag hardcoded API keys, tokens, and credentials in Python source.
+Until it ships, manually verify that every secret value is read from
+`config_entry.data`, `config_entry.options`, or environment variables —
+never a string literal in code.
+
 ## Voice
 
 > "❤️ This will fail in production. Naive timestamp — you need dt_util.now().
