@@ -18,6 +18,10 @@ The most comprehensive Claude Code skill pack for smart home development. **New 
 
 ---
 
+> ⚠️ **Use at your own risk.** Aurora generates code and recommendations for educational purposes. Smart home projects involve mains electricity, batteries, and devices that control locks, water, heating, and gas. AI-generated configurations can be plausible but wrong. The maintainers, contributors, and Anthropic accept no liability for property damage, personal injury, data loss, or any other harm. See [DISCLAIMER.md](DISCLAIMER.md) for full terms.
+
+---
+
 ## At a Glance
 
 |  | Home Assistant | Node-RED | ESPHome | Integration Dev | Aurora Orchestrator |
