@@ -8,6 +8,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.6.5] - 2026-05-14
+
+### Added
+
+**Community component infrastructure (Plan 6):**
+- `aurora/references/schemas/external-component.schema.json` — JSON Schema Draft 2020-12 for community ESPHome `external_components` modules. Required fields: `external_component_id`, `source`, `esphome` (with `min_version` and `supported_chips` enum), `lifecycle` (active / experimental / deprecated / abandoned / merged_to_core), `last_verified`. Optional: `maintainer`, `warnings`, `verified_by`, `documentation_url`, `datasheet_url`. `additionalProperties: false` at the top level so unknown fields fail validation.
+- `aurora/references/schemas/hacs-integration.schema.json` — JSON Schema for HACS-distributed Home Assistant integrations. Required fields: `hacs_integration_id`, `source`, `homeassistant` (with `min_version` and `domains`), `category` (enumerated), `lifecycle`, `last_verified`. Carries `requires_credentials` and `cloud_calls` flags that the secrets-validator and llm-config-validator paths can consume when an integration is later added to the catalog.
+- `aurora/references/validators/unknown-component-validator.md` — protocol agents follow when the user names a community component for which no profile exists. Asks three concrete questions (source URL, version requirements, docs link), records the answer in the project snapshot's `notes[]` with author/timestamp/source, and emits a mandatory caution block in the output. If the user cannot answer a required question, the agent refuses rather than fabricates plausible-but-wrong configuration.
+- `aurora/references/external_components/CONTRIBUTING.md` and `aurora/references/hacs_integrations/CONTRIBUTING.md` — verification floor for adding catalog entries: contributor must have personally installed the component, maintainer activity within 6 months, `verified_by` required for non-experimental status, `last_verified` within 30 days of submission. The catalogs ship empty by design — adding seed entries risks readers treating them as a curated "endorsed" list, which is exactly the failure mode this design avoids.
+
+### Documentation
+
+- README hero, "Already Installed? Update to v1.6.5", "What's New in v1.6.5" section explain Plan 6 with the "no catalog entries" framing visible up front. Validated-today marker bumped.
+
+### Testing infrastructure
+
+- 18 new pytest tests covering schema validity, required-field coverage, top-level `additionalProperties: false`, lifecycle-status enum consistency between the two schemas, supported-chips enum completeness, category enum coverage, CONTRIBUTING docs presence, both catalogs shipping empty, and the unknown-component protocol's contract (three questions, refusal on missing answers, snapshot recording, caution block, tiered-format reference).
+- 507 tests total (plus 5 intentionally-skipped tests where the planned-validator-acknowledgement check is not applicable).
+
 ## [1.6.4] - 2026-05-14
 
 ### Added

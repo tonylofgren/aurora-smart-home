@@ -7,14 +7,14 @@
 > **75,000+ lines** of documentation | **900+ example prompts** | **1,500+ code examples**
 > **21 agents** | **6 Iron Laws** | **JSON-validated reference data**
 
-The most comprehensive Claude Code skill pack for smart home development. **New in v1.6.4:** two more validators land — `llm-config-validator` (Mira) and `node-red-syntax-validator` (River) — and both specialists pick up Iron Law 2. Every DEEP-mode specialist now has both Iron Laws: snapshot-aware coordination + validate-before-generating. Builds on v1.6.3's tiered errors, v1.6.2's expanded validator suite, and v1.6.1's cross-agent hand-off. Covers automations, custom integrations, Node-RED flows, dashboards, and full product development from idea to manufacturing.
+The most comprehensive Claude Code skill pack for smart home development. **New in v1.6.5:** community-component infrastructure — JSON schemas for ESPHome `external_components` and HACS integrations, plus an `unknown-component-validator` protocol that asks the user three concrete questions and records the answer in the project snapshot rather than fabricating a config. Plan 6 ships zero catalog entries by design; contributions arrive via PR after manual verification. Builds on v1.6.4's complete Iron Law 2 propagation. Covers automations, custom integrations, Node-RED flows, dashboards, and full product development from idea to manufacturing.
 
 > **No runtime dependencies.** Aurora is a Claude Code plugin made of markdown and JSON. The agents (Claude) read the files directly; nothing is executed on your machine. Python + pytest are only needed if a developer wants to run the test suite locally.
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skills-7c3aed.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Home Assistant](https://img.shields.io/badge/Home_Assistant-2024.x--2026.x-41BDF5.svg)](https://www.home-assistant.io/)
 [![ESPHome](https://img.shields.io/badge/ESPHome-2026.4.5-000000.svg)](https://esphome.io/)
-[![Version](https://img.shields.io/badge/Version-v1.6.4-success.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-v1.6.5-success.svg)](CHANGELOG.md)
 [![Validated](https://img.shields.io/badge/Validated-against_datasheets-success.svg)](aurora/references/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -26,7 +26,7 @@ The most comprehensive Claude Code skill pack for smart home development. **New 
 
 ---
 
-## 🔄 Already Installed? Update to v1.6.4
+## 🔄 Already Installed? Update to v1.6.5
 
 Claude Code does **not** auto-update installed plugins by default. New aurora releases ship validated boards, sensors, templates, and validator improvements regularly.
 
@@ -125,6 +125,21 @@ Aurora runs like a small smart home agency. 1 orchestrator + 20 named specialist
 - 🎨 **Canvas** — Graphic design, UI beyond dashboards. *"The layout works but it has seven things asking for attention at once."*
 
 ---
+
+### What's New in v1.6.5
+
+**Community component infrastructure (Plan 6)**
+
+Community ESPHome `external_components` and HACS integrations are the biggest blind spot left in Aurora's reference data. The previous behaviour when a user named one: Volt or Atlas would silently fabricate plausible-but-wrong configuration based on the agent's training memory.
+
+This release ships **infrastructure for handling unknown community components correctly**, deliberately **without** a populated "popular components" catalog (which would rot within months and damage trust).
+
+- `aurora/references/schemas/external-component.schema.json` — JSON Schema for community ESPHome modules.
+- `aurora/references/schemas/hacs-integration.schema.json` — JSON Schema for HACS-distributed HA integrations.
+- `aurora/references/validators/unknown-component-validator.md` — protocol agents follow when no profile exists: ask the user three concrete questions (source URL, version requirements, docs link), record the answer in the project snapshot's `notes[]`, and emit a caution block in the output. If the user cannot answer a required question, the agent refuses rather than fabricates.
+- `aurora/references/external_components/CONTRIBUTING.md` and `aurora/references/hacs_integrations/CONTRIBUTING.md` — verification floor for adding catalog entries.
+
+The two catalog directories ship empty. Entries arrive via PR after manual verification per the contribution docs.
 
 ### What's New in v1.6.4
 
@@ -281,7 +296,7 @@ When data is not yet available for the requested hardware, Volt warns explicitly
 
 Volt's validators check assignments against machine-readable profiles. When a profile exists, Volt cannot generate YAML that breaks against it. When a profile does not yet exist, Volt warns explicitly and falls back to training memory with extra caution.
 
-**Validated today (v1.6.4):**
+**Validated today (v1.6.5):**
 
 | Category | Hardware |
 |----------|----------|

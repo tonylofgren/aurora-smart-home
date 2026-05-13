@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aurora-smart-home.dev/schemas/hacs-integration.schema.json",
+  "title": "Aurora HACS Integration Profile",
+  "description": "Profile for a community-maintained Home Assistant integration distributed via HACS (Home Assistant Community Store). The catalog is intentionally narrow — entries should only be added after manual verification of lifecycle status, maintainer activity, and HA version compatibility. When the user names an integration not in the catalog, the unknown-component-validator protocol applies instead of fabricating a profile.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "hacs_integration_id",
+    "display_name",
+    "source",
+    "homeassistant",
+    "category",
+    "lifecycle",
+    "last_verified"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+(\\.\\d+)?$"
+    },
+    "hacs_integration_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "description": "Stable snake_case identifier (matches the integration's `custom_components/<id>/` directory name when installed)."
+    },
+    "display_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "description": "One-sentence description of what the integration does."
+    },
+    "source": {
+      "type": "object",
+      "required": ["type", "url"],
+      "properties": {
+        "type": {"type": "string", "enum": ["github", "git"]},
+        "url": {"type": "string", "format": "uri"},
+        "hacs_default": {
+          "type": "boolean",
+          "description": "Whether the integration appears in the HACS default repository (no custom repository needed)."
+        }
+      },
+      "additionalProperties": false
+    },
+    "homeassistant": {
+      "type": "object",
+      "required": ["min_version", "domains"],
+      "properties": {
+        "min_version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+(\\.\\d+)?$"
+        },
+        "max_known_version": {
+          "type": ["string", "null"],
+          "pattern": "^\\d+\\.\\d+(\\.\\d+)?$"
+        },
+        "domains": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "minItems": 1,
+          "description": "HA entity domains the integration provides (sensor, switch, climate, etc.)."
+        },
+        "config_flow": {
+          "type": "boolean",
+          "description": "Whether the integration supports UI config flow. False means YAML-only setup."
+        },
+        "yaml_example": {
+          "type": ["string", "null"],
+          "description": "Inline configuration.yaml snippet when YAML setup is needed."
+        }
+      },
+      "additionalProperties": false
+    },
+    "category": {
+      "type": "string",
+      "enum": ["energy", "climate", "lighting", "media", "security", "presence", "vacuum", "weather", "calendar", "notifications", "automation_helper", "frontend", "infrastructure", "voice_assistant", "other"]
+    },
+    "tags": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "documentation_url": {
+      "type": ["string", "null"],
+      "format": "uri"
+    },
+    "maintainer": {
+      "type": "object",
+      "required": ["github_handle", "last_active_check_date"],
+      "properties": {
+        "name": {"type": ["string", "null"]},
+        "github_handle": {"type": "string", "minLength": 1},
+        "last_active_check_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "responsive": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "lifecycle": {
+      "type": "object",
+      "required": ["status", "released"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["active", "experimental", "deprecated", "abandoned", "merged_to_core"]
+        },
+        "released": {"type": "string", "format": "date"},
+        "deprecated_since": {"type": ["string", "null"], "format": "date"},
+        "reason": {"type": ["string", "null"]},
+        "successor": {
+          "type": ["string", "null"],
+          "description": "hacs_integration_id or HA core integration name that replaces this one."
+        }
+      },
+      "additionalProperties": false
+    },
+    "warnings": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "description": "Known caveats surfaced to the user when Ada or Atlas suggests the integration."
+    },
+    "requires_credentials": {
+      "type": "boolean",
+      "description": "Whether the integration requires API keys, OAuth, or username/password. If true, the secrets-validator path applies."
+    },
+    "cloud_calls": {
+      "type": "boolean",
+      "description": "Whether the integration makes cloud API calls. Surfaces a privacy warning when paired with conversation agents (see llm-config-validator)."
+    },
+    "verified_by": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["who", "date"],
+        "properties": {
+          "who": {"type": "string", "minLength": 1},
+          "date": {"type": "string", "format": "date"},
+          "ha_version": {
+            "type": ["string", "null"],
+            "pattern": "^\\d+\\.\\d+(\\.\\d+)?$"
+          },
+          "notes": {"type": ["string", "null"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "last_verified": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "additionalProperties": false
+}
