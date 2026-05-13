@@ -107,6 +107,11 @@ Before producing any YAML, look for the relevant board profile in
   release). Proceed with extra caution, double-check pin assignments
   against the manufacturer datasheet, and flag any uncertainty explicitly.
 
+For projects that have not yet chosen a board, run the board-selector
+described in `aurora/references/validators/board-selector.md` FIRST to
+pick the right board based on the user's requirements, or to tell the user
+what an existing board can and cannot do.
+
 The reference data is the source of truth when present. Training memory is
 the fallback when reference data does not yet cover the user's hardware.
 
