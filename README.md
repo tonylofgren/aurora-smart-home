@@ -73,6 +73,55 @@ Then restart Claude Code so the new files load.
 > /reload-plugins
 > ```
 
+## Meet the Aurora team
+
+Aurora runs like a small smart home agency. 1 orchestrator + 20 named specialists across 7 departments. Each specialist has a defined domain, a soul, and a voice — these are the people you will see check in during a project, not feature labels. When Aurora routes a request, she hands it off to the right teammate by name.
+
+🏠 **Aurora** — Founder & orchestrator. *"Your home should work for you — locally, privately, without asking permission."*
+
+**Hardware department**
+
+- ⚡ **Volt** — ESP32/ESP8266/Shelly firmware + IR proxy. *"Board first — then we build."*
+- 📡 **Nano** — Matter, Thread, BLE, embedded protocols. *"Matter over Thread is the right call here. Let me explain why."*
+- 🎙️ **Echo** — Voice, audio, wake word, Assist pipeline. *"Let's make sure your voice pipeline is solid end to end."*
+- 🔋 **Watt** — Power budget, battery sizing, solar dimensioning. *"Before we spec the battery — what's the duty cycle?"*
+
+**Home Assistant department**
+
+- 🧙 **Sage** — YAML automations, blueprints, scripts, helpers. *"Automation, blueprint, or script? Each one has a different shape."*
+- ❤️ **Ada** — Python custom integrations, coordinators, config flows. *"This will fail in production. You need `dt_util.now()`."*
+- 🤖 **Mira** — LLM, AI, conversation agents. *"Are we responding to commands, or inferring intent?"*
+- 🌊 **River** — Node-RED visual automation flows. *"Map the flow first — trigger → condition → action."*
+- 🦄 **Iris** — Dashboard visual design. *"Imagine walking into the room. What do you want to know at a glance?"*
+
+**Field intelligence**
+
+- 🏪 **Atlas** — External API patterns, OAuth, community integrations. *"Someone's already solved this. Let me show you how the community does it."*
+
+**Quality desk**
+
+- 🐛 **Glitch** — Cross-skill debugging. *"Paste the full log. Not the part you think matters — all of it."*
+- ✅ **Probe** — QA, testing, validation. *"Looks right — but let's test the edge cases first."*
+- 🏡 **Vera** — WAF + hardware safety review. *"What happens when the motion sensor misses? Can someone turn the light on manually?"*
+- 🔬 **Lens** — Code review, security audit. *"Three things need fixing here. Not suggestions — these will cause incidents."*
+- 📖 **Manual** — Installation guides, troubleshooting docs. *"The firmware is done. Now let's make sure someone else can install it."*
+
+**Research library**
+
+- 🔭 **Scout** — Research, investigation. *"Give me a moment — I've seen this discussed somewhere."*
+- 📚 **Lore** — Documentation writing. *"The setup section assumes the user already has HACS installed."*
+
+**Operations**
+
+- 🔧 **Forge** — Deploy, Docker, server, backups. *"Before we update — do you have a full backup from today?"*
+- 🌐 **Grid** — Network, UniFi, firewall, VLAN. *"That device is probably on the wrong VLAN."*
+
+**Design studio**
+
+- 🎨 **Canvas** — Graphic design, UI beyond dashboards. *"The layout works but it has seven things asking for attention at once."*
+
+---
+
 ### What's New in v1.6.1
 
 **Cross-agent DEEP mode hand-off**
@@ -451,52 +500,7 @@ Develop **Python custom components** for Home Assistant (custom_components, HACS
 
 ### Aurora Orchestrator & Reference Data (`aurora`)
 
-The orchestration layer that routes requests to the right specialist agent (21 total) and consults machine-readable reference data to keep generated code correct.
-
-**Meet the Aurora team.** Aurora runs like a small smart home agency. 1 orchestrator + 20 named specialists across 7 departments. Each specialist has a defined domain, a soul, and a voice — these are the people you will see check in during a project, not feature labels. When Aurora routes a request, she hands it off to the right teammate by name.
-
-🏠 **Aurora** — Founder & orchestrator. *"Your home should work for you — locally, privately, without asking permission."*
-
-**Hardware department**
-
-- ⚡ **Volt** — ESP32/ESP8266/Shelly firmware + IR proxy. *"Board first — then we build."*
-- 📡 **Nano** — Matter, Thread, BLE, embedded protocols. *"Matter over Thread is the right call here. Let me explain why."*
-- 🎙️ **Echo** — Voice, audio, wake word, Assist pipeline. *"Let's make sure your voice pipeline is solid end to end."*
-- 🔋 **Watt** — Power budget, battery sizing, solar dimensioning. *"Before we spec the battery — what's the duty cycle?"*
-
-**Home Assistant department**
-
-- 🧙 **Sage** — YAML automations, blueprints, scripts, helpers. *"Automation, blueprint, or script? Each one has a different shape."*
-- ❤️ **Ada** — Python custom integrations, coordinators, config flows. *"This will fail in production. You need `dt_util.now()`."*
-- 🤖 **Mira** — LLM, AI, conversation agents. *"Are we responding to commands, or inferring intent?"*
-- 🌊 **River** — Node-RED visual automation flows. *"Map the flow first — trigger → condition → action."*
-- 🦄 **Iris** — Dashboard visual design. *"Imagine walking into the room. What do you want to know at a glance?"*
-
-**Field intelligence**
-
-- 🏪 **Atlas** — External API patterns, OAuth, community integrations. *"Someone's already solved this. Let me show you how the community does it."*
-
-**Quality desk**
-
-- 🐛 **Glitch** — Cross-skill debugging. *"Paste the full log. Not the part you think matters — all of it."*
-- ✅ **Probe** — QA, testing, validation. *"Looks right — but let's test the edge cases first."*
-- 🏡 **Vera** — WAF + hardware safety review. *"What happens when the motion sensor misses? Can someone turn the light on manually?"*
-- 🔬 **Lens** — Code review, security audit. *"Three things need fixing here. Not suggestions — these will cause incidents."*
-- 📖 **Manual** — Installation guides, troubleshooting docs. *"The firmware is done. Now let's make sure someone else can install it."*
-
-**Research library**
-
-- 🔭 **Scout** — Research, investigation. *"Give me a moment — I've seen this discussed somewhere."*
-- 📚 **Lore** — Documentation writing. *"The setup section assumes the user already has HACS installed."*
-
-**Operations**
-
-- 🔧 **Forge** — Deploy, Docker, server, backups. *"Before we update — do you have a full backup from today?"*
-- 🌐 **Grid** — Network, UniFi, firewall, VLAN. *"That device is probably on the wrong VLAN."*
-
-**Design studio**
-
-- 🎨 **Canvas** — Graphic design, UI beyond dashboards. *"The layout works but it has seven things asking for attention at once."*
+The orchestration layer that routes requests to the right specialist agent (21 total) and consults machine-readable reference data to keep generated code correct. The full team roster lives at the top of this README under [Meet the Aurora team](#meet-the-aurora-team).
 
 **Reference data validated against authoritative sources:**
 - `aurora/references/boards/`: per-chip GPIO layouts, capability matrices, OTA safety

@@ -86,12 +86,12 @@ def test_roster_does_not_duplicate_an_agent(readme_text):
     Other parts of README may mention an agent name multiple times — this
     test only checks the roster block to catch copy-paste errors there."""
     roster_match = re.search(
-        r"Meet the Aurora team\.(.+?)(?=\n##\s|\n---\s*\n)",
+        r"^##\s+Meet the Aurora team\b(.+?)(?=\n##\s|\n---\s*\n)",
         readme_text,
-        re.DOTALL,
+        re.DOTALL | re.MULTILINE,
     )
     assert roster_match, (
-        "Could not locate the roster section (anchor: 'Meet the Aurora team.'). "
+        "Could not locate the roster section (anchor: '## Meet the Aurora team' H2). "
         "If the heading changed, update this test together with the README."
     )
     roster_block = roster_match.group(1)
