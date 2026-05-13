@@ -1,0 +1,128 @@
+{
+  "$schema": "../../schemas/board-profile.schema.json",
+  "schema_version": "1.0",
+  "board_id": "heltec-wifi-lora32-v3",
+  "display_name": "Heltec WiFi LoRa 32 V3",
+  "chip": "ESP32-S3",
+  "manufacturer": "Heltec Automation",
+  "wireless": {
+    "wifi": ["2.4GHz"],
+    "wifi_standard": "WiFi 4 (b/g/n)",
+    "bluetooth": "BLE 5.0",
+    "bluetooth_classic": false,
+    "thread": false,
+    "zigbee": false,
+    "lora": "SX1262 (433/868/915MHz, model-dependent)",
+    "ethernet": null
+  },
+  "power": {
+    "usb_type": "USB-C",
+    "operating_voltage": 3.3,
+    "input_voltage_range": "5V (USB) or 3.7V LiPo",
+    "battery_connector": "JST-PH 2.0",
+    "charging_ic": "TP4054 LiPo charger",
+    "vbat_monitor_pin": 1,
+    "deep_sleep_current_ua": 800,
+    "light_sleep_current_ma": 3.5,
+    "modem_sleep_current_ma": 30,
+    "solar_input": false,
+    "gpio_5v_tolerant": false
+  },
+  "memory": {
+    "flash_mb": 8,
+    "psram_mb": 0,
+    "psram_type": null,
+    "ram_kb": 512
+  },
+  "gpio": {
+    "valid_pins": [0,1,2,3,4,5,6,7,15,16,19,20,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48],
+    "strapping_pins": [0,3,45,46],
+    "reserved_for_usb": [19,20],
+    "reserved_for_flash": [22,23,24,25],
+    "input_only": [],
+    "adc1_pins": [1,2,3,4,5,6,7],
+    "adc2_pins": [15,16],
+    "touch_pins": [1,2,3,4,5,6,7],
+    "dac_pins": [],
+    "wake_source_pins": [0,1,2,3,4,5,6,7,15,16],
+    "i2c_default": {"sda": 17, "scl": 18},
+    "spi_default": {"mosi": 11, "miso": 13, "sck": 12, "cs": 8}
+  },
+  "onboard_components": {
+    "led_gpio": 35,
+    "led_type": "Single white LED",
+    "boot_button_gpio": 0,
+    "reset_button": "EN pin",
+    "display": "SSD1306 0.96 inch 128x64 OLED",
+    "imu": null,
+    "buzzer": null
+  },
+  "smart_home_capabilities": {
+    "bluetooth_proxy": true,
+    "voice_assistant": false,
+    "matter_controller": true,
+    "matter_device": true,
+    "zigbee_coordinator": false,
+    "thread_border_router": false,
+    "ble_tracker": true,
+    "camera_support": false,
+    "battery_powered": true,
+    "ir_blaster": false,
+    "rf_proxy_cc1101": false
+  },
+  "ota_safety": {
+    "factory_reset_pin": 0,
+    "external_programmer_needed": false,
+    "usb_cdc_recovery": true,
+    "min_required_features_for_unbricking": ["wifi", "ota OR usb_cdc"]
+  },
+  "form_factor": {
+    "antenna": "PCB + IPEX U.FL for LoRa",
+    "ipex_connector": true,
+    "dimensions_mm": "50 x 25",
+    "certifications": ["FCC", "CE"],
+    "operating_temp_c": "-40 to +85"
+  },
+  "limitations": {
+    "max_cpu_mhz": 240,
+    "no_dac": true,
+    "usb_blocks_gpio": [19,20],
+    "psram_blocks_gpio": [],
+    "adc2_blocked_when_wifi_active": true,
+    "strapping_conflict_warnings": [
+      "LoRa SX1262 reserves GPIO 8 (CS), 9 (RST), 14 (BUSY), 12 (DIO1), 11 (MOSI), 10 (SCK), 13 (MISO)",
+      "OLED reserves GPIO 17 (SDA), 18 (SCL), 21 (RST)",
+      "LoRa transceiver requires antenna; do not transmit without antenna connected (damages PA)",
+      "Deep sleep current ~800µA (higher than bare S3) due to LoRa keep-alive circuit"
+    ]
+  },
+  "lifecycle": {
+    "status": "active",
+    "released": "2023-06",
+    "deprecated_since": null,
+    "reason": null,
+    "successor": null
+  },
+  "esphome": {
+    "platform": "esp32",
+    "variant": "ESP32S3",
+    "framework": "esp-idf",
+    "min_version": "2023.10.0"
+  },
+  "datasheet_url": "https://heltec.org/project/wifi-lora-32-v3/",
+  "last_verified": "2026-05-13",
+  "verified_source": "Heltec WiFi LoRa 32 V3 schematic + datasheet",
+  "recommended_for": [
+    "LoRa-to-HA bridges (Meshtastic compatible, weather stations)",
+    "Long-range sensor networks beyond WiFi reach",
+    "Off-grid telemetry with extended antenna",
+    "TTN/Helium LoRaWAN nodes",
+    "Asset tracking with long range"
+  ],
+  "not_recommended_for": [
+    "WiFi-only projects (LoRa adds unused cost and reserves pins)",
+    "Ultra-low-power sleep (~800µA, higher than bare ESP32-S3 at 7µA)",
+    "Voice assistant (no PSRAM, LoRa pin conflicts with audio I2S typical pinout)",
+    "Indoor projects without LoRa coverage benefit"
+  ]
+}

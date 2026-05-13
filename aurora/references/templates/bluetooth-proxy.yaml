@@ -1,0 +1,43 @@
+# Bluetooth Proxy
+# Recommended board: ESP32-C3 Super Mini (cheap) or ESP32-S3 DevKit C-1 (more headroom)
+# Variables: ${device_name}, ${friendly_name}, ${board_id}
+
+esphome:
+  name: ${device_name}
+  friendly_name: ${friendly_name}
+
+esp32:
+  board: ${board_id}
+  framework:
+    type: esp-idf
+
+logger:
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: "${device_name} Fallback"
+    password: !secret fallback_ap_password
+
+captive_portal:
+
+# Bluetooth proxy: forwards BLE advertisements to Home Assistant
+# Place where coverage is weakest. Active mode lets HA connect to BLE devices
+# (locks, thermostats) through this proxy.
+bluetooth_proxy:
+  active: true
+
+esp32_ble_tracker:
+  scan_parameters:
+    interval: 320ms
+    window: 30ms
+    active: true

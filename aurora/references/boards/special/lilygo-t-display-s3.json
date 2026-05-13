@@ -1,0 +1,127 @@
+{
+  "$schema": "../../schemas/board-profile.schema.json",
+  "schema_version": "1.0",
+  "board_id": "lilygo-t-display-s3",
+  "display_name": "LilyGo T-Display S3",
+  "chip": "ESP32-S3",
+  "manufacturer": "LilyGo",
+  "wireless": {
+    "wifi": ["2.4GHz"],
+    "wifi_standard": "WiFi 4 (b/g/n)",
+    "bluetooth": "BLE 5.0",
+    "bluetooth_classic": false,
+    "thread": false,
+    "zigbee": false,
+    "lora": null,
+    "ethernet": null
+  },
+  "power": {
+    "usb_type": "USB-C",
+    "operating_voltage": 3.3,
+    "input_voltage_range": "5V (USB) or 3.3V or 3.7V LiPo",
+    "battery_connector": "JST-PH 2.0",
+    "charging_ic": "Onboard charger + MAX17048 fuel gauge",
+    "vbat_monitor_pin": 4,
+    "deep_sleep_current_ua": 100,
+    "light_sleep_current_ma": 2.5,
+    "modem_sleep_current_ma": 25,
+    "solar_input": false,
+    "gpio_5v_tolerant": false
+  },
+  "memory": {
+    "flash_mb": 16,
+    "psram_mb": 8,
+    "psram_type": "OPI",
+    "ram_kb": 512
+  },
+  "gpio": {
+    "valid_pins": [0,1,2,3,4,10,11,12,14,16,21,33,34,35,36,37,38,39,43,44],
+    "strapping_pins": [0,3,45,46],
+    "reserved_for_usb": [19,20],
+    "reserved_for_flash": [22,23,24,25],
+    "input_only": [],
+    "adc1_pins": [1,2,3,4,10],
+    "adc2_pins": [11,12,14],
+    "touch_pins": [1,2,3,4,10,11,12,14],
+    "dac_pins": [],
+    "wake_source_pins": [0,1,2,3,4,10,14],
+    "i2c_default": {"sda": 43, "scl": 44},
+    "spi_default": {"mosi": 11, "miso": 13, "sck": 12, "cs": 10}
+  },
+  "onboard_components": {
+    "led_gpio": null,
+    "led_type": null,
+    "boot_button_gpio": 0,
+    "reset_button": "EN pin",
+    "display": "ST7789 1.9 inch 170x320 IPS TFT",
+    "imu": null,
+    "buzzer": null
+  },
+  "smart_home_capabilities": {
+    "bluetooth_proxy": true,
+    "voice_assistant": true,
+    "matter_controller": true,
+    "matter_device": true,
+    "zigbee_coordinator": false,
+    "thread_border_router": false,
+    "ble_tracker": true,
+    "camera_support": false,
+    "battery_powered": true,
+    "ir_blaster": true,
+    "rf_proxy_cc1101": true
+  },
+  "ota_safety": {
+    "factory_reset_pin": 0,
+    "external_programmer_needed": false,
+    "usb_cdc_recovery": true,
+    "min_required_features_for_unbricking": ["wifi", "ota OR usb_cdc"]
+  },
+  "form_factor": {
+    "antenna": "PCB",
+    "ipex_connector": false,
+    "dimensions_mm": "62 x 25",
+    "certifications": ["FCC", "CE"],
+    "operating_temp_c": "-40 to +85"
+  },
+  "limitations": {
+    "max_cpu_mhz": 240,
+    "no_dac": true,
+    "usb_blocks_gpio": [19,20],
+    "psram_blocks_gpio": [26,27,28,29,30,31,32],
+    "adc2_blocked_when_wifi_active": true,
+    "strapping_conflict_warnings": [
+      "Display reserves GPIO 5, 6, 7, 8, 9, 13, 15, 17, 18, 40, 41, 42, 45, 46 (14 pins)",
+      "Backlight on GPIO 38, must be HIGH for display visible",
+      "Deep sleep current is ~100µA (display drains more than bare S3)"
+    ]
+  },
+  "lifecycle": {
+    "status": "active",
+    "released": "2023-04",
+    "deprecated_since": null,
+    "reason": null,
+    "successor": null
+  },
+  "esphome": {
+    "platform": "esp32",
+    "variant": "ESP32S3",
+    "framework": "esp-idf",
+    "min_version": "2023.10.0"
+  },
+  "datasheet_url": "https://www.lilygo.cc/products/t-display-s3",
+  "last_verified": "2026-05-13",
+  "verified_source": "LilyGo T-Display S3 schematic + ESPHome 2023.10 release notes",
+  "recommended_for": [
+    "Wall-mounted dashboard with TFT display",
+    "Tabletop status display for HA values",
+    "Battery-powered handheld sensors with screen feedback",
+    "Bluetooth proxy with on-device status indicator",
+    "Voice assistant satellite (PSRAM available)"
+  ],
+  "not_recommended_for": [
+    "GPIO-heavy custom hardware (display reserves 14 pins)",
+    "Ultra-low-power deep sleep (~100µA, much higher than bare S3 at 7µA)",
+    "Outdoor mounting (no IP rating)",
+    "Audio playback (no speaker, no DAC pin exposed)"
+  ]
+}

@@ -117,24 +117,25 @@ Volt's validators check assignments against machine-readable profiles. When a pr
 
 | Category | Hardware |
 |----------|----------|
-| **ESP boards** | ESP32 DevKit V1, ESP32-S2 Mini, ESP32-S3 DevKit C-1, ESP32-C3 Super Mini, ESP32-C6 DevKit, ESP32-H2 DevKit, Wemos D1 Mini (ESP8266, legacy) |
+| **ESP dev boards** | ESP32 DevKit V1, ESP32-S2 Mini, ESP32-S3 DevKit C-1, ESP32-C3 Super Mini, ESP32-C6 DevKit, ESP32-H2 DevKit, Wemos D1 Mini (ESP8266, legacy) |
+| **Smart home boards** | Shelly Plus 1, Shelly Plus 2PM, Sonoff Basic R3 (legacy), Sonoff Mini R3 |
+| **Maker boards** | LilyGo T-Display S3, M5Stack Atom Lite, M5Stack Core Basic, Heltec WiFi LoRa 32 V3 |
+| **Raspberry Pi Pico** | Pico W (RP2040 + WiFi), Pico 2 W (RP2350 + WiFi, experimental) |
 | **Temperature sensors** | BME280, BMP280, DHT22, DS18B20, NTC thermistor 10K |
 | **Air quality sensors** | MH-Z19B, SCD40 |
 | **Motion sensors** | PIR AM312, LD2410 radar |
 | **Moisture sensors** | Capacitive soil v1.2 |
 | **GPIO expanders** | PCF8574, MCP23017, PCA9685, TCA9548A multiplexer |
 | **Level shifters** | TXS0108E, BSS138 |
+| **Project templates** | Bluetooth proxy, Voice assistant (S3), Air quality monitor, Presence sensor (radar), Battery soil sensor, Multi-relay controller, Temp/humidity room |
 
-Every profile carries pin layouts, capability matrices, voltage requirements, `recommended_for` / `not_recommended_for` use cases, and lifecycle status. Volt uses the board selector to pick the right board for a project, or to tell users what an existing board can and cannot do.
+Every board profile carries pin layouts, capability matrices, voltage requirements, `recommended_for` / `not_recommended_for` use cases, and lifecycle status. Volt uses the board selector to pick the right board for a project, or to tell users what an existing board can and cannot do. Project templates provide a 30-second quick start for common use cases.
 
 **Coming in future releases:**
 
 | Hardware | Notes |
 |----------|-------|
-| Smart home boards (Shelly Plus, Sonoff, LilyGo, M5Stack, Heltec) | Product-specific pinouts |
-| Raspberry Pi Pico W (RP2040) and Pico 2 W (RP2350) | WiFi variants only; bare Pico/Pico 2 lack WiFi |
 | ESP32-P4, ESP32-C61 | Pending stable ESPHome support (currently experimental) |
-| Project templates (bluetooth proxy, voice assistant, etc.) | Quick-start scaffolds |
 | Retroactive YAML validation for existing configs | "Does my YAML look right?" mode |
 | Cross-agent validation (Ada, Sage, River) | Same pattern for other agents |
 

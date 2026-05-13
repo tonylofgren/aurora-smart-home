@@ -1,0 +1,128 @@
+{
+  "$schema": "../../schemas/board-profile.schema.json",
+  "schema_version": "1.0",
+  "board_id": "pico-w",
+  "display_name": "Raspberry Pi Pico W",
+  "chip": "RP2040",
+  "manufacturer": "Raspberry Pi",
+  "wireless": {
+    "wifi": ["2.4GHz"],
+    "wifi_standard": "WiFi 4 (b/g/n)",
+    "bluetooth": "BLE 5.0 (via CYW43439)",
+    "bluetooth_classic": false,
+    "thread": false,
+    "zigbee": false,
+    "lora": null,
+    "ethernet": null
+  },
+  "power": {
+    "usb_type": "Micro USB",
+    "operating_voltage": 3.3,
+    "input_voltage_range": "5V (USB) or 1.8-5.5V (VSYS)",
+    "battery_connector": null,
+    "charging_ic": null,
+    "vbat_monitor_pin": 29,
+    "deep_sleep_current_ua": 1500,
+    "light_sleep_current_ma": 1,
+    "modem_sleep_current_ma": 10,
+    "solar_input": false,
+    "gpio_5v_tolerant": false
+  },
+  "memory": {
+    "flash_mb": 2,
+    "psram_mb": 0,
+    "psram_type": null,
+    "ram_kb": 264
+  },
+  "gpio": {
+    "valid_pins": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,26,27,28],
+    "strapping_pins": [],
+    "reserved_for_usb": [],
+    "reserved_for_flash": [],
+    "input_only": [],
+    "adc1_pins": [26,27,28],
+    "adc2_pins": [],
+    "touch_pins": [],
+    "dac_pins": [],
+    "wake_source_pins": [],
+    "i2c_default": {"sda": 4, "scl": 5},
+    "spi_default": {"mosi": 19, "miso": 16, "sck": 18, "cs": 17}
+  },
+  "onboard_components": {
+    "led_gpio": null,
+    "led_type": "Onboard LED via CYW43439 (use cyw43 component, not raw GPIO)",
+    "boot_button_gpio": null,
+    "reset_button": "RUN pin (short to GND)",
+    "display": null,
+    "imu": null,
+    "buzzer": null
+  },
+  "smart_home_capabilities": {
+    "bluetooth_proxy": true,
+    "voice_assistant": false,
+    "matter_controller": true,
+    "matter_device": true,
+    "zigbee_coordinator": false,
+    "thread_border_router": false,
+    "ble_tracker": true,
+    "camera_support": false,
+    "battery_powered": true,
+    "ir_blaster": true,
+    "rf_proxy_cc1101": false
+  },
+  "ota_safety": {
+    "factory_reset_pin": null,
+    "external_programmer_needed": false,
+    "usb_cdc_recovery": true,
+    "min_required_features_for_unbricking": ["bootsel button"]
+  },
+  "form_factor": {
+    "antenna": "PCB",
+    "ipex_connector": false,
+    "dimensions_mm": "51 x 21",
+    "certifications": ["FCC", "CE", "RCM"],
+    "operating_temp_c": "-20 to +70"
+  },
+  "limitations": {
+    "max_cpu_mhz": 133,
+    "no_dac": true,
+    "usb_blocks_gpio": [],
+    "psram_blocks_gpio": [],
+    "adc2_blocked_when_wifi_active": false,
+    "strapping_conflict_warnings": [
+      "GPIO 23, 24, 25, 29 are reserved for internal CYW43439 communication and onboard LED",
+      "Pico W onboard LED is on CYW43439 chip, requires the cyw43 component in ESPHome (not raw GPIO output)",
+      "Deep sleep on Pico W is not as power-efficient as ESP32 (~1.5mA vs ~5µA)",
+      "WiFi chip cannot wake on packet like ESP32 ULP",
+      "BOOTSEL drag-and-drop reflash always works as recovery mechanism"
+    ]
+  },
+  "lifecycle": {
+    "status": "active",
+    "released": "2022-06",
+    "deprecated_since": null,
+    "reason": null,
+    "successor": null
+  },
+  "esphome": {
+    "platform": "rp2040",
+    "variant": "RaspberryPiPicoW",
+    "framework": "arduino",
+    "min_version": "2024.6.0"
+  },
+  "datasheet_url": "https://datasheets.raspberrypi.com/picow/pico-w-datasheet.pdf",
+  "last_verified": "2026-05-13",
+  "verified_source": "Raspberry Pi Pico W datasheet + ESPHome 2024.6 release notes",
+  "recommended_for": [
+    "Bluetooth proxy in environments where ESP32 stock is limited",
+    "Educational projects with strong RP2040 ecosystem (MicroPython, CircuitPython, C/C++ SDK)",
+    "Projects benefiting from RP2040 PIO state machines (custom protocols)",
+    "Drop-in replacement for D1 Mini form factor users wanting modern WiFi"
+  ],
+  "not_recommended_for": [
+    "Voice assistant (low CPU and no PSRAM)",
+    "Thread or Zigbee (no 802.15.4 radio)",
+    "Ultra-low-power battery sensors (deep sleep ~1.5mA, much higher than ESP32-C3 at ~5µA)",
+    "Projects needing tight Espressif-specific ESPHome features (BLE proxy was preliminary on RP2040 until 2024)"
+  ]
+}

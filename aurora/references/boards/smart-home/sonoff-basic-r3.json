@@ -1,0 +1,125 @@
+{
+  "$schema": "../../schemas/board-profile.schema.json",
+  "schema_version": "1.0",
+  "board_id": "sonoff-basic-r3",
+  "display_name": "Sonoff Basic R3",
+  "chip": "ESP8285",
+  "manufacturer": "ITEAD",
+  "wireless": {
+    "wifi": ["2.4GHz"],
+    "wifi_standard": "WiFi 4 (b/g/n)",
+    "bluetooth": null,
+    "bluetooth_classic": false,
+    "thread": false,
+    "zigbee": false,
+    "lora": null,
+    "ethernet": null
+  },
+  "power": {
+    "usb_type": null,
+    "operating_voltage": 3.3,
+    "input_voltage_range": "100-240V AC mains",
+    "battery_connector": null,
+    "charging_ic": null,
+    "vbat_monitor_pin": null,
+    "deep_sleep_current_ua": 0,
+    "light_sleep_current_ma": null,
+    "modem_sleep_current_ma": null,
+    "solar_input": false,
+    "gpio_5v_tolerant": false
+  },
+  "memory": {
+    "flash_mb": 1,
+    "psram_mb": 0,
+    "psram_type": null,
+    "ram_kb": 80
+  },
+  "gpio": {
+    "valid_pins": [0, 12, 13, 14],
+    "strapping_pins": [0, 2, 15],
+    "reserved_for_usb": [],
+    "reserved_for_flash": [6, 7, 8, 9, 10, 11],
+    "input_only": [],
+    "adc1_pins": [17],
+    "adc2_pins": [],
+    "touch_pins": [],
+    "dac_pins": [],
+    "wake_source_pins": [0],
+    "i2c_default": {"sda": 4, "scl": 5},
+    "spi_default": {"mosi": 13, "miso": 12, "sck": 14, "cs": 15}
+  },
+  "onboard_components": {
+    "led_gpio": 13,
+    "led_type": "Single status LED (active-low)",
+    "boot_button_gpio": 0,
+    "reset_button": null,
+    "display": null,
+    "imu": null,
+    "buzzer": null
+  },
+  "smart_home_capabilities": {
+    "bluetooth_proxy": false,
+    "voice_assistant": false,
+    "matter_controller": false,
+    "matter_device": false,
+    "zigbee_coordinator": false,
+    "thread_border_router": false,
+    "ble_tracker": false,
+    "camera_support": false,
+    "battery_powered": false,
+    "ir_blaster": false,
+    "rf_proxy_cc1101": false
+  },
+  "ota_safety": {
+    "factory_reset_pin": 0,
+    "external_programmer_needed": true,
+    "usb_cdc_recovery": false,
+    "min_required_features_for_unbricking": ["wifi", "ota"]
+  },
+  "form_factor": {
+    "antenna": "PCB",
+    "ipex_connector": false,
+    "dimensions_mm": "91 x 42 x 20",
+    "certifications": ["CE", "FCC", "RoHS"],
+    "operating_temp_c": "0 to +40"
+  },
+  "limitations": {
+    "max_cpu_mhz": 160,
+    "no_dac": true,
+    "usb_blocks_gpio": [],
+    "psram_blocks_gpio": [],
+    "adc2_blocked_when_wifi_active": false,
+    "strapping_conflict_warnings": [
+      "Sonoff Basic R3 is a closed-hardware device. GPIO mapping is fixed: relay GPIO 12, LED GPIO 13, button GPIO 0, external switch pad GPIO 14.",
+      "Flashing custom firmware requires opening the case and connecting a UART programmer to the internal header.",
+      "ESP8285 has only 1MB integrated flash. ESPHome firmware must be kept small. Consider OTA only after initial serial flash."
+    ]
+  },
+  "lifecycle": {
+    "status": "legacy",
+    "released": "2019",
+    "deprecated_since": "2023",
+    "reason": "ESP8285 lacks BLE, Matter, and Thread. Choose Sonoff Mini R3 (ESP32-C3) or third-party ESP32 module for new projects.",
+    "successor": "sonoff-mini-r3"
+  },
+  "esphome": {
+    "platform": "esp8266",
+    "variant": "ESP8285",
+    "framework": "arduino",
+    "min_version": "2022.1.0"
+  },
+  "datasheet_url": "https://sonoff.tech/product/diy-smart-switch/basicr3/",
+  "last_verified": "2026-05-13",
+  "verified_source": "ITEAD Sonoff Basic R3 product page and hardware documentation",
+  "recommended_for": [
+    "Replacing existing Sonoff Basic units with ESPHome firmware",
+    "Single-load mains switching (lamp, small appliance)",
+    "Educational/maker projects with existing R3 hardware"
+  ],
+  "not_recommended_for": [
+    "New 2026 projects (legacy chip)",
+    "Bluetooth / Matter / Thread (chip lacks these radios)",
+    "Battery operation (mains-only design)",
+    "High-load switching above 10A"
+  ]
+}

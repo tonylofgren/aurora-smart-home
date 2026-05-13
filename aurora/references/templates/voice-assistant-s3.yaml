@@ -1,0 +1,70 @@
+# Voice Assistant (ESP32-S3 satellite)
+# Recommended board: ESP32-S3 DevKit C-1 (requires PSRAM for wake word)
+# External hardware: I2S microphone (e.g. INMP441) on GPIO 1/2/3, optional speaker via MAX98357A on GPIO 11/12/13
+# Variables: ${device_name}, ${friendly_name}
+
+esphome:
+  name: ${device_name}
+  friendly_name: ${friendly_name}
+  min_version: 2024.6.0
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: esp-idf
+  flash_size: 8MB
+
+psram:
+  mode: octal
+  speed: 80MHz
+
+logger:
+  level: INFO
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+# I2S microphone for wake word + streaming
+i2s_audio:
+  i2s_lrclk_pin: GPIO1
+  i2s_bclk_pin: GPIO2
+
+microphone:
+  - platform: i2s_audio
+    id: mic
+    adc_type: external
+    i2s_din_pin: GPIO3
+    pdm: false
+    sample_rate: 16000
+    bits_per_sample: 32bit
+
+# Optional speaker via MAX98357A
+speaker:
+  - platform: i2s_audio
+    id: spk
+    i2s_dout_pin: GPIO11
+    dac_type: external
+
+micro_wake_word:
+  models:
+    - model: okay_nabu
+  on_wake_word_detected:
+    - voice_assistant.start:
+        wake_word: !lambda return wake_word;
+
+voice_assistant:
+  microphone: mic
+  speaker: spk
+  use_wake_word: false
+  noise_suppression_level: 2
+  auto_gain: 31dBFS
+  volume_multiplier: 2.0

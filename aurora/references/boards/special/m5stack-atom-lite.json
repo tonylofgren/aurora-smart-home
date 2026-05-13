@@ -1,0 +1,128 @@
+{
+  "$schema": "../../schemas/board-profile.schema.json",
+  "schema_version": "1.0",
+  "board_id": "m5stack-atom-lite",
+  "display_name": "M5Stack Atom Lite",
+  "chip": "ESP32-PICO-D4",
+  "manufacturer": "M5Stack",
+  "wireless": {
+    "wifi": ["2.4GHz"],
+    "wifi_standard": "WiFi 4 (b/g/n)",
+    "bluetooth": "BLE 4.2",
+    "bluetooth_classic": true,
+    "thread": false,
+    "zigbee": false,
+    "lora": null,
+    "ethernet": null
+  },
+  "power": {
+    "usb_type": "USB-C",
+    "operating_voltage": 3.3,
+    "input_voltage_range": "5V (USB) or 3.3V",
+    "battery_connector": null,
+    "charging_ic": null,
+    "vbat_monitor_pin": null,
+    "deep_sleep_current_ua": 30,
+    "light_sleep_current_ma": 0.8,
+    "modem_sleep_current_ma": 20,
+    "solar_input": false,
+    "gpio_5v_tolerant": false
+  },
+  "memory": {
+    "flash_mb": 4,
+    "psram_mb": 0,
+    "psram_type": null,
+    "ram_kb": 520
+  },
+  "gpio": {
+    "valid_pins": [12,19,21,22,23,25,26,32,33],
+    "strapping_pins": [0,2,5,12,15],
+    "reserved_for_usb": [],
+    "reserved_for_flash": [6,7,8,9,10,11],
+    "input_only": [],
+    "adc1_pins": [32,33],
+    "adc2_pins": [25,26],
+    "touch_pins": [12,32,33],
+    "dac_pins": [25,26],
+    "wake_source_pins": [12,21,22,23,25,26,32,33],
+    "i2c_default": {"sda": 32, "scl": 26},
+    "spi_default": {"mosi": 23, "miso": 19, "sck": 18, "cs": 5}
+  },
+  "onboard_components": {
+    "led_gpio": 27,
+    "led_type": "SK6812 RGB",
+    "boot_button_gpio": 39,
+    "reset_button": "Side reset button",
+    "display": null,
+    "imu": null,
+    "buzzer": null
+  },
+  "smart_home_capabilities": {
+    "bluetooth_proxy": true,
+    "voice_assistant": false,
+    "matter_controller": true,
+    "matter_device": true,
+    "zigbee_coordinator": false,
+    "thread_border_router": false,
+    "ble_tracker": true,
+    "camera_support": false,
+    "battery_powered": false,
+    "ir_blaster": true,
+    "rf_proxy_cc1101": true
+  },
+  "ota_safety": {
+    "factory_reset_pin": 39,
+    "external_programmer_needed": false,
+    "usb_cdc_recovery": true,
+    "min_required_features_for_unbricking": ["wifi", "ota OR usb_cdc"]
+  },
+  "form_factor": {
+    "antenna": "PCB",
+    "ipex_connector": false,
+    "dimensions_mm": "24 x 24",
+    "certifications": ["FCC", "CE"],
+    "operating_temp_c": "0 to +60"
+  },
+  "limitations": {
+    "max_cpu_mhz": 240,
+    "no_dac": false,
+    "usb_blocks_gpio": [],
+    "psram_blocks_gpio": [],
+    "adc2_blocked_when_wifi_active": true,
+    "strapping_conflict_warnings": [
+      "Onboard SK6812 RGB LED on GPIO 27 (use as light platform)",
+      "Onboard IR LED on GPIO 12 (perfect for IR blaster)",
+      "Grove port default: GPIO 32 (SDA), GPIO 26 (SCL)",
+      "User button on GPIO 39 (input-only via internal pull-up)",
+      "Compact form factor: only ~9 GPIO exposed on edge connector and Grove"
+    ]
+  },
+  "lifecycle": {
+    "status": "active",
+    "released": "2020-03",
+    "deprecated_since": null,
+    "reason": null,
+    "successor": null
+  },
+  "esphome": {
+    "platform": "esp32",
+    "variant": "ESP32",
+    "framework": "esp-idf",
+    "min_version": "2022.1.0"
+  },
+  "datasheet_url": "https://docs.m5stack.com/en/core/atom_lite",
+  "last_verified": "2026-05-13",
+  "verified_source": "M5Stack Atom Lite documentation + schematic",
+  "recommended_for": [
+    "IR blaster (onboard IR LED on GPIO 12, no external hardware needed)",
+    "Compact bluetooth proxy",
+    "Grove ecosystem prototyping",
+    "Tabletop status indicator (onboard SK6812 RGB LED)",
+    "Beginner ESPHome project with USB-C and case"
+  ],
+  "not_recommended_for": [
+    "GPIO-heavy projects (only ~9 pins exposed)",
+    "Voice projects (no PSRAM, no microphone)",
+    "Battery projects (no built-in battery support on Atom Lite, use Atom S3 or Core variants)"
+  ]
+}

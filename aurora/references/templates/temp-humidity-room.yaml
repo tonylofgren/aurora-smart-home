@@ -1,0 +1,45 @@
+# Temperature + Humidity Room Monitor
+# Recommended board: ESP32-C3 Super Mini
+# External hardware: BME280 on I2C
+# Variables: ${device_name}, ${friendly_name}, ${room_name}
+
+esphome:
+  name: ${device_name}
+  friendly_name: ${friendly_name}
+
+esp32:
+  board: esp32-c3-mini
+  framework:
+    type: esp-idf
+
+logger:
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+i2c:
+  sda: GPIO4
+  scl: GPIO5
+  scan: true
+
+sensor:
+  - platform: bme280_i2c
+    address: 0x76
+    temperature:
+      name: "${room_name} Temperature"
+      filters:
+        - offset: 0.0  # adjust if your sensor reads high (self-heating)
+    humidity:
+      name: "${room_name} Humidity"
+    pressure:
+      name: "${room_name} Pressure"
+    update_interval: 30s

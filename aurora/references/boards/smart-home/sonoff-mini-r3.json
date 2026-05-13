@@ -1,0 +1,126 @@
+{
+  "$schema": "../../schemas/board-profile.schema.json",
+  "schema_version": "1.0",
+  "board_id": "sonoff-mini-r3",
+  "display_name": "Sonoff Mini R3",
+  "chip": "ESP32-C3",
+  "manufacturer": "ITEAD",
+  "wireless": {
+    "wifi": ["2.4GHz"],
+    "wifi_standard": "WiFi 4 (b/g/n)",
+    "bluetooth": "BLE 5.0",
+    "bluetooth_classic": false,
+    "thread": false,
+    "zigbee": false,
+    "lora": null,
+    "ethernet": null
+  },
+  "power": {
+    "usb_type": null,
+    "operating_voltage": 3.3,
+    "input_voltage_range": "100-240V AC mains",
+    "battery_connector": null,
+    "charging_ic": null,
+    "vbat_monitor_pin": null,
+    "deep_sleep_current_ua": 0,
+    "light_sleep_current_ma": null,
+    "modem_sleep_current_ma": null,
+    "solar_input": false,
+    "gpio_5v_tolerant": false
+  },
+  "memory": {
+    "flash_mb": 4,
+    "psram_mb": 0,
+    "psram_type": null,
+    "ram_kb": 400
+  },
+  "gpio": {
+    "valid_pins": [4, 5, 6, 9],
+    "strapping_pins": [2, 8, 9],
+    "reserved_for_usb": [],
+    "reserved_for_flash": [11, 12, 13, 14, 15, 16, 17],
+    "input_only": [],
+    "adc1_pins": [4, 5],
+    "adc2_pins": [],
+    "touch_pins": [],
+    "dac_pins": [],
+    "wake_source_pins": [4, 5, 9],
+    "i2c_default": {"sda": 5, "scl": 6},
+    "spi_default": {"mosi": 7, "miso": 2, "sck": 6, "cs": 10}
+  },
+  "onboard_components": {
+    "led_gpio": 6,
+    "led_type": "Single status LED",
+    "boot_button_gpio": 9,
+    "reset_button": null,
+    "display": null,
+    "imu": null,
+    "buzzer": null
+  },
+  "smart_home_capabilities": {
+    "bluetooth_proxy": true,
+    "voice_assistant": false,
+    "matter_controller": false,
+    "matter_device": true,
+    "zigbee_coordinator": false,
+    "thread_border_router": false,
+    "ble_tracker": true,
+    "camera_support": false,
+    "battery_powered": false,
+    "ir_blaster": false,
+    "rf_proxy_cc1101": false
+  },
+  "ota_safety": {
+    "factory_reset_pin": 9,
+    "external_programmer_needed": true,
+    "usb_cdc_recovery": false,
+    "min_required_features_for_unbricking": ["wifi", "ota"]
+  },
+  "form_factor": {
+    "antenna": "PCB",
+    "ipex_connector": false,
+    "dimensions_mm": "39.5 x 33 x 16.8",
+    "certifications": ["CE", "FCC", "RoHS"],
+    "operating_temp_c": "0 to +40"
+  },
+  "limitations": {
+    "max_cpu_mhz": 160,
+    "no_dac": true,
+    "usb_blocks_gpio": [],
+    "psram_blocks_gpio": [],
+    "adc2_blocked_when_wifi_active": false,
+    "strapping_conflict_warnings": [
+      "Sonoff Mini R3 is a closed-hardware device. GPIO mapping is fixed: relay GPIO 4, external switch input GPIO 5, status LED GPIO 6, button/boot GPIO 9.",
+      "Flashing custom firmware requires opening the case and connecting a UART programmer.",
+      "GPIO 2, 8, 9 are strapping pins on ESP32-C3. GPIO 9 (boot) must be HIGH at normal boot."
+    ]
+  },
+  "lifecycle": {
+    "status": "active",
+    "released": "2022",
+    "deprecated_since": null,
+    "reason": null,
+    "successor": null
+  },
+  "esphome": {
+    "platform": "esp32",
+    "variant": "ESP32C3",
+    "framework": "esp-idf",
+    "min_version": "2023.4.0"
+  },
+  "datasheet_url": "https://sonoff.tech/product/diy-smart-switch/minir3/",
+  "last_verified": "2026-05-13",
+  "verified_source": "ITEAD Sonoff Mini R3 product page and hardware documentation",
+  "recommended_for": [
+    "Behind-the-switch smart switch with detect mode (DIY)",
+    "Matter-over-WiFi switch",
+    "ESPHome conversion of stock Sonoff firmware",
+    "Compact installations needing modern BLE+WiFi"
+  ],
+  "not_recommended_for": [
+    "GPIO modification beyond stock pinout",
+    "Multi-channel control (single relay only)",
+    "Voice assistant satellite (no audio)",
+    "Battery projects (mains-only)"
+  ]
+}
