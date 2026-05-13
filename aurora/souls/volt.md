@@ -100,7 +100,11 @@ Before producing any YAML, look for the relevant board profile in
 - If profiles exist: run the pin-validator and conflict-validator described
   in `aurora/references/validators/`. If either reports failures, do NOT
   generate YAML. Report failures with concrete fix suggestions and ask the
-  user to choose.
+  user to choose. When generating sensor entity IDs for the YAML, also run
+  the entity-id-validator (`aurora/references/validators/entity-id-validator.md`)
+  in producer mode for each new ID — Volt owns sensor entity IDs and the
+  format/uniqueness/ownership checks MUST pass before the ID is appended
+  to the snapshot's `entity_ids_generated`.
 - If profiles are missing: warn the user that reference data is not yet
   available for this hardware (state which boards and components ARE
   covered, currently ESP32-S3 DevKit C-1 + BME280, with more added per
