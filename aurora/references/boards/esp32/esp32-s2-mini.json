@@ -1,0 +1,114 @@
+{
+  "$schema": "../../schemas/board-profile.schema.json",
+  "schema_version": "1.0",
+  "board_id": "esp32-s2-mini",
+  "display_name": "ESP32-S2 Mini",
+  "chip": "ESP32-S2",
+  "manufacturer": "Wemos / LOLIN",
+  "wireless": {
+    "wifi": ["2.4GHz"],
+    "wifi_standard": "WiFi 4 (b/g/n)",
+    "bluetooth": null,
+    "bluetooth_classic": false,
+    "thread": false,
+    "zigbee": false,
+    "lora": null,
+    "ethernet": null
+  },
+  "power": {
+    "usb_type": "USB-C",
+    "operating_voltage": 3.3,
+    "input_voltage_range": "5V (USB) or 3.3V",
+    "battery_connector": null,
+    "charging_ic": null,
+    "vbat_monitor_pin": null,
+    "deep_sleep_current_ua": 22,
+    "light_sleep_current_ma": 0.9,
+    "modem_sleep_current_ma": 20,
+    "solar_input": false,
+    "gpio_5v_tolerant": false
+  },
+  "memory": {
+    "flash_mb": 4,
+    "psram_mb": 0,
+    "psram_type": null,
+    "ram_kb": 320
+  },
+  "gpio": {
+    "valid_pins": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46],
+    "strapping_pins": [0,45,46],
+    "reserved_for_usb": [19,20],
+    "reserved_for_flash": [22,23,24,25],
+    "input_only": [46],
+    "adc1_pins": [1,2,3,4,5,6,7,8,9,10],
+    "adc2_pins": [11,12,13,14,15,16,17,18,19,20],
+    "touch_pins": [1,2,3,4,5,6,7,8,9,10,11,12,13,14],
+    "dac_pins": [17,18],
+    "wake_source_pins": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21],
+    "i2c_default": {"sda": 8, "scl": 9},
+    "spi_default": {"mosi": 35, "miso": 37, "sck": 36, "cs": 34}
+  },
+  "onboard_components": {
+    "led_gpio": 15,
+    "led_type": "single LED",
+    "boot_button_gpio": 0,
+    "reset_button": "EN pin",
+    "display": null,
+    "imu": null,
+    "buzzer": null
+  },
+  "smart_home_capabilities": {
+    "bluetooth_proxy": false,
+    "voice_assistant": false,
+    "matter_controller": false,
+    "matter_device": false,
+    "zigbee_coordinator": false,
+    "thread_border_router": false,
+    "ble_tracker": false,
+    "camera_support": true,
+    "battery_powered": false,
+    "ir_blaster": true,
+    "rf_proxy_cc1101": true
+  },
+  "ota_safety": {
+    "factory_reset_pin": 0,
+    "external_programmer_needed": false,
+    "usb_cdc_recovery": true,
+    "min_required_features_for_unbricking": ["wifi", "ota OR usb_cdc"]
+  },
+  "form_factor": {
+    "antenna": "PCB",
+    "ipex_connector": false,
+    "dimensions_mm": "34.3 x 25.4",
+    "certifications": ["FCC", "CE"],
+    "operating_temp_c": "-40 to +85"
+  },
+  "limitations": {
+    "max_cpu_mhz": 240,
+    "no_dac": false,
+    "usb_blocks_gpio": [19,20],
+    "psram_blocks_gpio": [],
+    "adc2_blocked_when_wifi_active": true,
+    "strapping_conflict_warnings": [
+      "GPIO 0 must be HIGH at boot (pulled up internally)",
+      "GPIO 45 controls VDD_SPI voltage — avoid pulling HIGH at boot",
+      "GPIO 46 is input-only and must be LOW at boot for normal operation"
+    ]
+  },
+  "lifecycle": {
+    "status": "active",
+    "released": "2021-01",
+    "deprecated_since": null,
+    "reason": null,
+    "successor": null
+  },
+  "esphome": {
+    "platform": "esp32",
+    "variant": "ESP32S2",
+    "framework": "arduino",
+    "min_version": "2022.1.0"
+  },
+  "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-s2_datasheet_en.pdf",
+  "last_verified": "2026-05-13",
+  "verified_source": "Espressif ESP32-S2 Datasheet v1.3 + esphome/references/pinouts.md"
+}
