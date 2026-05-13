@@ -132,7 +132,7 @@ Every profile carries pin layouts, capability matrices, voltage requirements, `r
 | Hardware | Notes |
 |----------|-------|
 | Smart home boards (Shelly Plus, Sonoff, LilyGo, M5Stack, Heltec) | Product-specific pinouts |
-| RP2040 / RP2350 | Raspberry Pi Pico family |
+| Raspberry Pi Pico W (RP2040) and Pico 2 W (RP2350) | WiFi variants only; bare Pico/Pico 2 lack WiFi |
 | ESP32-P4, ESP32-C61 | Pending stable ESPHome support (currently experimental) |
 | Project templates (bluetooth proxy, voice assistant, etc.) | Quick-start scaffolds |
 | Retroactive YAML validation for existing configs | "Does my YAML look right?" mode |

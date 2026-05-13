@@ -10,7 +10,7 @@ User-facing coverage (what works today, what is coming) lives in [README.md](REA
 |-------|-------|--------|----------|
 | 1 | Foundation: JSON Schemas + pin/conflict validators + ESP32-S3 DevKit C-1 + BME280 + Iron Law 6 + pytest suite | ✅ Complete | v1.6.0 (2026-05-13) |
 | 2 | Foundation expansion: ESP32 classic, S2, C3, C6, H2, P4, C61, ESP8266 + 9+ common sensors + GPIO expanders (PCF8574, MCP23017, PCA9685, TCA9548A) + voltage level shifters (TXS0108E, BSS138) | 🔵 Next | TBD |
-| 3 | Smart home boards: Shelly Plus 1/2PM, Sonoff Basic R3 / Mini R3, LilyGo T-Display S3, M5Stack Atom / Core, Heltec WiFi LoRa, RP2040 Pico, RP2350 Pico 2 | ⏳ Planned | TBD |
+| 3 | Smart home boards: Shelly Plus 1/2PM, Sonoff Basic R3 / Mini R3, LilyGo T-Display S3, M5Stack Atom / Core, Heltec WiFi LoRa, Raspberry Pi Pico W (RP2040 + WiFi), Pico 2 W (RP2350 + WiFi, preliminary) | ⏳ Planned | TBD |
 | 4 | Project templates library: bluetooth proxy, voice assistant (ESP32-S3), air quality monitor, presence sensor (radar), battery soil sensor, multi-relay controller, temp/humidity room | ⏳ Planned | TBD |
 | 5 | Cross-agent validation: hand-off protocol + Ada/Sage/River/Mira/Atlas/Iris validation modules | ⏳ Planned | TBD |
 | 6 | External components catalog: community ESPHome packages (LD2410, Tuya MCU, NSPanel Pro, etc.) with source URL validation and maintenance status tracking | ⏳ Planned | TBD |
