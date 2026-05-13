@@ -46,6 +46,8 @@ Then restart Claude Code so the new files load.
 
 **Better solution:** enable auto-update once and forget. See [Enable Auto-Update](#enable-auto-update) below.
 
+Aurora also self-reports its release date in the banner. If your aurora banner is more than 3 months past the date shown, it is time to update.
+
 ---
 
 ## At a Glance
