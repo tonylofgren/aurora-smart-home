@@ -1,0 +1,46 @@
+# Air Quality Monitor (CO2 + temp + humidity)
+# Recommended board: ESP32-C3 Super Mini
+# External hardware: SCD40 CO2 sensor on I2C, optional OLED display
+# Variables: ${device_name}, ${friendly_name}, ${room_name}
+
+esphome:
+  name: ${device_name}
+  friendly_name: ${friendly_name}
+
+esp32:
+  board: esp32-c3-mini
+  framework:
+    type: esp-idf
+
+logger:
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+i2c:
+  sda: GPIO4
+  scl: GPIO5
+  scan: true
+
+sensor:
+  - platform: scd4x
+    co2:
+      name: "${room_name} CO2"
+      accuracy_decimals: 0
+    temperature:
+      name: "${room_name} Temperature"
+    humidity:
+      name: "${room_name} Humidity"
+    update_interval: 30s
+    address: 0x62
+    measurement_mode: periodic
+    automatic_self_calibration: true
