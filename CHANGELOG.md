@@ -8,6 +8,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.6.7] - 2026-05-14
+
+### Added
+
+**CI / CD pipeline runs pytest (Plan 8):**
+- New `pytest-suite` job in `.github/workflows/validate.yaml` runs the full 539-test pytest suite on every push to `main` and on every pull request to `main`. Python 3.13 pinned, dependencies installed from `requirements-dev.txt`, pip caches between runs, per-run summary reported in the GitHub Actions UI. Schema regressions, validator contract drift, soul Iron Law removals, and reference-data corruption now fail the build before merge instead of after.
+- Workflow path triggers extended to include `aurora/**`, `.claude-plugin/**`, and `requirements-dev.txt` so changes to schemas, profiles, souls, validators, or test dependencies actually trigger CI. The existing YAML lint, Markdown lint, structure check, and ESPHome config validation jobs are unchanged.
+
+**Schema-versioning operational doc (Plan 8):**
+- `aurora/references/schemas/SCHEMA-VERSIONING.md` spells out when to bump major / minor / patch on profile `schema_version` fields, what counts as a backwards-incompatible change, the in-PR workflow for landing schema changes (decide bump size, edit schema, re-run pytest, update profiles in the same PR for major bumps, add CHANGELOG entry), and what schema versioning explicitly does NOT cover. Calls out per-version `$id` URLs and migration tooling as future work rather than pretending they are solved.
+
+### Testing infrastructure
+
+- 14 new pytest tests covering the CI workflow's pytest job (pytest invoked, `aurora/tests` target, Python version pinned, pip caching configured, install from `requirements-dev.txt`), the schema-versioning doc (file exists, bump rules enumerated, backwards-compat addressed, pytest gate named), and contribution-flow docs (top-level `CONTRIBUTING.md`, PR template, bug report and feature request issue templates, requirements-dev.txt pins pytest + jsonschema).
+- 539 tests total (plus 5 intentionally-skipped tests).
+
+### Plan 8 closes the session
+
+Plans 5 (cross-agent hand-off + per-agent validators), 6 (community-component infrastructure), 7 (tiered errors + retroactive YAML review), and 8 (CI/CD + schema versioning) have all shipped between 1.6.0 and 1.6.7. Recommended freeze after this release. The aurora plugin grew from a generation-only skill into a validation-first orchestrator with 11 markdown validator specs, 8 DEEP-mode specialist souls each carrying both Iron Laws, full hand-off protocol, community-component infrastructure with explicit unknown-component handling, tiered error output, retroactive YAML review, and CI-enforced contract tests.
+
 ## [1.6.6] - 2026-05-14
 
 ### Added

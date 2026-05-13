@@ -10,6 +10,9 @@ on:
       - 'esphome/**'
       - 'home-assistant/**'
       - 'ha-integration-dev/**'
+      - 'aurora/**'
+      - '.claude-plugin/**'
+      - 'requirements-dev.txt'
       - '*.md'
   pull_request:
     branches: [main]
@@ -17,9 +20,38 @@ on:
       - 'esphome/**'
       - 'home-assistant/**'
       - 'ha-integration-dev/**'
+      - 'aurora/**'
+      - '.claude-plugin/**'
+      - 'requirements-dev.txt'
       - '*.md'
 
 jobs:
+  pytest-suite:
+    name: Aurora reference data + validator tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+
+      - name: Install test dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Run pytest suite
+        run: python -m pytest aurora/tests/ -v
+
+      - name: Report test count
+        if: always()
+        run: |
+          echo "## Pytest Summary" >> $GITHUB_STEP_SUMMARY
+          echo '' >> $GITHUB_STEP_SUMMARY
+          python -m pytest aurora/tests/ --collect-only -q 2>/dev/null | tail -5 >> $GITHUB_STEP_SUMMARY || true
+
   validate-yaml:
     name: Validate YAML files
     runs-on: ubuntu-latest
