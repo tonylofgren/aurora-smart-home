@@ -453,14 +453,50 @@ Develop **Python custom components** for Home Assistant (custom_components, HACS
 
 The orchestration layer that routes requests to the right specialist agent (21 total) and consults machine-readable reference data to keep generated code correct.
 
-**21 specialist agents** organized by domain:
-- **Hardware**: Volt (ESP32), Nano (Matter/Thread), Echo (voice), Watt (power)
-- **Home Assistant logic**: Sage (YAML), Ada (Python), Mira (LLM), River (Node-RED), Iris (dashboards)
-- **External data**: Atlas (APIs)
-- **Quality**: Glitch (debug), Probe (QA), Vera (WAF), Lens (security), Manual (docs)
-- **Research**: Scout, Lore
-- **Infrastructure**: Forge (deploy), Grid (network)
-- **Design**: Canvas
+**Meet the 21 agents.** Each one has a defined domain, a soul, and a voice. Aurora is the orchestrator; the other 20 are specialists.
+
+🏠 **Aurora** — Smart home orchestrator. *"Your home should work for you — locally, privately, without asking permission."*
+
+**Smart Home Hardware**
+
+- ⚡ **Volt** — ESP32/ESP8266/Shelly firmware + IR proxy. *"Board first — then we build."*
+- 📡 **Nano** — Matter, Thread, BLE, embedded protocols. *"Matter over Thread is the right call here. Let me explain why."*
+- 🎙️ **Echo** — Voice, audio, wake word, Assist pipeline. *"Let's make sure your voice pipeline is solid end to end."*
+- 🔋 **Watt** — Power budget, battery sizing, solar dimensioning. *"Before we spec the battery — what's the duty cycle?"*
+
+**Home Assistant Logic**
+
+- 🧙 **Sage** — YAML automations, blueprints, scripts, helpers. *"Automation, blueprint, or script? Each one has a different shape."*
+- ❤️ **Ada** — Python custom integrations, coordinators, config flows. *"This will fail in production. You need `dt_util.now()`."*
+- 🤖 **Mira** — LLM, AI, conversation agents. *"Are we responding to commands, or inferring intent?"*
+- 🌊 **River** — Node-RED visual automation flows. *"Map the flow first — trigger → condition → action."*
+- 🦄 **Iris** — Dashboard visual design. *"Imagine walking into the room. What do you want to know at a glance?"*
+
+**External Data**
+
+- 🏪 **Atlas** — External API patterns, OAuth, community integrations. *"Someone's already solved this. Let me show you how the community does it."*
+
+**Quality & Review**
+
+- 🐛 **Glitch** — Cross-skill debugging. *"Paste the full log. Not the part you think matters — all of it."*
+- ✅ **Probe** — QA, testing, validation. *"Looks right — but let's test the edge cases first."*
+- 🏡 **Vera** — WAF + hardware safety review. *"What happens when the motion sensor misses? Can someone turn the light on manually?"*
+- 🔬 **Lens** — Code review, security audit. *"Three things need fixing here. Not suggestions — these will cause incidents."*
+- 📖 **Manual** — Installation guides, troubleshooting docs. *"The firmware is done. Now let's make sure someone else can install it."*
+
+**Research & Documentation**
+
+- 🔭 **Scout** — Research, investigation. *"Give me a moment — I've seen this discussed somewhere."*
+- 📚 **Lore** — Documentation writing. *"The setup section assumes the user already has HACS installed."*
+
+**Infrastructure**
+
+- 🔧 **Forge** — Deploy, Docker, server, backups. *"Before we update — do you have a full backup from today?"*
+- 🌐 **Grid** — Network, UniFi, firewall, VLAN. *"That device is probably on the wrong VLAN."*
+
+**Design**
+
+- 🎨 **Canvas** — Graphic design, UI beyond dashboards. *"The layout works but it has seven things asking for attention at once."*
 
 **Reference data validated against authoritative sources:**
 - `aurora/references/boards/`: per-chip GPIO layouts, capability matrices, OTA safety

@@ -20,8 +20,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `aurora/references/handoff/` registered in the Reference Data section so specialists discover the protocol
 - Snapshot-Aware Coordination Iron Law added to every DEEP-mode specialist soul (Volt, Ada, Sage, Iris, Vera, Atlas, Mira, River). Each law is tailored to the agent's per-field ownership: writers list the fields they own, read-only agents (Iris, Vera) state the prohibition explicitly. All agents share the QUICK-mode exemption and the `conflict_log` escape hatch instead of overwriting peer fields.
 
+**Documentation:**
+- README agent roster — every one of the 21 agents (Aurora orchestrator + 20 specialists) now gets a distinctive entry with its emoji, domain, and a voice tagline drawn from its soul file. Replaces the previous one-line domain summary.
+
 **Testing infrastructure:**
-- 95 new pytest tests covering snapshot schema validity, example correctness, SKILL.md wiring (Step 7 contract), and per-soul snapshot awareness (333 total)
+- 100 new pytest tests covering snapshot schema validity, example correctness, SKILL.md wiring (Step 7 contract), per-soul snapshot awareness, and README agent roster integrity (338 total)
 
 ### Changed / Fixed
 
