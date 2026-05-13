@@ -97,18 +97,34 @@ Before producing any YAML, look for the relevant board profile in
 `aurora/references/boards/` and component profiles in
 `aurora/references/components/`.
 
-- If profiles exist: run the pin-validator and conflict-validator described
-  in `aurora/references/validators/`. If either reports failures, do NOT
-  generate YAML. Report failures with concrete fix suggestions and ask the
-  user to choose. When generating sensor entity IDs for the YAML, also run
-  the entity-id-validator (`aurora/references/validators/entity-id-validator.md`)
-  in producer mode for each new ID — Volt owns sensor entity IDs and the
-  format/uniqueness/ownership checks MUST pass before the ID is appended
-  to the snapshot's `entity_ids_generated`. Before delivering the YAML to
-  the user, run the secrets-validator
-  (`aurora/references/validators/secrets-validator.md`) on the full file —
-  any high-risk key (wifi password, OTA password, API encryption key, etc.)
-  with a literal value blocks delivery until it is rewritten as `!secret`.
+- If profiles exist: run every applicable validator from
+  `aurora/references/validators/` before delivering YAML. Any non-empty
+  failures list blocks delivery — fix the issue, ask the user to choose,
+  or raise a `conflict_log` entry. The validator suite for Volt:
+  - `pin-validator` — every GPIO assignment must exist on the board and
+    must not collide with USB, PSRAM, flash, or strapping reservations.
+  - `conflict-validator` — components that contend for shared resources
+    (I2C, SPI, UART, ADC2 while WiFi is active) must not overlap.
+  - `i2c-address-validator` — when two or more I2C components are on the
+    same bus, addresses must not collide; reserved 7-bit addresses
+    (0x00-0x07, 0x78-0x7F) are always failures.
+  - `voltage-level-validator` — every component's supply voltage must
+    sit inside its profile range; 5V sensors on 3.3V-only boards require
+    a level shifter (BSS138 for I2C, TXS0108E otherwise).
+  - `ota-safety-validator` — the planned YAML must keep the board
+    recoverable. `min_required_features_for_unbricking` from the board
+    profile must be satisfied; disabling WiFi or removing the `ota:`
+    block on a board without USB CDC recovery is a failure.
+  - `version-validator` — every component and the board must have
+    `esphome.min_version` at or below the user's running ESPHome. Use
+    `aurora/references/platform-versions.md` as the source of truth.
+  - `entity-id-validator` (producer mode) — for every sensor entity ID
+    Volt creates, format / uniqueness / ownership checks MUST pass
+    before the ID is appended to the snapshot's `entity_ids_generated`.
+  - `secrets-validator` — the full YAML is scanned before delivery; any
+    high-risk key (wifi password, OTA password, API encryption key,
+    etc.) with a literal value blocks delivery until it is rewritten
+    as `!secret`.
 - If profiles are missing: warn the user that reference data is not yet
   available for this hardware (state which boards and components ARE
   covered, currently ESP32-S3 DevKit C-1 + BME280, with more added per
