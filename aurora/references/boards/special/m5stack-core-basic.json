@@ -1,0 +1,129 @@
+{
+  "$schema": "../../schemas/board-profile.schema.json",
+  "schema_version": "1.0",
+  "board_id": "m5stack-core-basic",
+  "display_name": "M5Stack Core Basic",
+  "chip": "ESP32-D0WDQ6",
+  "manufacturer": "M5Stack",
+  "wireless": {
+    "wifi": ["2.4GHz"],
+    "wifi_standard": "WiFi 4 (b/g/n)",
+    "bluetooth": "BLE 4.2",
+    "bluetooth_classic": true,
+    "thread": false,
+    "zigbee": false,
+    "lora": null,
+    "ethernet": null
+  },
+  "power": {
+    "usb_type": "USB-C",
+    "operating_voltage": 3.3,
+    "input_voltage_range": "5V (USB) or 3.7V LiPo internal 150mAh",
+    "battery_connector": "Built-in 150mAh LiPo",
+    "charging_ic": "Onboard charger",
+    "vbat_monitor_pin": null,
+    "deep_sleep_current_ua": 100,
+    "light_sleep_current_ma": 2.0,
+    "modem_sleep_current_ma": 22,
+    "solar_input": false,
+    "gpio_5v_tolerant": false
+  },
+  "memory": {
+    "flash_mb": 16,
+    "psram_mb": 4,
+    "psram_type": "QSPI",
+    "ram_kb": 520
+  },
+  "gpio": {
+    "valid_pins": [0,2,5,13,16,17,21,22,26,32,35,36,39],
+    "strapping_pins": [0,2,5,12,15],
+    "reserved_for_usb": [],
+    "reserved_for_flash": [6,7,8,9,10,11],
+    "input_only": [35,36,39],
+    "adc1_pins": [32,35,36,39],
+    "adc2_pins": [0,2,13,26],
+    "touch_pins": [0,2,13,32],
+    "dac_pins": [25,26],
+    "wake_source_pins": [0,2,5,13,16,17,21,22,26,32,35,36,39],
+    "i2c_default": {"sda": 21, "scl": 22},
+    "spi_default": {"mosi": 23, "miso": 19, "sck": 18, "cs": 5}
+  },
+  "onboard_components": {
+    "led_gpio": null,
+    "led_type": null,
+    "boot_button_gpio": 0,
+    "reset_button": "Side button",
+    "display": "ILI9342C 2 inch 320x240 SPI TFT",
+    "imu": "MPU6886 6-axis on I2C",
+    "buzzer": "1W speaker via NS4168 amp on GPIO 25 DAC"
+  },
+  "smart_home_capabilities": {
+    "bluetooth_proxy": true,
+    "voice_assistant": true,
+    "matter_controller": true,
+    "matter_device": true,
+    "zigbee_coordinator": false,
+    "thread_border_router": false,
+    "ble_tracker": true,
+    "camera_support": false,
+    "battery_powered": true,
+    "ir_blaster": false,
+    "rf_proxy_cc1101": true
+  },
+  "ota_safety": {
+    "factory_reset_pin": 0,
+    "external_programmer_needed": false,
+    "usb_cdc_recovery": true,
+    "min_required_features_for_unbricking": ["wifi", "ota OR usb_cdc"]
+  },
+  "form_factor": {
+    "antenna": "PCB",
+    "ipex_connector": false,
+    "dimensions_mm": "54 x 54 x 17",
+    "certifications": ["FCC", "CE"],
+    "operating_temp_c": "0 to +60"
+  },
+  "limitations": {
+    "max_cpu_mhz": 240,
+    "no_dac": false,
+    "usb_blocks_gpio": [],
+    "psram_blocks_gpio": [],
+    "adc2_blocked_when_wifi_active": true,
+    "strapping_conflict_warnings": [
+      "Display reserves GPIO 14 (CS), 27 (DC), 33 (RST), 18 (SCK), 23 (MOSI)",
+      "Speaker on GPIO 25 (DAC) via NS4168 amplifier",
+      "MPU6886 IMU on I2C GPIO 21 (SDA), 22 (SCL)",
+      "User buttons: GPIO 37 (A), 38 (B), 39 (C) all input-only",
+      "Built-in 150mAh LiPo battery has limited capacity for sustained operation"
+    ]
+  },
+  "lifecycle": {
+    "status": "active",
+    "released": "2017-09",
+    "deprecated_since": null,
+    "reason": null,
+    "successor": null
+  },
+  "esphome": {
+    "platform": "esp32",
+    "variant": "ESP32",
+    "framework": "esp-idf",
+    "min_version": "2022.1.0"
+  },
+  "datasheet_url": "https://docs.m5stack.com/en/core/basic_v2.7",
+  "last_verified": "2026-05-13",
+  "verified_source": "M5Stack Core Basic documentation + schematic",
+  "recommended_for": [
+    "Programmable display panel for HA status",
+    "Audio doorbell receiver with notifications (1W speaker built-in)",
+    "Stack-on-modules (Faces, Bottom2 expansion)",
+    "Educational kit with full software/hardware ecosystem",
+    "Tabletop control panel for smart home scenes"
+  ],
+  "not_recommended_for": [
+    "Low-power battery sensors (150mAh internal LiPo is small)",
+    "Outdoor mounting (no IP rating)",
+    "Speaker-quality audio (1W mono speaker is rudimentary)",
+    "GPIO-heavy custom hardware (most pins reserved for display/speaker/IMU)"
+  ]
+}
