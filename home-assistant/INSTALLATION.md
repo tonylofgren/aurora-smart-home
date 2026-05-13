@@ -36,15 +36,23 @@ Create a simple automation that turns on a light when motion is detected
 
 ## Update
 
+Since v1.3, all aurora skills (including Home Assistant) ship as the single `aurora@aurora-smart-home` plugin.
+
 ```bash
-/plugin update supercharge-home-assistant-skill
+# Inside Claude Code — refreshes every installed plugin
+/reload-plugins
+
+# From your terminal — targeted at aurora
+claude plugin update aurora@aurora-smart-home
 ```
+
+The slash command `/plugin` opens an interactive UI; it does not accept arguments like `/plugin update <name>`.
 
 ### Enable Auto-Update
 
 1. Run `/plugin` to open the plugin manager
 2. Go to **Marketplaces** tab
-3. Select `supercharge-smart-home-claude-skills`
+3. Select `aurora-smart-home`
 4. Choose **Enable auto-update**
 
 ---

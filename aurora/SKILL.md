@@ -26,7 +26,7 @@ When activated, first output `v1.6.0 (released 2026-05-13)` on its own line, the
   │    21 Agents  ·  3 Model Tiers  ·  Community Project    │
   │          A Claude Code Skill  ·  nabucasa.com           │
   │                                                         │
-  │  Stay updated: /plugin update aurora@aurora-smart-home  │
+  │  Update: claude plugin update aurora@aurora-smart-home  │
   │        github.com/tonylofgren/aurora-smart-home         │
   └─────────────────────────────────────────────────────────┘
 ```
@@ -41,7 +41,9 @@ asking the project question:
 
 ```
 🔔 This Aurora release is over 3 months old. New boards and sensors land
-   regularly. Update: `/plugin update aurora@aurora-smart-home`
+   regularly. Update from your terminal:
+   `claude plugin update aurora@aurora-smart-home`
+   (then `/reload-plugins` or restart Claude Code)
 ```
 
 Only show the freshness notice when actually stale (>90 days). Skip it otherwise.

@@ -42,9 +42,17 @@ Create a basic Python custom integration skeleton for Home Assistant
 
 ## Update
 
+Since v1.3, all aurora skills (including this one) ship as the single `aurora@aurora-smart-home` plugin.
+
 ```bash
-/plugin update ha-integration@aurora-smart-home
+# Inside Claude Code — refreshes every installed plugin
+/reload-plugins
+
+# From your terminal — targeted at aurora
+claude plugin update aurora@aurora-smart-home
 ```
+
+The slash command `/plugin` opens an interactive UI; it does not accept arguments like `/plugin update <name>`.
 
 ### Enable Auto-Update
 

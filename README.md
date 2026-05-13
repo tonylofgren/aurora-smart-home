@@ -24,12 +24,25 @@ The most comprehensive Claude Code skill pack for smart home development. **New 
 
 ## 🔄 Already Installed? Update to v1.6.0
 
-Claude Code does **not** auto-update installed plugins by default. New aurora releases ship validated boards, sensors, templates, and validator improvements regularly. To get the latest:
+Claude Code does **not** auto-update installed plugins by default. New aurora releases ship validated boards, sensors, templates, and validator improvements regularly.
+
+**Fast option — inside Claude Code:**
 
 ```
-/plugin update aurora@aurora-smart-home
 /reload-plugins
 ```
+
+This pulls the latest version of every installed plugin (aurora included) and loads them into the current session.
+
+**Targeted option — from your terminal (outside Claude Code):**
+
+```
+claude plugin update aurora@aurora-smart-home
+```
+
+Then restart Claude Code so the new files load.
+
+**Note:** the slash command `/plugin` opens an interactive UI but does **not** accept arguments like `/plugin update <name>`. Only `/reload-plugins` or the CLI form above actually update aurora.
 
 **Better solution:** enable auto-update once and forget. See [Enable Auto-Update](#enable-auto-update) below.
 
@@ -558,18 +571,17 @@ See individual skill READMEs for detailed installation and usage:
 
 ## Update & Uninstall
 
-```bash
-# Update a skill
-/plugin update ha-yaml@aurora-smart-home
-/plugin update node-red@aurora-smart-home
-/plugin update esphome@aurora-smart-home
-/plugin update ha-integration@aurora-smart-home
+Aurora ships as one plugin (`aurora@aurora-smart-home`) since v1.3 — there are no separate skill plugins to update.
 
-# Uninstall a skill (use interactive UI - see note below)
-/plugin uninstall ha-yaml@aurora-smart-home
-/plugin uninstall node-red@aurora-smart-home
-/plugin uninstall esphome@aurora-smart-home
-/plugin uninstall ha-integration@aurora-smart-home
+```bash
+# Update — inside Claude Code (refreshes all installed plugins)
+/reload-plugins
+
+# Update — from your terminal (CLI), targeted at aurora
+claude plugin update aurora@aurora-smart-home
+
+# Uninstall — use the interactive UI
+/plugin
 ```
 
 ---
