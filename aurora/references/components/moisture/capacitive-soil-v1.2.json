@@ -1,0 +1,54 @@
+{
+  "$schema": "../../../schemas/component-profile.schema.json",
+  "schema_version": "1.0",
+  "component_id": "capacitive-soil-v12",
+  "display_name": "Capacitive Soil Moisture Sensor v1.2",
+  "type": "soil_moisture",
+  "category": "environment",
+  "protocol": "analog",
+  "last_verified": "2026-05-13",
+  "variants": {
+    "primary": "capacitive-soil-v12",
+    "easily_confused_with": [
+      {
+        "component_id": "capacitive-soil-v10",
+        "difference": "v1.0/v1.1 are known knockoffs with corrosion problems on power rail; v1.2 uses separate 555 timer chip and gold plating on traces"
+      }
+    ],
+    "knockoffs_known": true,
+    "verification_method": "Genuine v1.2 has a separate 555 timer chip visible on board and gold-plated immersion traces; knockoffs have fused design or bare copper"
+  },
+  "pin_requirements": {
+    "count": 1,
+    "type": "adc",
+    "adc_required": true,
+    "input_only_ok": true,
+    "strapping_pin_ok": false,
+    "5v_tolerant_required": false,
+    "interrupt_capable_required": false
+  },
+  "external_components": {
+    "pullup_resistor": null,
+    "decoupling_cap": null
+  },
+  "power": {
+    "voltage_min": 3.3,
+    "voltage_max": 5.5,
+    "tolerates_5v": true,
+    "level_shifter_required_on_5v_board": false,
+    "current_ma_active": 5,
+    "current_sleep_ua": 0
+  },
+  "limitations": {
+    "output_type": "analog_voltage",
+    "note": "Output voltage decreases with increasing moisture; requires per-sensor calibration for accurate readings"
+  },
+  "calibration": {
+    "required": true,
+    "type": "two_point_dry_wet_reference"
+  },
+  "esphome": {
+    "platform": "adc",
+    "min_version": "2022.1.0"
+  }
+}
