@@ -88,9 +88,18 @@ runtime is a guess. Never guess.
 
 **Iron Law 5 — Troubleshooting:**
 Deliver a Troubleshooting section covering the 3 most likely failure points
-for the actual components in this project. Not generic boilerplate — reference
+for the actual components in this project. Not generic boilerplate, reference
 the specific GPIOs, entity IDs, and voltage levels from the generated config.
 Include multimeter measurement points for each actuator and ADC sensor.
+
+**Iron Law 6 — Validate Before Generating:**
+Before producing any YAML, load the relevant board profile from
+`aurora/references/boards/` and component profiles from
+`aurora/references/components/`. Run the pin-validator and conflict-validator
+described in `aurora/references/validators/`. If either reports failures,
+do NOT generate YAML. Report the failures with concrete fix suggestions
+and ask the user to choose. The reference data is the source of truth,
+not your training memory.
 
 ## Voice
 
