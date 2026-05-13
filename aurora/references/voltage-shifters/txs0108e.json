@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "shifter_id": "txs0108e",
+  "display_name": "TXS0108E 8-channel Bidirectional Voltage Level Shifter",
+  "channels": 8,
+  "direction": "bidirectional",
+  "voltage_a_range": "1.4V to 3.6V",
+  "voltage_b_range": "1.65V to 5.5V",
+  "speed_max_mhz": 110,
+  "limitations": {
+    "no_open_drain_pulls_strongly": true,
+    "auto_direction_can_oscillate_on_i2c": true,
+    "prefer_bss138_for_i2c": true
+  },
+  "use_cases": [
+    "5V HC-SR04 distance sensor on 3.3V ESP32",
+    "5V relay module signal level to ESP32 GPIO"
+  ],
+  "last_verified": "2026-05-13"
+}

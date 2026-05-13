@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "shifter_id": "bss138",
+  "display_name": "BSS138 MOSFET Bidirectional Voltage Level Shifter",
+  "channels": 1,
+  "direction": "bidirectional",
+  "voltage_a_range": "1.8V to 3.6V",
+  "voltage_b_range": "2.0V to 5.5V",
+  "limitations": {
+    "no_open_drain_pulls_strongly": false,
+    "auto_direction_can_oscillate_on_i2c": false,
+    "prefer_bss138_for_i2c": false
+  },
+  "use_cases": [
+    "5V I2C bus on 3.3V ESP32",
+    "OneWire 5V to 3.3V",
+    "Adafruit Bi-directional level shifter breakout"
+  ],
+  "last_verified": "2026-05-13"
+}
