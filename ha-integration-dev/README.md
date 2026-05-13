@@ -17,9 +17,9 @@ Complete reference for developing **Home Assistant custom integrations in Python
    /plugin marketplace add tonylofgren/aurora-smart-home
    ```
 
-2. **Install the skill**
+2. **Install aurora** (since v1.3, this skill ships as part of the single aurora plugin)
    ```
-   /plugin install ha-integration@aurora-smart-home
+   /plugin install aurora@aurora-smart-home
    ```
 
 3. **Restart Claude Code** (exit and reopen)

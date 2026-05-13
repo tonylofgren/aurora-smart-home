@@ -15,10 +15,10 @@
 # Add the marketplace repository
 /plugin marketplace add tonylofgren/aurora-smart-home
 
-# Install the skill (choose one scope)
-/plugin install ha-integration@aurora-smart-home                    # Global (default)
-/plugin install ha-integration@aurora-smart-home --scope project    # Team (shared via git)
-/plugin install ha-integration@aurora-smart-home --scope local      # This project only
+# Install aurora (since v1.3, all skills ship as one plugin — choose one scope)
+/plugin install aurora@aurora-smart-home                    # Global (default)
+/plugin install aurora@aurora-smart-home --scope project    # Team (shared via git)
+/plugin install aurora@aurora-smart-home --scope local      # This project only
 ```
 
 Restart Claude Code after installation.
@@ -69,7 +69,7 @@ Use the interactive UI for complete removal:
 
 1. Run `/plugin`
 2. Go to **Installed** tab
-3. Select `ha-integration`
+3. Select `aurora`
 4. Choose **Uninstall**
 
 **Note:** The CLI command `/plugin uninstall` only disables plugins.
@@ -83,7 +83,7 @@ To move from one scope to another (e.g., user → local):
 1. Uninstall via interactive UI (see above)
 2. Reinstall with new scope:
    ```bash
-   /plugin install ha-integration@aurora-smart-home --scope local
+   /plugin install aurora@aurora-smart-home --scope local
    ```
 
 ---

@@ -258,10 +258,10 @@ By default, skills install globally (`--scope user`). You can also scope them:
 
 ```bash
 # Shared with your team via git (committed to .claude/settings.json)
-/plugin install ha-yaml@aurora-smart-home --scope project
+/plugin install aurora@aurora-smart-home --scope project
 
 # Only for you in this project (gitignored, .claude/settings.local.json)
-/plugin install ha-yaml@aurora-smart-home --scope local
+/plugin install aurora@aurora-smart-home --scope local
 ```
 
 | Scope | Stored in | Shared? | Use when |
@@ -608,7 +608,7 @@ To move a plugin from one scope to another (e.g., user → local):
 3. Select the plugin and choose **Uninstall**
 4. Reinstall with new scope:
    ```bash
-   /plugin install ha-yaml@aurora-smart-home --scope local
+   /plugin install aurora@aurora-smart-home --scope local
    ```
 
 **Note:** Use the interactive UI to uninstall - the CLI command `/plugin uninstall` only disables plugins.

@@ -118,8 +118,8 @@ See [INSTALLATION.md](INSTALLATION.md) for detailed setup instructions.
 # In Claude Code, add the marketplace repository
 /plugin marketplace add tonylofgren/aurora-smart-home
 
-# Then install the skill
-/plugin install ha-yaml@aurora-smart-home
+# Then install aurora (since v1.3, Home Assistant ships as part of the single aurora plugin)
+/plugin install aurora@aurora-smart-home
 ```
 
 See [INSTALLATION.md](INSTALLATION.md) for all installation options including scope selection.

@@ -87,13 +87,9 @@ Run these commands in Claude Code (one at a time):
 ```bash
 /plugin marketplace add tonylofgren/aurora-smart-home
 /plugin install aurora@aurora-smart-home
-/plugin install ha-yaml@aurora-smart-home
-/plugin install esphome@aurora-smart-home
-/plugin install node-red@aurora-smart-home
-/plugin install ha-integration@aurora-smart-home
 ```
 
-That's it. Skills are now available in every project.
+That's it. Since v1.3, all skills (Home Assistant, ESPHome, Node-RED, integration dev, etc.) ship as part of the single `aurora` plugin — no need to install them separately.
 
 > **Auto-update:** Run `/plugin` → Marketplaces → aurora-smart-home → Enable auto-update, and your skills stay current automatically.
 

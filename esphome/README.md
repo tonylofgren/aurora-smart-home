@@ -19,9 +19,9 @@ Complete **ESPHome device firmware** assistant for Claude Code. Create, configur
    /plugin marketplace add tonylofgren/aurora-smart-home
    ```
 
-2. **Install the skill**
+2. **Install aurora** (since v1.3, ESPHome ships as part of the single aurora plugin)
    ```
-   /plugin install esphome@aurora-smart-home
+   /plugin install aurora@aurora-smart-home
    ```
 
 3. **Restart Claude Code** (exit and reopen)
