@@ -1,0 +1,55 @@
+# Presence Sensor (LD2410 radar)
+# Recommended board: ESP32-C3 Super Mini
+# External hardware: HLK-LD2410 radar module on UART
+# Variables: ${device_name}, ${friendly_name}, ${room_name}
+
+esphome:
+  name: ${device_name}
+  friendly_name: ${friendly_name}
+
+esp32:
+  board: esp32-c3-mini
+  framework:
+    type: esp-idf
+
+logger:
+  baud_rate: 0  # disable UART logger so UART can be used for LD2410
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+uart:
+  tx_pin: GPIO0
+  rx_pin: GPIO1
+  baud_rate: 256000
+  parity: NONE
+  stop_bits: 1
+
+ld2410:
+
+binary_sensor:
+  - platform: ld2410
+    has_target:
+      name: "${room_name} Presence"
+    has_moving_target:
+      name: "${room_name} Moving Target"
+    has_still_target:
+      name: "${room_name} Still Target"
+
+sensor:
+  - platform: ld2410
+    moving_distance:
+      name: "${room_name} Moving Distance"
+    still_distance:
+      name: "${room_name} Still Distance"
+    detection_distance:
+      name: "${room_name} Detection Distance"
