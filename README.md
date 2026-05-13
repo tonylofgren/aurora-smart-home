@@ -22,6 +22,21 @@ The most comprehensive Claude Code skill pack for smart home development. **New 
 
 ---
 
+## 🔄 Already Installed? Update to v1.6.0
+
+Claude Code does **not** auto-update installed plugins by default. New aurora releases ship validated boards, sensors, templates, and validator improvements regularly. To get the latest:
+
+```
+/plugin update aurora@aurora-smart-home
+/reload-plugins
+```
+
+**Better solution:** enable auto-update once and forget. See [Enable Auto-Update](#enable-auto-update) below.
+
+Aurora also self-reports its release date in the banner. If your aurora banner is more than 3 months past the date shown, it is time to update.
+
+---
+
 ## At a Glance
 
 |  | Home Assistant | Node-RED | ESPHome | Integration Dev | Aurora Orchestrator |
