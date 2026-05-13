@@ -110,5 +110,19 @@
   },
   "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-c3_datasheet_en.pdf",
   "last_verified": "2026-05-13",
-  "verified_source": "Espressif ESP32-C3 Datasheet v1.9 + esphome/references/pinouts.md"
+  "verified_source": "Espressif ESP32-C3 Datasheet v1.9 + esphome/references/pinouts.md",
+  "recommended_for": [
+    "Compact battery-powered sensors (small form factor + deep sleep)",
+    "Single-relay smart switches",
+    "Bluetooth proxy in tight spaces",
+    "Matter device commissioning",
+    "Replacement for legacy ESP8266 D1 Mini (same form factor, modern radio)",
+    "Mass production builds (lowest cost ESP32 with BLE 5.0)"
+  ],
+  "not_recommended_for": [
+    "Voice assistant (single RISC-V core, small RAM 400KB)",
+    "Camera projects (no PSRAM, limited GPIO)",
+    "Projects needing 10+ GPIO simultaneously (only 22 valid pins total)",
+    "Thread or Zigbee (no 802.15.4 radio)"
+  ]
 }

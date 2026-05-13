@@ -113,5 +113,20 @@
   },
   "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/0a-esp8266ex_datasheet_en.pdf",
   "last_verified": "2026-05-13",
-  "verified_source": "Espressif ESP8266 datasheet + Wemos D1 Mini schematic"
+  "verified_source": "Espressif ESP8266 datasheet + Wemos D1 Mini schematic",
+  "recommended_for": [
+    "Legacy projects using existing D1 Mini hardware (drop-in support)",
+    "Simple WiFi sensors with one or two GPIO needs",
+    "IR blaster (single GPIO output)",
+    "Educational starter projects (huge tutorial base)",
+    "Cheap WiFi-to-relay bridges where modern features are unneeded"
+  ],
+  "not_recommended_for": [
+    "New projects in 2026+ (legacy; use ESP32-C3 Super Mini, same form factor with BLE 5.0)",
+    "Bluetooth proxy or BLE projects (no Bluetooth radio at all!)",
+    "Matter device (no BLE for commissioning)",
+    "Thread, Zigbee, or any 802.15.4 protocol",
+    "Voice assistant (insufficient RAM/CPU)",
+    "Projects needing more than one ADC input (only A0 exposed, 0-1V range)"
+  ]
 }

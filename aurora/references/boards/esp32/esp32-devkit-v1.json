@@ -112,5 +112,17 @@
   },
   "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf",
   "last_verified": "2026-05-13",
-  "verified_source": "Espressif ESP32 Datasheet v4.6 + esphome/references/pinouts.md"
+  "verified_source": "Espressif ESP32 Datasheet v4.6 + esphome/references/pinouts.md",
+  "recommended_for": [
+    "Bluetooth Classic projects (only ESP32 family with BT Classic)",
+    "Multi-sensor stations needing many GPIO (39 pins available)",
+    "Touch capacitive switch panels (10 touch-capable pins)",
+    "DAC audio output projects",
+    "Learning ESP32 fundamentals (most documentation targets this chip)"
+  ],
+  "not_recommended_for": [
+    "New Matter or Thread projects (use ESP32-C6 instead)",
+    "Compact form-factor builds (board is 55x28mm)",
+    "Low-cost mass production (ESP32-C3 is cheaper with BLE 5.0)"
+  ]
 }

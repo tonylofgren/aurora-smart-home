@@ -110,5 +110,16 @@
   },
   "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-s3_datasheet_en.pdf",
   "last_verified": "2026-05-13",
-  "verified_source": "Espressif official + Arduino-ESP32 v3.0"
+  "verified_source": "Espressif official + Arduino-ESP32 v3.0",
+  "recommended_for": [
+    "Voice assistant satellite (PSRAM enables wake word and streaming)",
+    "Bluetooth proxy for 16+ BLE devices",
+    "Matter controller and device",
+    "Camera projects (ESP32-CAM upgrade path)",
+    "IR/RF blaster with audio feedback"
+  ],
+  "not_recommended_for": [
+    "Ultra-low-power battery projects (modem sleep current ~20mA is high)",
+    "Single-relay switches (overkill, use ESP32-C3 Super Mini for ~1/3 cost)"
+  ]
 }

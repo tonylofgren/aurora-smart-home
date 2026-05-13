@@ -110,5 +110,17 @@
   },
   "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-s2_datasheet_en.pdf",
   "last_verified": "2026-05-13",
-  "verified_source": "Espressif ESP32-S2 Datasheet v1.3 + esphome/references/pinouts.md"
+  "verified_source": "Espressif ESP32-S2 Datasheet v1.3 + esphome/references/pinouts.md",
+  "recommended_for": [
+    "USB HID projects (keyboard, mouse, MIDI emulation)",
+    "USB OTG host applications",
+    "WiFi-only projects in compact form factor",
+    "Touch capacitive panels (14 touch pins)"
+  ],
+  "not_recommended_for": [
+    "Bluetooth proxy or BLE tracker (no Bluetooth radio at all!)",
+    "Matter projects (no BLE for commissioning)",
+    "Voice assistant (single core insufficient for streaming)",
+    "Any project requiring BLE"
+  ]
 }

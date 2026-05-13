@@ -112,5 +112,18 @@
   },
   "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-c6_datasheet_en.pdf",
   "last_verified": "2026-05-13",
-  "verified_source": "Espressif ESP32-C6 Datasheet v1.4 + esphome/references/pinouts.md"
+  "verified_source": "Espressif ESP32-C6 Datasheet v1.4 + esphome/references/pinouts.md",
+  "recommended_for": [
+    "Matter device with Thread connectivity",
+    "Thread border router",
+    "Zigbee coordinator (USB stick replacement)",
+    "WiFi 6 capable IoT devices",
+    "Future-proof smart home hub builds",
+    "Combined BLE + Thread + WiFi 6 projects"
+  ],
+  "not_recommended_for": [
+    "Voice assistant (single core, limited RAM)",
+    "Camera projects (limited GPIO, no PSRAM by default)",
+    "Bluetooth Classic projects (BLE-only, no BT Classic)"
+  ]
 }

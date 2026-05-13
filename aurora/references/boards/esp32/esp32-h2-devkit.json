@@ -112,5 +112,18 @@
   },
   "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-h2_datasheet_en.pdf",
   "last_verified": "2026-05-13",
-  "verified_source": "Espressif official datasheet + ESPHome 2023.10 release notes"
+  "verified_source": "Espressif official datasheet + ESPHome 2023.10 release notes",
+  "recommended_for": [
+    "Thread border router (no WiFi traffic interferes)",
+    "Zigbee coordinator (clean 802.15.4 dedication)",
+    "Matter device on Thread backbone",
+    "Mesh network nodes where WiFi is undesirable",
+    "Battery-powered Thread sensors (low power, dedicated radio)"
+  ],
+  "not_recommended_for": [
+    "Any project requiring WiFi (chip has no WiFi radio at all!)",
+    "Standalone smart home device (requires Thread border router or Ethernet to reach HA)",
+    "Voice assistant (single core, no streaming bandwidth)",
+    "Cloud-direct API integrations without Thread infrastructure"
+  ]
 }
