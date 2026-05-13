@@ -40,6 +40,23 @@ The most comprehensive Claude Code skill pack for smart home development - from 
 > /reload-plugins
 > ```
 
+### What's New in v1.6.0
+
+**Aurora Validation Foundation (Plan 1 of 8)**
+
+Volt no longer relies on training memory for GPIO and component data. Aurora now ships machine-readable reference data and validators that Volt MUST consult before generating ESPHome YAML:
+
+- JSON Schemas for board and component profiles (`aurora/references/schemas/`)
+- ESP32-S3 DevKit C-1 board profile with full capability data (`aurora/references/boards/`)
+- BME280 component profile with BMP280 disambiguation (`aurora/references/components/`)
+- Pin validator and conflict validator (`aurora/references/validators/`)
+- Iron Law 6 in Volt's soul: validate before generating
+- pytest suite covering schemas, data integrity, and Volt workflow simulation (36 passing)
+
+Future plans (2 through 8) expand boards, components, templates, cross-agent hand-off, external components, advanced features, and CI/CD.
+
+---
+
 ### What's New in v1.5.1 (2026-05-11)
 
 #### Home Assistant 2026.5
