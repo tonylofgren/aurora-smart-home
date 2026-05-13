@@ -7,12 +7,14 @@
 > **75,000+ lines** of documentation | **900+ example prompts** | **1,500+ code examples**
 > **21 agents** | **6 Iron Laws** | **JSON-validated reference data**
 
-The most comprehensive Claude Code skill pack for smart home development. **New in v1.6.1:** cross-agent DEEP mode now flows through a schema-validated project snapshot so Volt → Sage → Iris stay in sync instead of re-deriving state from chat history. Builds on v1.6.0's validation-before-generation foundation. Covers automations, custom integrations, Node-RED flows, dashboards, and full product development from idea to manufacturing.
+The most comprehensive Claude Code skill pack for smart home development. **New in v1.6.2:** five more validators land — `ota-safety`, `i2c-address`, `voltage-level`, `version`, `async-correctness` — and Ada / Iris / Atlas pick up their own "Validate Before Generating" Iron Law alongside Sage. Builds on v1.6.1's cross-agent hand-off and v1.6.0's validation-before-generation foundation. Covers automations, custom integrations, Node-RED flows, dashboards, and full product development from idea to manufacturing.
+
+> **No runtime dependencies.** Aurora is a Claude Code plugin made of markdown and JSON. The agents (Claude) read the files directly; nothing is executed on your machine. Python + pytest are only needed if a developer wants to run the test suite locally.
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skills-7c3aed.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Home Assistant](https://img.shields.io/badge/Home_Assistant-2024.x--2026.x-41BDF5.svg)](https://www.home-assistant.io/)
 [![ESPHome](https://img.shields.io/badge/ESPHome-2026.4.5-000000.svg)](https://esphome.io/)
-[![Version](https://img.shields.io/badge/Version-v1.6.1-success.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-v1.6.2-success.svg)](CHANGELOG.md)
 [![Validated](https://img.shields.io/badge/Validated-against_datasheets-success.svg)](aurora/references/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -22,7 +24,7 @@ The most comprehensive Claude Code skill pack for smart home development. **New 
 
 ---
 
-## 🔄 Already Installed? Update to v1.6.1
+## 🔄 Already Installed? Update to v1.6.2
 
 Claude Code does **not** auto-update installed plugins by default. New aurora releases ship validated boards, sensors, templates, and validator improvements regularly.
 
@@ -122,6 +124,32 @@ Aurora runs like a small smart home agency. 1 orchestrator + 20 named specialist
 
 ---
 
+### What's New in v1.6.2
+
+**Five more validators**
+
+The validator suite doubles. Each is a markdown spec (the established `pin-validator.md` / `conflict-validator.md` pattern), so the plugin still ships zero executable code.
+
+- `ota-safety-validator` (Volt) — refuses to ship YAML that would leave the board unrecoverable. Enforces every board profile's `min_required_features_for_unbricking`.
+- `i2c-address-validator` (Volt) — catches the classic BME280 + BMP280 collision at 0x76, calls out the reserved address ranges, routes around conflicts via address-strap pins or a TCA9548A multiplexer.
+- `voltage-level-validator` (Volt) — flags 5V sensors on 3.3V-only boards and recommends the right level shifter (BSS138 for I2C, TXS0108E otherwise) with concrete profile references.
+- `version-validator` (Volt + Sage) — cross-checks every referenced feature against `aurora/references/platform-versions.md` and the user's running ESPHome / HA version, including date-style semver comparison rules.
+- `async-correctness-validator` (Ada, Mira) — flags the eighty-percent of HA async bugs LLM-generated integrations ship: `datetime.now()`, `requests.get/post/...`, `time.sleep` in coroutines, `subprocess.run`, sync `open()` inside coroutines.
+
+**Iron Law 2 propagates to three more specialists**
+
+Following the Sage Iron Law 2 pattern from v1.6.1, three more specialist souls now have their own "Validate Before Generating" law:
+
+- **Ada** (full) — runs `async-correctness-validator` on every Python file and `entity-id-validator` in producer mode for every entity the integration creates.
+- **Iris** (thin) — runs `entity-id-validator` in consumer mode for every card reference. Iris is read-only of `entity_ids_generated`; missing references become `conflict_log` entries.
+- **Atlas** (thin) — runs `secrets-validator` on every YAML snippet that wires an external API.
+
+Mira and River intentionally stay at Iron Law 1 (snapshot-aware coordination) until their domain validators (`llm-config-validator`, `node-red-syntax-validator`) ship — adding the law to a soul before the validator exists creates dead references.
+
+**Volt's Iron Law 6 expanded**
+
+Volt now invokes all eight applicable validators on every YAML output: pin, conflict, i2c-address, voltage-level, ota-safety, version, entity-id (producer mode), secrets. The graceful fallback for missing reference data is unchanged.
+
 ### What's New in v1.6.1
 
 **Cross-agent DEEP mode hand-off**
@@ -209,7 +237,7 @@ When data is not yet available for the requested hardware, Volt warns explicitly
 
 Volt's validators check assignments against machine-readable profiles. When a profile exists, Volt cannot generate YAML that breaks against it. When a profile does not yet exist, Volt warns explicitly and falls back to training memory with extra caution.
 
-**Validated today (v1.6.1):**
+**Validated today (v1.6.2):**
 
 | Category | Hardware |
 |----------|----------|

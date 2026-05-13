@@ -8,6 +8,35 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.6.2] - 2026-05-13
+
+### Added
+
+**Five more validators (Plan 5 Phase 3 D+):**
+- `aurora/references/validators/ota-safety-validator.md` — Volt validator that enforces the board profile's `min_required_features_for_unbricking`. Disabling WiFi or removing the `ota:` block on a board without USB CDC recovery is a failure. AP fallback recommendations and strapping-pin factory-reset warnings round it out.
+- `aurora/references/validators/i2c-address-validator.md` — Volt validator that verifies no two devices on the same I2C bus share an address. Calls out the I2C-reserved 7-bit ranges (`0x00-0x07`, `0x78-0x7F`), supports multiplexer (TCA9548A) channel isolation, GPIO expander address collisions, and speed-mismatch warnings.
+- `aurora/references/validators/voltage-level-validator.md` — Volt validator that verifies supply voltages stay inside each component profile's range. Flags 5V sensors on 3.3V-only boards and recommends BSS138 (I2C) or TXS0108E (general-purpose) level shifters, with concrete profile references.
+- `aurora/references/validators/version-validator.md` — Volt + Sage validator that cross-checks every referenced feature, component, and integration against `aurora/references/platform-versions.md` and the user's running ESPHome / Home Assistant version. Date-style semver comparison spelled out explicitly. Handles deprecation warnings and experimental-feature flags.
+- `aurora/references/validators/async-correctness-validator.md` — Ada + Mira validator that catches the high-frequency HA async bugs LLM-generated integrations commonly ship: `datetime.now()` instead of `dt_util.now()`, `requests.get/post/...` instead of `aiohttp`, `time.sleep` in coroutines, `subprocess.run`, sync `open(` inside async functions. Tight, enumerated pattern list with documented exemptions (imports, comments, docstrings, string literals).
+
+**Iron Law 2 propagation to three more specialists (Plan 5 Phase 4):**
+- **Ada** gains full Iron Law 2 (`Validate Before Generating`): invokes `async-correctness-validator` on every Python file and `entity-id-validator` in producer mode for every entity the integration creates. Notes `python-secrets-validator` as planned-but-not-shipped and steers credentials to `config_entry` / environment variables until it lands.
+- **Iris** gains thin Iron Law 2: invokes `entity-id-validator` in consumer mode for every card reference. Iris is read-only of `entity_ids_generated`; missing references become `conflict_log` entries asking Volt / Ada / Sage to add the entity, not invented `sensor.fake_thing` references.
+- **Atlas** gains thin Iron Law 2: invokes `secrets-validator` on every YAML snippet that wires an external API or community integration, including snippets included with recommendations.
+- Mira and River intentionally stay at Iron Law 1 (snapshot-aware coordination) until their domain validators (`llm-config-validator`, `node-red-syntax-validator`) ship.
+
+**Volt's Iron Law 6 expanded:**
+- From 2 named validators (pin, conflict) at the start of v1.6.0 to 8 named validators at v1.6.2: pin, conflict, i2c-address, voltage-level, ota-safety, version, entity-id (producer mode), secrets. Restructured as a bulleted suite for readability. The graceful fallback for missing reference data is unchanged.
+
+### Documentation
+
+- README hero line mentions v1.6.2's headline changes (five new validators + Iron Law 2 propagation).
+- README notes Aurora has **no runtime dependencies** — the plugin is markdown + JSON, consumed by Claude reading files directly. Python + pytest are only needed if a developer wants to run the test suite locally.
+
+### Testing infrastructure
+
+- 59 new pytest tests (427 total, plus 2 intentionally-skipped negative tests for Mira / River): 36 covering the five new validator docs, 23 covering Iron Law 2 propagation across Ada / Iris / Atlas (plus negative tests asserting Mira and River do NOT yet have Iron Law 2).
+
 ## [1.6.1] - 2026-05-13
 
 ### Added
