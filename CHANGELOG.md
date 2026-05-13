@@ -45,8 +45,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 **Voltage level shifters (2 chips):**
 - TXS0108E (8-channel bidirectional), BSS138 (MOSFET-based, recommended for I2C)
 
+**Cross-agent hand-off protocol:**
+- JSON Schema for project snapshots (`aurora/references/schemas/project-snapshot.schema.json`)
+- Hand-off protocol documentation (`aurora/references/handoff/_protocol.md`) defining storage location, lifecycle, per-field ownership, conflict handling
+- Example multi-agent snapshot (`aurora/references/handoff/examples/living-room-sensor.json`) covering Volt → Sage → Iris workflow
+- Foundation for DEEP mode (2+ agents collaborating); per-agent Iron Law 6 propagation parked for later phases pending per-agent reference data
+
 **Testing infrastructure:**
-- pytest test suite covering schemas, data integrity, and Volt workflow simulation (160+ tests)
+- pytest test suite covering schemas, data integrity, Volt workflow simulation, and project snapshot hand-off (250 tests)
 - Schema validation in CI, negative tests, URI format enforcement
 
 **Documentation and disclaimers:**

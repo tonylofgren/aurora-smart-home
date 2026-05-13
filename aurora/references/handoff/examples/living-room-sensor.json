@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0",
+  "project_id": "8c2f3d1a-7b6e-4a5c-9d8f-1e2a3b4c5d6e",
+  "project_name": "Living room sensor",
+  "created_at": "2026-05-13T22:00:00Z",
+  "updated_at": "2026-05-13T22:35:42Z",
+  "snapshot_file_path": "aurora-project.json",
+  "current_agent": "iris",
+  "agents_completed": ["volt", "sage"],
+  "agents_pending": ["iris"],
+  "user_requirements": [
+    "Living room temperature and humidity",
+    "Presence detection so lights only stay on when someone is in the room",
+    "Dashboard tile showing the room state at a glance"
+  ],
+  "selected_board": "esp32-c3-mini",
+  "selected_components": ["bme280", "ld2410"],
+  "gpio_allocation": {
+    "bme280": {
+      "sda": 8,
+      "scl": 9
+    },
+    "ld2410": {
+      "tx": 4,
+      "rx": 5
+    }
+  },
+  "entity_ids_generated": [
+    "sensor.living_room_temperature",
+    "sensor.living_room_humidity",
+    "binary_sensor.living_room_presence"
+  ],
+  "esphome_filename": "living-room-sensor.yaml",
+  "ha_yaml_files": [
+    "automations.yaml"
+  ],
+  "validation_results": {
+    "volt": {
+      "status": "passed",
+      "validators_run": ["pin-validator", "conflict-validator"],
+      "failures": [],
+      "warnings": [],
+      "completed_at": "2026-05-13T22:15:10Z"
+    },
+    "sage": {
+      "status": "passed",
+      "validators_run": [],
+      "failures": [],
+      "warnings": [],
+      "completed_at": "2026-05-13T22:35:42Z"
+    },
+    "iris": {
+      "status": "pending",
+      "validators_run": [],
+      "failures": [],
+      "warnings": [],
+      "completed_at": null
+    }
+  },
+  "conflict_log": [],
+  "notes": [
+    {
+      "author": "volt",
+      "text": "Chose ESP32-C3-MINI because user wants Matter-ready hardware and the C3 supports it via ESPHome 2025.x. ESP32-S3 was an alternative but adds cost without features the user asked for.",
+      "added_at": "2026-05-13T22:10:00Z"
+    }
+  ]
+}
