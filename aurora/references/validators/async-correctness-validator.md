@@ -58,6 +58,9 @@ For each forbidden pattern in the list above:
 - Warnings: list of warning strings. Ada surfaces these but does not block delivery.
 - Failures: list of failure strings. Ada MUST NOT deliver the file if non-empty.
 
+
+Failure and warning entries follow the four-tier output defined in [`_tiered-errors.md`](_tiered-errors.md): `❌ Problem` (short) / `📚 Explanation` (medium) / `🔧 Fix` (concrete) / `💡 Deeper` (optional). Tiers 1 and 3 are mandatory for every failure; tier 2 is added during the next round of edits where it is still missing.
+
 ## Why This List Is Narrow
 
 The validator does not attempt to detect:

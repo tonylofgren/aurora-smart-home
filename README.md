@@ -7,14 +7,14 @@
 > **75,000+ lines** of documentation | **900+ example prompts** | **1,500+ code examples**
 > **21 agents** | **6 Iron Laws** | **JSON-validated reference data**
 
-The most comprehensive Claude Code skill pack for smart home development. **New in v1.6.2:** five more validators land — `ota-safety`, `i2c-address`, `voltage-level`, `version`, `async-correctness` — and Ada / Iris / Atlas pick up their own "Validate Before Generating" Iron Law alongside Sage. Builds on v1.6.1's cross-agent hand-off and v1.6.0's validation-before-generation foundation. Covers automations, custom integrations, Node-RED flows, dashboards, and full product development from idea to manufacturing.
+The most comprehensive Claude Code skill pack for smart home development. **New in v1.6.3:** every validator now emits **tiered error messages** — `❌ Problem` (short) / `📚 Explanation` (medium) / `🔧 Fix` (concrete) / `💡 Deeper` (optional) — so beginners get a clear "what's wrong + what to do" pair and curious users get the underlying constraint. Builds on v1.6.2's expanded validator suite and v1.6.1's cross-agent hand-off. Covers automations, custom integrations, Node-RED flows, dashboards, and full product development from idea to manufacturing.
 
 > **No runtime dependencies.** Aurora is a Claude Code plugin made of markdown and JSON. The agents (Claude) read the files directly; nothing is executed on your machine. Python + pytest are only needed if a developer wants to run the test suite locally.
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skills-7c3aed.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Home Assistant](https://img.shields.io/badge/Home_Assistant-2024.x--2026.x-41BDF5.svg)](https://www.home-assistant.io/)
 [![ESPHome](https://img.shields.io/badge/ESPHome-2026.4.5-000000.svg)](https://esphome.io/)
-[![Version](https://img.shields.io/badge/Version-v1.6.2-success.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-v1.6.3-success.svg)](CHANGELOG.md)
 [![Validated](https://img.shields.io/badge/Validated-against_datasheets-success.svg)](aurora/references/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -24,7 +24,7 @@ The most comprehensive Claude Code skill pack for smart home development. **New 
 
 ---
 
-## 🔄 Already Installed? Update to v1.6.2
+## 🔄 Already Installed? Update to v1.6.3
 
 Claude Code does **not** auto-update installed plugins by default. New aurora releases ship validated boards, sensors, templates, and validator improvements regularly.
 
@@ -123,6 +123,35 @@ Aurora runs like a small smart home agency. 1 orchestrator + 20 named specialist
 - 🎨 **Canvas** — Graphic design, UI beyond dashboards. *"The layout works but it has seven things asking for attention at once."*
 
 ---
+
+### What's New in v1.6.3
+
+**Tiered error messages across every validator**
+
+Validator output used to be one line: `❌ GPIO 19 conflicts with USB`. Beginners hit that and didn't know whether to move the pin, disable USB, or use a different board. Experienced users skipped past the explanation. This release introduces a four-tier output format every validator now emits:
+
+```
+❌ Problem (short):
+GPIO 19 cannot be used on ESP32-S3 DevKit C-1 while USB CDC is enabled.
+
+📚 Explanation (medium):
+The ESP32-S3 routes USB D+/D- to GPIO 19/20. With usb_cdc: enabled,
+these pins are reserved and any assignment to them collides with USB.
+
+🔧 Fix (concrete):
+Move the sensor to GPIO 8 (SDA) and GPIO 9 (SCL), the board's default
+I2C pins. In living-room-sensor.yaml change line 12 from sda: 19 to
+sda: 8 and line 13 from scl: 20 to scl: 9.
+
+💡 Deeper (optional):
+USB-OTG uses differential signalling on D+/D- mapped to these GPIOs.
+You can set usb_cdc: false to free them, but you lose USB serial
+console — only OTA-over-WiFi remains for log inspection.
+```
+
+Tiers 1 and 3 are mandatory for every failure (so the user always gets "what's wrong, what to do"); tiers 2 and 4 add context for users who want it. Warnings use the same shape with `⚠️ Warning` instead of `❌ Problem`.
+
+The shared format spec lives at `aurora/references/validators/_tiered-errors.md`. Every validator (pin, conflict, entity-id, secrets, ota-safety, i2c-address, voltage-level, version, async-correctness) references it from its Output section, so agents that read one validator see the contract immediately.
 
 ### What's New in v1.6.2
 
@@ -237,7 +266,7 @@ When data is not yet available for the requested hardware, Volt warns explicitly
 
 Volt's validators check assignments against machine-readable profiles. When a profile exists, Volt cannot generate YAML that breaks against it. When a profile does not yet exist, Volt warns explicitly and falls back to training memory with extra caution.
 
-**Validated today (v1.6.2):**
+**Validated today (v1.6.3):**
 
 | Category | Hardware |
 |----------|----------|

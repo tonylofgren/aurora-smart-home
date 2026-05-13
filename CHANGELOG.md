@@ -8,6 +8,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.6.3] - 2026-05-13
+
+### Added
+
+**Tiered error output (Plan 7 §3.13):**
+- `aurora/references/validators/_tiered-errors.md` — shared output format spec used by every validator. Defines the four labelled tiers: `❌ Problem` (short, one line), `📚 Explanation` (medium, why it's wrong), `🔧 Fix` (concrete action with file/line where applicable), `💡 Deeper` (optional educational context). Warnings use the same shape with `⚠️ Warning` instead of `❌ Problem`. Tiers 1 and 3 are mandatory; tier 2 fills in over time; tier 4 is optional.
+- Every validator's Output section now references the spec so the format is consistent across the suite. Affected: `pin-validator`, `conflict-validator`, `entity-id-validator`, `secrets-validator`, `ota-safety-validator`, `i2c-address-validator`, `voltage-level-validator`, `version-validator`, `async-correctness-validator`.
+
+### Testing infrastructure
+
+- 24 new pytest tests covering the shared format spec (mandatory tiers, emoji prefixes, complete example) and asserting every validator references `_tiered-errors.md` inside its Output section. 451 tests total (plus 2 intentionally-skipped negative tests for Mira / River).
+
+### Documentation
+
+- README hero line and a new "What's New in v1.6.3" section show a complete four-tier example so first-time readers see the contract before encountering it in agent output.
+
 ## [1.6.2] - 2026-05-13
 
 ### Added

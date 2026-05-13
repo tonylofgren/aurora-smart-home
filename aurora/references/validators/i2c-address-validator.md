@@ -36,6 +36,9 @@ For each I2C bus in `bus_assignments`:
 - Warnings: list of warning strings. Volt surfaces these but does not block.
 - Failures: list of failure strings. Volt MUST NOT generate YAML if non-empty. Recommended remediations are stated in each failure message.
 
+
+Failure and warning entries follow the four-tier output defined in [`_tiered-errors.md`](_tiered-errors.md): `❌ Problem` (short) / `📚 Explanation` (medium) / `🔧 Fix` (concrete) / `💡 Deeper` (optional). Tiers 1 and 3 are mandatory for every failure; tier 2 is added during the next round of edits where it is still missing.
+
 ## Examples
 
 ### Example 1: BME280 + BMP280 collision

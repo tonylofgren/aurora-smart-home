@@ -33,6 +33,9 @@ For every planned configuration:
 - Warnings: list of warning strings. Volt surfaces these to the user but does not block.
 - Failures: list of failure strings. Volt MUST NOT generate YAML if non-empty. The user picks: enable the missing feature, acknowledge the recovery risk explicitly (which Volt logs in the snapshot's `notes[]`), or pick a different board.
 
+
+Failure and warning entries follow the four-tier output defined in [`_tiered-errors.md`](_tiered-errors.md): `❌ Problem` (short) / `📚 Explanation` (medium) / `🔧 Fix` (concrete) / `💡 Deeper` (optional). Tiers 1 and 3 are mandatory for every failure; tier 2 is added during the next round of edits where it is still missing.
+
 ## Examples
 
 ### Example 1: WiFi disabled on a board without USB CDC

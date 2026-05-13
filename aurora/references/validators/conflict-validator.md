@@ -34,6 +34,9 @@ Same structure as pin-validator: `{failures: [...], warnings: [...]}`.
 
 Volt MUST NOT generate YAML if `failures` is non-empty.
 
+
+Failure and warning entries follow the four-tier output defined in [`_tiered-errors.md`](_tiered-errors.md): `❌ Problem` (short) / `📚 Explanation` (medium) / `🔧 Fix` (concrete) / `💡 Deeper` (optional). Tiers 1 and 3 are mandatory for every failure; tier 2 is added during the next round of edits where it is still missing.
+
 ## Example
 
 Input:

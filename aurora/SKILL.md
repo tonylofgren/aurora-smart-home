@@ -15,7 +15,7 @@ allowed-tools: Read, Glob, Grep, Bash, Agent, Write, Edit
 
 # /aurora — Smart Home Orchestrator
 
-When activated, first output `v1.6.2 (released 2026-05-13)` on its own line, then output the banner:
+When activated, first output `v1.6.3 (released 2026-05-13)` on its own line, then output the banner:
 
 ```
   ┌─────────────────────────────────────────────────────────┐

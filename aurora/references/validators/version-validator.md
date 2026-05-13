@@ -43,6 +43,9 @@ For each entry in `referenced_features`:
 - Warnings: list of warning strings.
 - Failures: list of failure strings. Agents MUST NOT generate output if non-empty. The remediation is always one of: upgrade the platform, remove the feature, or pick a different component.
 
+
+Failure and warning entries follow the four-tier output defined in [`_tiered-errors.md`](_tiered-errors.md): `❌ Problem` (short) / `📚 Explanation` (medium) / `🔧 Fix` (concrete) / `💡 Deeper` (optional). Tiers 1 and 3 are mandatory for every failure; tier 2 is added during the next round of edits where it is still missing.
+
 ## Version Comparison
 
 Semver-ish comparison, since both HA and ESPHome use date-style versions (e.g. `2026.4.5`):

@@ -24,6 +24,6 @@ def test_skill_mentions_iron_law_6():
     assert "Iron Law 6" in content
 
 
-def test_skill_version_bumped_to_1_6_2():
+def test_skill_version_bumped_to_1_6_3():
     content = SKILL_PATH.read_text(encoding="utf-8")
-    assert "v1.6.2" in content
+    assert "v1.6.3" in content
