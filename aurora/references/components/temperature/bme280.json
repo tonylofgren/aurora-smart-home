@@ -1,0 +1,66 @@
+{
+  "$schema": "../../schemas/component-profile.schema.json",
+  "schema_version": "1.0",
+  "component_id": "bme280",
+  "display_name": "BME280 Temperature/Humidity/Pressure",
+  "type": "environment_combined",
+  "category": "environment",
+  "protocol": "i2c",
+  "variants": {
+    "primary": "bme280",
+    "easily_confused_with": [
+      {
+        "component_id": "bmp280",
+        "difference": "BMP280 lacks humidity sensor, identical appearance"
+      }
+    ],
+    "knockoffs_known": true,
+    "verification_method": "Read chip ID register: 0x60 = BME280, 0x58 = BMP280"
+  },
+  "i2c": {
+    "default_addresses": ["0x76", "0x77"],
+    "address_strap_pin": "SDO (LOW=0x76, HIGH=0x77)",
+    "max_speed_khz": 400
+  },
+  "pin_requirements": {
+    "count": 2,
+    "type": "i2c",
+    "must_use_default_i2c_pins": false,
+    "adc_required": false,
+    "input_only_ok": false,
+    "strapping_pin_ok": false,
+    "5v_tolerant_required": false,
+    "interrupt_capable_required": false
+  },
+  "external_components": {
+    "pullup_resistor": {"value_ohm": 4700, "required": true, "note": "External pull-ups if board does not provide them"},
+    "decoupling_cap": {"value_uf": 0.1, "required": true}
+  },
+  "power": {
+    "voltage_min": 1.8,
+    "voltage_max": 3.6,
+    "tolerates_5v": false,
+    "level_shifter_required_on_5v_board": true,
+    "current_ma_active": 0.7,
+    "current_sleep_ua": 0.1
+  },
+  "limitations": {
+    "min_read_interval_s": 0.5,
+    "operating_temp_c": "-40 to +85",
+    "humidity_range": "0-100%",
+    "pressure_range_hpa": "300-1100",
+    "accuracy_temp_c": "+/- 0.5",
+    "accuracy_humidity": "+/- 3%",
+    "accuracy_pressure_hpa": "+/- 1"
+  },
+  "calibration": {
+    "required": false,
+    "type": null
+  },
+  "esphome": {
+    "platform": "bme280_i2c",
+    "min_version": "2022.1.0",
+    "config_template": "templates/components/bme280.yaml"
+  },
+  "datasheet_url": "https://www.bosch-sensortec.com/products/environmental-sensors/humidity-sensors-bme280/"
+}
