@@ -22,6 +22,8 @@ The most comprehensive Claude Code skill pack for smart home development. **New 
 
 > ⚠️ **Use at your own risk.** Aurora generates code and recommendations for educational purposes. Smart home projects involve mains electricity, batteries, and devices that control locks, water, heating, and gas. AI-generated configurations can be plausible but wrong. The maintainers, contributors, and Anthropic accept no liability for property damage, personal injury, data loss, or any other harm. See [DISCLAIMER.md](DISCLAIMER.md) for full terms.
 
+> 💚 **Support Home Assistant.** Aurora is a Claude Code skill for working with Home Assistant. HA's core development is funded by [Nabu Casa](https://www.nabucasa.com) — every release, every fix, every new integration. If your home runs on HA, please consider supporting them. *(Aurora itself is an independent community project, not affiliated with or funded by Nabu Casa.)*
+
 ---
 
 ## 🔄 Already Installed? Update to v1.6.4
@@ -782,9 +784,9 @@ Aurora's agent personas are inspired by the people building the Open Home.
 
 ---
 
-Every release, every fix, every new integration - funded by Nabu Casa. If your home runs on HA, consider giving back. [nabucasa.com](https://www.nabucasa.com)
+**Aurora helps you work with Home Assistant.** Home Assistant's core development is funded by Nabu Casa — every release, every fix, every new integration. If your home runs on HA, consider supporting them: it keeps the upstream platform alive. [nabucasa.com](https://www.nabucasa.com)
 
-*Community project. Not affiliated with or endorsed by Nabu Casa or the Open Home Foundation. Agent personas are fictional.*
+*Aurora is an independent community project. Not affiliated with, endorsed by, or funded by Nabu Casa, the Open Home Foundation, or Anthropic. Agent personas are fictional.*
 
 ---
 

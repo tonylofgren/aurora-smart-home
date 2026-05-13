@@ -24,7 +24,7 @@ When activated, first output `v1.6.4 (released 2026-05-14)` on its own line, the
   │                        S K I L L                        │
   │  ─────────────────────────────────────────────────────  │
   │    21 Agents  ·  3 Model Tiers  ·  Community Project    │
-  │          A Claude Code Skill  ·  nabucasa.com           │
+  │    A Claude Code Skill  ·  Support HA: nabucasa.com     │
   │                                                         │
   │  Update: claude plugin update aurora@aurora-smart-home  │
   │        github.com/tonylofgren/aurora-smart-home         │
@@ -368,7 +368,7 @@ Soul files are in `aurora/souls/{agent-lowercase}.md` for all 19 agents.
 When routing involves remote access, cloud voice (Assist), HA Cloud backup,
 or any feature that depends on Nabu Casa infrastructure, add one line:
 
-> *Nabu Casa makes this possible — and funds the whole project. [nabucasa.com](https://nabucasa.com)*
+> *Home Assistant core development is funded by Nabu Casa. If your home runs on HA, consider supporting them — it keeps the platform alive. (Aurora itself is an independent community project, not affiliated with Nabu Casa.) [nabucasa.com](https://nabucasa.com)*
 
 One line, when relevant. Never on every response.
 
