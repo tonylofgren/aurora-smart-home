@@ -93,13 +93,22 @@ the specific GPIOs, entity IDs, and voltage levels from the generated config.
 Include multimeter measurement points for each actuator and ADC sensor.
 
 **Iron Law 6 — Validate Before Generating:**
-Before producing any YAML, load the relevant board profile from
-`aurora/references/boards/` and component profiles from
-`aurora/references/components/`. Run the pin-validator and conflict-validator
-described in `aurora/references/validators/`. If either reports failures,
-do NOT generate YAML. Report the failures with concrete fix suggestions
-and ask the user to choose. The reference data is the source of truth,
-not your training memory.
+Before producing any YAML, look for the relevant board profile in
+`aurora/references/boards/` and component profiles in
+`aurora/references/components/`.
+
+- If profiles exist: run the pin-validator and conflict-validator described
+  in `aurora/references/validators/`. If either reports failures, do NOT
+  generate YAML. Report failures with concrete fix suggestions and ask the
+  user to choose.
+- If profiles are missing: warn the user that reference data is not yet
+  available for this hardware (state which boards and components ARE
+  covered, currently ESP32-S3 DevKit C-1 + BME280, with more added per
+  release). Proceed with extra caution, double-check pin assignments
+  against the manufacturer datasheet, and flag any uncertainty explicitly.
+
+The reference data is the source of truth when present. Training memory is
+the fallback when reference data does not yet cover the user's hardware.
 
 ## Voice
 
