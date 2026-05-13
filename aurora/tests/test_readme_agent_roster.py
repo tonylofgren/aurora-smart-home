@@ -86,12 +86,12 @@ def test_roster_does_not_duplicate_an_agent(readme_text):
     Other parts of README may mention an agent name multiple times — this
     test only checks the roster block to catch copy-paste errors there."""
     roster_match = re.search(
-        r"Meet the 21 agents\.(.+?)(?=\n##\s|\n---\s*\n)",
+        r"Meet the Aurora team\.(.+?)(?=\n##\s|\n---\s*\n)",
         readme_text,
         re.DOTALL,
     )
     assert roster_match, (
-        "Could not locate the roster section (anchor: 'Meet the 21 agents.'). "
+        "Could not locate the roster section (anchor: 'Meet the Aurora team.'). "
         "If the heading changed, update this test together with the README."
     )
     roster_block = roster_match.group(1)
@@ -108,13 +108,14 @@ def test_roster_does_not_duplicate_an_agent(readme_text):
 
 
 def test_roster_count_matches_advertised_total(readme_text):
-    """README advertises '21 agents'. The roster must back that claim."""
-    assert "21 agents" in readme_text, (
-        "README no longer advertises '21 agents'. Either restore the claim "
-        "or update both the headline and the roster together."
+    """README must consistently advertise the team size. The roster intro
+    says '1 orchestrator + 20 named specialists'; ALL_AGENTS must match."""
+    assert "1 orchestrator + 20 named specialists" in readme_text, (
+        "README roster intro no longer states '1 orchestrator + 20 named specialists'. "
+        "If the team size changed, update both the intro and ALL_AGENTS together."
     )
     assert len(ALL_AGENTS) == 21, (
-        f"This test file lists {len(ALL_AGENTS)} agents, expected 21. "
-        f"If a new agent has been added, both the README roster and "
-        f"ALL_AGENTS here must be updated together."
+        f"This test file lists {len(ALL_AGENTS)} agents, expected 21 "
+        f"(1 orchestrator + 20 specialists). If a new agent has been added, "
+        f"both the README roster and ALL_AGENTS here must be updated together."
     )

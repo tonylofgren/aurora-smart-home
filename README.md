@@ -453,18 +453,18 @@ Develop **Python custom components** for Home Assistant (custom_components, HACS
 
 The orchestration layer that routes requests to the right specialist agent (21 total) and consults machine-readable reference data to keep generated code correct.
 
-**Meet the 21 agents.** Each one has a defined domain, a soul, and a voice. Aurora is the orchestrator; the other 20 are specialists.
+**Meet the Aurora team.** Aurora runs like a small smart home agency. 1 orchestrator + 20 named specialists across 7 departments. Each specialist has a defined domain, a soul, and a voice — these are the people you will see check in during a project, not feature labels. When Aurora routes a request, she hands it off to the right teammate by name.
 
-🏠 **Aurora** — Smart home orchestrator. *"Your home should work for you — locally, privately, without asking permission."*
+🏠 **Aurora** — Founder & orchestrator. *"Your home should work for you — locally, privately, without asking permission."*
 
-**Smart Home Hardware**
+**Hardware department**
 
 - ⚡ **Volt** — ESP32/ESP8266/Shelly firmware + IR proxy. *"Board first — then we build."*
 - 📡 **Nano** — Matter, Thread, BLE, embedded protocols. *"Matter over Thread is the right call here. Let me explain why."*
 - 🎙️ **Echo** — Voice, audio, wake word, Assist pipeline. *"Let's make sure your voice pipeline is solid end to end."*
 - 🔋 **Watt** — Power budget, battery sizing, solar dimensioning. *"Before we spec the battery — what's the duty cycle?"*
 
-**Home Assistant Logic**
+**Home Assistant department**
 
 - 🧙 **Sage** — YAML automations, blueprints, scripts, helpers. *"Automation, blueprint, or script? Each one has a different shape."*
 - ❤️ **Ada** — Python custom integrations, coordinators, config flows. *"This will fail in production. You need `dt_util.now()`."*
@@ -472,11 +472,11 @@ The orchestration layer that routes requests to the right specialist agent (21 t
 - 🌊 **River** — Node-RED visual automation flows. *"Map the flow first — trigger → condition → action."*
 - 🦄 **Iris** — Dashboard visual design. *"Imagine walking into the room. What do you want to know at a glance?"*
 
-**External Data**
+**Field intelligence**
 
 - 🏪 **Atlas** — External API patterns, OAuth, community integrations. *"Someone's already solved this. Let me show you how the community does it."*
 
-**Quality & Review**
+**Quality desk**
 
 - 🐛 **Glitch** — Cross-skill debugging. *"Paste the full log. Not the part you think matters — all of it."*
 - ✅ **Probe** — QA, testing, validation. *"Looks right — but let's test the edge cases first."*
@@ -484,17 +484,17 @@ The orchestration layer that routes requests to the right specialist agent (21 t
 - 🔬 **Lens** — Code review, security audit. *"Three things need fixing here. Not suggestions — these will cause incidents."*
 - 📖 **Manual** — Installation guides, troubleshooting docs. *"The firmware is done. Now let's make sure someone else can install it."*
 
-**Research & Documentation**
+**Research library**
 
 - 🔭 **Scout** — Research, investigation. *"Give me a moment — I've seen this discussed somewhere."*
 - 📚 **Lore** — Documentation writing. *"The setup section assumes the user already has HACS installed."*
 
-**Infrastructure**
+**Operations**
 
 - 🔧 **Forge** — Deploy, Docker, server, backups. *"Before we update — do you have a full backup from today?"*
 - 🌐 **Grid** — Network, UniFi, firewall, VLAN. *"That device is probably on the wrong VLAN."*
 
-**Design**
+**Design studio**
 
 - 🎨 **Canvas** — Graphic design, UI beyond dashboards. *"The layout works but it has seven things asking for attention at once."*
 
