@@ -18,10 +18,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Board selector validator for picking the right board per project requirements
 - Volt Iron Law 6: validate before generating (with graceful fallback when reference data is missing)
 
-**Board profiles (7 boards):**
-- ESP32-S3 DevKit C-1, ESP32 DevKit V1, ESP32-S2 Mini, ESP32-C3 Super Mini
-- ESP32-C6 DevKit, ESP32-H2 DevKit, Wemos D1 Mini (ESP8266, marked legacy with C3 Mini as successor)
+**Board profiles (17 boards):**
+- **ESP dev boards (7)**: ESP32-S3 DevKit C-1, ESP32 DevKit V1, ESP32-S2 Mini, ESP32-C3 Super Mini, ESP32-C6 DevKit, ESP32-H2 DevKit, Wemos D1 Mini (ESP8266, marked legacy with C3 Mini as successor)
+- **Smart home boards (4)**: Shelly Plus 1, Shelly Plus 2PM, Sonoff Basic R3 (legacy), Sonoff Mini R3
+- **Maker boards (4)**: LilyGo T-Display S3, M5Stack Atom Lite, M5Stack Core Basic, Heltec WiFi LoRa 32 V3
+- **Raspberry Pi Pico (2)**: Pico W (RP2040 + WiFi), Pico 2 W (RP2350 + WiFi, marked experimental)
 - Each profile carries: GPIO layout, capability matrix, OTA safety, lifecycle status, `recommended_for` / `not_recommended_for` use cases
+- `experimental` added to `lifecycle.status` enum
+
+**Project templates (7 ready-to-use scaffolds):**
+- Bluetooth proxy, Voice assistant (ESP32-S3 + INMP441 mic + MAX98357A amp)
+- Air quality monitor (SCD40), Presence sensor (LD2410 radar)
+- Battery-powered soil moisture sensor, Multi-relay controller (PCF8574 + 8 relays)
+- Temperature/humidity room monitor (BME280)
+- Each template has YAML scaffold + customization guide with recommended board and external hardware list
 
 **Component profiles (10 sensors):**
 - Temperature: BME280, BMP280 (with mutual disambiguation), DHT22, DS18B20, NTC thermistor 10K
