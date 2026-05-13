@@ -1,0 +1,55 @@
+{
+  "$schema": "../../schemas/component-profile.schema.json",
+  "schema_version": "1.0",
+  "component_id": "ds18b20",
+  "display_name": "DS18B20 1-Wire Temperature Sensor",
+  "type": "temperature",
+  "category": "environment",
+  "protocol": "onewire",
+  "last_verified": "2026-05-13",
+  "variants": {
+    "primary": "ds18b20",
+    "easily_confused_with": [],
+    "knockoffs_known": true,
+    "verification_method": "Genuine units show Maxim/Analog Devices logo; knockoffs often misread at extreme temps or show wrong ROM family code (should be 0x28)"
+  },
+  "pin_requirements": {
+    "count": 1,
+    "type": "gpio",
+    "adc_required": false,
+    "input_only_ok": false,
+    "strapping_pin_ok": false,
+    "5v_tolerant_required": false,
+    "interrupt_capable_required": false
+  },
+  "external_components": {
+    "pullup_resistor": {
+      "value_ohm": 4700,
+      "required": true,
+      "note": "4.7kΩ pullup required on OneWire bus; multiple sensors can share one pin on the same bus"
+    },
+    "decoupling_cap": null
+  },
+  "power": {
+    "voltage_min": 3.0,
+    "voltage_max": 5.5,
+    "tolerates_5v": true,
+    "level_shifter_required_on_5v_board": false,
+    "current_ma_active": 1.5,
+    "current_sleep_ua": 1
+  },
+  "limitations": {
+    "operating_temp_c": "-55 to +125",
+    "accuracy_temp_c": "+/- 0.5",
+    "multi_drop_on_single_pin": true
+  },
+  "calibration": {
+    "required": false,
+    "type": null
+  },
+  "esphome": {
+    "platform": "dallas_temp",
+    "min_version": "2023.12.0"
+  },
+  "datasheet_url": "https://www.analog.com/media/en/technical-documentation/data-sheets/ds18b20.pdf"
+}
