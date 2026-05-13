@@ -20,16 +20,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `aurora/references/handoff/` registered in the Reference Data section so specialists discover the protocol
 - Snapshot-Aware Coordination Iron Law added to every DEEP-mode specialist soul (Volt, Ada, Sage, Iris, Vera, Atlas, Mira, River). Each law is tailored to the agent's per-field ownership: writers list the fields they own, read-only agents (Iris, Vera) state the prohibition explicitly. All agents share the QUICK-mode exemption and the `conflict_log` escape hatch instead of overwriting peer fields.
 
-**First cross-agent validators (Plan 5 Phase 3 — C1 + C2):**
+**First cross-agent validators (Plan 5 Phase 3 — C1 + C2 + C3):**
 - `aurora/references/validators/entity-id-validator.md` — markdown spec for the entity-id validator, covering producer mode (Volt/Ada/Sage creating new IDs) and consumer mode (Sage/Iris/Mira/River referencing existing IDs). Hooks into the snapshot's `entity_ids_generated` field, which makes the Phase 1 hand-off protocol load-bearing for the first time.
 - `aurora/references/validators/secrets-validator.md` — markdown spec for credential scanning in YAML output. Tightly scoped: enumerates a fixed list of high-risk keys (`password`, `api_key`, `token`, `secret`, `client_secret`, `private_key`, `ota_password`, `wifi_password`, etc.) and requires their values to be `!secret <name>` references. Intentionally excludes generic entropy/base64 scanning (false-positive tarpit), inline comments, and inspects block scalars / templated values only via warnings. Suggests concrete secret names in failure messages.
 - Volt's Iron Law 6 now references entity-id-validator and secrets-validator alongside pin-validator and conflict-validator. When generating sensor entity IDs, Volt runs the entity-id-validator in producer mode (format, uniqueness, ownership); before delivering YAML, Volt runs the secrets-validator on the full file and blocks delivery on literal credentials.
+- Sage gains its own validation Iron Law (Iron Law 2 — Validate Before Generating) in addition to the snapshot-aware Law 1 from Phase 2B. Sage now invokes entity-id-validator in consumer mode for every referenced ID (with QUICK-mode warning fallback) and in producer mode for helper entities it creates, plus secrets-validator on every generated YAML file. Failures block delivery. yaml-syntax and version validators are spec'd in §3.14 but not yet shipped; Sage's law explicitly notes them as planned.
 
 **Documentation:**
 - README agent roster — Aurora reframed as a small smart home agency: 1 orchestrator + 20 named specialists across 7 departments (Hardware, Home Assistant, Field intelligence, Quality desk, Research library, Operations, Design studio). Each entry has an emoji, a domain, and a voice tagline drawn from its soul file. Replaces the previous one-line domain summary.
 
 **Testing infrastructure:**
-- 121 new pytest tests covering snapshot schema validity, example correctness, SKILL.md wiring (Step 7 contract), per-soul snapshot awareness, README agent roster integrity, entity-id-validator doc structure, and secrets-validator doc structure (359 total)
+- 130 new pytest tests covering snapshot schema validity, example correctness, SKILL.md wiring (Step 7 contract), per-soul snapshot awareness, README agent roster integrity, entity-id-validator doc structure, secrets-validator doc structure, and Sage's Iron Law 2 contract (368 total)
 
 ### Changed / Fixed
 
