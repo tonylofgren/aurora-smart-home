@@ -1,0 +1,60 @@
+{
+  "$schema": "../../schemas/component-profile.schema.json",
+  "schema_version": "1.0",
+  "component_id": "ntc-thermistor-10k",
+  "display_name": "NTC Thermistor 10K",
+  "type": "temperature",
+  "category": "environment",
+  "protocol": "analog",
+  "last_verified": "2026-05-13",
+  "variants": {
+    "primary": "ntc-thermistor-10k",
+    "easily_confused_with": [
+      {
+        "component_id": "ntc-thermistor-100k",
+        "difference": "100K NTC has different resistance/beta characteristics; must match firmware configuration to actual thermistor part"
+      }
+    ],
+    "knockoffs_known": false,
+    "verification_method": "Measure resistance at room temperature (~25C); genuine 10K NTC should read approximately 10000 ohms"
+  },
+  "pin_requirements": {
+    "count": 1,
+    "type": "adc",
+    "adc_required": true,
+    "input_only_ok": true,
+    "strapping_pin_ok": false,
+    "5v_tolerant_required": false,
+    "interrupt_capable_required": false
+  },
+  "external_components": {
+    "pullup_resistor": {
+      "value_ohm": 10000,
+      "required": true,
+      "note": "10K series resistor required to form voltage divider with thermistor; connect between VCC and ADC pin"
+    },
+    "decoupling_cap": null
+  },
+  "power": {
+    "voltage_min": 0.0,
+    "voltage_max": 3.3,
+    "tolerates_5v": false,
+    "level_shifter_required_on_5v_board": true,
+    "current_ma_active": 0.3,
+    "current_sleep_ua": 0
+  },
+  "limitations": {
+    "requires_voltage_divider": true,
+    "adc_reference_v": 3.3,
+    "typical_operating_temp_c": "-40 to +125",
+    "accuracy_temp_c": "+/- 1 to 2 depending on beta accuracy"
+  },
+  "calibration": {
+    "required": true,
+    "type": "beta_coefficient_or_two_point"
+  },
+  "esphome": {
+    "platform": "ntc",
+    "min_version": "2022.1.0"
+  }
+}
