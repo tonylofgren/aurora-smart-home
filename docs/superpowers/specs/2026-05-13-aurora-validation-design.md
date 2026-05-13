@@ -1,72 +1,72 @@
 # Aurora Skill — Validation-Before-Generation Design
 
-**Status:** Draft for review (v2 - expanded with Tier A + B)
+**Status:** Draft for review (v2, expanded with Tier A + B)
 **Date:** 2026-05-13
-**Author:** Granskning från nybörjar-perspektiv
-**Scope:** Aurora skill arkitektur, alla agenter, fokus Volt (ESP32/ESPHome)
+**Author:** Review from a beginner's perspective
+**Scope:** Aurora skill architecture, all agents, focus on Volt (ESP32/ESPHome)
 
 ---
 
-## 1. Bakgrund och problem
+## 1. Background and problem
 
-Aurora skill är ett orchestreringslager med 21 specialistagenter för smart home-utveckling. Skill har Iron Laws som styr varje agents disciplin, t.ex. Volts krav om "board first" innan YAML-generering.
+Aurora skill is an orchestration layer with 21 specialist agents for smart home development. The skill defines Iron Laws that govern each agent's discipline, e.g. Volt's "board first" requirement before YAML generation.
 
-**Identifierat kärnproblem:**
-Iron Laws finns som *text*, inte som *tvingande struktur*. Detta betyder att en agent (särskilt Volt) kan generera kod som inte matchar den fysiska hårdvaran: felaktig GPIO-pin, fel board för uppgiften, eller pin-konflikter mellan komponenter.
+**Identified core problem:**
+Iron Laws exist as *text*, not as *enforced structure*. This means an agent (particularly Volt) can generate code that does not match the physical hardware: wrong GPIO pin, wrong board for the task, or pin conflicts between components.
 
-**För en nybörjare:**
-Den värsta besvikelsen är att aurora skill *lägger in fel portar i koden*. Detta resulterar i sensor som inte fungerar, skadad hårdvara, timmar bortkastade på felsökning, eller övergivet projekt.
+**For a beginner:**
+The worst disappointment is that the aurora skill *writes the wrong pins into the code*. The result is a sensor that does not work, damaged hardware, hours wasted on debugging, or an abandoned project.
 
-**Designens mål:**
-Garantera att aurora skill levererar *korrekt kod oavsett användare*, genom systemisk validering före generering.
+**Design goal:**
+Guarantee that the aurora skill produces *correct code regardless of who uses it*, through systemic validation before generation.
 
 ---
 
-## 2. Nuvarande tillstånd
+## 2. Current state
 
-### Vad som finns idag
+### What exists today
 
-- `aurora/SKILL.md`: routing och Iron Laws för 21 agenter
-- `aurora/souls/volt.md`: Volts Iron Laws (board first, wiring diagram, calibration, power budget, troubleshooting)
+- `aurora/SKILL.md`: routing and Iron Laws for 21 agents
+- `aurora/souls/volt.md`: Volt's Iron Laws (board first, wiring diagram, calibration, power budget, troubleshooting)
 - `aurora/references/platform-versions.md`: HA + ESPHome version info
-- `aurora/references/workflows.md`: multi-skill workflow-mallar
-- `esphome/references/pinouts.md`: GPIO-pinouts för 9 ESP-chip-familjer (markdown + ASCII)
-- `esphome/references/boards.md`: board-information
+- `aurora/references/workflows.md`: multi-skill workflow templates
+- `esphome/references/pinouts.md`: GPIO pinouts for 9 ESP chip families (markdown + ASCII)
+- `esphome/references/boards.md`: board information
 
-### Identifierade luckor
+### Identified gaps
 
-1. Pin-data är inte machine-readable (markdown/ASCII, svår att parsa)
-2. Aurora skill länkar inte till pin-data (Volt vet inte att referensen finns)
-3. Ingen validering före generering (Volt litar på sin egen kunskap)
-4. Endast pin-data, ingen capability-matrix (BLE/Thread/PSRAM saknas)
-5. Ingen sensor/komponent-databas (sensor-krav kan brista)
-6. Inga conflict-checks mellan komponenter
-7. Mönstret saknas för andra agenter (Ada, Sage, River har samma risk)
-8. Sensor-varianter blandas (BME280 vs BMP280, DHT22 vs DHT11)
-9. GPIO Expander-stöd saknas (när pinnar tar slut)
-10. Voltage level shifter-data saknas (5V sensorer på 3.3V boards)
-11. I2C-adresskonflikter detekteras inte
-12. Sleep mode och wake source-data saknas
-13. OTA-safety check saknas (brick-risk)
-14. Secrets-validering saknas (credentials i klartext)
-15. External components-katalog saknas
-16. Project templates saknas (helt blank start)
-17. Hand-off protocol mellan agenter saknas
-18. Data update mechanism saknas (hur uppdateras JSON?)
-19. JSON Schema validation saknas (för JSON-filerna själva)
-20. Community contribution path saknas
-21. Schema versioning saknas (backward compatibility)
-22. CI/CD för Iron Law Test Suite saknas
+1. Pin data is not machine-readable (markdown/ASCII, hard to parse)
+2. Aurora skill does not link to the pin data (Volt does not know the reference exists)
+3. No validation before generation (Volt relies on its own knowledge)
+4. Only pin data, no capability matrix (BLE/Thread/PSRAM missing)
+5. No sensor/component database (sensor requirements may break)
+6. No conflict checks between components
+7. Pattern missing for other agents (Ada, Sage, River carry the same risk)
+8. Sensor variants get mixed up (BME280 vs BMP280, DHT22 vs DHT11)
+9. GPIO expander support missing (when pins run out)
+10. Voltage level shifter data missing (5V sensors on 3.3V boards)
+11. I2C address conflicts not detected
+12. Sleep mode and wake source data missing
+13. OTA safety check missing (brick risk)
+14. Secrets validation missing (credentials in plaintext)
+15. External components catalog missing
+16. Project templates missing (completely blank start)
+17. Hand-off protocol between agents missing
+18. Data update mechanism missing (how is JSON refreshed?)
+19. JSON Schema validation missing (for the JSON files themselves)
+20. Community contribution path missing
+21. Schema versioning missing (backward compatibility)
+22. CI/CD for Iron Law Test Suite missing
 
 ---
 
-## 3. Föreslagen arkitektur
+## 3. Proposed architecture
 
-### 3.1 Ny katalogstruktur
+### 3.1 New directory structure
 
 ```
 aurora/references/
-├── boards/                          # Board-profiler (komplett kapacitet)
+├── boards/                          # Board profiles (full capability)
 │   ├── _index.md
 │   ├── esp32/
 │   │   ├── esp32-devkit-v1.json
@@ -93,13 +93,13 @@ aurora/references/
 │       ├── m5stack-atom.json
 │       └── heltec-wifi-lora32.json
 │
-├── components/                      # Sensor/aktuator-profiler
+├── components/                      # Sensor/actuator profiles
 │   ├── _index.md
 │   ├── temperature/
 │   │   ├── dht22.json
 │   │   ├── ds18b20.json
 │   │   ├── bme280.json
-│   │   ├── bmp280.json           # OBS: skild från BME280
+│   │   ├── bmp280.json           # NOTE: distinct from BME280
 │   │   └── ntc-thermistor.json
 │   ├── moisture/
 │   │   ├── capacitive-soil-v1.2.json
@@ -109,28 +109,28 @@ aurora/references/
 │   │   └── radar-ld2410.json
 │   ├── air-quality/
 │   │   ├── mh-z19b.json
-│   │   ├── mh-z19c.json          # OBS: skild kalibrering
+│   │   ├── mh-z19c.json          # NOTE: different calibration
 │   │   └── scd40.json
 │   ├── distance/
-│   │   └── hc-sr04.json          # OBS: 5V sensor
+│   │   └── hc-sr04.json          # NOTE: 5V sensor
 │   ├── relays/
 │   │   └── songle-srd-05vdc.json
 │   └── displays/
 │       ├── ili9341-tft.json
 │       └── ssd1306-oled.json
 │
-├── expanders/                       # GPIO expanders (när pinnar tar slut)
+├── expanders/                       # GPIO expanders (when pins run out)
 │   ├── _index.md
 │   ├── pcf8574.json                # 8-bit I2C expander
 │   ├── mcp23017.json               # 16-bit I2C expander
 │   ├── pca9685.json                # 16-channel PWM
-│   └── tca9548a.json               # I2C multiplexer (för dubbletter)
+│   └── tca9548a.json               # I2C multiplexer (for duplicates)
 │
 ├── voltage-shifters/                # Level shifters (5V <-> 3.3V)
 │   ├── _index.md
 │   ├── txs0108e.json               # 8-channel bidirectional
 │   ├── bss138.json                 # MOSFET-based single channel
-│   └── tx-rx-resistor-divider.json # Voltage divider för RX only
+│   └── tx-rx-resistor-divider.json # Voltage divider for RX only
 │
 ├── external-components/             # ESPHome community packages
 │   ├── _index.md
@@ -138,7 +138,7 @@ aurora/references/
 │   ├── tuya-mcu-jesserockz.json
 │   └── nspanel-pro.json
 │
-├── templates/                       # Quick-start projekt-mallar
+├── templates/                       # Quick-start project templates
 │   ├── _index.md
 │   ├── bluetooth-proxy.yaml
 │   ├── voice-assistant-s3.yaml
@@ -148,7 +148,7 @@ aurora/references/
 │   ├── battery-soil-sensor.yaml
 │   └── multi-relay-controller.yaml
 │
-├── schemas/                         # JSON Schema för validering av JSON
+├── schemas/                         # JSON Schema for validation of JSON
 │   ├── board-profile.schema.json
 │   ├── component-profile.schema.json
 │   ├── expander-profile.schema.json
@@ -157,7 +157,7 @@ aurora/references/
 │   ├── project-snapshot.schema.json
 │   └── _schema-version.md
 │
-├── validators/                      # Cross-agent validator-moduler
+├── validators/                      # Cross-agent validator modules
 │   ├── pin-validator.md
 │   ├── conflict-validator.md
 │   ├── yaml-syntax-validator.md
@@ -176,7 +176,7 @@ aurora/references/
 └── project-snapshots/               # User project history (runtime)
 ```
 
-### 3.2 Board-profil JSON-schema (utökad)
+### 3.2 Board profile JSON schema (expanded)
 
 ```json
 {
@@ -307,7 +307,7 @@ aurora/references/
 }
 ```
 
-### 3.3 Komponent-profil JSON-schema (utökad)
+### 3.3 Component profile JSON schema (expanded)
 
 ```json
 {
@@ -324,11 +324,11 @@ aurora/references/
     "easily_confused_with": [
       {
         "component_id": "bmp280",
-        "difference": "BMP280 saknar humidity sensor, identiskt utseende"
+        "difference": "BMP280 lacks humidity sensor, identical appearance"
       }
     ],
     "knockoffs_known": true,
-    "verification_method": "Läs chip ID register: 0x60 = BME280, 0x58 = BMP280"
+    "verification_method": "Read chip ID register: 0x60 = BME280, 0x58 = BMP280"
   },
 
   "i2c": {
@@ -349,7 +349,7 @@ aurora/references/
   },
 
   "external_components": {
-    "pullup_resistor": {"value_ohm": 4700, "required": true, "note": "External pull-ups om board ej har"},
+    "pullup_resistor": {"value_ohm": 4700, "required": true, "note": "External pull-ups if board does not provide them"},
     "decoupling_cap": {"value_uf": 0.1, "required": true}
   },
 
@@ -387,9 +387,9 @@ aurora/references/
 }
 ```
 
-### 3.4 GPIO Expander-profil
+### 3.4 GPIO expander profile
 
-När antal komponenter > tillgängliga GPIO på board, route till expander:
+When component count exceeds available GPIO on the board, route to an expander:
 
 ```json
 {
@@ -416,9 +416,9 @@ När antal komponenter > tillgängliga GPIO på board, route till expander:
   },
 
   "use_cases": [
-    "16 reläer på ESP32-C3 (22 GPIO total)",
-    "Button matrix utan att slösa GPIO",
-    "LED-status panels"
+    "16 relays on ESP32-C3 (only 22 GPIO total)",
+    "Button matrix without wasting GPIO",
+    "LED status panels"
   ],
 
   "esphome": {
@@ -428,7 +428,7 @@ När antal komponenter > tillgängliga GPIO på board, route till expander:
 }
 ```
 
-### 3.5 Voltage Level Shifter-profil
+### 3.5 Voltage level shifter profile
 
 ```json
 {
@@ -457,7 +457,7 @@ När antal komponenter > tillgängliga GPIO på board, route till expander:
 }
 ```
 
-### 3.6 External Components-katalog
+### 3.6 External components catalog
 
 ```json
 {
@@ -476,134 +476,134 @@ När antal komponenter > tillgängliga GPIO på board, route till expander:
 }
 ```
 
-### 3.7 Volts validerings-workflow (utökad)
+### 3.7 Volt's validation workflow (expanded)
 
 ```
-INPUT: Användarens projekt-krav (sensor, BLE, batteri, voice, etc.)
+INPUT: User project requirements (sensor, BLE, battery, voice, etc.)
 
-STEG 1: Kravanalys
-├── Identifiera behov: BLE? Battery? Voice? Camera? Matter?
-├── Identifiera antal komponenter
-└── Sätt capability filters
+STEP 1: Requirement analysis
+├── Identify needs: BLE? Battery? Voice? Camera? Matter?
+├── Identify number of components
+└── Set capability filters
 
-STEG 2: Template-check
-├── Matchar kraven en befintlig template i templates/?
-└── Om ja, föreslå template som startpunkt
+STEP 2: Template check
+├── Do the requirements match an existing template in templates/?
+└── If yes, suggest the template as a starting point
 
-STEG 3: Board-rekommendation
-├── Läs alla *.json i boards/
-├── Filtrera mot capability filters
-├── Filtrera bort deprecated boards (varna om användare insisterar)
-└── Föreslå 2-3 lämpliga boards med trade-offs
+STEP 3: Board recommendation
+├── Read all *.json in boards/
+├── Filter against capability filters
+├── Filter out deprecated boards (warn if user insists)
+└── Suggest 2-3 suitable boards with trade-offs
 
-STEG 4: Användaren väljer board
-└── Bekräftelse + load board-profil
+STEP 4: User selects a board
+└── Confirm + load board profile
 
-STEG 5: Komponent-validering
-├── För varje sensor/komponent: ladda components/*.json
-├── Visa "easily_confused_with" varningar (BME280 vs BMP280)
-├── Verifiera pin_requirements matchar board.gpio
-├── Verifiera power-krav passar board (voltage_min/max)
-├── Om komponent 5V och board 3.3V: kräv level shifter
-└── Verifiera ESPHome-version stöder komponenten
+STEP 5: Component validation
+├── For each sensor/component: load components/*.json
+├── Display "easily_confused_with" warnings (BME280 vs BMP280)
+├── Verify pin_requirements match board.gpio
+├── Verify power requirements match board (voltage_min/max)
+├── If component is 5V and board is 3.3V: require level shifter
+└── Verify ESPHome version supports the component
 
-STEG 6: GPIO-tillräcklighet
-├── Räkna behövda pinnar vs board.gpio.valid_pins
-├── Om otillräckligt: föreslå GPIO expander från expanders/
-└── Om I2C-adresskonflikt: föreslå TCA9548A multiplexer
+STEP 6: GPIO sufficiency
+├── Count required pins vs board.gpio.valid_pins
+├── If insufficient: suggest GPIO expander from expanders/
+└── If I2C address conflict: suggest TCA9548A multiplexer
 
-STEG 7: Pin-allokering
-├── Föreslå GPIO från board.gpio.valid_pins
-├── Undvik strapping_pins, reserved_for_usb, psram_blocks_gpio
-├── Använd i2c_default / spi_default för bus-protokoll
-└── Reservera pinnar per komponent
+STEP 7: Pin allocation
+├── Suggest GPIO from board.gpio.valid_pins
+├── Avoid strapping_pins, reserved_for_usb, psram_blocks_gpio
+├── Use i2c_default / spi_default for bus protocols
+└── Reserve pins per component
 
-STEG 8: Conflict-validering (validators/conflict-validator.md)
-├── Pin-collision check: Två komponenter på samma pin (ej I2C/OneWire)?
-├── Bus-sharing check: I2C-adresser unika (validators/i2c-address-validator)?
-├── Strapping-conflict: Komponent på 0/3/45/46 utan korrekt pull?
-├── USB-conflict: 19/20 + USB CDC aktiv?
-├── PSRAM-conflict: 26-32 + PSRAM aktiv?
-├── Voltage-mismatch (validators/voltage-level-validator): 5V komponent på 3.3V-only pin?
-└── ADC-conflict: ADC2 + WiFi (S2/C3 specific)?
+STEP 8: Conflict validation (validators/conflict-validator.md)
+├── Pin collision check: two components on the same pin (excluding I2C/OneWire)?
+├── Bus sharing check: I2C addresses unique (validators/i2c-address-validator)?
+├── Strapping conflict: component on 0/3/45/46 without correct pull?
+├── USB conflict: 19/20 + USB CDC active?
+├── PSRAM conflict: 26-32 + PSRAM active?
+├── Voltage mismatch (validators/voltage-level-validator): 5V component on 3.3V-only pin?
+└── ADC conflict: ADC2 + WiFi (S2/C3 specific)?
 
-STEG 9: Sleep mode-validering
-├── Om deep_sleep används: wake-pin i board.gpio.wake_source_pins?
-├── Om battery: är wake-strategi konsistent med power budget?
-└── Flag Watt för power budget review
+STEP 9: Sleep mode validation
+├── If deep_sleep used: wake pin in board.gpio.wake_source_pins?
+├── If battery powered: is wake strategy consistent with power budget?
+└── Flag Watt for power budget review
 
-STEG 10: OTA-safety (validators/ota-safety-validator.md)
-├── Är OTA-funktionen kvar i config?
-├── Är USB-CDC kvar eller WiFi recovery möjlig?
-├── Om ingen recovery-väg: VARNA om brick-risk
-└── Kräv explicit override för att fortsätta
+STEP 10: OTA safety (validators/ota-safety-validator.md)
+├── Is the OTA platform still present in the config?
+├── Is USB-CDC still active or WiFi recovery available?
+├── If no recovery path remains: WARN about brick risk
+└── Require explicit override to continue
 
-STEG 11: Secrets-validering (validators/secrets-validator.md)
-├── Skanna YAML för strängar som ser ut som credentials
-├── Verifiera att alla credentials använder !secret
-└── Reject output om credentials i klartext
+STEP 11: Secrets validation (validators/secrets-validator.md)
+├── Scan YAML for strings that look like credentials
+├── Verify that all credentials use !secret
+└── Reject output if credentials are in plaintext
 
-STEG 12: Version-validering (validators/version-validator.md)
-├── ESPHome >= minimum för alla features?
-├── Board stöder valt framework (arduino vs esp-idf)?
-└── Chip-revision OK?
+STEP 12: Version validation (validators/version-validator.md)
+├── ESPHome >= minimum for all features?
+├── Board supports the chosen framework (arduino vs esp-idf)?
+└── Chip revision OK?
 
-STEG 13: YAML-generering (endast om STEG 1-12 ✓)
-├── Generera ESPHome YAML
-├── Generera ASCII wiring diagram (Iron Law 2)
-├── Generera calibration procedure om sensor kräver (Iron Law 3)
-├── Generera troubleshooting med faktiska entity IDs (Iron Law 5)
-└── Spara project-snapshot
+STEP 13: YAML generation (only if STEP 1-12 ✓)
+├── Generate ESPHome YAML
+├── Generate ASCII wiring diagram (Iron Law 2)
+├── Generate calibration procedure if a sensor requires it (Iron Law 3)
+├── Generate troubleshooting with actual entity IDs (Iron Law 5)
+└── Save project snapshot
 
 OUTPUT:
-├── ✅ Komplett, validerad YAML + diagram + docs
-└── ❌ Tydligt felmeddelande med förklaring och förslag
+├── ✅ Complete, validated YAML + diagram + docs
+└── ❌ Clear error message with explanation and suggested fix
 ```
 
-### 3.8 OTA-Safety Validation
+### 3.8 OTA safety validation
 
-Förhindrar att Volt genererar config som kan göra board obrickbar:
+Prevents Volt from generating configurations that can brick a board:
 
 ```
-INPUT: Genererad YAML + board-profil
+INPUT: Generated YAML + board profile
 
 CHECKS:
-├── Är 'ota:' platform deklarerad i YAML?
-├── Är WiFi konfigurerad (för OTA over WiFi)?
-├── Är USB-CDC kvar (för fysisk recovery)?
-├── Använder konfig 'factory_reset' button mappning?
-└── Är inte OTA + WiFi + USB ALLA disablerade samtidigt?
+├── Is an 'ota:' platform declared in the YAML?
+├── Is WiFi configured (for OTA over WiFi)?
+├── Is USB-CDC still active (for physical recovery)?
+├── Does the config use a 'factory_reset' button mapping?
+└── Are OTA + WiFi + USB NOT all disabled at the same time?
 
 OUTPUT:
-├── ✅ Recovery-väg finns
-└── ❌ "BRICK RISK: Den här konfigurationen saknar både OTA, USB-CDC och 
-       WiFi recovery. Om något går fel kan du inte återflasha utan extern 
-       programmerare. Lägg till minst en av: ota:, usb_cdc:, eller behåll WiFi."
+├── ✅ A recovery path exists
+└── ❌ "BRICK RISK: This configuration lacks OTA, USB-CDC and WiFi recovery.
+       If something goes wrong you cannot reflash without an external
+       programmer. Add at least one of: ota:, usb_cdc:, or keep WiFi."
 ```
 
-### 3.9 Secrets-Validering
+### 3.9 Secrets validation
 
-Förhindrar credentials i klartext:
+Prevents credentials in plaintext:
 
 ```
-INPUT: Genererad YAML
+INPUT: Generated YAML
 
-PATTERN MATCHING (regex för att flagga misstänkta strängar):
+PATTERN MATCHING (regex to flag suspicious strings):
 ├── api_key|access_token|password|secret = "[^!secret]"
-├── 'api: encryption: key' utan !secret
-├── 'wifi: password' utan !secret
-├── 'mqtt: password' utan !secret
-└── Hex-strängar > 20 tecken som ser ut som API-nycklar
+├── 'api: encryption: key' without !secret
+├── 'wifi: password' without !secret
+├── 'mqtt: password' without !secret
+└── Hex strings > 20 chars that look like API keys
 
-REGEL:
-├── Alla credentials MÅSTE referera !secret name
-├── secrets.yaml-template genereras separat
-└── Output rejected om credentials hardcoded
+RULE:
+├── All credentials MUST reference a !secret name
+├── secrets.yaml template is generated separately
+└── Output rejected if credentials are hardcoded
 ```
 
-### 3.10 Hand-off Protocol mellan agenter
+### 3.10 Agent hand-off protocol
 
-I DEEP mode involveras 2+ agenter. Standardiserad data-overföring:
+In DEEP mode, 2+ agents are involved. Standardized data transfer:
 
 ```json
 {
@@ -611,7 +611,7 @@ I DEEP mode involveras 2+ agenter. Standardiserad data-overföring:
   "schema_version": "1.0",
   "project_context": {
     "project_id": "uuid-v4",
-    "project_name": "Vardagsrum sensor",
+    "project_name": "Living room sensor",
     "user_requirements": ["temp", "humidity", "presence"],
     "selected_board": "esp32-c3-mini",
     "selected_components": ["bme280", "ld2410"],
@@ -620,11 +620,11 @@ I DEEP mode involveras 2+ agenter. Standardiserad data-overföring:
       "ld2410": {"tx": 4, "rx": 5}
     },
     "entity_ids_generated": [
-      "sensor.vardagsrum_temperature",
-      "sensor.vardagsrum_humidity",
-      "binary_sensor.vardagsrum_presence"
+      "sensor.living_room_temperature",
+      "sensor.living_room_humidity",
+      "binary_sensor.living_room_presence"
     ],
-    "esphome_filename": "vardagsrum-sensor.yaml",
+    "esphome_filename": "living-room-sensor.yaml",
     "current_agent": "volt",
     "next_agents": ["sage", "iris"],
     "validation_results": {
@@ -637,7 +637,7 @@ I DEEP mode involveras 2+ agenter. Standardiserad data-overföring:
 }
 ```
 
-**Flöde:**
+**Flow:**
 ```
 Volt completes → writes project_context → Sage reads it
 Sage completes → updates entity_ids_used → Iris reads it
@@ -645,11 +645,11 @@ Iris completes → final project_snapshot saved
 ```
 
 **Conflict resolution:**
-Om Vera blockerar Volt's val: project_context.conflict_log loggas, användaren beslutar.
+If Vera blocks Volt's choice: project_context.conflict_log is updated and the user decides.
 
-### 3.11 Project Templates Library
+### 3.11 Project templates library
 
-Quick-start för vanliga use-cases:
+Quick start for common use cases:
 
 ```yaml
 # templates/bluetooth-proxy.yaml
@@ -682,54 +682,54 @@ esp32_ble_tracker:
 
 **Workflow:**
 ```
-Användare: "Jag vill bygga bluetooth proxy"
-→ Aurora matchar "bluetooth-proxy" template
-→ Volt frågar: "Start från template eller bygg från grunden?"
-→ Om template: variabler fylls i, validering körs, klar på 30 sekunder
+User: "I want to build a bluetooth proxy"
+→ Aurora matches the "bluetooth-proxy" template
+→ Volt asks: "Start from template or build from scratch?"
+→ If template: variables are filled in, validation runs, done in 30 seconds
 ```
 
-### 3.12 Retroactive YAML Validation
+### 3.12 Retroactive YAML validation
 
-Volt får förmåga att validera *befintlig* YAML:
+Volt gains the ability to validate *existing* YAML:
 
 ```
-Användare: *klistrar in YAML* "Funkar det här?"
-→ Volt parsar YAML
-→ Identifierar board + alla GPIO + alla komponenter
-→ Kör STEG 5-12 i validerings-workflow
+User: *pastes YAML* "Does this work?"
+→ Volt parses the YAML
+→ Identifies board + all GPIO + all components
+→ Runs STEP 5-12 of the validation workflow
 → Output:
-  ✅ "Allt ser korrekt ut"
-  ⚠️ "Rad 23: GPIO 19 används men USB är aktiverat, konflikt"
-  ❌ "Rad 45: GPIO 49 finns inte på ESP32-S3 (max 48)"
+  ✅ "Looks correct"
+  ⚠️ "Line 23: GPIO 19 used while USB is active, conflict"
+  ❌ "Line 45: GPIO 49 does not exist on ESP32-S3 (max 48)"
 ```
 
-### 3.13 Tiered Error Messages för Nybörjare
+### 3.13 Tiered error messages for beginners
 
 ```
-❌ Problem (kort):
-GPIO 19 kan inte användas på den här boarden
+❌ Problem (short):
+GPIO 19 cannot be used on this board
 
-📚 Förklaring (medium):
-ESP32-S3 har inbyggd USB-stöd som använder GPIO 19 och 20.
-Om du använder dessa pinnar för en sensor, slutar USB att fungera.
+📚 Explanation (medium):
+The ESP32-S3 has built-in USB support that uses GPIO 19 and 20.
+If you use these pins for a sensor, USB stops working.
 
-🔧 Lösning (konkret):
-Använd GPIO 8 istället, den är ledig och passar för din DHT22.
+🔧 Solution (concrete):
+Use GPIO 8 instead, it is free and works for your DHT22.
 
-💡 Djupare (för den som vill veta):
-USB-OTG-protokollet använder differentiella signaler D+/D-
-mappade till GPIO 19/20. Du kan stänga av USB i config med
-'usb_cdc: false', men då tappar du serial debug.
+💡 Deeper (for the curious):
+The USB-OTG protocol uses differential signals D+/D-
+mapped to GPIO 19/20. You can disable USB in the config via
+'usb_cdc: false', but you lose serial debug.
 ```
 
-### 3.14 Cross-Agent Validation Pattern
+### 3.14 Cross-agent validation pattern
 
-| Agent | Validator-moduler | Resurs-bibliotek |
-|-------|-------------------|-------------------|
+| Agent | Validator modules | Resource library |
+|-------|-------------------|------------------|
 | Volt | pin, conflict, version, ota-safety, secrets, i2c-address, voltage-level | boards/, components/, expanders/, voltage-shifters/ |
 | Ada | python-syntax, async-correctness, entity-id, secrets | (HA Python API spec) |
 | Sage | yaml-syntax, entity-id, version, secrets | (HA YAML schema) |
-| River | node-red-syntax, version | (Node-RED nod-namn) |
+| River | node-red-syntax, version | (Node-RED node names) |
 | Mira | python-syntax, llm-config, secrets | (LLM provider specs) |
 | Atlas | api-endpoint, secrets | (API catalog) |
 | Iris | lovelace-schema, card-types | (Lovelace specs) |
@@ -753,15 +753,15 @@ aurora/tests/
 ├── sage/
 │   ├── test-yaml-syntax-valid.md
 │   └── test-entity-id-format.md
-└── (osv för alla agenter)
+└── (and so on for all agents)
 ```
 
-### 3.16 User Project History
+### 3.16 User project history
 
 ```json
 {
   "project_id": "uuid-v4",
-  "name": "Vardagsrum sensor",
+  "name": "Living room sensor",
   "created": "2026-05-13",
   "board": "esp32-c3-mini",
   "components": ["bme280", "ld2410"],
@@ -771,54 +771,54 @@ aurora/tests/
     "validated_at": "2026-05-13",
     "warnings": []
   },
-  "files": ["vardagsrum-sensor.yaml"],
+  "files": ["living-room-sensor.yaml"],
   "agents_involved": ["volt", "sage", "iris"]
 }
 ```
 
-### 3.17 Lifecycle/Deprecation Warnings
+### 3.17 Lifecycle/Deprecation warnings
 
 ```json
 "lifecycle": {
   "status": "deprecated",
   "since": "2024",
-  "reason": "ESP8266 saknar BLE, Thread, Matter. Välj ESP32-C3 för nya projekt.",
+  "reason": "ESP8266 lacks BLE, Thread, Matter. Choose ESP32-C3 for new projects.",
   "successor": "esp32-c3-mini"
 }
 ```
 
 ---
 
-## 4. Data Management (NY sektion)
+## 4. Data management (new section)
 
-### 4.1 Data Source och Update Mechanism
+### 4.1 Data source and update mechanism
 
-**Auktoritativa källor (per board/component):**
+**Authoritative sources (per board/component):**
 
-| Datatyp | Primär källa | Sekundär | Update-frekvens |
-|---------|--------------|----------|-----------------|
-| Chip GPIO/specs | Espressif datasheets | Arduino-ESP32 repo | Per ny chip-revision |
-| Dev board pinouts | Tillverkarens datasheet | Community wiki | Per ny board |
-| Sensor specs | Tillverkarens datasheet | ESPHome docs | Sällan ändras |
+| Data type | Primary source | Secondary | Update cadence |
+|-----------|---------------|-----------|----------------|
+| Chip GPIO/specs | Espressif datasheets | Arduino-ESP32 repo | Per new chip revision |
+| Dev board pinouts | Manufacturer datasheet | Community wiki | Per new board |
+| Sensor specs | Manufacturer datasheet | ESPHome docs | Rarely changes |
 | ESPHome support | ESPHome changelog | GitHub releases | Per ESPHome release |
 
-**Update-process:**
-1. JSON-fil har `last_verified: YYYY-MM-DD` och `verified_source`
-2. Audit-script körs månadsvis, flaggar filer äldre än 6 månader
-3. Vid ny chip-release: PR med ny board-profil + uppdaterad `_index.md`
+**Update process:**
+1. Each JSON file has `last_verified: YYYY-MM-DD` and `verified_source`
+2. An audit script runs monthly and flags files older than 6 months
+3. On new chip release: PR with the new board profile + updated `_index.md`
 
-### 4.2 JSON Schema Validation
+### 4.2 JSON schema validation
 
-`aurora/references/schemas/*.schema.json` definierar struktur för alla JSON-typer.
+`aurora/references/schemas/*.schema.json` defines the structure for all JSON types.
 
 **Validation runs:**
-- Pre-commit hook: alla nya/ändrade JSON valideras mot schema
-- CI: heltäckande validation över alla JSON-filer
-- Runtime (Volt): validera schema vid laddning, fall back om ogiltigt
+- Pre-commit hook: all new or changed JSON validated against the schema
+- CI: full validation across all JSON files
+- Runtime (Volt): validate the schema at load time, fall back if invalid
 
-### 4.3 Schema Versioning & Backward Compatibility
+### 4.3 Schema versioning and backward compatibility
 
-Varje JSON har `schema_version`:
+Every JSON file carries `schema_version`:
 ```json
 {
   "schema_version": "1.0",
@@ -826,32 +826,32 @@ Varje JSON har `schema_version`:
 }
 ```
 
-**Versioneringsregler (semver):**
+**Versioning rules (semver):**
 - MAJOR (2.0): breaking change, requires migration
-- MINOR (1.1): nya optional fields, backward compatible
-- PATCH (1.0.1): bugfix i dokumentation
+- MINOR (1.1): new optional fields, backward compatible
+- PATCH (1.0.1): documentation bugfix
 
-**Migration scripts** lagras i `schemas/migrations/v1-to-v2.md`.
+**Migration scripts** live in `schemas/migrations/v1-to-v2.md`.
 
-### 4.4 Community Contribution Path
+### 4.4 Community contribution path
 
-`aurora/CONTRIBUTING.md` med:
-- Mall för "Add new board" PR
-- Mall för "Add new component" PR
-- Verifieringskrav (datasheet link, last_verified, tester)
-- Review-process (minst 1 maintainer + automatiserad test-suite)
+`aurora/CONTRIBUTING.md` contains:
+- Template for "Add new board" PRs
+- Template for "Add new component" PRs
+- Verification requirements (datasheet link, last_verified, tests)
+- Review process (at least 1 maintainer + automated test suite)
 
-PR-template med checklist:
+PR template checklist:
 ```
 - [ ] schema_version is set
-- [ ] last_verified is current date
+- [ ] last_verified is the current date
 - [ ] verified_source is linked
 - [ ] All required fields are present
 - [ ] Passes schema validation (npm run validate)
 - [ ] Iron Law tests pass
 ```
 
-### 4.5 CI/CD för Iron Law Test Suite
+### 4.5 CI/CD for the Iron Law Test Suite
 
 GitHub Actions workflow `.github/workflows/aurora-validation.yml`:
 
@@ -873,16 +873,16 @@ jobs:
 
 ---
 
-## 5. Implementeringsplan (utökad)
+## 5. Implementation plan (expanded)
 
-### Fas 1: Foundation Data + Schema
-1. Skriv JSON Schema för alla typer (boards, components, expanders, voltage-shifters, external-components, project-snapshots)
-2. Konvertera `esphome/references/pinouts.md` till JSON-profiler för 9 chip-familjer
-3. Skapa initial set av 10 vanliga sensor-profiler (inklusive varianter)
-4. Skapa initial set av 4 GPIO-expander-profiler
-5. Skapa initial set av 3 voltage shifter-profiler
+### Phase 1: Foundation data + schema
+1. Write JSON Schema for all types (boards, components, expanders, voltage-shifters, external-components, project-snapshots)
+2. Convert `esphome/references/pinouts.md` into JSON profiles for 9 chip families
+3. Create an initial set of 10 common sensor profiles (including variants)
+4. Create an initial set of 4 GPIO expander profiles
+5. Create an initial set of 3 voltage shifter profiles
 
-### Fas 2: Validator-modulerna
+### Phase 2: Validator modules
 1. `validators/pin-validator.md`
 2. `validators/conflict-validator.md`
 3. `validators/version-validator.md`
@@ -894,19 +894,19 @@ jobs:
 9. `validators/i2c-address-validator.md`
 10. `validators/voltage-level-validator.md`
 
-### Fas 3: Volts integration
-1. Uppdatera `aurora/souls/volt.md` med Iron Law 6: "Validate before generating"
-2. Uppdatera `aurora/SKILL.md` med referens till boards/, components/, expanders/
-3. Skapa Volts test-suite i `aurora/tests/volt/`
-4. Implementera utökat validering-workflow (13 steg)
+### Phase 3: Volt integration
+1. Update `aurora/souls/volt.md` with Iron Law 6: "Validate before generating"
+2. Update `aurora/SKILL.md` with references to boards/, components/, expanders/
+3. Create Volt's test suite in `aurora/tests/volt/`
+4. Implement the expanded validation workflow (13 steps)
 
-### Fas 4: Smart Home & Special boards
+### Phase 4: Smart home and special boards
 1. Shelly Plus 1, Plus 2PM
 2. Sonoff Basic R3, Mini R3
 3. LilyGo T-Display S3, M5Stack Atom, Heltec WiFi LoRa
 4. RP2040 Pico, RP2350 Pico 2
 
-### Fas 5: Project Templates Library
+### Phase 5: Project templates library
 1. Bluetooth proxy template
 2. Voice assistant template (ESP32-S3)
 3. Air quality monitor template
@@ -915,114 +915,114 @@ jobs:
 6. Multi-relay controller template
 7. Temp/humidity room template
 
-### Fas 6: Hand-off Protocol & Cross-Agent
+### Phase 6: Hand-off protocol and cross-agent
 1. `handoff/_protocol.md`
 2. `handoff/project-context.schema.json`
-3. Ada validation (test-suite + validators)
-4. Sage validation (test-suite + validators)
-5. River validation (test-suite + validators)
-6. Mira, Atlas, Iris: samma mönster
+3. Ada validation (test suite + validators)
+4. Sage validation (test suite + validators)
+5. River validation (test suite + validators)
+6. Mira, Atlas, Iris: same pattern
 
-### Fas 7: External Components Catalog
-1. `external-components/_index.md` med community-package guide
+### Phase 7: External components catalog
+1. `external-components/_index.md` with community package guide
 2. Initial set: LD2410, Tuya MCU, NSPanel Pro
-3. Source URL-validering (GitHub repo finns)
-4. Maintenance status-tracking
+3. Source URL validation (GitHub repo exists)
+4. Maintenance status tracking
 
-### Fas 8: Advanced features
-1. Retroactive YAML validation (Volt parsar existerande YAML)
-2. Tiered error message-system
-3. Project snapshots (persistens mellan sessioner)
+### Phase 8: Advanced features
+1. Retroactive YAML validation (Volt parses existing YAML)
+2. Tiered error message system
+3. Project snapshots (persistence between sessions)
 4. Lifecycle warnings
 
-### Fas 9: Data Management
+### Phase 9: Data management
 1. JSON Schema validation infrastructure
-2. Audit-script för data freshness
-3. `CONTRIBUTING.md` + PR-templates
-4. CI/CD workflow för aurora validation
+2. Audit script for data freshness
+3. `CONTRIBUTING.md` + PR templates
+4. CI/CD workflow for aurora validation
 
 ---
 
-## 6. Förväntat resultat
+## 6. Expected outcome
 
-### Före lösningen
-> Nybörjare: "Jag vill bygga en bluetooth-proxy"
-> → Volt: "Använd ESP32-S2"
-> → Användare köper, flashar, fungerar inte (S2 har ingen BLE)
-> → ❌ Besvikelse, projekt övergivet
+### Before the solution
+> Beginner: "I want to build a bluetooth proxy"
+> → Volt: "Use ESP32-S2"
+> → User buys it, flashes, it does not work (S2 has no BLE)
+> → ❌ Disappointment, project abandoned
 
-### Efter lösningen
-> Nybörjare: "Jag vill bygga en bluetooth-proxy"
-> → Volt matchar template "bluetooth-proxy"
-> → Volt filtrerar boards: capability `bluetooth_proxy: true`
-> → Volt: "ESP32-C3 (billigast) eller ESP32-S3 (om voice senare)"
-> → Användaren väljer C3
-> → Volt laddar `esp32-c3-mini.json` + komponent-profiler
-> → Volt kollar GPIO-tillräcklighet, conflicts, OTA-safety, secrets
-> → Volt genererar YAML från template + diagram + troubleshooting
-> → ✅ Användare flashar, bluetooth-proxy fungerar
-
----
-
-## 7. Success Criteria
-
-- ✅ Volt kan **inte** generera YAML med GPIO som inte finns på vald board
-- ✅ Volt kan **inte** rekommendera board som saknar krävd capability
-- ✅ Volt **upptäcker** pin-konflikter mellan komponenter före output
-- ✅ Volt **varnar** för deprecated boards med tydlig successor
-- ✅ Volt **varnar** för sensor-variant-förvirring (BME280 vs BMP280)
-- ✅ Volt **föreslår** GPIO expander när pinnar tar slut
-- ✅ Volt **kräver** voltage level shifter när 5V-komponent på 3.3V board
-- ✅ Volt **detekterar** I2C-adresskonflikter mellan komponenter
-- ✅ Volt **förhindrar** brick-risk via OTA-safety check
-- ✅ Volt **kräver** !secret för alla credentials
-- ✅ Project templates ger 30-sekunders quick-start för 7 vanliga use-cases
-- ✅ Hand-off protocol fungerar mellan minst Volt → Sage → Iris
-- ✅ Felmeddelanden är förståeliga för nybörjare (3 lager)
-- ✅ JSON-data valideras mot schema vid commit
-- ✅ Schema-versionering möjliggör backward compatibility
-- ✅ CI/CD kör Iron Law Test Suite automatiskt på varje PR
-- ✅ Community kan bidra med nya boards via dokumenterad process
+### After the solution
+> Beginner: "I want to build a bluetooth proxy"
+> → Volt matches the "bluetooth-proxy" template
+> → Volt filters boards by capability `bluetooth_proxy: true`
+> → Volt: "ESP32-C3 (cheapest) or ESP32-S3 (if voice later)"
+> → User picks C3
+> → Volt loads `esp32-c3-mini.json` + component profiles
+> → Volt checks GPIO sufficiency, conflicts, OTA safety, secrets
+> → Volt generates YAML from template + diagram + troubleshooting
+> → ✅ User flashes, bluetooth proxy works
 
 ---
 
-## 8. Out of scope för denna version (Tier C, V2 roadmap)
+## 7. Success criteria
 
-- Hardware automation (BOM-generering, PCB-layout)
-- Multi-board topology validation (3+ ESP32 som pratar med varandra)
+- ✅ Volt **cannot** generate YAML with GPIO that does not exist on the selected board
+- ✅ Volt **cannot** recommend a board missing a required capability
+- ✅ Volt **detects** pin conflicts between components before output
+- ✅ Volt **warns** about deprecated boards with a clear successor
+- ✅ Volt **warns** about easily confused sensor variants (BME280 vs BMP280)
+- ✅ Volt **suggests** a GPIO expander when pins run out
+- ✅ Volt **requires** a voltage level shifter when a 5V component is paired with a 3.3V board
+- ✅ Volt **detects** I2C address conflicts between components
+- ✅ Volt **prevents** brick risk via the OTA safety check
+- ✅ Volt **requires** !secret for all credentials
+- ✅ Project templates provide a 30-second quick start for 7 common use cases
+- ✅ Hand-off protocol works for at least Volt → Sage → Iris
+- ✅ Error messages are understandable for beginners (3 layers)
+- ✅ JSON data validates against the schema on commit
+- ✅ Schema versioning supports backward compatibility
+- ✅ CI/CD runs the Iron Law Test Suite automatically on every PR
+- ✅ The community can contribute new boards via a documented process
+
+---
+
+## 8. Out of scope for this version (Tier C, V2 roadmap)
+
+- Hardware automation (BOM generation, PCB layout)
+- Multi-board topology validation (3+ ESP32 devices communicating)
 - Pricing/availability data
-- Compliance & certifiering (CE, FCC, RoHS) per board
-- Industriprotokoll (Modbus RTU/TCP, BACnet, M-Bus, KNX, DLMS)
-- Mass-produktion concerns (supply chain, lead times, MOQs)
-- Migration path för befintliga ESPHome-projekt
-- Internationalization (felmeddelanden på olika språk)
-- Interactive board selector UI (CLI-only för v1)
+- Compliance and certification (CE, FCC, RoHS) per board
+- Industrial protocols (Modbus RTU/TCP, BACnet, M-Bus, KNX, DLMS)
+- Mass-production concerns (supply chain, lead times, MOQs)
+- Migration path for existing ESPHome projects
+- Internationalization (error messages in multiple languages)
+- Interactive board selector UI (CLI only for v1)
 
 ---
 
-## 9. Risker och mitigation
+## 9. Risks and mitigation
 
-| Risk | Sannolikhet | Påverkan | Mitigation |
-|------|-------------|----------|------------|
-| JSON-databasen blir inaktuell | Hög | Hög | `last_verified` + audit-script + community PR-process |
-| Volt ignorerar validering | Låg | Kritisk | Test-suite + Iron Law 6 explicit + CI |
-| Nybörjare överväldigas av val | Medel | Medel | Tiered messages + templates som default |
-| Maintenance overhead | Medel | Medel | Templater + bidragsguide + schema validation |
-| Schema-breaking changes | Medel | Hög | schema_version + migration scripts |
-| External component-data inaktuell | Hög | Medel | maintenance_status field + GitHub stars check |
-| Falska positiva i secrets-scanner | Medel | Låg | Regex tweaks + opt-out per credential |
-| OTA-safety för restriktiv | Låg | Medel | Explicit override-flagga med varning |
-| I2C-multiplexer komplicerar | Medel | Låg | Endast vid riktig konflikt, transparent |
-| GPIO expander glömmer constraints | Låg | Medel | Expander-profil deklarerar limitations |
-
----
-
-## 10. Nästa steg
-
-1. Användare granskar och godkänner detta spec
-2. Vid godkännande: transition till `writing-plans` skill för detaljerad implementeringsplan
-3. Implementation per fas, med test-coverage per fas
+| Risk | Likelihood | Impact | Mitigation |
+|------|-----------|--------|------------|
+| JSON database goes stale | High | High | `last_verified` + audit script + community PR process |
+| Volt ignores validation | Low | Critical | Test suite + Iron Law 6 explicit + CI |
+| Beginners overwhelmed by choices | Medium | Medium | Tiered messages + templates as default |
+| Maintenance overhead | Medium | Medium | Templates + contributor guide + schema validation |
+| Schema-breaking changes | Medium | High | schema_version + migration scripts |
+| External component data stale | High | Medium | maintenance_status field + GitHub stars check |
+| False positives in secrets scanner | Medium | Low | Regex tweaks + per-credential opt-out |
+| OTA safety too restrictive | Low | Medium | Explicit override flag with warning |
+| I2C multiplexer adds complexity | Medium | Low | Only when there is a real conflict, transparent |
+| GPIO expander forgets constraints | Low | Medium | Expander profile declares limitations |
 
 ---
 
-*Spec uppdaterad: 2026-05-13. Status: Draft v2 (expanded with Tier A + B). 22 saknade element från initial granskning, 15 inkluderade här, 9 i V2 roadmap.*
+## 10. Next steps
+
+1. User reviews and approves this spec
+2. On approval: transition to the `writing-plans` skill for a detailed implementation plan
+3. Implementation per phase, with test coverage per phase
+
+---
+
+*Spec updated: 2026-05-13. Status: Draft v2 (expanded with Tier A + B). 22 missing elements from the initial review, 15 included here, 9 in the V2 roadmap.*
