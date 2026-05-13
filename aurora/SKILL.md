@@ -15,7 +15,7 @@ allowed-tools: Read, Glob, Grep, Bash, Agent, Write, Edit
 
 # /aurora — Smart Home Orchestrator
 
-When activated, first output `v1.5.1` on its own line, then output the banner:
+When activated, first output `v1.6.0` on its own line, then output the banner:
 
 ```
   ┌─────────────────────────────────────────────────────────┐
@@ -216,7 +216,27 @@ Forward these to the user when the relevant agent is assigned:
 - **River** (node-red): Always use current node names (`trigger-state`, `api-call-service`) — never legacy names
 - **Atlas** (api-catalog): Credentials always go in `secrets.yaml` — never hardcoded in YAML or Python
 - **Forge** (infrastructure): Always confirm a full backup exists before any HA update, add-on change, or config migration — no exceptions
-- **Grid** (network): Never connect IoT devices to the main LAN without a VLAN plan — always establish segmentation before recommending device setup
+- **Grid** (network): Never connect IoT devices to the main LAN without a VLAN plan, always establish segmentation before recommending device setup
+
+## Reference Data
+
+Aurora ships machine-readable reference data so agents can validate against
+authoritative specs instead of relying on training memory:
+
+- `aurora/references/boards/`: board profiles per chip family. Volt and other
+  hardware agents MUST load the matching profile before generating any GPIO
+  configuration.
+- `aurora/references/components/`: sensor and actuator profiles. Include
+  variant disambiguation (e.g. BME280 vs BMP280), voltage levels, and pin
+  requirements.
+- `aurora/references/schemas/`: JSON Schema definitions for every JSON type.
+  Tests in `aurora/tests/` validate that every reference file conforms.
+- `aurora/references/validators/`: validator modules consumed by Volt and
+  other agents. Current modules: `pin-validator.md`, `conflict-validator.md`.
+
+When Volt produces output, it MUST follow Iron Law 6: load the relevant
+profiles, run pin-validator and conflict-validator, and refuse to generate
+YAML if either reports failures.
 
 ## Common Multi-Skill Workflows
 
