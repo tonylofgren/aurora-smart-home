@@ -51,10 +51,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Example multi-agent snapshot (`aurora/references/handoff/examples/living-room-sensor.json`) covering Volt → Sage → Iris workflow
 - Orchestrator wiring in `aurora/SKILL.md` (Step 7: DEEP Mode Hand-Off) — when to create the snapshot, what initial fields to write, how to update between specialists, per-field ownership reminder, conflict handling, QUICK mode exemption
 - `aurora/references/handoff/` registered in the Reference Data section so specialists discover the protocol
-- Per-agent Iron Law propagation across specialist souls parked for the next phase
+- Snapshot-Aware Coordination Iron Law added to every DEEP-mode specialist soul (Volt, Ada, Sage, Iris, Vera, Atlas, Mira, River). Each law is tailored to the agent's per-field ownership: writers list the fields they own, read-only agents (Iris, Vera) state the prohibition explicitly. All agents share the same QUICK-mode exemption and the `conflict_log` escape hatch instead of overwriting peer fields.
 
 **Testing infrastructure:**
-- pytest test suite covering schemas, data integrity, Volt workflow simulation, project snapshot hand-off, and SKILL.md wiring (261 tests)
+- pytest test suite covering schemas, data integrity, Volt workflow simulation, project snapshot hand-off, SKILL.md wiring, and per-soul snapshot awareness (333 tests)
 - Schema validation in CI, negative tests, URI format enforcement
 
 **Documentation and disclaimers:**
