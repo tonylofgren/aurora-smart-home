@@ -1,0 +1,116 @@
+{
+  "$schema": "../../schemas/board-profile.schema.json",
+  "schema_version": "1.0",
+  "board_id": "esp32-devkit-v1",
+  "display_name": "ESP32 DevKit V1",
+  "chip": "ESP32",
+  "manufacturer": "Espressif / various",
+  "wireless": {
+    "wifi": ["2.4GHz"],
+    "wifi_standard": "WiFi 4 (b/g/n)",
+    "bluetooth": "BLE 4.2 + BT Classic",
+    "bluetooth_classic": true,
+    "thread": false,
+    "zigbee": false,
+    "lora": null,
+    "ethernet": null
+  },
+  "power": {
+    "usb_type": "Micro-USB",
+    "operating_voltage": 3.3,
+    "input_voltage_range": "5V (USB) or 3.3V",
+    "battery_connector": null,
+    "charging_ic": null,
+    "vbat_monitor_pin": null,
+    "deep_sleep_current_ua": 10,
+    "light_sleep_current_ma": 0.8,
+    "modem_sleep_current_ma": 20,
+    "solar_input": false,
+    "gpio_5v_tolerant": false
+  },
+  "memory": {
+    "flash_mb": 4,
+    "psram_mb": 0,
+    "psram_type": null,
+    "ram_kb": 520
+  },
+  "gpio": {
+    "valid_pins": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,25,26,27,32,33,34,35,36,39],
+    "strapping_pins": [0,2,5,12,15],
+    "reserved_for_usb": [],
+    "reserved_for_flash": [6,7,8,9,10,11],
+    "input_only": [34,35,36,39],
+    "adc1_pins": [32,33,34,35,36,37,38,39],
+    "adc2_pins": [0,2,4,12,13,14,15,25,26,27],
+    "touch_pins": [0,2,4,12,13,14,15,27,32,33],
+    "dac_pins": [25,26],
+    "wake_source_pins": [0,2,4,12,13,14,15,25,26,27,32,33,34,35,36,39],
+    "i2c_default": {"sda": 21, "scl": 22},
+    "spi_default": {"mosi": 23, "miso": 19, "sck": 18, "cs": 5}
+  },
+  "onboard_components": {
+    "led_gpio": 2,
+    "led_type": "single LED",
+    "boot_button_gpio": 0,
+    "reset_button": "EN pin",
+    "display": null,
+    "imu": null,
+    "buzzer": null
+  },
+  "smart_home_capabilities": {
+    "bluetooth_proxy": true,
+    "voice_assistant": false,
+    "matter_controller": true,
+    "matter_device": true,
+    "zigbee_coordinator": false,
+    "thread_border_router": false,
+    "ble_tracker": true,
+    "camera_support": false,
+    "battery_powered": false,
+    "ir_blaster": true,
+    "rf_proxy_cc1101": true
+  },
+  "ota_safety": {
+    "factory_reset_pin": 0,
+    "external_programmer_needed": false,
+    "usb_cdc_recovery": false,
+    "min_required_features_for_unbricking": ["wifi", "ota"]
+  },
+  "form_factor": {
+    "antenna": "PCB",
+    "ipex_connector": false,
+    "dimensions_mm": "55 x 28",
+    "certifications": ["FCC", "CE"],
+    "operating_temp_c": "-40 to +85"
+  },
+  "limitations": {
+    "max_cpu_mhz": 240,
+    "no_dac": false,
+    "usb_blocks_gpio": [],
+    "psram_blocks_gpio": [],
+    "adc2_blocked_when_wifi_active": true,
+    "strapping_conflict_warnings": [
+      "GPIO 0 must be HIGH at boot (BOOT mode)",
+      "GPIO 2 must be LOW at boot for flash download mode",
+      "GPIO 5 affects SDIO slave timing at boot",
+      "GPIO 12 must be LOW at boot — controls flash voltage (3.3V), pulling HIGH boots from 1.8V VDD_SDIO",
+      "GPIO 15 must be HIGH at boot to enable UART download mode debug messages"
+    ]
+  },
+  "lifecycle": {
+    "status": "active",
+    "released": "2016-01",
+    "deprecated_since": null,
+    "reason": null,
+    "successor": null
+  },
+  "esphome": {
+    "platform": "esp32",
+    "variant": "ESP32",
+    "framework": "arduino",
+    "min_version": "2022.1.0"
+  },
+  "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf",
+  "last_verified": "2026-05-13",
+  "verified_source": "Espressif ESP32 Datasheet v4.6 + esphome/references/pinouts.md"
+}
