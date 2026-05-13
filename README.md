@@ -5,12 +5,15 @@
 # Aurora Smart Home
 
 > **75,000+ lines** of documentation | **900+ example prompts** | **1,500+ code examples**
+> **21 agents** | **6 Iron Laws** | **JSON-validated reference data**
 
-The most comprehensive Claude Code skill pack for smart home development - from YAML automations to designing and manufacturing professional ESPHome-based IoT products.
+The most comprehensive Claude Code skill pack for smart home development. **New in v1.6.0:** Volt validates ESPHome configs against machine-readable hardware profiles before generating YAML, instead of guessing from training memory. Covers automations, custom integrations, Node-RED flows, dashboards, and full product development from idea to manufacturing.
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skills-7c3aed.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Home Assistant](https://img.shields.io/badge/Home_Assistant-2024.x--2026.x-41BDF5.svg)](https://www.home-assistant.io/)
 [![ESPHome](https://img.shields.io/badge/ESPHome-2026.4.5-000000.svg)](https://esphome.io/)
+[![Version](https://img.shields.io/badge/Version-v1.6.0-success.svg)](CHANGELOG.md)
+[![Validated](https://img.shields.io/badge/Validated-against_datasheets-success.svg)](aurora/references/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
@@ -54,6 +57,70 @@ Volt no longer relies on training memory for GPIO and component data. Aurora now
 - pytest suite covering schemas, data integrity, and Volt workflow simulation (36 passing)
 
 Future plans (2 through 8) expand boards, components, templates, cross-agent hand-off, external components, advanced features, and CI/CD.
+
+#### How Validation Works
+
+```
+You: "ESP32-S3 with BME280 on GPIO 19 + 20"
+       |
+       v
++----------------------------------------+
+| Volt loads board profile:              |
+|   aurora/references/boards/esp32/      |
+|   esp32-s3-devkitc-1.json              |
+| Volt loads component profile:          |
+|   aurora/references/components/        |
+|   temperature/bme280.json              |
++----------------------------------------+
+       |
+       v
++----------------------------------------+
+| pin-validator + conflict-validator     |
+| check every assignment:                |
+|  - GPIO exists on this board?          |
+|  - Reserved for USB / PSRAM / Flash?   |
+|  - I2C addresses unique?               |
+|  - Voltage compatible?                 |
++----------------------------------------+
+       |
+   Found a failure?
+   /            \
+  YES            NO
+   |              |
+   v              v
++-------+   +-------------------------+
+| Refuse|   | Generate complete YAML +|
+| YAML. |   | wiring diagram +        |
+| Explain   | calibration procedure + |
+| Suggest   | troubleshooting section |
+| fix.  |   +-------------------------+
++-------+
+```
+
+Concrete example, GPIO 19/20 conflicting with USB-CDC on ESP32-S3:
+
+> ❌ GPIO 19 is used by USB CDC on ESP32-S3 DevKit C-1. Either move the pin or set usb_cdc: false (loses serial debug).
+> ❌ GPIO 20 is used by USB CDC on ESP32-S3 DevKit C-1. Either move the pin or set usb_cdc: false (loses serial debug).
+> 🔧 Use GPIO 8 (SDA) and GPIO 9 (SCL) instead, the board's default I2C pins.
+
+When data is not yet available for the requested hardware, Volt warns explicitly and proceeds with extra caution, double-checking against the manufacturer datasheet.
+
+#### Validation Coverage Roadmap
+
+The validation pipeline is built incrementally across 8 plans. Each plan delivers working, tested software on its own.
+
+| Plan | Scope | Status |
+|------|-------|--------|
+| 1 | Foundation: schemas + pin/conflict validators + ESP32-S3 + BME280 + Iron Law 6 | ✅ v1.6.0 |
+| 2 | Foundation expansion: 8 more ESP chips + 9+ sensors + GPIO expanders + voltage shifters | 🔵 next |
+| 3 | Smart home boards: Shelly Plus, Sonoff, LilyGo, M5Stack, Heltec, RP2040/RP2350 | ⏳ planned |
+| 4 | Project templates library: bluetooth proxy, voice assistant, air quality, etc. | ⏳ planned |
+| 5 | Cross-agent hand-off protocol + Ada/Sage/River validation | ⏳ planned |
+| 6 | External components catalog (community ESPHome packages) | ⏳ planned |
+| 7 | Retroactive YAML validation + tiered error messages + project snapshots | ⏳ planned |
+| 8 | CI/CD for Iron Law Test Suite + schema versioning + community contribution path | ⏳ planned |
+
+**Currently validated hardware (Plan 1):** ESP32-S3 DevKit C-1 board, BME280 sensor. Hardware outside this list: Volt warns and falls back to training memory with explicit caution per Iron Law 6.
 
 ---
 
