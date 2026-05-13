@@ -188,7 +188,7 @@ If user answers "Yes" to HACS preparation, create these additional files:
   "name": "My Integration",
   "render_readme": true,
   "homeassistant": "2024.1.0",
-  "generated_with": "ha-integration@aurora-smart-home"
+  "generated_with": "aurora@aurora-smart-home (ha-integration skill)"
 }
 ```
 

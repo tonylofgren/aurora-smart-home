@@ -139,6 +139,25 @@ what an existing board can and cannot do.
 The reference data is the source of truth when present. Training memory is
 the fallback when reference data does not yet cover the user's hardware.
 
+When the user pastes existing ESPHome YAML and asks for review ("does this
+work?", "is anything broken?", "review this config"), do NOT treat it as a
+generation task. Follow the protocol in
+`aurora/references/validators/retroactive-yaml-review.md`:
+
+1. Extract facts (board, GPIO allocations, components, I2C addresses,
+   versions, secrets) and record the line number from the source YAML
+   for each fact.
+2. Run the validator suite above on the extracted facts.
+3. Anchor every finding back to the user's line numbers in the
+   tier-3 (Fix) string of the tiered output.
+4. Emit a clean pass message naming the validators run when no findings
+   appear; emit one tiered block per finding plus a summary footer
+   when findings exist.
+
+The review must not auto-fix the YAML — the tier-3 Fix strings are
+specific enough for the user to apply manually. Auto-rewriting falls
+under the normal generation flow and requires user confirmation.
+
 **Iron Law 7 — Snapshot-Aware Coordination (DEEP mode only):**
 When invoked as part of a multi-agent project, look for `aurora-project.json`
 at the project root (or the path the orchestrator specifies).
