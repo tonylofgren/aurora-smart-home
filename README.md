@@ -17,14 +17,14 @@ The most comprehensive Claude Code skill pack for smart home development - from 
 
 ## At a Glance
 
-|  | Home Assistant | Node-RED | ESPHome | Integration Dev |
-|---|:---:|:---:|:---:|:---:|
-| **Reference Guides** | 49 | 12 | 38 | 17 |
-| **Example Prompts** | 300+ | 100+ | 600+ | 129 |
-| **Code Examples** | 700+ | 200+ | 1000+ | 200+ |
-| **Ready Templates** | 17 | 15 | 30 | 10 |
-| **Coverage** | 50+ integrations | 31 nodes | 160+ components | Full HA framework |
-| **Bonus** | Sections dashboard | Node-RED 4.x | **Product dev: idea → production** | HACS v2 |
+|  | Home Assistant | Node-RED | ESPHome | Integration Dev | Aurora Orchestrator |
+|---|:---:|:---:|:---:|:---:|:---:|
+| **Reference Guides** | 49 | 12 | 38 | 17 | 21 agents + validators |
+| **Example Prompts** | 300+ | 100+ | 600+ | 129 | Routing-driven |
+| **Code Examples** | 700+ | 200+ | 1000+ | 200+ | (delegated) |
+| **Ready Templates** | 17 | 15 | 30 | 10 | Project snapshots |
+| **Coverage** | 50+ integrations | 31 nodes | 160+ components | Full HA framework | All skills |
+| **Bonus** | Sections dashboard | Node-RED 4.x | **Product dev: idea → production** | HACS v2 | **Validates before generating** |
 
 ---
 
@@ -316,7 +316,42 @@ Develop **Python custom components** for Home Assistant (custom_components, HACS
 
 ---
 
+### Aurora Orchestrator & Reference Data (`aurora`)
+
+The orchestration layer that routes requests to the right specialist agent (21 total) and consults machine-readable reference data to keep generated code correct.
+
+**21 specialist agents** organized by domain:
+- **Hardware**: Volt (ESP32), Nano (Matter/Thread), Echo (voice), Watt (power)
+- **Home Assistant logic**: Sage (YAML), Ada (Python), Mira (LLM), River (Node-RED), Iris (dashboards)
+- **External data**: Atlas (APIs)
+- **Quality**: Glitch (debug), Probe (QA), Vera (WAF), Lens (security), Manual (docs)
+- **Research**: Scout, Lore
+- **Infrastructure**: Forge (deploy), Grid (network)
+- **Design**: Canvas
+
+**Reference data validated against authoritative sources:**
+- `aurora/references/boards/`: per-chip GPIO layouts, capability matrices, OTA safety
+- `aurora/references/components/`: sensor profiles with variant disambiguation
+- `aurora/references/schemas/`: JSON Schema definitions every profile must conform to
+- `aurora/references/validators/`: pin and conflict validators run before YAML generation
+
+**Iron Law 6**: Volt MUST consult the validators and refuse to generate YAML when failures are detected. The data is the source of truth, not training memory.
+
+[View Aurora documentation](./aurora/SKILL.md)
+
+---
+
 ## Why This Skill Pack?
+
+### Correct by construction
+
+Aurora ships **machine-readable reference data** for boards and components plus **validators that agents must consult before generating code**. Volt cannot output ESPHome YAML with a GPIO that does not exist on the selected board, cannot pair a 5V sensor with a 3.3V board without flagging a level shifter, and cannot silently put two I2C devices on the same address.
+
+The reference data is versioned, schema-validated in CI, and traceable to manufacturer datasheets via `last_verified` and `verified_source` fields. When Espressif releases a new chip variant, a single PR adds a board profile and every agent that touches GPIO gets the new data immediately.
+
+This is different from skill packs that rely on the model's training memory: training memory drifts and produces plausible but wrong configs. Aurora's validators stop wrong configs from being emitted at all.
+
+### Everything else
 
 - **Saves hours** - No more searching through docs and forums
 - **Always current** - Covers HA 2024.x-2026.x, ESPHome 2026.3, Node-RED 4.x
