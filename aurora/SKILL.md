@@ -17,19 +17,21 @@ allowed-tools: Read, Glob, Grep, Bash, Agent, Write, Edit, WebFetch
 
 ## Version Check (run before banner)
 
-Before emitting anything else, run a version check via `WebFetch`:
+Try to fetch the latest published version. Best-effort, never blocking. Try paths in this order until one succeeds, then stop. If none succeeds, skip the check silently.
 
-1. Fetch `https://raw.githubusercontent.com/tonylofgren/aurora-smart-home/main/.claude-plugin/marketplace.json` and parse the `"version"` field.
-2. Compare the fetched version to the installed version `1.7.2`.
-3. If the fetched version is semver-greater than `1.7.2`, output this notice BEFORE the version banner:
+1. **`gh` CLI (primary).** Run via Bash: `gh release view --json tagName -R tonylofgren/aurora-smart-home --jq '.tagName'`. On a developer machine with `gh` installed and authenticated this returns a tag like `v1.7.2`. Strip the leading `v` to get the version.
+
+2. **`WebFetch` (fallback).** Fetch `https://raw.githubusercontent.com/tonylofgren/aurora-smart-home/main/.claude-plugin/marketplace.json` and parse the `"version"` field.
+
+3. **Silent skip.** If both paths fail, are blocked, return nothing, or do not parse, proceed directly to the banner with no extra output. Never surface "WebFetch blocked", "gh not found", "context-mode error", "command not found", or any other technical message to the user. Network issues, runtime sandbox restrictions, and missing CLI tools are all the same outcome from the user's perspective: silent.
+
+If either path succeeded and the fetched version is semver-greater than the installed version `1.7.2`, output this notice BEFORE the version banner:
 
    ```
    🔔 A newer Aurora is available: v<latest> (you have v1.7.2).
       Update: claude plugin update aurora@aurora-smart-home
       Then /reload-plugins or restart Claude Code.
    ```
-
-4. If WebFetch fails (no network, GitHub down, parse error), proceed silently. The local Freshness Check below remains as a fallback.
 
 Then output `v1.7.2 (released 2026-05-14)` on its own line, then output the banner:
 
