@@ -8,6 +8,55 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.7.0] - 2026-05-14
+
+### Added
+
+**Complete-delivery contracts across every DEEP-mode specialist:**
+
+- Volt's new **Iron Law 8 (Complete Delivery)** blocks hardware-project delivery until every required artifact exists on disk in the project folder: `<device-name>.yaml`, `secrets.yaml.example`, and a `README.md` carrying What this does, BOM with estimated unit prices and a dated total, wiring (connection table + ASCII diagram + power budget + safety notes), installation steps, calibration procedures, troubleshooting for the three most likely failures, and recovery instructions.
+- Manufacturing tier (`breadboard` / `perfboard` / `custom-PCB` / `production`) asked at project start determines extra artifacts. Custom-PCB tier adds `SCHEMATIC.md` and `PCB-NOTES.md`. Production tier additionally adds `MANUFACTURING.md`, `COST-ANALYSIS.md`, `CERTIFICATION.md`, `TEST-JIG.md`. Aurora produces text specifications; KiCad binaries are explicitly out of scope.
+- **Iron Law 3 (Complete Delivery)** added to Sage, Ada, River, and Iris for software-only projects. Each agent now writes a project folder containing the working YAML / Python / JSON plus a `README.md` with agent-specific Installation, Troubleshooting, and Recovery sections. Ada additionally produces a HACS-ready repo layout (`hacs.json`, `LICENSE`, `.github/workflows/validate.yaml`) when requested.
+
+**Four new deliverable format specs in `aurora/references/deliverables/`:**
+
+- `bom-format.md` — required columns (Component, Qty, Source, Unit price USD, Notes), production-tier additions (LCSC part number, Package), and a mandatory dated total footer. Price-free BOMs are not deliverable.
+- `wiring-format.md` — required parts (connection table, ASCII diagram, power budget paragraph, safety notes). Diagram is required even when the connection table exists.
+- `manual-format.md` — README structure with required H2 sections plus agent-specific Installation variants for all five specialists (Volt, Sage, Ada, River, Iris).
+- `pcb-format.md` — manufacturing tier table, schematic text format with reference designators and net lists, PCB layout notes, production-tier files (MANUFACTURING / COST-ANALYSIS / CERTIFICATION / TEST-JIG), and an explicit disclaimer that KiCad files are not generated.
+
+**Attribution rule covers every generated file, not just YAML/Python/flow JSON:**
+
+- All four skill SKILL.md Code Attribution sections expanded to cover every file type the skill produces (YAML, Python, JSON, Markdown, shell). The marker form is `aurora@aurora-smart-home (<sub-skill> skill)` plus the repo URL in the format appropriate to the file.
+- Sub-skill markers updated to current names: `(home-assistant skill)` replaces legacy `(ha-yaml skill)`; `(ha-integration-dev skill)` replaces legacy `(ha-integration skill)`. Hardcoded `v1.1.0` removed from the rule template.
+
+### Changed
+
+**README rewritten for clarity and accuracy:**
+
+- 651 lines reduced to roughly 312 lines (about 52% shorter).
+- New "What gets delivered" section showing the per-agent project folder structure and which sections the project README carries.
+- New glossary collapsible (plugin / command / skill / agent / validator / snapshot) for first-time Claude Code users.
+- New "What Aurora refuses to do" framing in surrounding messaging plus a vasser "Who this is for" rewrite with three concrete personas.
+- Validator count corrected from "15 validators" to 12 validators plus three supporting specs (`_tiered-errors`, `retroactive-yaml-review`, `board-selector`).
+- Skill table now includes `api-catalog` and `ha-dashboard-design`, both previously omitted despite shipping in the marketplace.
+- All em-dashes removed per the no-em-dash docs preference.
+
+**README anchor and line-break fixes:**
+
+- Restored `## Meet the Aurora team` H2 so the roster-section test can locate the block.
+- Collapsed line breaks that split "1 orchestrator + 20 named specialists" and the Nabu Casa funding sentence across lines.
+- Voice-tagline regex now accepts em-dash or pipe as the agent-entry separator so the roster respects the no-em-dash preference without breaking the contract.
+
+### Testing infrastructure
+
+- New `test_volt_iron_law_8.py` with 12 contract tests for Volt's Iron Law 8 (project folder, manufacturing tier, required files per tier, required README sections, BOM price + date stamp, disk check, attribution, deliverable-spec references).
+- New `test_deliverable_specs.py` covering the four format specs (existence, BOM price column and dated total, manual installation variants per agent, wiring required parts, PCB tier enumeration, KiCad disclaimer).
+- New `test_complete_delivery_propagation.py` with parametrised contract tests for Sage / Ada / River / Iris plus agent-specific spot checks (HACS path, manifest.json, flow JSON, dashboard YAML).
+- `test_volt_iron_laws.py` extended to cover Iron Laws 1–8 (was 1–6).
+- `test_readme_agent_roster.py` voice-tagline regex updated to accept em-dash or pipe.
+- 606 tests pass.
+
 ## [1.6.7] - 2026-05-14
 
 ### Added
