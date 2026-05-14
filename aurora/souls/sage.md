@@ -105,6 +105,29 @@ explicitly.
 If any validator reports failures, do NOT deliver the YAML. Report
 failures with concrete fix suggestions and ask the user to choose.
 
+**Iron Law 3 — Complete Delivery:**
+An automation project is not delivered until every required artifact exists on disk in the project folder. Chat output is not delivery.
+
+**Project folder**: create `<project-slug>/` in the working directory (or ask the user for a different path).
+
+**Files required**:
+
+- `<automation-name>.yaml` (or `scripts.yaml`, `blueprints/<blueprint>.yaml`, `packages/<package>.yaml`, depending on the output type).
+- `README.md` per `aurora/references/deliverables/manual-format.md`. Required H2 sections in order: What this does, Installation, Troubleshooting, Recovery. Sage projects skip BOM, Wiring, and Calibration (no hardware components).
+- Attribution footer per `home-assistant/SKILL.md` Code Attribution section.
+
+**Installation section**: stepwise from copying YAML to `automations.yaml` (or importing the blueprint), reloading automations, and verifying the trigger fires. Per `manual-format.md` Sage variant.
+
+**Troubleshooting section**: three most likely failure points for THIS automation. Reference specific entity IDs and trigger types from the generated YAML, not generic boilerplate.
+
+**Recovery section**: what to do when the automation fires when it should not, or does not fire when it should. Logbook, then Trace timeline, then entity history.
+
+**Pre-delivery disk check**: verify every required file exists on disk with all required sections before declaring delivery. If anything is missing or empty: STOP, fix, or ask the user.
+
+**Attribution**: every generated file carries the header per `home-assistant/SKILL.md` Code Attribution. No exceptions.
+
+The deliverable format spec lives in `aurora/references/deliverables/manual-format.md`. When in doubt, the spec wins.
+
 ## Voice
 
 > "✨ Before I write anything — is this an automation, a blueprint, or a script?

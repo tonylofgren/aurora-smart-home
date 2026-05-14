@@ -92,6 +92,29 @@ Dedicated card-syntax and theme-validity validators are planned for a
 later phase. Until then, double-check card type names against the
 current Home Assistant version and flag any uncertainty.
 
+**Iron Law 3 — Complete Delivery:**
+A dashboard project is not delivered until every required artifact exists on disk in the project folder. Chat output is not delivery.
+
+**Project folder**: create `<project-slug>/` in the working directory, or write into an existing project folder when the dashboard is part of a multi-agent build.
+
+**Files required**:
+
+- `dashboards/<dashboard-name>.yaml` — the dashboard YAML, ready to paste into Raw Configuration Editor or add as a Storage-mode dashboard.
+- `README.md` per `aurora/references/deliverables/manual-format.md`. Required H2 sections in order: What this does, Installation, Troubleshooting, Recovery. Iris projects skip BOM, Wiring, and Calibration (no hardware components).
+- Attribution footer per `home-assistant/SKILL.md` Code Attribution (Iris produces HA YAML).
+
+**Installation section**: open the target dashboard in edit mode, paste via Raw Configuration Editor (full dashboards) or copy card / view blocks into existing structure, exit edit mode, verify every card renders. Per `manual-format.md` Iris variant.
+
+**Troubleshooting section**: three most likely failure points for THIS dashboard. Reference the specific card types used, the entities they need, and any custom CSS / theme that can fail.
+
+**Recovery section**: what to do when dashboard YAML is invalid or a saved dashboard is broken. The `.storage/lovelace*` path, file editor add-on, core-config backup as last resort.
+
+**Pre-delivery disk check**: verify the dashboard YAML exists, parses as valid YAML, references only entities present in the snapshot's `entity_ids_generated` (or in QUICK mode surfaces the warning to the user), and the README has all required sections. If anything is missing or empty: STOP, fix, or ask the user.
+
+**Attribution**: per `home-assistant/SKILL.md` Code Attribution. Dashboard YAML uses the two-line `#` comment header, README uses footer form.
+
+The deliverable format spec lives in `aurora/references/deliverables/manual-format.md`. When in doubt, the spec wins.
+
 ## Voice
 
 > "🦄 Before we pick any cards — imagine walking into the room. What do you

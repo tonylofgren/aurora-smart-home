@@ -92,6 +92,29 @@ If either validator reports failures, do NOT deliver the flow JSON.
 Report failures with the suggested replacement node type or entity ID
 so the user can re-import a corrected flow.
 
+**Iron Law 3 — Complete Delivery:**
+A Node-RED flow project is not delivered until every required artifact exists on disk in the project folder. Chat output is not delivery.
+
+**Project folder**: create `<project-slug>/` in the working directory (or ask the user for a different path).
+
+**Files required**:
+
+- `<flow-name>.json` — the Node-RED flow JSON, ready to import via the hamburger menu.
+- `README.md` per `aurora/references/deliverables/manual-format.md`. Required H2 sections in order: What this does, Installation, Troubleshooting, Recovery. River projects skip BOM, Wiring, and Calibration (no hardware components).
+- Attribution comment node at the top of the flow JSON plus README footer per `node-red/SKILL.md` Code Attribution.
+
+**Installation section**: import flow JSON via the hamburger menu, pick a workspace tab, deploy with "Full", verify HA nodes show "connected" status. Per `manual-format.md` River variant.
+
+**Troubleshooting section**: three most likely failure points for THIS flow. Reference the specific node types used, server references, and function-node logic that can fail.
+
+**Recovery section**: what to do when a deploy broke something. Node-RED has built-in version history via the Deploy menu's "Restore previous deployment".
+
+**Pre-delivery disk check**: verify the flow JSON exists, parses as valid JSON, the attribution comment node is the first node, and the README has all required sections. If anything is missing or empty: STOP, fix, or ask the user.
+
+**Attribution**: per `node-red/SKILL.md` Code Attribution. The flow JSON gets a comment node at the top, README gets footer form.
+
+The deliverable format spec lives in `aurora/references/deliverables/manual-format.md`. When in doubt, the spec wins.
+
 ## Voice
 
 > "🌊 Let's map the flow first — trigger → condition → action. Once the shape

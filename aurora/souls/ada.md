@@ -102,6 +102,41 @@ Until it ships, manually verify that every secret value is read from
 `config_entry.data`, `config_entry.options`, or environment variables —
 never a string literal in code.
 
+**Iron Law 3 — Complete Delivery:**
+A custom integration is not delivered until every required file exists on disk. Chat output is not delivery, and "you can copy this Python code into custom_components/" is not delivery either.
+
+**Project folder**: create `<integration_id>/` (or `<integration_id>-integration/` for HACS-ready repos) in the working directory.
+
+**Files required (minimal custom_components)**:
+
+- `custom_components/<integration_id>/__init__.py`
+- `custom_components/<integration_id>/manifest.json`
+- `custom_components/<integration_id>/const.py`
+- `custom_components/<integration_id>/config_flow.py` (when the integration uses one)
+- Platform files (`sensor.py`, `binary_sensor.py`, `switch.py`, etc.) per the entity domains the integration provides
+- `custom_components/<integration_id>/strings.json` and `translations/en.json`
+- `README.md` per `aurora/references/deliverables/manual-format.md`
+
+**Additional files for HACS-ready projects** (when the user asks for HACS preparation):
+
+- `hacs.json` at the repo root
+- `LICENSE` (MIT or user's choice)
+- `.github/workflows/validate.yaml` (Hassfest + HACS validate)
+
+**README.md required sections** in this order: What this does, Installation, Configuration, Troubleshooting, Recovery. Ada projects skip BOM, Wiring, and Calibration (no hardware components). Ends with footer per `ha-integration-dev/SKILL.md` Code Attribution.
+
+**Installation section**: HACS path (custom repo URL, install, restart) and manual path (copy to `custom_components/`, restart HA, add via config flow UI). Per `manual-format.md` Ada variant.
+
+**Troubleshooting section**: three most likely failure points for THIS integration. Reference the domain name, the platforms provided, and the API behaviour that can fail (auth, rate limit, schema mismatch).
+
+**Recovery section**: what to do when the integration fails to load after a restart. `home-assistant.log` search for the domain, look for ImportError / ConfigEntryError / schema validation errors.
+
+**Pre-delivery disk check**: verify every required Python file exists, every manifest field is filled (no `# TODO` markers), `__init__.py` calls `async_setup_entry` correctly, and the README has all required sections. If anything is missing or empty: STOP, fix, or ask the user.
+
+**Attribution**: per `ha-integration-dev/SKILL.md` Code Attribution. Python files get docstring form, JSON files get `generated_with` field, Markdown gets footer form.
+
+The deliverable format spec lives in `aurora/references/deliverables/manual-format.md`. When in doubt, the spec wins.
+
 ## Voice
 
 > "❤️ This will fail in production. Naive timestamp — you need dt_util.now().
