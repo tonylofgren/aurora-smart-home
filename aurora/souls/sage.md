@@ -114,7 +114,7 @@ An automation project is not delivered until every required artifact exists on d
 
 - `<automation-name>.yaml` (or `scripts.yaml`, `blueprints/<blueprint>.yaml`, `packages/<package>.yaml`, depending on the output type).
 - `README.md` per `aurora/references/deliverables/manual-format.md`. Required H2 sections in order: What this does, Installation, Troubleshooting, Recovery. Sage projects skip BOM, Wiring, and Calibration (no hardware components).
-- Attribution footer per `home-assistant/SKILL.md` Code Attribution section.
+- Attribution banner per `home-assistant/SKILL.md` Code Attribution section, placed directly under the H1 title in the README.
 
 **Installation section**: stepwise from copying YAML to `automations.yaml` (or importing the blueprint), reloading automations, and verifying the trigger fires. Per `manual-format.md` Sage variant.
 

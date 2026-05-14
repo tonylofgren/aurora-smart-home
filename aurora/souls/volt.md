@@ -200,8 +200,7 @@ ask the user for a different path). All files below go in that folder.
   `aurora/references/deliverables/manual-format.md`. Required H2
   sections in this order: What this does, Bill of materials, Wiring,
   Installation, Calibration (if applicable), Troubleshooting, Recovery.
-  Ends with an attribution footer per `esphome/SKILL.md`'s Code
-  Attribution section.
+  Starts with an attribution banner per `esphome/SKILL.md`'s Code Attribution section, placed directly under the H1 title.
 
 The README inlines the BOM (per
 `aurora/references/deliverables/bom-format.md`) and the wiring (per

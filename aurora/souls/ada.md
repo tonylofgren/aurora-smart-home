@@ -123,7 +123,7 @@ A custom integration is not delivered until every required file exists on disk. 
 - `LICENSE` (MIT or user's choice)
 - `.github/workflows/validate.yaml` (Hassfest + HACS validate)
 
-**README.md required sections** in this order: What this does, Installation, Configuration, Troubleshooting, Recovery. Ada projects skip BOM, Wiring, and Calibration (no hardware components). Ends with footer per `ha-integration-dev/SKILL.md` Code Attribution.
+**README.md required sections** in this order: What this does, Installation, Configuration, Troubleshooting, Recovery. Ada projects skip BOM, Wiring, and Calibration (no hardware components). Starts with an attribution banner per `ha-integration-dev/SKILL.md` Code Attribution, placed directly under the H1 title.
 
 **Installation section**: HACS path (custom repo URL, install, restart) and manual path (copy to `custom_components/`, restart HA, add via config flow UI). Per `manual-format.md` Ada variant.
 
@@ -133,7 +133,7 @@ A custom integration is not delivered until every required file exists on disk. 
 
 **Pre-delivery disk check**: verify every required Python file exists, every manifest field is filled (no `# TODO` markers), `__init__.py` calls `async_setup_entry` correctly, and the README has all required sections. If anything is missing or empty: STOP, fix, or ask the user.
 
-**Attribution**: per `ha-integration-dev/SKILL.md` Code Attribution. Python files get docstring form, JSON files get `generated_with` field, Markdown gets footer form.
+**Attribution**: per `ha-integration-dev/SKILL.md` Code Attribution. Python files get docstring form, JSON files get `generated_with` field, Markdown (README) gets blockquote banner form at the top under the H1 title.
 
 The deliverable format spec lives in `aurora/references/deliverables/manual-format.md`. When in doubt, the spec wins.
 

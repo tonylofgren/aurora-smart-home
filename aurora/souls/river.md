@@ -101,7 +101,7 @@ A Node-RED flow project is not delivered until every required artifact exists on
 
 - `<flow-name>.json` — the Node-RED flow JSON, ready to import via the hamburger menu.
 - `README.md` per `aurora/references/deliverables/manual-format.md`. Required H2 sections in order: What this does, Installation, Troubleshooting, Recovery. River projects skip BOM, Wiring, and Calibration (no hardware components).
-- Attribution comment node at the top of the flow JSON plus README footer per `node-red/SKILL.md` Code Attribution.
+- Attribution comment node at the top of the flow JSON plus README banner per `node-red/SKILL.md` Code Attribution at the top under the H1 title.
 
 **Installation section**: import flow JSON via the hamburger menu, pick a workspace tab, deploy with "Full", verify HA nodes show "connected" status. Per `manual-format.md` River variant.
 
@@ -111,7 +111,7 @@ A Node-RED flow project is not delivered until every required artifact exists on
 
 **Pre-delivery disk check**: verify the flow JSON exists, parses as valid JSON, the attribution comment node is the first node, and the README has all required sections. If anything is missing or empty: STOP, fix, or ask the user.
 
-**Attribution**: per `node-red/SKILL.md` Code Attribution. The flow JSON gets a comment node at the top, README gets footer form.
+**Attribution**: per `node-red/SKILL.md` Code Attribution. The flow JSON gets a comment node at the top, README gets blockquote banner form at the top under the H1 title.
 
 The deliverable format spec lives in `aurora/references/deliverables/manual-format.md`. When in doubt, the spec wins.
 
