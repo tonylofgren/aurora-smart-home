@@ -7,7 +7,7 @@
 > **75,000+ lines** of documentation | **900+ example prompts** | **1,500+ code examples**
 > **21 agents** | **6 Iron Laws** | **JSON-validated reference data**
 
-The most comprehensive Claude Code skill pack for smart home development. **New in v1.6.7:** CI/CD pipeline now runs the 539-test pytest suite on every push and PR — schema regressions and validator contract drift fail the build before merge. Plus a `SCHEMA-VERSIONING.md` operational doc spells out when to bump major / minor / patch on profile schema versions. Builds on v1.6.6's retroactive YAML review. Covers automations, custom integrations, Node-RED flows, dashboards, and full product development from idea to manufacturing.
+The most comprehensive Claude Code skill pack for smart home development. **New for users since v1.6.0:** paste an existing ESPHome or Home Assistant config and Aurora reviews it line by line with concrete fixes; agents like Ada, Sage, and Mira refuse to ship code with bad async patterns, missing `!secret` references, or invented entity IDs; cross-agent projects (Volt → Sage → Iris) stay in sync via a structured handoff so the dashboard agent never references entities the firmware agent never produced. Covers automations, custom integrations, Node-RED flows, dashboards, and full product development from idea to manufacturing.
 
 > **No runtime dependencies.** Aurora is a Claude Code plugin made of markdown and JSON. The agents (Claude) read the files directly; nothing is executed on your machine. Python + pytest are only needed if a developer wants to run the test suite locally.
 
@@ -128,71 +128,23 @@ Aurora runs like a small smart home agency. 1 orchestrator + 20 named specialist
 
 ### What's New in v1.6.7
 
-**Pytest suite runs in CI (Plan 8)**
-
-The 500+ contract tests under `aurora/tests/` protect every schema, every validator markdown spec, every soul Iron Law, every reference data file. Until now they ran only locally before commits. From this release they run in GitHub Actions on every push and pull request to `main` — schema regressions, validator drift, or accidental Iron Law removals fail the build before merge.
-
-The new `pytest-suite` job in `.github/workflows/validate.yaml` pins Python 3.13, installs from `requirements-dev.txt`, caches pip between runs, and reports a per-run summary in the GitHub Actions UI. Existing jobs (YAML lint, Markdown lint, structure checks, ESPHome config validation) are unchanged.
-
-**Operational schema-versioning doc**
-
-`aurora/references/schemas/SCHEMA-VERSIONING.md` spells out when to bump major / minor / patch on profile `schema_version` fields, what counts as a backwards-incompatible change, and how to land a schema change without breaking existing profiles. Short, operational, no philosophy.
-
-**Plan 8 closes the session**
-
-Plan 5 (cross-agent hand-off + per-agent validators), Plan 6 (community-component infrastructure), Plan 7 (tiered errors + retroactive YAML review), and Plan 8 (CI/CD + schema versioning) have all shipped. Recommended freeze after this release — the changelog from 1.6.0 → 1.6.7 covers everything in one session and users need time to absorb the additions.
+🛠️ **Infrastructure release — no user-facing changes.** 1.6.7 ships internal improvements to how Aurora is developed and tested (pytest now runs in CI, schema-versioning rules are documented). Users on 1.6.6 do not need to upgrade for any functional benefit. See [CHANGELOG.md](CHANGELOG.md) for technical detail.
 
 ### What's New in v1.6.6
 
-**Retroactive YAML review (Plan 7)**
+**Paste-YAML review.** Volt and Sage used to be generation-only — give them requirements, get back YAML. Now you can paste an existing config and ask "does this work?". Aurora identifies the board / components / GPIO from the YAML, runs the full validator suite against it, and reports back with every finding anchored to the line in your source — so the fix message points at line 23 of your file, not at an abstract pin number. Auto-fixing the YAML is deliberately not done; the Fix lines are specific enough that you apply them manually and stay in control.
 
-Until now Volt and Sage have been generation-only — give them requirements, get back YAML. Users frequently want the inverse: paste an existing config and ask "does this work?". The new protocol covers exactly that:
-
-1. **Extract** — Volt parses the YAML, identifies the board, every GPIO assignment, every component, every I2C address, and records the line number for each.
-2. **Validate** — runs the full validator suite (pin, conflict, i2c-address, voltage-level, ota-safety, version, entity-id producer, secrets) against the extracted facts.
-3. **Anchor** — re-emits every finding with the user's line numbers so they can navigate directly.
-4. **Output** — tiered errors (Problem / Explanation / Fix / Deeper) with the Fix line referencing specific source lines. Clean passes list which validators ran so "no findings" can't be mistaken for "did not look".
-
-Sage runs the same protocol on HA YAML with a smaller validator subset (entity-id consumer, version, secrets). Auto-fixing is deliberately out of scope — the Fix strings are specific enough for the user to apply manually.
-
-The protocol spec lives at `aurora/references/validators/retroactive-yaml-review.md`. Volt's Iron Law 6 now invokes it whenever the user pastes YAML and asks for review (as opposed to generation).
-
-**"Generated by" attribution rule refresh**
-
-The four sub-skill SKILL.md files (esphome, home-assistant, node-red, ha-integration-dev) used to instruct agents to emit `# Generated by esphome@aurora-smart-home v1.5.1` style headers. Two issues with that:
-
-- After v1.3 the only plugin is `aurora@aurora-smart-home`; the per-skill plugin names no longer exist.
-- The hardcoded versions (`v1.5.1`, `v1.1.0`) drift every release; stale comments accumulate in user files.
-
-The rule template now reads `aurora@aurora-smart-home (<sub-skill> skill)` with no hardcoded version. The sub-skill name survives as a semantic marker so users still see which module produced the file.
+Volt covers ESPHome YAML, Sage covers Home Assistant YAML. Clean passes list which validators actually ran so "no findings" never gets mistaken for "did not look".
 
 ### What's New in v1.6.5
 
-**Community component infrastructure (Plan 6)**
+**Aurora no longer invents community components.** When you name an ESPHome `external_components` module or a HACS integration Aurora hasn't seen before, agents used to silently make up the configuration from training memory — often plausible, sometimes wrong. Now they ask you three things: source URL, version requirements, documentation link. Aurora uses your answers as the only source of truth for the generated config, and adds a visible caution block so you know the result is based on what you supplied rather than verified reference data.
 
-Community ESPHome `external_components` and HACS integrations are the biggest blind spot left in Aurora's reference data. The previous behaviour when a user named one: Volt or Atlas would silently fabricate plausible-but-wrong configuration based on the agent's training memory.
-
-This release ships **infrastructure for handling unknown community components correctly**, deliberately **without** a populated "popular components" catalog (which would rot within months and damage trust).
-
-- `aurora/references/schemas/external-component.schema.json` — JSON Schema for community ESPHome modules.
-- `aurora/references/schemas/hacs-integration.schema.json` — JSON Schema for HACS-distributed HA integrations.
-- `aurora/references/validators/unknown-component-validator.md` — protocol agents follow when no profile exists: ask the user three concrete questions (source URL, version requirements, docs link), record the answer in the project snapshot's `notes[]`, and emit a caution block in the output. If the user cannot answer a required question, the agent refuses rather than fabricates.
-- `aurora/references/external_components/CONTRIBUTING.md` and `aurora/references/hacs_integrations/CONTRIBUTING.md` — verification floor for adding catalog entries.
-
-The two catalog directories ship empty. Entries arrive via PR after manual verification per the contribution docs.
+If you don't have all three answers, Aurora stops there rather than guessing.
 
 ### What's New in v1.6.4
 
-**llm-config and node-red-syntax validators**
-
-The last two domain validators for DEEP-mode specialists ship:
-
-- `llm-config-validator` (Mira) — enumerates the known LLM providers (`openai_conversation`, `anthropic`, `google_generative_ai_conversation`, `ollama`, `local_llm_conversation`), flags casing errors on provider keys, malformed local endpoints, missing `api_key` references on cloud providers, prompt templates past the token budget, and `expose:` lists that reference entities not in the snapshot. Includes a privacy warning when cloud providers receive sensitive entity state.
-- `node-red-syntax-validator` (River) — catches the legacy node type names (`ha-state-changed` → `trigger-state`, `ha-call-service` → `api-call-service`, etc.) that silently fail to deploy in `node-red-contrib-home-assistant-websocket` 4.x. Confirms every HA-side node has a `server` reference, every `api-call-service` has both `domain` and `service`, and warns on function nodes that import sync HTTP libraries or contain literal credentials.
-
-**Iron Law 2 reaches the last two specialists**
-
-With their domain validators shipped, Mira and River now have Iron Law 2 (Validate Before Generating). Every DEEP-mode specialist — Volt, Ada, Sage, Iris, Vera, Atlas, Mira, River — now carries both Iron Laws: snapshot-aware coordination (Law 1, from v1.6.1) and validate-before-generating (Law 2). No DEEP-mode soul stays at Law 1 only.
+**Mira (LLM/AI) and River (Node-RED) validate before shipping.** When Mira sets up a conversation agent, it checks the provider name spelling, the endpoint URL, whether the prompt template fits in the token budget, and whether `expose:` lists reference entities that actually exist. Cloud providers get a privacy warning when they're about to receive sensitive entity state — so you know before you ship that OpenAI is about to see your camera entities. When River builds a Node-RED flow, it catches legacy node type names (`ha-state-changed`, `ha-call-service`) that silently fail to deploy on current Node-RED, confirms every Home Assistant node points at a configured server, and flags function nodes that contain hardcoded credentials.
 
 ### What's New in v1.6.3
 
@@ -219,21 +171,17 @@ You can set usb_cdc: false to free them, but you lose USB serial
 console — only OTA-over-WiFi remains for log inspection.
 ```
 
-Tiers 1 and 3 are mandatory for every failure (so the user always gets "what's wrong, what to do"); tiers 2 and 4 add context for users who want it. Warnings use the same shape with `⚠️ Warning` instead of `❌ Problem`.
-
-The shared format spec lives at `aurora/references/validators/_tiered-errors.md`. Every validator (pin, conflict, entity-id, secrets, ota-safety, i2c-address, voltage-level, version, async-correctness) references it from its Output section, so agents that read one validator see the contract immediately.
+Tiers 1 and 3 are mandatory for every failure (so you always get "what's wrong, what to do"); tiers 2 and 4 add context when you want it. Warnings use the same shape with `⚠️ Warning` instead of `❌ Problem`.
 
 ### What's New in v1.6.2
 
-**Five more validators**
+**Five more things Aurora catches before shipping code.**
 
-The validator suite doubles. Each is a markdown spec (the established `pin-validator.md` / `conflict-validator.md` pattern), so the plugin still ships zero executable code.
-
-- `ota-safety-validator` (Volt) — refuses to ship YAML that would leave the board unrecoverable. Enforces every board profile's `min_required_features_for_unbricking`.
-- `i2c-address-validator` (Volt) — catches the classic BME280 + BMP280 collision at 0x76, calls out the reserved address ranges, routes around conflicts via address-strap pins or a TCA9548A multiplexer.
-- `voltage-level-validator` (Volt) — flags 5V sensors on 3.3V-only boards and recommends the right level shifter (BSS138 for I2C, TXS0108E otherwise) with concrete profile references.
-- `version-validator` (Volt + Sage) — cross-checks every referenced feature against `aurora/references/platform-versions.md` and the user's running ESPHome / HA version, including date-style semver comparison rules.
-- `async-correctness-validator` (Ada, Mira) — flags the eighty-percent of HA async bugs LLM-generated integrations ship: `datetime.now()`, `requests.get/post/...`, `time.sleep` in coroutines, `subprocess.run`, sync `open()` inside coroutines.
+- **OTA safety.** Refuses to ship ESPHome YAML that would leave the board unrecoverable — for example, disabling WiFi on a board without USB recovery.
+- **I²C address collisions.** Catches the classic BME280 + BMP280 collision at `0x76`, calls out reserved address ranges, and suggests routing around conflicts via address-strap pins or a TCA9548A multiplexer.
+- **Voltage levels.** Flags 5V sensors connected to 3.3V-only boards and recommends the right level shifter (BSS138 for I²C, TXS0108E otherwise) with the right part on the wiring diagram.
+- **Platform version.** Cross-checks every referenced ESPHome or Home Assistant feature against your running version, including deprecation warnings.
+- **Async correctness (Python).** Catches the eighty-percent of HA async bugs LLM-generated integrations ship: `datetime.now()` instead of `dt_util.now()`, `requests` instead of `aiohttp`, `time.sleep` in coroutines, sync `open()` inside async functions.
 
 **Iron Law 2 propagates to three more specialists**
 
@@ -251,24 +199,11 @@ Volt now invokes all eight applicable validators on every YAML output: pin, conf
 
 ### What's New in v1.6.1
 
-**Cross-agent DEEP mode hand-off**
+**Multi-agent projects stay in sync.** When you build something that spans firmware + automations + dashboard, Aurora used to route to Volt, Sage, and Iris in sequence — and each agent had to re-derive shared context from chat history. Now Aurora writes a project snapshot to disk that travels between specialists. The dashboard agent sees the exact entity IDs the firmware agent produced; the automation agent sees which board was actually picked. If one agent disagrees with another, the conflict surfaces to you instead of being silently overridden.
 
-When two or more specialists collaborate on the same project (Volt builds firmware, Sage wires automations, Iris designs the dashboard), they previously had to re-derive shared context from chat history. v1.6.1 introduces a structured **project snapshot** that travels between agents on disk:
+Single-agent tasks skip the snapshot — no overhead for the common case.
 
-- JSON Schema for the snapshot (`aurora/references/schemas/project-snapshot.schema.json`) with format-checked UUIDs, ISO 8601 timestamps, and Home Assistant entity_id patterns
-- Hand-off protocol document (`aurora/references/handoff/_protocol.md`) defining storage location, lifecycle, per-field ownership table, and conflict handling
-- Runnable example covering a full Volt → Sage → Iris flow (`aurora/references/handoff/examples/`)
-- Aurora orchestrator wired to create, update, and complete snapshots in DEEP mode (Step 7 in `aurora/SKILL.md`)
-- Snapshot-Aware Iron Law in every DEEP-mode specialist soul (Volt, Ada, Sage, Iris, Vera, Atlas, Mira, River), each tailored to that agent's per-field ownership
-- 95 new pytest contract tests (333 total) verifying the schema, the SKILL.md wiring, and per-soul snapshot awareness
-- QUICK mode (single-agent task) is explicitly exempted — no overhead for trivial requests
-
-The protocol prevents three failure modes: lost context between agents, stale assumptions after upstream edits, and silent conflicts where one agent quietly overrides another. Unresolved conflict_log entries block DEEP mode from completing.
-
-**Documentation cleanup**
-
-- Replaced the broken `/plugin update <name>` slash command in update instructions with `/reload-plugins` (inside Claude Code) and `claude plugin update aurora@aurora-smart-home` (CLI) — both verified working
-- Consolidated stale pre-v1.3 plugin install instructions (`ha-yaml`, `ha-integration`, `esphome`, `node-red`, `supercharge-*`) to the single `aurora@aurora-smart-home` plugin across README, MANUAL, and all INSTALLATION docs
+**Update instructions fixed.** The `/plugin update <name>` slash command never accepted arguments inside Claude Code, so update instructions across the docs were broken. Fixed: use `/reload-plugins` inside Claude Code, or `claude plugin update aurora@aurora-smart-home` from your terminal. Both verified working.
 
 ### What's New in v1.6.0
 
