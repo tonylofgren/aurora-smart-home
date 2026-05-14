@@ -24,9 +24,9 @@ def test_skill_mentions_iron_law_6():
     assert "Iron Law 6" in content
 
 
-def test_skill_version_bumped_to_1_7_2():
+def test_skill_version_bumped_to_1_7_3():
     content = SKILL_PATH.read_text(encoding="utf-8")
-    assert "v1.7.2" in content
+    assert "v1.7.3" in content
 
 
 def test_skill_has_version_check_section():
@@ -37,27 +37,28 @@ def test_skill_has_version_check_section():
     )
 
 
-def test_skill_version_check_uses_webfetch():
+def test_skill_version_check_uses_gh_cli():
     content = SKILL_PATH.read_text(encoding="utf-8")
-    assert "WebFetch" in content, (
-        "aurora/SKILL.md does not mention WebFetch. The version check needs "
-        "WebFetch to fetch the latest marketplace.json from GitHub."
+    assert "gh release view" in content, (
+        "aurora/SKILL.md does not invoke 'gh release view' for the version "
+        "check. gh CLI is the single source of truth for the latest tag."
     )
 
 
-def test_skill_allowed_tools_includes_webfetch():
+def test_skill_version_check_does_not_use_webfetch():
+    content = SKILL_PATH.read_text(encoding="utf-8")
+    skill_body = content.split("---", 2)[2]
+    assert "WebFetch" not in skill_body or "Do not" in skill_body, (
+        "aurora/SKILL.md body references WebFetch as an active fetching path. "
+        "WebFetch fallback leaks tool errors to the user when blocked by "
+        "context-mode-style wrappers. Only gh CLI should be used."
+    )
+
+
+def test_skill_allowed_tools_excludes_webfetch():
     content = SKILL_PATH.read_text(encoding="utf-8")
     frontmatter = content.split("---", 2)[1]
-    assert "WebFetch" in frontmatter, (
-        "aurora/SKILL.md frontmatter does not list WebFetch in allowed-tools. "
-        "Without it the version-check WebFetch call cannot execute."
-    )
-
-
-def test_skill_version_check_fetches_raw_marketplace_json():
-    content = SKILL_PATH.read_text(encoding="utf-8")
-    expected_url_part = "raw.githubusercontent.com/tonylofgren/aurora-smart-home"
-    assert expected_url_part in content, (
-        "aurora/SKILL.md version check does not target the raw marketplace.json "
-        "URL. Without the URL the check cannot resolve the latest version."
+    assert "WebFetch" not in frontmatter, (
+        "aurora/SKILL.md frontmatter still lists WebFetch in allowed-tools. "
+        "v1.7.3 removed WebFetch entirely from the version-check chain."
     )

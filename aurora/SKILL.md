@@ -10,30 +10,35 @@ description: >
   token usage efficient. Trigger on: smart home, Home Assistant, ESPHome,
   automation, IoT, dashboard, ESP32, Node-RED, or any request about
   controlling or monitoring devices at home.
-allowed-tools: Read, Glob, Grep, Bash, Agent, Write, Edit, WebFetch
+allowed-tools: Read, Glob, Grep, Bash, Agent, Write, Edit
 ---
 
 # /aurora — Smart Home Orchestrator
 
 ## Version Check (run before banner)
 
-Try to fetch the latest published version. Best-effort, never blocking. Try paths in this order until one succeeds, then stop. If none succeeds, skip the check silently.
+Try to fetch the latest published version, best-effort, never blocking. Use **only** `gh` CLI via Bash. **Do not** fall back to WebFetch or any other fetching method.
 
-1. **`gh` CLI (primary).** Run via Bash: `gh release view --json tagName -R tonylofgren/aurora-smart-home --jq '.tagName'`. On a developer machine with `gh` installed and authenticated this returns a tag like `v1.7.2`. Strip the leading `v` to get the version.
+Command:
 
-2. **`WebFetch` (fallback).** Fetch `https://raw.githubusercontent.com/tonylofgren/aurora-smart-home/main/.claude-plugin/marketplace.json` and parse the `"version"` field.
+```
+gh release view --json tagName -R tonylofgren/aurora-smart-home --jq '.tagName'
+```
 
-3. **Silent skip.** If both paths fail, are blocked, return nothing, or do not parse, proceed directly to the banner with no extra output. Never surface "WebFetch blocked", "gh not found", "context-mode error", "command not found", or any other technical message to the user. Network issues, runtime sandbox restrictions, and missing CLI tools are all the same outcome from the user's perspective: silent.
+- If gh returns a valid version tag (like `v1.7.3`), strip the leading `v` and compare to the installed version `1.7.3`. If the fetched version is semver-greater, output the update notice (see below) BEFORE the banner.
+- If gh is missing, fails, returns nothing, or returns something that does not parse as a semver tag, proceed directly to the banner with no output. Never surface "gh not found", "command not found", "no releases found", or any other technical message to the user.
 
-If either path succeeded and the fetched version is semver-greater than the installed version `1.7.2`, output this notice BEFORE the version banner:
+The fallback chain is intentionally one tier. Earlier versions tried WebFetch as a secondary path; runtime tool errors from blocked fetches leaked to the user before Aurora could suppress them. A single best-effort path via gh, or silent skip, is the only safe shape.
 
-   ```
-   🔔 A newer Aurora is available: v<latest> (you have v1.7.2).
-      Update: claude plugin update aurora@aurora-smart-home
-      Then /reload-plugins or restart Claude Code.
-   ```
+Update notice (only when gh succeeded and a newer version exists):
 
-Then output `v1.7.2 (released 2026-05-14)` on its own line, then output the banner:
+```
+🔔 A newer Aurora is available: v<latest> (you have v1.7.3).
+   Update: claude plugin update aurora@aurora-smart-home
+   Then /reload-plugins or restart Claude Code.
+```
+
+Then output `v1.7.3 (released 2026-05-14)` on its own line, then output the banner:
 
 ```
   ┌─────────────────────────────────────────────────────────┐
@@ -51,7 +56,7 @@ Then output `v1.7.2 (released 2026-05-14)` on its own line, then output the bann
 
 ## Freshness Check (fallback when version check failed)
 
-If the Version Check above succeeded, skip this section. This is only the fallback for when WebFetch was unavailable.
+If the Version Check above succeeded, skip this section. This is only the fallback for when gh CLI was unavailable.
 
 The release date of this version is `2026-05-14`.
 

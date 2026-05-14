@@ -8,6 +8,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.7.3] - 2026-05-14
+
+### Changed
+
+**Version check simplified to gh CLI only, WebFetch fallback removed:**
+
+- `aurora/SKILL.md` Version Check now uses a single best-effort path: `gh release view --json tagName -R tonylofgren/aurora-smart-home --jq '.tagName'`. If gh succeeds and returns a newer tag, the update notice is shown. If gh fails for any reason (missing, unauthenticated, no releases, parse error), Aurora proceeds to the banner silently.
+- The WebFetch fallback in v1.7.2 leaked tool errors to the user when the runtime had a context-mode-style WebFetch wrapper. Claude Code's tool runtime emits "Error: WebFetch blocked" before Aurora can decide to suppress it, so any chained fallback that includes WebFetch shows the error regardless of SKILL.md instructions. Removing WebFetch is the only way to keep the path quiet on blocked runtimes.
+- `WebFetch` removed from `aurora/SKILL.md` `allowed-tools` since it is no longer used.
+- Test contracts updated: `test_skill_version_check_uses_gh_cli` replaces the previous WebFetch-presence test; `test_skill_version_check_does_not_use_webfetch` and `test_skill_allowed_tools_excludes_webfetch` lock the removal.
+
 ## [1.7.2] - 2026-05-14
 
 ### Changed
