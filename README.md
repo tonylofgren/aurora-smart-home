@@ -26,6 +26,33 @@ The most comprehensive Claude Code skill pack for smart home development. **New 
 
 ---
 
+## 🚀 Get Started
+
+Aurora is a plugin for **Claude Code** — Anthropic's terminal-based AI coding assistant. You need Claude Code installed before you can use Aurora.
+
+**1. Install Claude Code** (if you haven't already)
+
+Follow the official install guide at [claude.com/claude-code](https://claude.com/claude-code) or [docs.anthropic.com/claude-code](https://docs.anthropic.com/en/docs/claude-code).
+
+**2. Add the Aurora marketplace and install the plugin**
+
+Inside Claude Code, run:
+
+```
+/plugin marketplace add tonylofgren/aurora-smart-home
+/plugin install aurora@aurora-smart-home
+```
+
+**3. Restart Claude Code, then start your first project**
+
+```
+/aurora:aurora
+```
+
+Aurora asks what you want to build and routes to the right specialist.
+
+---
+
 ## 🔄 Already Installed? Update to v1.6.7
 
 Claude Code does **not** auto-update installed plugins by default. New aurora releases ship validated boards, sensors, templates, and validator improvements regularly.
@@ -777,6 +804,14 @@ Aurora's agent personas are inspired by the people building the Open Home.
 **Aurora helps you work with Home Assistant.** Home Assistant's core development is funded by Nabu Casa — every release, every fix, every new integration. If your home runs on HA, consider supporting them: it keeps the upstream platform alive. [nabucasa.com](https://www.nabucasa.com)
 
 *Aurora is an independent community project. Not affiliated with, endorsed by, or funded by Nabu Casa, the Open Home Foundation, or Anthropic. Agent personas are fictional.*
+
+---
+
+## Contact
+
+Questions, build ideas, or want to share a project? Reach out on Instagram: [@roligaprojekt](https://www.instagram.com/roligaprojekt).
+
+Bug reports and feature requests: open a [GitHub issue](https://github.com/tonylofgren/aurora-smart-home/issues).
 
 ---
 
