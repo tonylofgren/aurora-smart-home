@@ -24,9 +24,24 @@ def test_skill_mentions_iron_law_6():
     assert "Iron Law 6" in content
 
 
-def test_skill_version_bumped_to_1_7_4():
+def test_skill_version_matches_marketplace():
+    """Version string in aurora/SKILL.md must match marketplace.json — bumping
+    one without the other was the root of multiple drifts (v1.6.x, v1.7.x).
+    Reading both from disk keeps this test correct across future bumps."""
+    import json
+
     content = SKILL_PATH.read_text(encoding="utf-8")
-    assert "v1.7.4" in content
+    marketplace = json.loads(
+        (SKILL_PATH.parents[1] / ".claude-plugin" / "marketplace.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    version = marketplace["version"]
+    assert f"v{version}" in content, (
+        f"aurora/SKILL.md does not mention v{version} from marketplace.json. "
+        "When bumping the version, update SKILL.md output line + banner "
+        "release date together with marketplace.json."
+    )
 
 
 def test_aurora_skill_loads_specialist_soul_before_delegating():
