@@ -68,16 +68,19 @@ def test_all_agents_listed_in_roster(readme_text):
 
 
 def test_every_agent_entry_has_a_voice_tagline(readme_text):
-    """Each agent's roster entry must include an italic 'voice' quote — that
-    is what makes the roster distinctive instead of a bland name list."""
+    """Each agent's roster entry must include an italic 'voice' quote, that
+    is what makes the roster distinctive instead of a bland name list.
+
+    The separator between **Name** and the domain text accepts em-dash or
+    pipe so the format respects the no-em-dash docs preference."""
     missing = []
     for soul_name, display_name in ALL_AGENTS.items():
-        pattern = rf"\*\*{re.escape(display_name)}\*\*\s*—[^\n]*?\*\"[^\"]+\"\*"
+        pattern = rf"\*\*{re.escape(display_name)}\*\*\s*[—|]\s*[^\n]*?\*\"[^\"]+\"\*"
         if not re.search(pattern, readme_text):
             missing.append(display_name)
     assert not missing, (
         f"Agents in the roster without a voice tagline: {missing}. "
-        f"The roster format is: emoji **Name** — domain. *\"voice line.\"*"
+        f"The roster format is: emoji **Name** [—|] domain. *\"voice line.\"*"
     )
 
 

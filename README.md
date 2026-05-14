@@ -267,13 +267,12 @@ the orchestrator on quick tasks.
 | `api-catalog`          | Specific service names (Tibber, SMHI, OpenAI, etc.)           |
 | `ha-dashboard-design`  | "dashboard look", "card-mod", "Lovelace theme"                |
 
-<details>
-<summary><strong>Meet the 21 agents</strong></summary>
+## Meet the Aurora team
 
-Aurora runs like a small smart home agency. 1 orchestrator + 20 named
-specialists across 7 departments. Each specialist has a defined domain, a
-soul (`aurora/souls/`), and a voice. Agents are not owned by a single skill,
-they are routed in by the orchestrator wherever their domain fits.
+<details>
+<summary><strong>Show all 21 agents</strong></summary>
+
+Aurora runs like a small smart home agency. 1 orchestrator + 20 named specialists across 7 departments. Each specialist has a defined domain, a soul (`aurora/souls/`), and a voice. Agents are not owned by a single skill, they are routed in by the orchestrator wherever their domain fits.
 
 🏠 **Aurora** | Founder and orchestrator. *"Your home should work for you, locally, privately, without asking permission."*
 
@@ -428,11 +427,7 @@ Then describe what you want to build.
 
 ---
 
-**Aurora helps you work with Home Assistant.** HA's core development is funded
-by [Nabu Casa](https://www.nabucasa.com). If your home runs on HA, please
-consider supporting them. Aurora is an independent community project, not
-affiliated with, endorsed by, or funded by Nabu Casa, the Open Home Foundation,
-or Anthropic. Agent personas are fictional.
+**Aurora helps you work with Home Assistant.** Home Assistant's core development is funded by [Nabu Casa](https://www.nabucasa.com). If your home runs on HA, please consider supporting them. Aurora is an independent community project, not affiliated with, endorsed by, or funded by Nabu Casa, the Open Home Foundation, or Anthropic. Agent personas are fictional.
 
 ---
 
