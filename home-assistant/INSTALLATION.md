@@ -93,7 +93,7 @@ To move from one scope to another (e.g., user → local):
 ### Template Errors
 
 1. Specify your HA version in requests
-2. Report issues on [GitHub](https://github.com/tonylofgren/supercharge-smart-home-claude-skills/issues)
+2. Report issues on [GitHub](https://github.com/tonylofgren/aurora-smart-home/issues)
 
 ---
 
@@ -101,4 +101,4 @@ To move from one scope to another (e.g., user → local):
 
 - **Usage examples:** See [USAGE-GUIDE.md](USAGE-GUIDE.md)
 - **300+ prompts:** See [PROMPT-IDEAS.md](PROMPT-IDEAS.md)
-- **Issues:** [GitHub Issues](https://github.com/tonylofgren/supercharge-smart-home-claude-skills/issues)
+- **Issues:** [GitHub Issues](https://github.com/tonylofgren/aurora-smart-home/issues)

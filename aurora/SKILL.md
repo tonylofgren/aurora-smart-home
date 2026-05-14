@@ -28,6 +28,20 @@ gh release view --json tagName -R tonylofgren/aurora-smart-home --jq '.tagName'
 - If gh returns a valid version tag (like `v1.7.4`), strip the leading `v` and compare to the installed version `1.7.4`. If the fetched version is semver-greater, output the update notice (see below) BEFORE the banner.
 - If gh is missing, fails, returns nothing, or returns something that does not parse as a semver tag, proceed directly to the banner with no output. Never surface "gh not found", "command not found", "no releases found", or any other technical message to the user.
 
+**Semver comparison rule (avoid lexicographic mistakes):** Both versions must be matched against `^\d+\.\d+\.\d+$`, then split on `.` and each segment compared as **integer**, not as string. Lexicographic comparison reports `1.7.10 < 1.7.4` (because `'1' < '4'`), which is wrong. Concretely:
+
+```python
+def semver_gt(latest: str, installed: str) -> bool:
+    import re
+    m = re.match(r"^(\d+)\.(\d+)\.(\d+)$", latest)
+    n = re.match(r"^(\d+)\.(\d+)\.(\d+)$", installed)
+    if not m or not n:
+        return False
+    return tuple(int(x) for x in m.groups()) > tuple(int(x) for x in n.groups())
+```
+
+Apply this rule (or its equivalent in your runtime) before emitting the update notice. If parsing fails, treat as "no newer version" and stay silent.
+
 The fallback chain is intentionally one tier. Earlier versions tried WebFetch as a secondary path; runtime tool errors from blocked fetches leaked to the user before Aurora could suppress them. A single best-effort path via gh, or silent skip, is the only safe shape.
 
 Update notice (only when gh succeeded and a newer version exists):
@@ -46,7 +60,7 @@ Then output `v1.7.4 (released 2026-05-14)` on its own line, then output the bann
   │      S M A R T   H O M E   O R C H E S T R A T O R      │
   │                        S K I L L                        │
   │  ─────────────────────────────────────────────────────  │
-  │    21 Agents  ·  3 Model Tiers  ·  Community Project    │
+  │    21 Agents  ·  Opus / Sonnet / Haiku  ·  Community    │
   │    A Claude Code Skill  ·  Support HA: nabucasa.com     │
   │                                                         │
   │  Update: claude plugin update aurora@aurora-smart-home  │
@@ -394,7 +408,7 @@ it never replaces it.
 Emojis are part of each agent's identity — use them in text responses, never
 inside code blocks or YAML.
 
-Soul files are in `aurora/souls/{agent-lowercase}.md` for all 19 agents.
+Soul files are in `aurora/souls/{agent-lowercase}.md` for all 21 agents (1 orchestrator + 20 specialists).
 
 ---
 
@@ -415,7 +429,7 @@ help response. Use markdown — no code blocks.
 ---
 
 **Aurora — Smart Home Orchestrator**
-19 specialist agents. Describe your project and Aurora routes to the right one.
+20 specialists across 16 capability areas. Describe your project and Aurora routes to the right one.
 
 ---
 

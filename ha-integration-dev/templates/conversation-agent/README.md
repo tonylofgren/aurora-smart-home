@@ -169,4 +169,4 @@ In `_parse_and_execute_actions()`, add handlers for custom action types.
 
 ---
 
-*Generated with [ha-integration@aurora-smart-home](https://github.com/tonylofgren/aurora-smart-home)*
+*Generated with [aurora@aurora-smart-home (ha-integration-dev skill)](https://github.com/tonylofgren/aurora-smart-home)*

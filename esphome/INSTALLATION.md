@@ -131,4 +131,4 @@ See [scripts/README.md](../scripts/README.md) for more options.
 
 - **Usage examples:** See [USAGE-GUIDE.md](USAGE-GUIDE.md)
 - **600+ prompts:** See [PROMPT-IDEAS.md](PROMPT-IDEAS.md)
-- **Issues:** [GitHub Issues](https://github.com/tonylofgren/supercharge-smart-home-claude-skills/issues)
+- **Issues:** [GitHub Issues](https://github.com/tonylofgren/aurora-smart-home/issues)
