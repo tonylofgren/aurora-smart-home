@@ -8,6 +8,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.7.1] - 2026-05-14
+
+### Added
+
+**Version check at every `/aurora:aurora` activation:**
+
+- Aurora now fetches `https://raw.githubusercontent.com/tonylofgren/aurora-smart-home/main/.claude-plugin/marketplace.json` via `WebFetch` before emitting the banner. The fetched `version` field is compared against the installed version. If GitHub has a newer version, Aurora prints a notice with the exact version delta plus the update command before the banner appears.
+- The fetch is silent on success and silent on failure (no network, GitHub down, parse error). Network problems never block a session.
+- The previous 90-day local Freshness Check is kept as a fallback for when WebFetch is unavailable.
+- `WebFetch` added to `aurora/SKILL.md` `allowed-tools`. Four new pytest contracts lock the version-check section, the WebFetch reference, the URL target, and the `allowed-tools` inclusion.
+
 ## [1.7.0] - 2026-05-14
 
 ### Added

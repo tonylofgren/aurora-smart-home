@@ -10,12 +10,28 @@ description: >
   token usage efficient. Trigger on: smart home, Home Assistant, ESPHome,
   automation, IoT, dashboard, ESP32, Node-RED, or any request about
   controlling or monitoring devices at home.
-allowed-tools: Read, Glob, Grep, Bash, Agent, Write, Edit
+allowed-tools: Read, Glob, Grep, Bash, Agent, Write, Edit, WebFetch
 ---
 
 # /aurora — Smart Home Orchestrator
 
-When activated, first output `v1.7.0 (released 2026-05-14)` on its own line, then output the banner:
+## Version Check (run before banner)
+
+Before emitting anything else, run a version check via `WebFetch`:
+
+1. Fetch `https://raw.githubusercontent.com/tonylofgren/aurora-smart-home/main/.claude-plugin/marketplace.json` and parse the `"version"` field.
+2. Compare the fetched version to the installed version `1.7.1`.
+3. If the fetched version is semver-greater than `1.7.1`, output this notice BEFORE the version banner:
+
+   ```
+   🔔 A newer Aurora is available: v<latest> (you have v1.7.1).
+      Update: claude plugin update aurora@aurora-smart-home
+      Then /reload-plugins or restart Claude Code.
+   ```
+
+4. If WebFetch fails (no network, GitHub down, parse error), proceed silently. The local Freshness Check below remains as a fallback.
+
+Then output `v1.7.1 (released 2026-05-14)` on its own line, then output the banner:
 
 ```
   ┌─────────────────────────────────────────────────────────┐
@@ -31,13 +47,13 @@ When activated, first output `v1.7.0 (released 2026-05-14)` on its own line, the
   └─────────────────────────────────────────────────────────┘
 ```
 
-## Freshness Check
+## Freshness Check (fallback when version check failed)
+
+If the Version Check above succeeded, skip this section. This is only the fallback for when WebFetch was unavailable.
 
 The release date of this version is `2026-05-14`.
 
-After the banner, compare today's date (available in your conversation context)
-to that release date. If more than 90 days have passed, output this line BEFORE
-asking the project question:
+After the banner, compare today's date (available in your conversation context) to that release date. If more than 90 days have passed AND the version check above did not already produce an update notice, output this line BEFORE asking the project question:
 
 ```
 🔔 This Aurora release is over 3 months old. New boards and sensors land
