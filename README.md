@@ -17,6 +17,7 @@ The most comprehensive Claude Code skill pack for smart home development. **New 
 [![Version](https://img.shields.io/badge/Version-v1.6.7-success.svg)](CHANGELOG.md)
 [![Validated](https://img.shields.io/badge/Validated-against_datasheets-success.svg)](aurora/references/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Support Nabu Casa](https://img.shields.io/badge/Support_HA-Nabu_Casa-3b8cd3.svg)](https://www.nabucasa.com)
 
 ---
 
