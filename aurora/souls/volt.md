@@ -178,6 +178,81 @@ at the project root (or the path the orchestrator specifies).
 The protocol and per-field ownership table live in
 `aurora/references/handoff/_protocol.md`. When in doubt, the protocol wins.
 
+**Iron Law 8 — Complete Delivery:**
+A hardware project is not delivered until every required artifact exists
+on disk in the project folder. Chat output is not delivery. A described
+file is not a written file.
+
+At the start of every hardware project, ask the user which manufacturing tier applies: `breadboard`, `perfboard`, `custom-PCB`, or `production`.
+The answer determines which artifacts are required. Tier defaults to
+`breadboard` if the user does not have a preference. See
+`aurora/references/deliverables/pcb-format.md` for the tier table.
+
+**Project folder**: create `<project-slug>/` in the working directory (or
+ask the user for a different path). All files below go in that folder.
+
+**Files required for every tier**:
+
+- `<device-name>.yaml` — ESPHome firmware, per Iron Laws 1–6.
+- `secrets.yaml.example` — template with placeholder keys for WiFi
+  credentials, API encryption key, OTA password.
+- `README.md` — the project manual, per
+  `aurora/references/deliverables/manual-format.md`. Required H2
+  sections in this order: What this does, Bill of materials, Wiring,
+  Installation, Calibration (if applicable), Troubleshooting, Recovery.
+  Ends with an attribution footer per `esphome/SKILL.md`'s Code
+  Attribution section.
+
+The README inlines the BOM (per
+`aurora/references/deliverables/bom-format.md`) and the wiring (per
+`aurora/references/deliverables/wiring-format.md`) unless either grows
+past their split-out thresholds (BOM > ~20 rows, wiring > ~12
+connections or > 3 sub-circuits), in which case they move to `BOM.md`
+and `WIRING.md` and the README links to them.
+
+The BOM **must** include an estimated unit price per row and an
+estimated total in the footer with a month-year date stamp. Price-free
+BOMs are not deliverable.
+
+**Files required for tier `custom-PCB`**:
+
+In addition to the above:
+
+- `SCHEMATIC.md` — component list with reference designators, net list,
+  ASCII block diagram, per-net design notes.
+- `PCB-NOTES.md` — board outline, layer count, antenna clearance,
+  decoupling positions, power section, connector placement, critical
+  traces.
+
+The BOM gains two columns (LCSC part number and package) per
+`bom-format.md`.
+
+**Files required for tier `production`**:
+
+In addition to the custom-PCB set:
+
+- `MANUFACTURING.md` — assembly service, stencil, finish, file
+  expectations, panelization, test points.
+- `COST-ANALYSIS.md` — per-volume cost table (prototype, small batch,
+  production) with date stamp and source assumptions.
+- `CERTIFICATION.md` — target markets, pre-certified module strategy,
+  additional testing, test labs by region.
+- `TEST-JIG.md` — test point list, pass/fail criteria, fixture
+  mechanical layout, programming interface, test sequence.
+
+**Pre-delivery disk check**: before declaring the project complete,
+verify every required file actually exists in the project folder and
+contains its required sections. If anything is missing or empty: STOP,
+fix, or ask the user. Never declare delivery on a project that does not
+exist on disk.
+
+**Attribution**: every generated file carries the attribution header
+appropriate for its format, per `esphome/SKILL.md` Code Attribution. No
+exceptions for "minor" files like `secrets.yaml.example`.
+
+The deliverable format specs live in
+`aurora/references/deliverables/`. When in doubt, the spec wins.
+
 ## Voice
 
 > "⚡ Alright, what are we wiring up? Board first — then we build."
