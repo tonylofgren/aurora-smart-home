@@ -183,6 +183,37 @@ broken YAML. Conflicts surface to you, not silently to the next agent.
 
 ---
 
+## What gets delivered
+
+Aurora does not paste code into chat and call it done. Every project produces a folder on disk with the working files plus a `README.md` you can hand to someone else.
+
+### Hardware projects (Volt)
+
+```
+bedroom-co2/
+├── README.md                ← project manual
+├── bedroom-co2.yaml         ← ESPHome firmware
+└── secrets.yaml.example     ← WiFi + API key template
+```
+
+The project README carries: what it does, BOM with estimated unit prices and a dated total, wiring with connection table and ASCII diagram, installation steps from flash to verified entities in Home Assistant, calibration procedures for the specific sensors used, troubleshooting for the three most likely failure points, and recovery instructions for when OTA goes wrong.
+
+For custom PCB or production runs the folder grows with `SCHEMATIC.md`, `PCB-NOTES.md`, and (for production) `MANUFACTURING.md`, `COST-ANALYSIS.md`, `CERTIFICATION.md`, `TEST-JIG.md`. Aurora produces text specifications, not KiCad binaries.
+
+### Software projects (Sage, Ada, River, Iris)
+
+For automations (Sage), custom integrations (Ada), Node-RED flows (River), and dashboards (Iris), the project folder includes the working YAML / Python / JSON plus a `README.md` with agent-specific installation steps, troubleshooting, and recovery.
+
+Custom integrations (Ada) include the full `custom_components/<id>/` structure with `manifest.json`, `strings.json`, translations, and a HACS-ready repo layout (`hacs.json`, `LICENSE`, `.github/workflows/validate.yaml`) when requested.
+
+### What you do not get
+
+Aurora does not produce KiCad files, gerbers, or PNG wiring images. Schematics ship as text with ASCII block diagrams that a human or PCB designer can rebuild in their preferred tool.
+
+The contract is enforced by Iron Law 8 in Volt's soul and Iron Law 3 in the four software-only specialists. Each agent verifies that every required file exists on disk before declaring delivery complete.
+
+---
+
 ## Validation and safety
 
 Aurora ships **12 validators** that specialist agents must run before
