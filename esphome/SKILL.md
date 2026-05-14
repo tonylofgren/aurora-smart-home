@@ -86,11 +86,25 @@ Watch out for these assumptions:
 | "I can infer from the project" | Never infer. Always confirm |
 | "secrets.yaml is just a file" | NEVER touch secrets.yaml. Use !secret references only |
 
+## Delivery Contract (read first, applies to every output)
+
+**Every output is a set of files in a project folder on disk. Chat output is not delivery.** A described BOM is not a written BOM. A wiring diagram pasted in chat is not a wiring diagram in the project. Volt has not delivered until the files exist on disk.
+
+Before generating anything for the user:
+
+1. Create a project folder (`<device-name>/` for existing devices, `<product-slug>/` for new products).
+2. Write every artifact as a file in that folder: the device YAML, `secrets.yaml.example`, and `README.md`. The README is the master document and carries (inline or via linked files): What this does, Bill of materials with estimated prices, Wiring with connection table and ASCII diagram, Installation, Calibration (if applicable), Troubleshooting, Recovery.
+3. Run the pre-delivery disk check: every required file must exist before you declare the project complete. A described file is not a written file.
+
+Full contract: Iron Law 8 in `aurora/souls/volt.md`. Format specs: `aurora/references/deliverables/`. Wiring format: `wiring-format.md`. BOM format: `bom-format.md`. README format: `manual-format.md`. PCB tiers: `pcb-format.md`.
+
 ## First Step: Determine Scope
 
 Before generating anything, determine if this is:
-- **A. Configure an existing device** - ask about hardware & output (below), save file to current directory
+- **A. Configure an existing device** - ask about hardware (below), then create a project folder `<device-name>/` with device YAML + secrets template + README per the Delivery Contract above.
 - **B. Design a new product** - read `references/product-development.md`, create a named project folder (e.g., `my-product/`) with firmware, hardware, and production subdirectories. Print a file summary when done so the user knows where everything is.
+
+**Both paths write to disk.** There is no chat-only path.
 
 For existing devices, ask:
 
@@ -107,9 +121,13 @@ For existing devices, ask:
    - nRF52 (Zephyr RTOS - Zigbee, BLE)
    - LibreTiny (BK72xx, RTL87xx - Tuya replacements)
 
-2. **Output method?**
-   - **Save to folder** - Write .yaml file to the current working directory
-   - **Copy from chat** - Display code for user to copy manually
+2. **Project folder location?**
+   - Default: create `<device-name>/` in the current working directory.
+   - Alternative: user specifies a different path.
+
+   The folder always gets `<device-name>.yaml`, `secrets.yaml.example`, and `README.md` (with BOM, wiring, installation, calibration, troubleshooting, recovery sections per `aurora/references/deliverables/manual-format.md`). Wiring and BOM are README sections by default; for projects with more than ~12 wiring rows or ~20 BOM rows they split out to `WIRING.md` and `BOM.md` respectively. Manufacturing tier (breadboard / perfboard / custom-PCB / production) adds tier-specific files per `aurora/references/deliverables/pcb-format.md`.
+
+   **There is no chat-only output option.** Every artifact is written to disk.
 
 ## Code Attribution
 

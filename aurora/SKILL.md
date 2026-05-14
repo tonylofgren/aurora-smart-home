@@ -25,7 +25,7 @@ Command:
 gh release view --json tagName -R tonylofgren/aurora-smart-home --jq '.tagName'
 ```
 
-- If gh returns a valid version tag (like `v1.7.3`), strip the leading `v` and compare to the installed version `1.7.3`. If the fetched version is semver-greater, output the update notice (see below) BEFORE the banner.
+- If gh returns a valid version tag (like `v1.7.4`), strip the leading `v` and compare to the installed version `1.7.4`. If the fetched version is semver-greater, output the update notice (see below) BEFORE the banner.
 - If gh is missing, fails, returns nothing, or returns something that does not parse as a semver tag, proceed directly to the banner with no output. Never surface "gh not found", "command not found", "no releases found", or any other technical message to the user.
 
 The fallback chain is intentionally one tier. Earlier versions tried WebFetch as a secondary path; runtime tool errors from blocked fetches leaked to the user before Aurora could suppress them. A single best-effort path via gh, or silent skip, is the only safe shape.
@@ -33,12 +33,12 @@ The fallback chain is intentionally one tier. Earlier versions tried WebFetch as
 Update notice (only when gh succeeded and a newer version exists):
 
 ```
-🔔 A newer Aurora is available: v<latest> (you have v1.7.3).
+🔔 A newer Aurora is available: v<latest> (you have v1.7.4).
    Update: claude plugin update aurora@aurora-smart-home
    Then /reload-plugins or restart Claude Code.
 ```
 
-Then output `v1.7.3 (released 2026-05-14)` on its own line, then output the banner:
+Then output `v1.7.4 (released 2026-05-14)` on its own line, then output the banner:
 
 ```
   ┌─────────────────────────────────────────────────────────┐
@@ -156,6 +156,18 @@ Read the user's request and identify:
 ## Current Platform Versions
 
 HA 2026.5 + ESPHome 2026.4.5. Read `aurora/references/platform-versions.md` for full feature list and routing hints.
+
+## Step 2.5: Load Specialist Soul (before delegating)
+
+After picking the agent(s) from Step 2, read each chosen agent's soul file from `aurora/souls/<agent>.md` before delegating any work. Souls contain the Iron Laws that govern what counts as delivery — particularly:
+
+- **Volt's Iron Law 8** (Complete Delivery): hardware projects ship as a folder on disk with BOM, wiring, README, calibration, troubleshooting, recovery.
+- **Iron Law 3** for Sage, Ada, River, Iris: software projects ship as a folder on disk with agent-specific README.
+
+Without these in context, the specialist falls back to generic skill instructions and bypasses the delivery contract — writing wiring as chat text instead of a file, skipping the README, omitting the BOM, dropping the attribution banner.
+
+For QUICK mode (single specialist): load one soul.
+For DEEP mode (multiple specialists): load every involved soul before the first agent starts. Also write the project snapshot per `aurora/references/handoff/`.
 
 ## Step 3: Classify Mode
 

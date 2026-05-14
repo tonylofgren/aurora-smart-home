@@ -8,6 +8,40 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.7.4] - 2026-05-14
+
+### Fixed
+
+**Runtime regression: Iron Law 8 / Iron Law 3 silently bypassed.** A user testing v1.7.3 reported that `/aurora:aurora` for an ESP32 + LD2410 project generated the YAML file at the workspace root, without a project folder, without a README, without BOM/wiring/installation/troubleshooting/recovery sections, and without the attribution banner. Root cause: two layers were wrong.
+
+1. **`esphome/SKILL.md`, `home-assistant/SKILL.md`, and `ha-integration-dev/SKILL.md`** all offered a `Copy from chat` output option and said `save to current directory`. That text actively contradicted Iron Law 8 / Iron Law 3 in the souls.
+2. **`aurora/SKILL.md`** never instructed the orchestrator to **load the specialist's soul file** before delegating. Iron Laws lived in `aurora/souls/<agent>.md` but were not in the runtime context when the specialist started work.
+
+### Changed
+
+**`Copy from chat` removed from three SKILL.md files:**
+
+- `esphome/SKILL.md` First Step + Output method now both create a project folder. `Copy from chat` gone.
+- `home-assistant/SKILL.md` Output method removed; project-folder-only.
+- `ha-integration-dev/SKILL.md` Output method removed; project-folder-only.
+
+**Delivery Contract block added to top of `esphome/SKILL.md`:**
+
+A new block placed BEFORE `## First Step` states explicitly: "Every output is a set of files in a project folder on disk. Chat output is not delivery. A described BOM is not a written BOM." The block lists the required artifacts and points at Iron Law 8 (in `aurora/souls/volt.md`) and the format specs in `aurora/references/deliverables/`. Putting the contract before the scope question is what gets Volt to read it first.
+
+**`aurora/SKILL.md` Step 2.5 added: Load Specialist Soul:**
+
+After routing to an agent in Step 2, Aurora now loads the agent's soul file from `aurora/souls/` before delegating. This puts Iron Law 8 (Volt) and Iron Law 3 (Sage / Ada / River / Iris) into the runtime context so the specialist actually follows the delivery contract instead of falling back to generic skill instructions.
+
+### Testing infrastructure
+
+- New `test_delivery_contract_in_skills.py` with parametrised tests across `esphome`, `home-assistant`, and `ha-integration-dev` SKILL.md:
+  - No SKILL.md may offer "Copy from chat" as an output option.
+  - Each SKILL.md must mention "project folder".
+  - Each SKILL.md must state explicitly that chat output is not delivery.
+  - Plus esphome-specific spot checks: Delivery Contract block exists before First Step, and references volt.md + the deliverables specs.
+- `test_skill_md_structure.py` extended with `test_aurora_skill_loads_specialist_soul_before_delegating` (locks the Step 2.5 instruction).
+
 ## [1.7.3] - 2026-05-14
 
 ### Changed

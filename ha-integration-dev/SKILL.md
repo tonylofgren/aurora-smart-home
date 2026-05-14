@@ -82,9 +82,11 @@ Ask user:
 2. **Update method?** (polling interval vs push/websocket)
 3. **Authentication?** (none, API key, OAuth2)
 4. **Entity types needed?** (sensor, switch, light, climate, etc.)
-5. **Output method?**
-   - **Save to folder** - Write files to custom_components/ in current working directory
-   - **Copy from chat** - Display code for user to copy manually
+5. **Project folder location?**
+   - Default: create `<integration_id>/` (or `<integration_id>-integration/` for HACS-ready) in the current working directory.
+   - Alternative: user specifies a different path.
+
+   **Delivery Contract:** every artifact is written to disk as a file in the project folder. Chat output is not delivery. The folder always contains `custom_components/<integration_id>/` with `__init__.py`, `manifest.json`, `const.py`, platform files, `strings.json`, `translations/en.json`, plus a `README.md` per Iron Law 3 in `aurora/souls/ada.md` (sections: What this does, Installation, Configuration, Troubleshooting, Recovery, per `aurora/references/deliverables/manual-format.md`). No chat-only output option.
 6. **Prepare for HACS sharing?** (recommended for distribution)
    - **Yes** - Create hacs.json, README.md, LICENSE, .github/workflows/validate.yaml
    - **No** - Only create custom_components/ files

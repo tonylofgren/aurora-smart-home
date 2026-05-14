@@ -90,9 +90,11 @@ Ask these questions before generating configuration:
    - UI Editor (Settings > Automations)
    - YAML files (automations.yaml, packages/)
 
-3. **Output method?**
-   - **Save to folder** - Write file to the current working directory (where Claude is running)
-   - **Copy from chat** - Display code for user to copy manually
+3. **Project folder location?**
+   - Default: create `<project-slug>/` in the current working directory.
+   - Alternative: user specifies a different path.
+
+   **Delivery Contract:** every artifact is written to disk as a file in the project folder. Chat output is not delivery. The folder always contains the automation / script / blueprint / package YAML and a `README.md` per Iron Law 3 in `aurora/souls/sage.md`. README sections: What this does, Installation, Troubleshooting, Recovery (per `aurora/references/deliverables/manual-format.md`). No chat-only output option.
 
 4. **HA Version?** (for deprecated syntax awareness)
 
