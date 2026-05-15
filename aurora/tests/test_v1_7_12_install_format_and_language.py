@@ -231,3 +231,31 @@ def test_manual_format_iris_install_has_option_a_b():
         "Iris Installation variant in manual-format.md must list "
         "Option A (Raw Configuration Editor) and Option B (YAML-mode dashboard)."
     )
+
+
+def test_install_templates_have_translate_first_banner():
+    """Every install-*.md template in aurora/references/templates/ must
+    open with a TRANSLATE-FIRST banner. The banner is the in-context
+    reminder that catches the specialist precisely when she opens the
+    template to write INSTALL.md. Without it the runtime drops back to
+    copying English verbatim, which is the v1.7.12 bug this rule fixed.
+    Three layers of enforcement defeat the regression: (1) SKILL.md
+    Language Rule, (2) Volt Iron Law 8 explicit reference, (3) banner in
+    the template itself so the specialist cannot read the template
+    without seeing the rule."""
+    templates_dir = REPO / "aurora" / "references" / "templates"
+    install_templates = sorted(templates_dir.glob("install-*.md"))
+    assert install_templates, (
+        "No install-*.md templates found in aurora/references/templates/."
+    )
+    missing = []
+    for template in install_templates:
+        head = template.read_text(encoding="utf-8")[:1500]
+        if "TRANSLATE-FIRST" not in head:
+            missing.append(template.name)
+    assert not missing, (
+        f"install-*.md templates missing TRANSLATE-FIRST banner in the "
+        f"top 1500 chars: {missing}. Every template must open with the "
+        f"banner so the specialist sees the translation instruction "
+        f"before copying any prose into <project>/esphome/INSTALL.md."
+    )

@@ -1,5 +1,7 @@
 # INSTALL.md template — GitHub Actions + web.esphome.io
 
+> ⚠️ **TRANSLATE-FIRST.** This template is English. Translate every heading, prose paragraph, prerequisite, step description, and verification text into the user's detected language before writing the result to `<project>/esphome/INSTALL.md`. Quoted commands, file paths, `!secret` keys, and identifiers stay English. Shipping this verbatim to a non-English user is a Language Rule violation per `aurora/SKILL.md`.
+
 Template for `INSTALL.md` when the user picked **GitHub Actions** as
 the deployment method. Aurora/Volt fills in the placeholders.
 
