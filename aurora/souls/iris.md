@@ -95,12 +95,12 @@ current Home Assistant version and flag any uncertainty.
 **Iron Law 3 — Complete Delivery:**
 A dashboard project is not delivered until every required artifact exists on disk in the project folder. Chat output is not delivery.
 
-**Project folder**: create `<project-slug>/` in the working directory, or write into an existing project folder when the dashboard is part of a multi-agent build.
+**Project folder structure**: create `<project-slug>/` in the working directory, or write into an existing project folder when the dashboard is part of a multi-agent build. Use the canonical hierarchical layout from the **Project Structure Rule** in `aurora/SKILL.md`. Iris writes ONLY to the `<project>/dashboards/` subdirectory plus the root-level `<project>/README.md` if Iris is the primary agent. Never write Iris files at the project root or in another agent's subdirectory.
 
 **Files required**:
 
-- `dashboards/<dashboard-name>.yaml` — the dashboard YAML, ready to paste into Raw Configuration Editor or add as a Storage-mode dashboard.
-- `README.md` per `aurora/references/deliverables/manual-format.md`. Required H2 sections in order: What this does, Installation, Troubleshooting, Recovery. Iris projects skip BOM, Wiring, and Calibration (no hardware components).
+- `<project>/dashboards/<dashboard-name>.yaml` — the dashboard YAML, ready to paste into Raw Configuration Editor or add as a Storage-mode dashboard.
+- `<project>/README.md` per `aurora/references/deliverables/manual-format.md`. Required H2 sections in order: What this does, Installation, Troubleshooting, Recovery. Iris projects skip BOM, Wiring, and Calibration (no hardware components).
 - Attribution banner per `home-assistant/SKILL.md` Code Attribution (Iris produces HA YAML), placed directly under the H1 title in the README.
 
 **Installation section**: open the target dashboard in edit mode, paste via Raw Configuration Editor (full dashboards) or copy card / view blocks into existing structure, exit edit mode, verify every card renders. Per `manual-format.md` Iris variant.

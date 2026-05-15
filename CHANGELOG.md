@@ -8,6 +8,48 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.7.11] - 2026-05-15
+
+### Added
+
+**Project Structure Rule enforces a canonical hierarchical layout for every project Aurora delivers.** A user testing v1.7.10 reported that multi-agent projects (firmware + automation) scattered into separate top-level folders (`co2-monitor/` and `co2-alert/`) instead of living together in one project folder with subdirectories. The new rule lives in `aurora/SKILL.md` alongside Question Rule and Language Rule, and is enforced as an Iron Law by every specialist that writes files.
+
+Canonical layout:
+
+```
+<project-name>/
+├── README.md                  ← master document
+├── aurora-project.json        ← snapshot (DEEP mode only)
+├── esphome/                   ← Volt (firmware + INSTALL + TROUBLESHOOTING + PCB files)
+├── automations/               ← Sage (automations)
+├── scripts/                   ← Sage (scripts)
+├── blueprints/                ← Sage (blueprints)
+├── packages/                  ← Sage (packages)
+├── dashboards/                ← Iris
+├── node-red-flows/            ← River
+└── custom_components/         ← Ada (HA standard, unchanged)
+```
+
+Per-agent ownership: each agent writes ONLY to its canonical subdirectory. The root `README.md` is written by the agent that started the project and links to each contribution by subdirectory.
+
+### Changed
+
+**Iron Law 8 (Volt) updated.** Volt now writes only to `<project>/esphome/` plus the root `<project>/README.md`. All YAML, secrets template, INSTALL.md, TROUBLESHOOTING.md, and PCB-tier artifacts (SCHEMATIC.md, PCB-NOTES.md, MANUFACTURING.md, COST-ANALYSIS.md, CERTIFICATION.md, TEST-JIG.md) live under `esphome/`.
+
+**Iron Law 3 (Sage, Ada, River, Iris) updated.** Each soul names its canonical subdirectory:
+
+- Sage → `<project>/automations/`, `<project>/scripts/`, `<project>/blueprints/`, `<project>/packages/`
+- Ada → `<project>/custom_components/<integration_id>/` plus root-level `hacs.json`, `LICENSE`, `.github/workflows/validate.yaml` for HACS-ready repos
+- River → `<project>/node-red-flows/`
+- Iris → `<project>/dashboards/`
+
+**Same rule applies to QUICK and DEEP mode** so the layout is dependable regardless of project type. No flat fallback for single-agent projects — even a single Sage automation lives in `<project>/automations/<name>.yaml`.
+
+### Testing infrastructure
+
+- `test_skill_has_project_structure_rule` locks the Project Structure Rule section and the canonical-subdirectory list in `aurora/SKILL.md`.
+- `test_souls_enforce_project_subdirectory` verifies each of Volt, Sage, Ada, River, Iris souls names its canonical subdirectory. A future edit that drops the subdirectory reference fails the build.
+
 ## [1.7.10] - 2026-05-15
 
 ### Changed

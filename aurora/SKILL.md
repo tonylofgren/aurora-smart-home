@@ -41,7 +41,7 @@ Command:
 gh release view --json tagName -R tonylofgren/aurora-smart-home --jq '.tagName'
 ```
 
-- If gh returns a valid version tag (like `v1.7.10`), strip the leading `v` and compare to the installed version `1.7.10`. If the fetched version is semver-greater, output the update notice (see below) BEFORE the banner.
+- If gh returns a valid version tag (like `v1.7.11`), strip the leading `v` and compare to the installed version `1.7.11`. If the fetched version is semver-greater, output the update notice (see below) BEFORE the banner.
 - If gh is missing, fails, returns nothing, or returns something that does not parse as a semver tag, proceed directly to the banner with no output. Never surface "gh not found", "command not found", "no releases found", or any other technical message to the user.
 
 **Semver comparison rule (avoid lexicographic mistakes):** Both versions must be matched against `^\d+\.\d+\.\d+$`, then split on `.` and each segment compared as **integer**, not as string. Lexicographic comparison reports `2.0.10 < 2.0.2` (because `'1' < '2'` at the start of the third segment), which is wrong. Concretely:
@@ -63,12 +63,12 @@ The fallback chain is intentionally one tier. Earlier versions tried WebFetch as
 Update notice (only when gh succeeded and a newer version exists):
 
 ```
-🔔 A newer Aurora is available: v<latest> (you have v1.7.10).
+🔔 A newer Aurora is available: v<latest> (you have v1.7.11).
    Update: claude plugin update aurora@aurora-smart-home
    Then /reload-plugins or restart Claude Code.
 ```
 
-Then output `v1.7.10 (released 2026-05-15)` on its own line, then output the banner:
+Then output `v1.7.11 (released 2026-05-15)` on its own line, then output the banner:
 
 ```
   ┌─────────────────────────────────────────────────────────┐
@@ -430,6 +430,53 @@ Detect language from the user's most recent project-describing message — not f
 Apply consistently across every specialist that ships project folders (Volt, Sage, Ada, River, Iris, Manual). A Swedish user who said "bygg en CO2-mätare" receives a Swedish `README.md` and a Swedish `INSTALL.md`, with the YAML keys and `entity_id`s still in English. A YAML comment that says `# kalibrering: 400 ppm utomhus` is correct; renaming `sensor.co2_concentration` to `sensor.koldioxidhalt` is not — entity IDs are code.
 
 The rule for files committed to **the aurora-smart-home repo itself** is separate: those stay English regardless of conversation language, because the repo serves a global audience.
+
+### Project Structure Rule
+
+Every project Aurora delivers lives in **one project folder**. Inside that folder, generated artifacts are organised into Home-Assistant-conventional subdirectories. The rule is enforced as an Iron Law by every specialist that writes files (Iron Law 8 for Volt, Iron Law 3 for Sage, Ada, River, Iris). A delivery that puts files at the project root or in unconventional subdirectories does not pass the disk check.
+
+Canonical layout:
+
+```
+<project-name>/
+├── README.md                          ← master document, links every part
+├── aurora-project.json                ← snapshot (DEEP mode only)
+├── esphome/                           ← Volt
+│   ├── <device-name>.yaml
+│   ├── secrets.yaml.example
+│   ├── INSTALL.md
+│   └── TROUBLESHOOTING.md
+├── automations/                       ← Sage (automations)
+│   └── <automation-name>.yaml
+├── scripts/                           ← Sage (scripts)
+├── blueprints/                        ← Sage (blueprints)
+├── packages/                          ← Sage (packages)
+├── dashboards/                        ← Iris
+│   └── <dashboard-name>.yaml
+├── node-red-flows/                    ← River
+│   └── <flow-name>.json
+└── custom_components/                 ← Ada (HA standard)
+    └── <integration_id>/
+        ├── __init__.py
+        ├── manifest.json
+        └── ...
+```
+
+**Per-agent ownership (each agent writes ONLY to its own subdirectory):**
+
+| Agent  | Subdirectory                  | Filename pattern                          |
+|--------|-------------------------------|-------------------------------------------|
+| Volt   | `<project>/esphome/`          | `<device-name>.yaml`, `secrets.yaml.example`, `INSTALL.md`, `TROUBLESHOOTING.md` |
+| Sage   | `<project>/automations/` (or `scripts/`, `blueprints/`, `packages/` per output type) | `<automation-name>.yaml` |
+| Ada    | `<project>/custom_components/<integration_id>/` | Python files, `manifest.json`, `strings.json`, `translations/en.json`, plus optional `<project>/hacs.json`, `<project>/.github/workflows/validate.yaml`, `<project>/LICENSE` for HACS-ready repos |
+| River  | `<project>/node-red-flows/`   | `<flow-name>.json` |
+| Iris   | `<project>/dashboards/`       | `<dashboard-name>.yaml` |
+
+**Project README on root:** Every project folder has a `README.md` at the **root**, written by the agent that started the project (or by Manual if explicitly invoked). The root README is the master document and links to each agent's contribution by subdirectory: "ESPHome firmware: see `esphome/`", "Automations: see `automations/`", etc. Per-subdirectory READMEs are optional for complex deliverables (e.g. `esphome/INSTALL.md` is required, `automations/README.md` only if there is non-obvious context).
+
+**Project name:** Aurora derives the project name from the user's request (e.g. "CO2 air quality monitor" → `co2-air-quality/`). The name is slug-cased, English (per Language Rule — directory names are code), and stable across the project's lifetime. Specialists do not invent their own variants.
+
+**No flat fallback for single-agent projects.** Even a single Sage automation lives in `<project>/automations/<name>.yaml`, never at the project root. Consistency between QUICK and DEEP mode is what makes the structure dependable — the user always knows where to look.
 
 ## Iron Laws Reference
 

@@ -63,6 +63,56 @@ def test_skill_has_reactivation_check_before_version_check():
     )
 
 
+def test_skill_has_project_structure_rule():
+    """aurora/SKILL.md must define the Project Structure Rule that maps each
+    agent to its canonical subdirectory. Without it, agents drop files at
+    the project root and the build becomes a flat pile instead of an
+    HA-conventional hierarchy."""
+    content = SKILL_PATH.read_text(encoding="utf-8")
+    assert "Project Structure Rule" in content, (
+        "aurora/SKILL.md is missing the Project Structure Rule. Without it, "
+        "each agent invents its own subdirectory and the canonical hierarchy "
+        "(esphome/, automations/, dashboards/, node-red-flows/, "
+        "custom_components/) is not enforced."
+    )
+    required_subdirs = [
+        "<project>/esphome/",
+        "<project>/automations/",
+        "<project>/dashboards/",
+        "<project>/node-red-flows/",
+        "<project>/custom_components/",
+    ]
+    missing = [s for s in required_subdirs if s not in content]
+    assert not missing, (
+        f"Project Structure Rule does not enumerate every canonical "
+        f"subdirectory: missing {missing}."
+    )
+
+
+def test_souls_enforce_project_subdirectory():
+    """Every soul that writes files must point at its canonical subdirectory
+    (Iron Law-enforced). A soul that says 'create <project-slug>/' without
+    naming the subdirectory falls back to root-level files, which is the
+    flat-pile regression Project Structure Rule fixes."""
+    souls_dir = SKILL_PATH.parent / "souls"
+    expected = {
+        "volt.md": "<project>/esphome/",
+        "sage.md": "<project>/automations/",
+        "ada.md": "<project>/custom_components/",
+        "river.md": "<project>/node-red-flows/",
+        "iris.md": "<project>/dashboards/",
+    }
+    missing = []
+    for soul_filename, subdir in expected.items():
+        content = (souls_dir / soul_filename).read_text(encoding="utf-8")
+        if subdir not in content:
+            missing.append((soul_filename, subdir))
+    assert not missing, (
+        f"Souls missing their canonical subdirectory reference: {missing}. "
+        f"Each soul's Iron Law must name the agent's <project>/<subdir>/ path."
+    )
+
+
 def test_clustered_questions_offer_run_with_defaults():
     """When Aurora or a specialist clusters multiple related questions in a
     single prompt, the prompt must close with a plain-language 'run with

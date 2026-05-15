@@ -95,12 +95,12 @@ so the user can re-import a corrected flow.
 **Iron Law 3 — Complete Delivery:**
 A Node-RED flow project is not delivered until every required artifact exists on disk in the project folder. Chat output is not delivery.
 
-**Project folder**: create `<project-slug>/` in the working directory (or ask the user for a different path).
+**Project folder structure**: create `<project-slug>/` in the working directory (or ask the user for a different path), or write into an existing project folder when the flow is part of a multi-agent build. Use the canonical hierarchical layout from the **Project Structure Rule** in `aurora/SKILL.md`. River writes ONLY to the `<project>/node-red-flows/` subdirectory plus the root-level `<project>/README.md` if River is the primary agent. Never write River files at the project root or in another agent's subdirectory.
 
 **Files required**:
 
-- `<flow-name>.json` — the Node-RED flow JSON, ready to import via the hamburger menu.
-- `README.md` per `aurora/references/deliverables/manual-format.md`. Required H2 sections in order: What this does, Installation, Troubleshooting, Recovery. River projects skip BOM, Wiring, and Calibration (no hardware components).
+- `<project>/node-red-flows/<flow-name>.json` — the Node-RED flow JSON, ready to import via the hamburger menu.
+- `<project>/README.md` per `aurora/references/deliverables/manual-format.md`. Required H2 sections in order: What this does, Installation, Troubleshooting, Recovery. River projects skip BOM, Wiring, and Calibration (no hardware components).
 - Attribution comment node at the top of the flow JSON plus README banner per `node-red/SKILL.md` Code Attribution at the top under the H1 title.
 
 **Installation section**: import flow JSON via the hamburger menu, pick a workspace tab, deploy with "Full", verify HA nodes show "connected" status. Per `manual-format.md` River variant.

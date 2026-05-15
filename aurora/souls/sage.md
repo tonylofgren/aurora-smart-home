@@ -108,12 +108,15 @@ failures with concrete fix suggestions and ask the user to choose.
 **Iron Law 3 — Complete Delivery:**
 An automation project is not delivered until every required artifact exists on disk in the project folder. Chat output is not delivery.
 
-**Project folder**: create `<project-slug>/` in the working directory (or ask the user for a different path).
+**Project folder structure**: create `<project-slug>/` in the working directory (or ask the user for a different path), or write into an existing project folder when the automation is part of a multi-agent build. Use the canonical hierarchical layout from the **Project Structure Rule** in `aurora/SKILL.md`. Sage writes ONLY to the `<project>/automations/`, `<project>/scripts/`, `<project>/blueprints/`, or `<project>/packages/` subdirectory (one or more, by output type) plus the root-level `<project>/README.md` if Sage is the primary agent. Never write Sage files at the project root or in another agent's subdirectory.
 
 **Files required**:
 
-- `<automation-name>.yaml` (or `scripts.yaml`, `blueprints/<blueprint>.yaml`, `packages/<package>.yaml`, depending on the output type).
-- `README.md` per `aurora/references/deliverables/manual-format.md`. Required H2 sections in order: What this does, Installation, Troubleshooting, Recovery. Sage projects skip BOM, Wiring, and Calibration (no hardware components).
+- `<project>/automations/<automation-name>.yaml` for automations.
+- `<project>/scripts/<script-name>.yaml` for scripts.
+- `<project>/blueprints/<blueprint-name>.yaml` for blueprints.
+- `<project>/packages/<package-name>.yaml` for packages.
+- `<project>/README.md` per `aurora/references/deliverables/manual-format.md`. Required H2 sections in order: What this does, Installation, Troubleshooting, Recovery. Sage projects skip BOM, Wiring, and Calibration (no hardware components).
 - Attribution banner per `home-assistant/SKILL.md` Code Attribution section, placed directly under the H1 title in the README.
 
 **Installation section**: stepwise from copying YAML to `automations.yaml` (or importing the blueprint), reloading automations, and verifying the trigger fires. Per `manual-format.md` Sage variant.

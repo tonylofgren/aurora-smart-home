@@ -270,62 +270,33 @@ ever again.
 
 ### Manufacturing-tier artifacts
 
-**Project folder**: create `<project-slug>/` in the working directory (or
-ask the user for a different path). All files below go in that folder.
+**Project folder structure**: create `<project-slug>/` in the working directory (or ask the user for a different path). Use the hierarchical layout from the **Project Structure Rule** in `aurora/SKILL.md`. Volt writes ONLY to the `<project>/esphome/` subdirectory plus the root-level `<project>/README.md` and (DEEP mode only) `<project>/aurora-project.json` snapshot. Never write Volt files at the project root or in another agent's subdirectory.
 
 **Files required for every tier**:
 
-- `<device-name>.yaml` — ESPHome firmware, per Iron Laws 1–6.
-- `secrets.yaml.example` — template with placeholder keys for WiFi
-  credentials, API encryption key, OTA password.
-- `README.md` — the project manual, per
-  `aurora/references/deliverables/manual-format.md`. Required H2
-  sections in this order: What this does, Bill of materials, Wiring,
-  Installation, Calibration (if applicable), Troubleshooting, Recovery.
-  Starts with an attribution banner per `esphome/SKILL.md`'s Code Attribution section, placed directly under the H1 title.
-- `INSTALL.md` — step-by-step deployment instructions matching the
-  chosen deployment method (see template snippets in
-  `aurora/references/templates/install-*.md`). Replaces the brief
-  Installation H2 in README.md with full, copy-paste-ready commands.
-  The README's Installation section becomes a short "see INSTALL.md
-  for details" pointer.
+- `<project>/esphome/<device-name>.yaml` — ESPHome firmware, per Iron Laws 1–6.
+- `<project>/esphome/secrets.yaml.example` — template with placeholder keys for WiFi credentials, API encryption key, OTA password.
+- `<project>/esphome/INSTALL.md` — step-by-step deployment instructions matching the chosen deployment method (see template snippets in `aurora/references/templates/install-*.md`). Copy-paste-ready commands.
+- `<project>/esphome/TROUBLESHOOTING.md` — three most likely failure points per Iron Law 5, with actual entity IDs and GPIO labels from this project.
+- `<project>/README.md` — project master document per `aurora/references/deliverables/manual-format.md`. Required H2 sections in this order: What this does, Bill of materials, Wiring, Installation (short pointer: "see `esphome/INSTALL.md`"), Calibration (if applicable), Troubleshooting (short pointer: "see `esphome/TROUBLESHOOTING.md`"), Recovery. Starts with an attribution banner per `esphome/SKILL.md` Code Attribution, placed directly under the H1 title.
 
-The README inlines the BOM (per
-`aurora/references/deliverables/bom-format.md`) and the wiring (per
-`aurora/references/deliverables/wiring-format.md`) unless either grows
-past their split-out thresholds (BOM > ~20 rows, wiring > ~12
-connections or > 3 sub-circuits), in which case they move to `BOM.md`
-and `WIRING.md` and the README links to them.
+The root `README.md` inlines the BOM (per `aurora/references/deliverables/bom-format.md`) and the wiring (per `aurora/references/deliverables/wiring-format.md`) unless either grows past the split-out thresholds (BOM > ~20 rows, wiring > ~12 connections or > 3 sub-circuits), in which case they move to `<project>/esphome/BOM.md` and `<project>/esphome/WIRING.md` and the root README links to them.
 
-The BOM **must** include an estimated unit price per row and an
-estimated total in the footer with a month-year date stamp. Price-free
-BOMs are not deliverable.
+The BOM **must** include an estimated unit price per row and an estimated total in the footer with a month-year date stamp. Price-free BOMs are not deliverable.
 
-**Files required for tier `custom-PCB`**:
+**Files required for tier `custom-PCB`** (in addition to the every-tier set):
 
-In addition to the above:
+- `<project>/esphome/SCHEMATIC.md` — component list with reference designators, net list, ASCII block diagram, per-net design notes.
+- `<project>/esphome/PCB-NOTES.md` — board outline, layer count, antenna clearance, decoupling positions, power section, connector placement, critical traces.
 
-- `SCHEMATIC.md` — component list with reference designators, net list,
-  ASCII block diagram, per-net design notes.
-- `PCB-NOTES.md` — board outline, layer count, antenna clearance,
-  decoupling positions, power section, connector placement, critical
-  traces.
+The BOM gains two columns (LCSC part number and package) per `bom-format.md`.
 
-The BOM gains two columns (LCSC part number and package) per
-`bom-format.md`.
+**Files required for tier `production`** (in addition to the custom-PCB set):
 
-**Files required for tier `production`**:
-
-In addition to the custom-PCB set:
-
-- `MANUFACTURING.md` — assembly service, stencil, finish, file
-  expectations, panelization, test points.
-- `COST-ANALYSIS.md` — per-volume cost table (prototype, small batch,
-  production) with date stamp and source assumptions.
-- `CERTIFICATION.md` — target markets, pre-certified module strategy,
-  additional testing, test labs by region.
-- `TEST-JIG.md` — test point list, pass/fail criteria, fixture
-  mechanical layout, programming interface, test sequence.
+- `<project>/esphome/MANUFACTURING.md` — assembly service, stencil, finish, file expectations, panelization, test points.
+- `<project>/esphome/COST-ANALYSIS.md` — per-volume cost table (prototype, small batch, production) with date stamp and source assumptions.
+- `<project>/esphome/CERTIFICATION.md` — target markets, pre-certified module strategy, additional testing, test labs by region.
+- `<project>/esphome/TEST-JIG.md` — test point list, pass/fail criteria, fixture mechanical layout, programming interface, test sequence.
 
 **Pre-delivery disk check**: before declaring the project complete,
 verify every required file actually exists in the project folder and

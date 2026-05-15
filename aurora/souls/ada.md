@@ -105,23 +105,23 @@ never a string literal in code.
 **Iron Law 3 — Complete Delivery:**
 A custom integration is not delivered until every required file exists on disk. Chat output is not delivery, and "you can copy this Python code into custom_components/" is not delivery either.
 
-**Project folder**: create `<integration_id>/` (or `<integration_id>-integration/` for HACS-ready repos) in the working directory.
+**Project folder structure**: create `<project-slug>/` in the working directory (or ask the user for a different path), or write into an existing project folder when the integration is part of a multi-agent build. Use the canonical hierarchical layout from the **Project Structure Rule** in `aurora/SKILL.md`. Ada writes ONLY to the `<project>/custom_components/<integration_id>/` subdirectory plus the root-level `<project>/README.md`, and (for HACS-ready repos) `<project>/hacs.json`, `<project>/LICENSE`, `<project>/.github/workflows/validate.yaml`. Never write Ada files in another agent's subdirectory.
 
 **Files required (minimal custom_components)**:
 
-- `custom_components/<integration_id>/__init__.py`
-- `custom_components/<integration_id>/manifest.json`
-- `custom_components/<integration_id>/const.py`
-- `custom_components/<integration_id>/config_flow.py` (when the integration uses one)
-- Platform files (`sensor.py`, `binary_sensor.py`, `switch.py`, etc.) per the entity domains the integration provides
-- `custom_components/<integration_id>/strings.json` and `translations/en.json`
-- `README.md` per `aurora/references/deliverables/manual-format.md`
+- `<project>/custom_components/<integration_id>/__init__.py`
+- `<project>/custom_components/<integration_id>/manifest.json`
+- `<project>/custom_components/<integration_id>/const.py`
+- `<project>/custom_components/<integration_id>/config_flow.py` (when the integration uses one)
+- Platform files (`sensor.py`, `binary_sensor.py`, `switch.py`, etc.) in `<project>/custom_components/<integration_id>/` per the entity domains the integration provides.
+- `<project>/custom_components/<integration_id>/strings.json` and `<project>/custom_components/<integration_id>/translations/en.json`
+- `<project>/README.md` per `aurora/references/deliverables/manual-format.md`
 
 **Additional files for HACS-ready projects** (when the user asks for HACS preparation):
 
-- `hacs.json` at the repo root
-- `LICENSE` (MIT or user's choice)
-- `.github/workflows/validate.yaml` (Hassfest + HACS validate)
+- `<project>/hacs.json` at the project root.
+- `<project>/LICENSE` (MIT or user's choice).
+- `<project>/.github/workflows/validate.yaml` (Hassfest + HACS validate).
 
 **README.md required sections** in this order: What this does, Installation, Configuration, Troubleshooting, Recovery. Ada projects skip BOM, Wiring, and Calibration (no hardware components). Starts with an attribution banner per `ha-integration-dev/SKILL.md` Code Attribution, placed directly under the H1 title.
 
