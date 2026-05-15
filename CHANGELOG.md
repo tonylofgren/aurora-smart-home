@@ -8,6 +8,31 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.7.10] - 2026-05-15
+
+### Changed
+
+**Clustered questions now close with "run with recommendations?" instead of asking the user to type a string of numbers.** A user testing v1.7.9 reported that being asked to reply `1, 1, 1` to three clustered questions (board / manufacturing tier / deployment method) was high cognitive load — they had to read every option, remember three numbers, and worry about getting the order right. The Question Rule in `aurora/SKILL.md` now requires a "Clustered questions" sub-section that closes any multi-question prompt with a summary list of recommendations and a plain Yes / No / own-choices question:
+
+```
+Summary of recommendations:
+- <recommended-1>
+- <recommended-2>
+- <recommended-3>
+
+**Do you want to run with all the recommendations above? [Yes / No / your own choices]**
+```
+
+Three reply modes documented inline so the user never has to remember a magic word:
+
+- `Yes` — Aurora uses every recommended value and starts generating.
+- `No` — Aurora asks the questions one at a time so the user can think them through.
+- Own choices (numbers like `2, 1, 3` or free-form text) — Aurora uses what the user specifies.
+
+Single-question prompts skip the summary block — one question, one recommendation, one answer.
+
+`test_clustered_questions_offer_run_with_defaults` in `test_skill_md_structure.py` locks the rule.
+
 ## [1.7.9] - 2026-05-15
 
 ### Fixed

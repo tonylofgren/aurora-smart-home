@@ -63,6 +63,27 @@ def test_skill_has_reactivation_check_before_version_check():
     )
 
 
+def test_clustered_questions_offer_run_with_defaults():
+    """When Aurora or a specialist clusters multiple related questions in a
+    single prompt, the prompt must close with a plain-language 'run with
+    recommendations?' question (Yes / No / own choices) instead of asking
+    the user to type 'default' or remember a string of numbers. v1.7.10
+    UX fix after a user found '1, 1, 1' clumsy."""
+    content = SKILL_PATH.read_text(encoding="utf-8")
+    assert "Clustered questions" in content, (
+        "aurora/SKILL.md is missing the 'Clustered questions' sub-section "
+        "of the Question Rule. Without it, specialists default to asking "
+        "the user to remember and type three numbers for board + tier + "
+        "deployment, which is high cognitive load."
+    )
+    text_lower = content.lower()
+    assert "run with all the recommendations" in text_lower or "run with the recommendations" in text_lower or "do you want to run with" in text_lower, (
+        "aurora/SKILL.md Clustered Questions block does not include the "
+        "'run with recommendations?' closing question. The closing question "
+        "is what replaces the typed 'default' shortcut with plain language."
+    )
+
+
 def test_aurora_skill_loads_specialist_soul_before_delegating():
     """Aurora orchestrator must instruct the agent to load the specialist's
     soul file from aurora/souls/ before delegating. Without this, Iron Laws

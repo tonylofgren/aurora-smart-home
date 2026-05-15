@@ -41,7 +41,7 @@ Command:
 gh release view --json tagName -R tonylofgren/aurora-smart-home --jq '.tagName'
 ```
 
-- If gh returns a valid version tag (like `v1.7.9`), strip the leading `v` and compare to the installed version `1.7.9`. If the fetched version is semver-greater, output the update notice (see below) BEFORE the banner.
+- If gh returns a valid version tag (like `v1.7.10`), strip the leading `v` and compare to the installed version `1.7.10`. If the fetched version is semver-greater, output the update notice (see below) BEFORE the banner.
 - If gh is missing, fails, returns nothing, or returns something that does not parse as a semver tag, proceed directly to the banner with no output. Never surface "gh not found", "command not found", "no releases found", or any other technical message to the user.
 
 **Semver comparison rule (avoid lexicographic mistakes):** Both versions must be matched against `^\d+\.\d+\.\d+$`, then split on `.` and each segment compared as **integer**, not as string. Lexicographic comparison reports `2.0.10 < 2.0.2` (because `'1' < '2'` at the start of the third segment), which is wrong. Concretely:
@@ -63,12 +63,12 @@ The fallback chain is intentionally one tier. Earlier versions tried WebFetch as
 Update notice (only when gh succeeded and a newer version exists):
 
 ```
-🔔 A newer Aurora is available: v<latest> (you have v1.7.9).
+🔔 A newer Aurora is available: v<latest> (you have v1.7.10).
    Update: claude plugin update aurora@aurora-smart-home
    Then /reload-plugins or restart Claude Code.
 ```
 
-Then output `v1.7.9 (released 2026-05-15)` on its own line, then output the banner:
+Then output `v1.7.10 (released 2026-05-15)` on its own line, then output the banner:
 
 ```
   ┌─────────────────────────────────────────────────────────┐
@@ -384,6 +384,37 @@ Recommended: <option N> — <one-line reason tied to user's context>
 Yes/no questions follow the same rule — list both options ("Yes / No"), state which one Aurora would pick and why. The reason must reference the user's stated context (project type, experience level, hardware named, budget hints) rather than generic "this is more popular".
 
 This rule applies to every clarifying question, every multiple-choice prompt, every "should I do X or Y" branch. No exceptions, including the board question (Volt Iron Law 1) and the deployment method question (Volt Iron Law 8) — both must list all candidate values before recommending one.
+
+#### Clustered questions: ask "run with defaults?"
+
+When Aurora or a specialist needs to ask **two or more related clarifying questions at once** (typical for hardware project setup: board, manufacturing tier, deployment method), the prompt must close with a single yes/no/own-choice question rather than asking the user to remember and reply with a string of numbers.
+
+Format:
+
+```
+[Question 1 with options + Recommended]
+
+[Question 2 with options + Recommended]
+
+[Question 3 with options + Recommended]
+
+---
+
+Summary of recommendations:
+- <recommended-1>
+- <recommended-2>
+- <recommended-3>
+
+**Do you want to run with all the recommendations above? [Yes / No / your own choices]**
+
+- `Yes` → Aurora uses every recommended value and starts generating.
+- `No` → Aurora asks the questions one at a time so you can think them through.
+- Your own choices (numbers like `2, 1, 3` or free-form text) → Aurora uses what you specify.
+```
+
+The summary list before the closing question lets the user see at a glance what `Yes` accepts without scrolling back. The closing question is plain language, not a magic word — `default`, `defaults`, `kör default`, and similar phrasings all map to the same intent and the user does not have to remember any of them.
+
+Single-question prompts skip the summary block; one question, one recommendation, one answer.
 
 ### Language Rule for Deliverables
 
