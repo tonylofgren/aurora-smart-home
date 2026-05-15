@@ -8,6 +8,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.7.7] - 2026-05-15
+
+### Added
+
+**Question Rule — every question Aurora or a specialist asks now ships with a recommendation and a reason.** Listing bare options put the decision burden on someone who came to Aurora precisely because they did not have that domain knowledge. Picking a board, a deployment method, or a sensor variant is exactly the kind of decision Aurora is supposed to help with. The rule lives in `aurora/SKILL.md` so every specialist inherits it.
+
+**Language Rule — generated project folders follow your language for human-readable docs.** A Swedish user who types "bygg en CO2-mätare" now gets a Swedish `README.md`, `INSTALL.md`, and `TROUBLESHOOTING.md`. YAML keys, entity IDs, GPIO labels, and the attribution banner stay English because they are code. The boundary is documented explicitly so the agent does not over-translate identifiers or under-translate human text.
+
+**Deployment-method question for hardware projects.** Volt now asks how you want to flash the firmware before generating YAML, with four options:
+
+1. **HA ESPHome Add-on** (recommended) — paste YAML into Home Assistant, HA compiles server-side and flashes via USB or OTA.
+2. **GitHub Actions + web.esphome.io** — for users without HA and without a local Python toolchain; GitHub compiles the firmware and the project's `.github/workflows/build-firmware.yml` publishes a `.bin` that flashes from the browser.
+3. **Local ESPHome CLI** — for users with `esphome` installed locally.
+4. **Docker self-hosted ESPHome dashboard** — for power users running a home server.
+
+Each option ships its own `INSTALL.md` content and supplementary files (workflow YAML for option 2, `docker-compose.yml` for option 4). Template snippets live in `aurora/references/templates/install-*.md`.
+
+### Fixed
+
+**Volt no longer defaults to a generic breadboard config when the user says only "ESP32-S3".** Iron Law 1 now demands the **specific board model** (ESP32-S3-DevKitC-1, Lolin S3 Mini, XIAO ESP32-S3, M5Stack Atom S3, etc.), not just the chip family. Reference data in `aurora/references/boards/` ships per dev-board, and picking the wrong board profile means validators check the wrong GPIO map and miss real conflicts. If the user names only a chip family, Volt asks which specific board, applying the Question Rule.
+
+**Volt no longer recommends `esphome run` as the default install path.** Local CLI is now option 3 of 4, reserved for users who already have ESPHome installed. The default for HA users is the Home Assistant ESPHome Add-on.
+
 ## [1.7.6] - 2026-05-15
 
 ### Added

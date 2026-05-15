@@ -1,0 +1,123 @@
+# GitHub Actions workflow template — ESPHome firmware build
+#
+# Aurora/Volt copies this into the user's project at
+# `.github/workflows/build-firmware.yml` when deployment method = GitHub Actions.
+#
+# Placeholders for Volt to fill in:
+#   {device_name}    — the ESPHome name: value (e.g. co2_monitor_living_room)
+#   {yaml_filename}  — the YAML file in the repo root (e.g. co2-monitor.yaml)
+#
+# What this workflow does:
+# - On push to main, on workflow_dispatch, or on schedule (weekly toolchain refresh)
+# - Compiles {yaml_filename} with the ESPHome Docker image
+# - Caches ~/.platformio so subsequent runs take 1-2 minutes instead of 15
+# - Publishes firmware.bin + manifest.json as a GitHub Release asset
+# - Manifest URL works with https://web.esphome.io/?url=<manifest-url>
+
+name: Build firmware
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "{yaml_filename}"
+      - ".github/workflows/build-firmware.yml"
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 1"   # weekly toolchain refresh, Mondays 06:00 UTC
+
+permissions:
+  contents: write   # required to publish releases
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache PlatformIO toolchains
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.platformio
+            ~/.cache/pip
+          key: ${{ runner.os }}-pio-${{ hashFiles('{yaml_filename}') }}
+          restore-keys: |
+            ${{ runner.os }}-pio-
+
+      - name: Write secrets.yaml from GitHub secrets
+        env:
+          WIFI_SSID: ${{ secrets.WIFI_SSID }}
+          WIFI_PASSWORD: ${{ secrets.WIFI_PASSWORD }}
+          API_ENCRYPTION_KEY: ${{ secrets.API_ENCRYPTION_KEY }}
+          OTA_PASSWORD: ${{ secrets.OTA_PASSWORD }}
+        run: |
+          {
+            echo "wifi_ssid: \"$WIFI_SSID\""
+            echo "wifi_password: \"$WIFI_PASSWORD\""
+            echo "api_encryption_key: \"$API_ENCRYPTION_KEY\""
+            echo "ota_password: \"$OTA_PASSWORD\""
+          } > secrets.yaml
+
+      - name: Build firmware via ESPHome Docker image
+        run: |
+          docker run --rm -v "${{ github.workspace }}":/config \
+            ghcr.io/esphome/esphome:stable \
+            compile {yaml_filename}
+
+      - name: Locate firmware binary
+        id: locate
+        run: |
+          BIN=$(find .esphome/build -name 'firmware.bin' -type f | head -n 1)
+          if [ -z "$BIN" ]; then
+            echo "::error::firmware.bin not found after compile"
+            exit 1
+          fi
+          cp "$BIN" firmware.bin
+          echo "bin_path=firmware.bin" >> "$GITHUB_OUTPUT"
+
+      - name: Write manifest.json for web.esphome.io
+        env:
+          DEVICE_NAME: "{device_name}"
+          REPO_URL: "https://github.com/${{ github.repository }}"
+          SHA: "${{ github.sha }}"
+        run: |
+          cat > manifest.json <<EOF
+          {
+            "name": "${DEVICE_NAME}",
+            "version": "${SHA}",
+            "home_assistant_domain": "esphome",
+            "new_install_prompt_erase": false,
+            "builds": [
+              {
+                "chipFamily": "ESP32-S3",
+                "parts": [
+                  {
+                    "path": "firmware.bin",
+                    "offset": 0
+                  }
+                ]
+              }
+            ]
+          }
+          EOF
+          echo "Note: adjust chipFamily for the actual board (ESP32, ESP32-S3, ESP32-C3, ESP32-C6, ESP8266)."
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: firmware-${{ github.sha }}
+          name: "firmware ${{ github.sha }}"
+          body: |
+            Automated firmware build for `{device_name}` from
+            commit ${{ github.sha }}.
+
+            **Flash from your browser:**
+            https://web.esphome.io/?url=https://github.com/${{ github.repository }}/releases/download/firmware-${{ github.sha }}/manifest.json
+          files: |
+            firmware.bin
+            manifest.json
+          fail_on_unmatched_files: true
