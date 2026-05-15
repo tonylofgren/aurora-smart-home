@@ -97,6 +97,41 @@ def test_aurora_skill_has_language_rule_for_deliverables():
         )
 
 
+def test_question_rule_requires_listing_all_options():
+    """v1.7.9 fix: the v1.7.8 eval-1 with-skill run collapsed to a single
+    recommendation without listing the alternative deployment methods.
+    Question Rule must explicitly state that the list comes first and
+    'Recommended:' tags one entry — never replaces the list."""
+    text = AURORA_SKILL.read_text(encoding="utf-8")
+    lower = text.lower()
+    must_have = [
+        "every available option listed",
+        "tag attached to one of the listed options",
+    ]
+    for phrase in must_have:
+        assert phrase in lower, (
+            f"Question Rule must contain the phrase '{phrase}' so the agent "
+            "knows that collapsing to one recommendation hides the alternatives."
+        )
+
+
+def test_volt_template_fidelity_rule():
+    """v1.7.9 fix: the v1.7.8 eval-3 with-skill run paraphrased
+    'pip install esphome' to a free-text equivalent. Volt's Iron Law 8
+    must spell out that template code blocks are reproduced verbatim and
+    only placeholders are adapted."""
+    text = VOLT_SOUL.read_text(encoding="utf-8")
+    lower = text.lower()
+    assert "template fidelity rule" in lower or "verbatim" in lower, (
+        "Volt Iron Law 8 must declare a template-fidelity rule so the agent "
+        "does not paraphrase commands in INSTALL.md."
+    )
+    assert "placeholder" in lower, (
+        "Template-fidelity rule must explicitly distinguish placeholders "
+        "(adapt) from code blocks (verbatim)."
+    )
+
+
 def test_question_rule_and_language_rule_grouped_together():
     """Both rules apply globally, so they belong in one Communication
     Rules section. Grouping makes it harder to delete one without

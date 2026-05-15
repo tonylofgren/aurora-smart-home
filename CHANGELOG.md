@@ -8,6 +8,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.7.9] - 2026-05-15
+
+### Fixed
+
+**Question Rule no longer collapses to a single recommendation.** The v1.7.8 eval suite caught a case where Volt answered the deployment-method question by tagging one option as "Recommended" but skipped listing the alternatives. The user sees a recommendation without knowing what they are choosing against. The Question Rule now explicitly states that every available option must be listed first, and `Recommended:` is a tag attached to one of the listed options — never a replacement for the list.
+
+**INSTALL.md commands now come from the template verbatim.** The same eval suite caught Volt paraphrasing `pip install esphome` to free-text equivalents. The user copy-pastes those commands; drift in spelling or flags breaks the paste. Volt's Iron Law 8 now declares a Template fidelity rule: placeholders (`{device_name}`, `{yaml_filename}`, etc.) are adapted, but everything else — code blocks, section headings, prose order, troubleshooting cases — is reproduced exactly. Project-specific additions go in a separate "Project-specific notes" section at the end, never inlined into template steps.
+
+### Verified
+
+Re-ran eval-1 and eval-3 against this commit. Both runs now pass every assertion (3/3 and 4/4, up from 2/3 and 3/4 in v1.7.8's iteration-1).
+
 ## [1.7.8] - 2026-05-15
 
 ### Added

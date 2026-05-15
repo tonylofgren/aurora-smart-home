@@ -241,8 +241,32 @@ The deployment method determines extra files added to the project folder:
 
 Use the install-template snippets in `aurora/references/templates/`:
 `install-ha-addon.md`, `install-github-actions.md`, `install-cli.md`,
-`install-docker.md`. Adapt placeholders (project name, board, device
-name) but keep the structural sections intact.
+`install-docker.md`.
+
+**Template fidelity rule:** Adapt **placeholders only** — the curly-brace
+tokens like `{device_name}`, `{yaml_filename}`, `{board_model}`,
+`{repo_name}`. Everything else is reproduced verbatim. In particular:
+
+- **Code blocks (commands, env vars, file paths)** must be copied
+  character-for-character from the template. `pip install esphome` is
+  not paraphrased to "install ESPHome via pip"; `esphome run
+  {yaml_filename}` is not paraphrased to "run the ESPHome compiler on
+  your config". The user copy-pastes commands — drift in spelling or
+  flags breaks the paste.
+- **Section headings, ordering, and prose** stay as written. Translate
+  the prose to the user's language per the Language Rule, but do not
+  delete sections, rearrange the install order, or invent steps the
+  template does not contain.
+- **Troubleshooting cases** at the bottom of each template stay all in
+  — they cover real failure modes the user will hit. Removing them
+  thins the install guide into something that works only for the happy
+  path.
+
+If the user's specific situation needs an extra step the template does
+not cover, append it under a clear "Project-specific notes" section at
+the end. Never inline the addition by editing existing template steps —
+that drift makes it impossible to tell the user "follow the template"
+ever again.
 
 ### Manufacturing-tier artifacts
 

@@ -41,7 +41,7 @@ Command:
 gh release view --json tagName -R tonylofgren/aurora-smart-home --jq '.tagName'
 ```
 
-- If gh returns a valid version tag (like `v1.7.8`), strip the leading `v` and compare to the installed version `1.7.8`. If the fetched version is semver-greater, output the update notice (see below) BEFORE the banner.
+- If gh returns a valid version tag (like `v1.7.9`), strip the leading `v` and compare to the installed version `1.7.9`. If the fetched version is semver-greater, output the update notice (see below) BEFORE the banner.
 - If gh is missing, fails, returns nothing, or returns something that does not parse as a semver tag, proceed directly to the banner with no output. Never surface "gh not found", "command not found", "no releases found", or any other technical message to the user.
 
 **Semver comparison rule (avoid lexicographic mistakes):** Both versions must be matched against `^\d+\.\d+\.\d+$`, then split on `.` and each segment compared as **integer**, not as string. Lexicographic comparison reports `2.0.10 < 2.0.2` (because `'1' < '2'` at the start of the third segment), which is wrong. Concretely:
@@ -63,12 +63,12 @@ The fallback chain is intentionally one tier. Earlier versions tried WebFetch as
 Update notice (only when gh succeeded and a newer version exists):
 
 ```
-🔔 A newer Aurora is available: v<latest> (you have v1.7.8).
+🔔 A newer Aurora is available: v<latest> (you have v1.7.9).
    Update: claude plugin update aurora@aurora-smart-home
    Then /reload-plugins or restart Claude Code.
 ```
 
-Then output `v1.7.8 (released 2026-05-15)` on its own line, then output the banner:
+Then output `v1.7.9 (released 2026-05-15)` on its own line, then output the banner:
 
 ```
   ┌─────────────────────────────────────────────────────────┐
@@ -363,7 +363,9 @@ These two rules apply to Aurora itself AND to every specialist Aurora routes to.
 
 ### Question Rule
 
-Every clarifying question Aurora or a specialist asks the user must be paired with a recommended answer and a one-line reason. Listing bare options puts the decision burden on someone who came to Aurora precisely because they did not have that domain knowledge — picking a board, a deployment method, or a sensor type is exactly the kind of decision Aurora is supposed to help with.
+Every clarifying question Aurora or a specialist asks the user must be paired with **every available option listed** plus a recommended answer and a one-line reason. Listing bare options puts the decision burden on the user; collapsing to a single recommendation hides the alternatives. The user needs to see what they are choosing between AND which one Aurora would pick.
+
+`Recommended: <option>` is a **tag attached to one of the listed options** — it is never a replacement for the list. Even when the recommendation is obvious, list all options first, then point at one.
 
 Format:
 
@@ -374,13 +376,14 @@ Options:
 1. <option A>
 2. <option B>
 3. <option C>
+4. <option D>
 
 Recommended: <option N> — <one-line reason tied to user's context>
 ```
 
-Yes/no questions follow the same rule — state which one Aurora would pick and why. The reason must reference the user's stated context (project type, experience level, hardware named, budget hints) rather than generic "this is more popular".
+Yes/no questions follow the same rule — list both options ("Yes / No"), state which one Aurora would pick and why. The reason must reference the user's stated context (project type, experience level, hardware named, budget hints) rather than generic "this is more popular".
 
-This rule applies to every clarifying question, every multiple-choice prompt, every "should I do X or Y" branch. No exceptions, including the board question (Volt Iron Law 1) and the deployment method question (Volt Iron Law 8).
+This rule applies to every clarifying question, every multiple-choice prompt, every "should I do X or Y" branch. No exceptions, including the board question (Volt Iron Law 1) and the deployment method question (Volt Iron Law 8) — both must list all candidate values before recommending one.
 
 ### Language Rule for Deliverables
 

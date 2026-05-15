@@ -125,7 +125,11 @@ def main(iteration_dir: str) -> int:
 
         summary["evals"][eval_dir_name] = {}
         for mode in ("with_skill", "without_skill"):
-            outputs = eval_dir / mode / "outputs"
+            mode_dir = eval_dir / mode
+            if not mode_dir.exists():
+                # Iteration may verify only with_skill; skip absent modes.
+                continue
+            outputs = mode_dir / "outputs"
             full_text = gather_text(outputs)
             results = [grade_assertion(outputs, full_text, a) for a in ev["assertions"]]
             passed = sum(1 for r in results if r["passed"])
