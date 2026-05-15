@@ -8,6 +8,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.7.8] - 2026-05-15
+
+### Added
+
+**Regression eval suite for the v1.7.7 runtime principles.** A new `aurora/evals/` folder ships three test prompts that exercise the four principles introduced in v1.7.7 (specific-board confirmation, deployment-method question, Question Rule with recommendations, Language Rule for deliverables). For each prompt, paired subagent runs (with-skill + baseline) produce outputs that a grader scores against explicit assertions. The principle-pinning pytests in `aurora/tests/test_v177_principles.py` check that the rules are written down; this eval suite checks that an actual agent follows them when handed a real prompt.
+
+The suite is human-triggered — running it spawns paired subagents and costs API tokens, so CI runs the structural validation in `aurora/tests/test_evals_suite.py` (4 cases) but does not spawn agents. `aurora/evals/README.md` documents the workflow.
+
+First iteration ran on this commit gave the with-skill version a +27 percentage-point edge over baseline (9/11 vs 6/11 across three evals), with the biggest gains on attribution-banner enforcement and INSTALL.md generation under the Language Rule.
+
 ## [1.7.7] - 2026-05-15
 
 ### Added
