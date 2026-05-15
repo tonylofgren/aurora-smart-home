@@ -6,7 +6,8 @@ Format for the project `README.md` that ships in every project folder. The manua
 
 This spec describes the **root** `README.md` at `<project>/README.md`. The root README is the master document. Agent-specific deliverables live in canonical subdirectories per the **Project Structure Rule** in `aurora/SKILL.md`:
 
-- `<project>/esphome/` (Volt)
+- `<project>/esphome/` (Volt — firmware YAML, INSTALL.md, TROUBLESHOOTING.md)
+- `<project>/hardware/` (Volt — BOM.md, WIRING.md when split out, HAZARD-ANALYSIS.md, SCHEMATIC.md, PCB-NOTES.md, MANUFACTURING.md, COST-ANALYSIS.md, CERTIFICATION.md, TEST-JIG.md)
 - `<project>/automations/`, `<project>/scripts/`, `<project>/blueprints/`, `<project>/packages/` (Sage)
 - `<project>/custom_components/<integration_id>/` (Ada)
 - `<project>/node-red-flows/` (River)

@@ -21,10 +21,13 @@ The user can override the recommended tier. If they pick `breadboard` for a proj
 
 ```
 <project>/
-├── README.md           (manual, links to the PCB files below)
-├── BOM.md              (table with LCSC part numbers and packages)
-├── SCHEMATIC.md
-└── PCB-NOTES.md
+├── README.md               (master document, links to hardware/ files)
+├── esphome/
+│   └── <device>.yaml
+└── hardware/
+    ├── BOM.md              (table with LCSC part numbers and packages)
+    ├── SCHEMATIC.md
+    └── PCB-NOTES.md
 ```
 
 ### Production
@@ -32,13 +35,16 @@ The user can override the recommended tier. If they pick `breadboard` for a proj
 ```
 <project>/
 ├── README.md
-├── BOM.md
-├── SCHEMATIC.md
-├── PCB-NOTES.md
-├── MANUFACTURING.md    (assembly service, stencil, finish, file expectations)
-├── COST-ANALYSIS.md    (prototype vs volume pricing, break-even)
-├── CERTIFICATION.md    (CE / FCC / RoHS path, pre-certified module strategy)
-└── TEST-JIG.md         (production test rig: bed of nails, fixtures, pass/fail)
+├── esphome/
+│   └── <device>.yaml
+└── hardware/
+    ├── BOM.md
+    ├── SCHEMATIC.md
+    ├── PCB-NOTES.md
+    ├── MANUFACTURING.md    (assembly service, stencil, finish, file expectations)
+    ├── COST-ANALYSIS.md    (prototype vs volume pricing, break-even)
+    ├── CERTIFICATION.md    (CE / FCC / RoHS path, pre-certified module strategy)
+    └── TEST-JIG.md         (production test rig: bed of nails, fixtures, pass/fail)
 ```
 
 ## SCHEMATIC.md format

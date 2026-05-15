@@ -270,7 +270,14 @@ ever again.
 
 ### Manufacturing-tier artifacts
 
-**Project folder structure**: create `<project-slug>/` in the working directory (or ask the user for a different path). Use the hierarchical layout from the **Project Structure Rule** in `aurora/SKILL.md`. Volt writes ONLY to the `<project>/esphome/` subdirectory plus the root-level `<project>/README.md` and (DEEP mode only) `<project>/aurora-project.json` snapshot. Never write Volt files at the project root or in another agent's subdirectory.
+**Project folder structure**: create `<project-slug>/` in the working directory (or ask the user for a different path). Use the hierarchical layout from the **Project Structure Rule** in `aurora/SKILL.md`. Volt writes to:
+
+- `<project>/esphome/` — firmware YAML, secrets template, INSTALL.md, TROUBLESHOOTING.md
+- `<project>/hardware/` — PCB-tier artifacts (SCHEMATIC.md, PCB-NOTES.md, MANUFACTURING.md, COST-ANALYSIS.md, CERTIFICATION.md, TEST-JIG.md) and split-out BOM.md / WIRING.md when applicable; also the HAZARD-ANALYSIS.md produced by Vera lands here
+- `<project>/README.md` — project master document
+- `<project>/aurora-project.json` — DEEP mode only
+
+Never write Volt files at the project root (except README.md) or in another agent's subdirectory.
 
 **Files required for every tier**:
 
@@ -282,29 +289,42 @@ ever again.
 
 **Language for INSTALL.md, TROUBLESHOOTING.md, BOM.md, WIRING.md, and README.md** (Language Rule reminder): these are human-readable docs. They MUST be in the user's detected language (the language the user used to describe the project), NOT defaulted to English. A Swedish user gets a Swedish `INSTALL.md` with translated headings, prerequisites, step descriptions, and verification text. Quoted commands (`esphome run device.yaml`), file paths, and identifiers stay English; the surrounding prose does not. The install templates in `aurora/references/templates/install-*.md` are English by default and MUST be translated when the user wrote in another language. Skipping translation for "it's technical content" is a Language Rule violation, not a shortcut.
 
-The root `README.md` inlines the BOM (per `aurora/references/deliverables/bom-format.md`) and the wiring (per `aurora/references/deliverables/wiring-format.md`) unless either grows past the split-out thresholds (BOM > ~20 rows, wiring > ~12 connections or > 3 sub-circuits), in which case they move to `<project>/esphome/BOM.md` and `<project>/esphome/WIRING.md` and the root README links to them.
+The root `README.md` inlines the BOM (per `aurora/references/deliverables/bom-format.md`) and the wiring (per `aurora/references/deliverables/wiring-format.md`) unless either grows past the split-out thresholds (BOM > ~20 rows, wiring > ~12 connections or > 3 sub-circuits), in which case they move to `<project>/hardware/BOM.md` and `<project>/hardware/WIRING.md` and the root README links to them.
 
 The BOM **must** include an estimated unit price per row and an estimated total in the footer with a month-year date stamp. Price-free BOMs are not deliverable.
 
 **Files required for tier `custom-PCB`** (in addition to the every-tier set):
 
-- `<project>/esphome/SCHEMATIC.md` — component list with reference designators, net list, ASCII block diagram, per-net design notes.
-- `<project>/esphome/PCB-NOTES.md` — board outline, layer count, antenna clearance, decoupling positions, power section, connector placement, critical traces.
+- `<project>/hardware/SCHEMATIC.md` — component list with reference designators, net list, ASCII block diagram, per-net design notes.
+- `<project>/hardware/PCB-NOTES.md` — board outline, layer count, antenna clearance, decoupling positions, power section, connector placement, critical traces.
 
 The BOM gains two columns (LCSC part number and package) per `bom-format.md`.
 
 **Files required for tier `production`** (in addition to the custom-PCB set):
 
-- `<project>/esphome/MANUFACTURING.md` — assembly service, stencil, finish, file expectations, panelization, test points.
-- `<project>/esphome/COST-ANALYSIS.md` — per-volume cost table (prototype, small batch, production) with date stamp and source assumptions.
-- `<project>/esphome/CERTIFICATION.md` — target markets, pre-certified module strategy, additional testing, test labs by region.
-- `<project>/esphome/TEST-JIG.md` — test point list, pass/fail criteria, fixture mechanical layout, programming interface, test sequence.
+- `<project>/hardware/MANUFACTURING.md` — assembly service, stencil, finish, file expectations, panelization, test points.
+- `<project>/hardware/COST-ANALYSIS.md` — per-volume cost table (prototype, small batch, production) with date stamp and source assumptions.
+- `<project>/hardware/CERTIFICATION.md` — target markets, pre-certified module strategy, additional testing, test labs by region.
+- `<project>/hardware/TEST-JIG.md` — test point list, pass/fail criteria, fixture mechanical layout, programming interface, test sequence.
 
 **Pre-delivery disk check**: before declaring the project complete,
 verify every required file actually exists in the project folder and
-contains its required sections. If anything is missing or empty: STOP,
-fix, or ask the user. Never declare delivery on a project that does not
-exist on disk.
+contains its required sections. For projects that triggered Vera's Iron
+Law 1, also confirm `<project>/hardware/HAZARD-ANALYSIS.md` exists and
+that Vera has cleared the project (no unresolved `conflict_log` entries).
+If anything is missing or empty: STOP, fix, or ask the user. Never
+declare delivery on a project that does not exist on disk.
+
+**Run check-delivery.py as the final step** before declaring delivery:
+
+```
+python aurora/scripts/check-delivery.py <project-folder>
+```
+
+The script checks required files, attribution banners, README sections,
+BOM datestamp, hardware/ vs esphome/ placement of PCB files, and
+INSTALL.md language consistency. Delivery is blocked until the script
+reports DELIVERY APPROVED.
 
 **Attribution**: every generated file carries the attribution header
 appropriate for its format, per `esphome/SKILL.md` Code Attribution. No

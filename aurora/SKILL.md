@@ -41,7 +41,7 @@ Command:
 gh release view --json tagName -R tonylofgren/aurora-smart-home --jq '.tagName'
 ```
 
-- If gh returns a valid version tag (like `v1.7.12`), strip the leading `v` and compare to the installed version `1.7.12`. If the fetched version is semver-greater, output the update notice (see below) BEFORE the banner.
+- If gh returns a valid version tag (like `v1.7.12`), strip the leading `v` and compare to the installed version `1.8.0`. If the fetched version is semver-greater, output the update notice (see below) BEFORE the banner.
 - If gh is missing, fails, returns nothing, or returns something that does not parse as a semver tag, proceed directly to the banner with no output. Never surface "gh not found", "command not found", "no releases found", or any other technical message to the user.
 
 **Semver comparison rule (avoid lexicographic mistakes):** Both versions must be matched against `^\d+\.\d+\.\d+$`, then split on `.` and each segment compared as **integer**, not as string. Lexicographic comparison reports `2.0.10 < 2.0.2` (because `'1' < '2'` at the start of the third segment), which is wrong. Concretely:
@@ -63,12 +63,12 @@ The fallback chain is intentionally one tier. Earlier versions tried WebFetch as
 Update notice (only when gh succeeded and a newer version exists):
 
 ```
-🔔 A newer Aurora is available: v<latest> (you have v1.7.12).
+🔔 A newer Aurora is available: v<latest> (you have v1.8.0).
    Update: claude plugin update aurora@aurora-smart-home
    Then /reload-plugins or restart Claude Code.
 ```
 
-Then output `v1.7.12 (released 2026-05-15)` on its own line, then output the banner:
+Then output `v1.8.0 (released 2026-05-15)` on its own line, then output the banner:
 
 ```
   ┌─────────────────────────────────────────────────────────┐
@@ -465,11 +465,21 @@ Canonical layout:
 <project-name>/
 ├── README.md                          ← master document, links every part
 ├── aurora-project.json                ← snapshot (DEEP mode only)
-├── esphome/                           ← Volt
+├── esphome/                           ← Volt (firmware + install docs)
 │   ├── <device-name>.yaml
 │   ├── secrets.yaml.example
 │   ├── INSTALL.md
 │   └── TROUBLESHOOTING.md
+├── hardware/                          ← Volt (PCB + safety artifacts)
+│   ├── BOM.md                         ← when split out from README
+│   ├── WIRING.md                      ← when split out from README
+│   ├── HAZARD-ANALYSIS.md             ← Vera (required for battery/actuator/outdoor/>5V)
+│   ├── SCHEMATIC.md                   ← custom-PCB and production tiers
+│   ├── PCB-NOTES.md                   ← custom-PCB and production tiers
+│   ├── MANUFACTURING.md               ← production tier only
+│   ├── COST-ANALYSIS.md               ← production tier only
+│   ├── CERTIFICATION.md               ← production tier only
+│   └── TEST-JIG.md                    ← production tier only
 ├── automations/                       ← Sage (automations)
 │   └── <automation-name>.yaml
 ├── scripts/                           ← Sage (scripts)
@@ -491,6 +501,7 @@ Canonical layout:
 | Agent  | Subdirectory                  | Filename pattern                          |
 |--------|-------------------------------|-------------------------------------------|
 | Volt   | `<project>/esphome/`          | `<device-name>.yaml`, `secrets.yaml.example`, `INSTALL.md`, `TROUBLESHOOTING.md` |
+| Volt   | `<project>/hardware/`         | `BOM.md`, `WIRING.md` (when split out), `HAZARD-ANALYSIS.md` (Vera), `SCHEMATIC.md`, `PCB-NOTES.md`, `MANUFACTURING.md`, `COST-ANALYSIS.md`, `CERTIFICATION.md`, `TEST-JIG.md` |
 | Sage   | `<project>/automations/` (or `scripts/`, `blueprints/`, `packages/` per output type) | `<automation-name>.yaml` |
 | Ada    | `<project>/custom_components/<integration_id>/` | Python files, `manifest.json`, `strings.json`, `translations/en.json`, plus optional `<project>/hacs.json`, `<project>/.github/workflows/validate.yaml`, `<project>/LICENSE` for HACS-ready repos |
 | River  | `<project>/node-red-flows/`   | `<flow-name>.json` |
@@ -524,13 +535,15 @@ Forward these to the user when the relevant agent is assigned:
 - **Volt** (esphome): Generate a wiring diagram for every GPIO connection — no GPIO without a diagram, no exceptions
 - **Volt** (esphome): Generate a calibration procedure (with actual entity IDs) for sensors that require it: capacitive moisture, NTC thermistor, CO₂, water level, pressure, LDR
 - **Volt** (esphome): Flag Watt before finalising any BOM that includes a battery, solar panel, or deep sleep — a battery size without a calculated runtime is a guess
-- **Vera** (hardware safety): Hardware Safety Review is mandatory BEFORE Volt for any project with battery, actuators, outdoor mounting, or voltages > 5V — Vera can block Volt if critical risks are found
+- **Vera** (hardware safety): Hardware Safety Review is mandatory BEFORE Volt for any project with battery, actuators, outdoor mounting, or voltages > 5V — Vera produces `hardware/HAZARD-ANALYSIS.md` and can block Volt if critical risks are found
 - **Watt** (esphome): Never deliver a battery or solar recommendation without a full power budget table — state-by-state current × time = mAh/day → days of runtime
 - **Manual** (esphome): Reference actual entity IDs and file names from the project — never write generic placeholders in INSTALL.md or TROUBLESHOOTING.md
 - **Sage** (ha-yaml): Clarify intent before generating — automation vs blueprint vs script vs dashboard are different outputs
 - **Ada** (ha-integration): Always use `dt_util.now()` not `datetime.now()`, `aiohttp` not `requests`, JSON-serializable attributes only
 - **River** (node-red): Always use current node names (`trigger-state`, `api-call-service`) — never legacy names
 - **Atlas** (api-catalog): Credentials always go in `secrets.yaml` — never hardcoded in YAML or Python
+- **Volt** (esphome): Run `python aurora/scripts/check-delivery.py <project-folder>` as the final step before declaring delivery — blocks until required files, attributions, BOM datestamp, and hardware/ placement all pass
+- **Sage, Ada, River, Iris**: Run `python aurora/scripts/check-delivery.py <project-folder>` before declaring delivery — confirms project structure, README sections, and attribution banners
 - **Forge** (infrastructure): Always confirm a full backup exists before any HA update, add-on change, or config migration — no exceptions
 - **Grid** (network): Never connect IoT devices to the main LAN without a VLAN plan, always establish segmentation before recommending device setup
 

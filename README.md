@@ -11,7 +11,7 @@ against schema-checked profiles, and refuses to ship code that does not pass.
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skills-7c3aed.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Home Assistant](https://img.shields.io/badge/Home_Assistant-2024.x--2026.x-41BDF5.svg)](https://www.home-assistant.io/)
 [![ESPHome](https://img.shields.io/badge/ESPHome-2026.4.5-000000.svg)](https://esphome.io/)
-[![Version](https://img.shields.io/badge/Version-v1.7.12-success.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-v1.8.0-success.svg)](CHANGELOG.md)
 [![Validated](https://img.shields.io/badge/Validated-against_datasheets-success.svg)](aurora/references/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Support Nabu Casa](https://img.shields.io/badge/Support_HA-Nabu_Casa-3b8cd3.svg)](https://www.nabucasa.com)
@@ -426,9 +426,10 @@ Full guide: [TROUBLESHOOTING.md](./TROUBLESHOOTING.md).
 
 ## Changelog
 
-Version history lives in [CHANGELOG.md](./CHANGELOG.md). Recent releases added
-retroactive YAML review, tiered error output, community-component infrastructure,
-cross-agent project snapshots, and validators for LLM config and Node-RED syntax.
+Version history lives in [CHANGELOG.md](./CHANGELOG.md).
+
+**What's new in v1.8.0:** Hardware safety analysis — dangerous projects (battery, mains relay, outdoor, >5V) now trigger Vera's review before Volt starts and produce `hardware/HAZARD-ANALYSIS.md`. PCB files move from `esphome/` to `hardware/`. Four HA integration patterns documented in `aurora/references/ha-integration/`. Self-validating delivery via `aurora/scripts/check-delivery.py` — every specialist must pass the script before declaring done.
+
 The roadmap lives in [ROADMAP.md](./ROADMAP.md).
 
 ---

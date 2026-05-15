@@ -8,6 +8,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.8.0] - 2026-05-15
+
+### Added
+
+**Dangerous projects now get a safety analysis file.** Battery, relay-driven mains, outdoor mounting, and any supply over 5V trigger Vera's safety review before Volt starts. The review produces `hardware/HAZARD-ANALYSIS.md` — a hazard table with severity, likelihood, risk level, required mitigations, residual risk, and a sign-off block. Vera blocks Volt if any hazard is rated Critical (Catastrophic at any likelihood, or Major + Likely or higher). The template lives in `aurora/references/deliverables/safety-format.md`.
+
+**Four patterns for getting Aurora-generated YAML into Home Assistant.** New `aurora/references/ha-integration/` docs cover every realistic install path: paste directly into the HA UI editor (no server access needed); point `configuration.yaml` at a folder with `!include_dir_named` and drop files in on restart; copy files to `config/` via Samba share, SCP, or the File Editor add-on; or store config in a git repo and pull to the server. A `pattern-selector.md` walks you through the decision with a flowchart and a recommended default per agent.
+
+**Aurora can now check its own work.** `aurora/scripts/check-delivery.py <project-folder>` validates a project folder before delivery is declared: required files present, attribution banners on every file, README has its required sections, BOM has a price datestamp, PCB files are in `hardware/` not `esphome/`, and INSTALL.md language matches the README. Volt's Iron Law 8 and every other delivery contract now end with "run check-delivery.py and get DELIVERY APPROVED before declaring done."
+
+### Changed
+
+**PCB and safety files move to `hardware/`.** `SCHEMATIC.md`, `PCB-NOTES.md`, `MANUFACTURING.md`, `COST-ANALYSIS.md`, `CERTIFICATION.md`, `TEST-JIG.md`, and split-out `BOM.md` / `WIRING.md` all live in `<project>/hardware/` from now on. Previously they lived under `<project>/esphome/`. `check-delivery.py` flags any of these files found in `esphome/` as a placement error. **Breaking change from v1.7.x projects** — move existing PCB files from `esphome/` to `hardware/` if you have them.
+
+**Vera's soul is fully written.** The existing partial soul has been replaced with a complete implementation covering two modes: hardware safety review (Iron Laws 1–5, HAZARD-ANALYSIS.md, blocking on critical risk) and WAF review (override methods, failure-safe defaults, notification audit, non-technical user test). Iron Law 6 adds snapshot-aware coordination for DEEP mode.
+
 ## [1.7.12] - 2026-05-15
 
 ### Added
