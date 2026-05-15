@@ -44,6 +44,25 @@ def test_skill_version_matches_marketplace():
     )
 
 
+def test_skill_has_reactivation_check_before_version_check():
+    """Aurora must skip the banner and gh call when /aurora:aurora is invoked
+    twice in the same conversation. Without a guard, every reactivation
+    re-runs the version check, reprints the banner, and re-asks the opening
+    question — pure noise mid-session."""
+    content = SKILL_PATH.read_text(encoding="utf-8")
+    assert "Reactivation Check" in content, (
+        "aurora/SKILL.md is missing the Reactivation Check section. Without "
+        "it, /aurora:aurora typed a second time re-runs version-check + "
+        "banner + opening question, which wastes tokens and confuses the user."
+    )
+    reactivation_pos = content.index("Reactivation Check")
+    version_check_pos = content.index("Version Check")
+    assert reactivation_pos < version_check_pos, (
+        "Reactivation Check must come BEFORE Version Check so the gh call is "
+        "skipped on reactivation."
+    )
+
+
 def test_aurora_skill_loads_specialist_soul_before_delegating():
     """Aurora orchestrator must instruct the agent to load the specialist's
     soul file from aurora/souls/ before delegating. Without this, Iron Laws

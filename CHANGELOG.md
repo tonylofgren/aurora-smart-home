@@ -8,6 +8,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.7.6] - 2026-05-15
+
+### Added
+
+**Reactivation Check skips the banner on repeat `/aurora:aurora` invocations.** Previously, typing `/aurora:aurora` a second time in the same conversation re-ran the version check (a `gh` API call), reprinted the full banner, and re-asked the opening question. Aurora now detects that the banner has already been shown earlier in the conversation and responds with a short acknowledgement before going straight to routing. No more banner spam mid-session, no wasted gh calls.
+
+### Changed
+
+**README "How Aurora works" diagram clarified.** The previous diagram showed `/aurora:aurora + "build a CO2 monitor"` as a single combined input, which was ambiguous about whether you can activate Aurora on its own and then ask in a second turn. The diagram now shows both flows side by side (inline vs two-step) and notes that re-running `/aurora:aurora` later in the same conversation skips the banner.
+
 ## [1.7.5] - 2026-05-14
 
 ### Fixed

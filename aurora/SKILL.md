@@ -15,6 +15,22 @@ allowed-tools: Read, Glob, Grep, Bash, Agent, Write, Edit
 
 # /aurora — Smart Home Orchestrator
 
+## Reactivation Check (run before everything else)
+
+If the AURORA banner box (the `┌──...AURORA...──┐` block from the section below) has already been emitted earlier in this conversation, Aurora is already loaded. In that case:
+
+- Skip Version Check, Freshness Check, and the banner entirely.
+- Do not run any `gh` calls.
+- Respond with a single short line acknowledging that Aurora is already loaded, e.g.:
+
+  > *Aurora is already loaded.*
+
+- Then proceed straight to Step 1 (Parse Intent) using whatever request the user typed alongside `/aurora:aurora`. If the user typed nothing alongside it, ask the opening question once:
+
+  `What do you want to build or fix? Type help for examples.`
+
+This avoids re-running the version check, re-printing the banner, and re-asking the opening question every time the user types `/aurora:aurora` mid-session. The full activation flow below only runs on the first `/aurora:aurora` of a conversation.
+
 ## Version Check (run before banner)
 
 Try to fetch the latest published version, best-effort, never blocking. Use **only** `gh` CLI via Bash. **Do not** fall back to WebFetch or any other fetching method.
@@ -25,7 +41,7 @@ Command:
 gh release view --json tagName -R tonylofgren/aurora-smart-home --jq '.tagName'
 ```
 
-- If gh returns a valid version tag (like `v1.7.5`), strip the leading `v` and compare to the installed version `1.7.5`. If the fetched version is semver-greater, output the update notice (see below) BEFORE the banner.
+- If gh returns a valid version tag (like `v1.7.6`), strip the leading `v` and compare to the installed version `1.7.6`. If the fetched version is semver-greater, output the update notice (see below) BEFORE the banner.
 - If gh is missing, fails, returns nothing, or returns something that does not parse as a semver tag, proceed directly to the banner with no output. Never surface "gh not found", "command not found", "no releases found", or any other technical message to the user.
 
 **Semver comparison rule (avoid lexicographic mistakes):** Both versions must be matched against `^\d+\.\d+\.\d+$`, then split on `.` and each segment compared as **integer**, not as string. Lexicographic comparison reports `2.0.10 < 2.0.2` (because `'1' < '2'` at the start of the third segment), which is wrong. Concretely:
@@ -47,12 +63,12 @@ The fallback chain is intentionally one tier. Earlier versions tried WebFetch as
 Update notice (only when gh succeeded and a newer version exists):
 
 ```
-🔔 A newer Aurora is available: v<latest> (you have v1.7.5).
+🔔 A newer Aurora is available: v<latest> (you have v1.7.6).
    Update: claude plugin update aurora@aurora-smart-home
    Then /reload-plugins or restart Claude Code.
 ```
 
-Then output `v1.7.5 (released 2026-05-14)` on its own line, then output the banner:
+Then output `v1.7.6 (released 2026-05-15)` on its own line, then output the banner:
 
 ```
   ┌─────────────────────────────────────────────────────────┐
@@ -72,7 +88,7 @@ Then output `v1.7.5 (released 2026-05-14)` on its own line, then output the bann
 
 If the Version Check above succeeded, skip this section. This is only the fallback for when gh CLI was unavailable.
 
-The release date of this version is `2026-05-14`.
+The release date of this version is `2026-05-15`.
 
 After the banner, compare today's date (available in your conversation context) to that release date. If more than 90 days have passed AND the version check above did not already produce an update notice, output this line BEFORE asking the project question:
 

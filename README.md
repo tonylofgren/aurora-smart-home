@@ -11,7 +11,7 @@ against schema-checked profiles, and refuses to ship code that does not pass.
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skills-7c3aed.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Home Assistant](https://img.shields.io/badge/Home_Assistant-2024.x--2026.x-41BDF5.svg)](https://www.home-assistant.io/)
 [![ESPHome](https://img.shields.io/badge/ESPHome-2026.4.5-000000.svg)](https://esphome.io/)
-[![Version](https://img.shields.io/badge/Version-v1.7.5-success.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-v1.7.6-success.svg)](CHANGELOG.md)
 [![Validated](https://img.shields.io/badge/Validated-against_datasheets-success.svg)](aurora/references/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Support Nabu Casa](https://img.shields.io/badge/Support_HA-Nabu_Casa-3b8cd3.svg)](https://www.nabucasa.com)
@@ -138,12 +138,28 @@ Aurora fits three kinds of work:
 
 ## How Aurora works
 
+### Activate Aurora — two ways
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  You: /aurora:aurora + "build a CO2 monitor on ESP32-S3"    │
+│  Inline (one turn):                                         │
+│    /aurora:aurora build a CO2 monitor on ESP32-S3           │
+│                                                             │
+│  Two-step (separate turns):                                 │
+│    1) /aurora:aurora                                        │
+│       → Aurora shows its banner and asks the opening        │
+│         question.                                           │
+│    2) build a CO2 monitor on ESP32-S3                       │
 └─────────────────────────────────────────────────────────────┘
-                          │
-                          ▼
+```
+
+Both paths end up in the same routing flow. Re-running `/aurora:aurora`
+later in the same conversation skips the banner and just acknowledges
+that Aurora is already loaded — no version check, no re-greeting.
+
+### Routing
+
+```
 ┌─────────────────────────────────────────────────────────────┐
 │  Aurora (orchestrator)                                      │
 │    Parses intent, picks the right specialist(s),            │
