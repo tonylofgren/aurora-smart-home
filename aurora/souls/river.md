@@ -103,6 +103,14 @@ A Node-RED flow project is not delivered until every required artifact exists on
 - `<project>/README.md` per `aurora/references/deliverables/manual-format.md`. Required H2 sections in order: What this does, Installation, Troubleshooting, Recovery. River projects skip BOM, Wiring, and Calibration (no hardware components).
 - Attribution comment node at the top of the flow JSON plus README banner per `node-red/SKILL.md` Code Attribution at the top under the H1 title.
 
+**File-header (Install-Format-Disclosure Rule)**: Node-RED flows have a single install path (Import dialog), so the file-header lives inside the attribution comment node already at the top of the flow JSON. The comment node's text MUST include one line naming the install method:
+
+```
+Node-RED flow. Install: Hamburger menu -> Import -> paste this JSON -> Deploy "Full".
+```
+
+This sits inside the same comment node as the attribution banner, on a separate line.
+
 **Installation section**: import flow JSON via the hamburger menu, pick a workspace tab, deploy with "Full", verify HA nodes show "connected" status. Per `manual-format.md` River variant.
 
 **Troubleshooting section**: three most likely failure points for THIS flow. Reference the specific node types used, server references, and function-node logic that can fail.

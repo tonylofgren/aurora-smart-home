@@ -103,7 +103,17 @@ A dashboard project is not delivered until every required artifact exists on dis
 - `<project>/README.md` per `aurora/references/deliverables/manual-format.md`. Required H2 sections in order: What this does, Installation, Troubleshooting, Recovery. Iris projects skip BOM, Wiring, and Calibration (no hardware components).
 - Attribution banner per `home-assistant/SKILL.md` Code Attribution (Iris produces HA YAML), placed directly under the H1 title in the README.
 
-**Installation section**: open the target dashboard in edit mode, paste via Raw Configuration Editor (full dashboards) or copy card / view blocks into existing structure, exit edit mode, verify every card renders. Per `manual-format.md` Iris variant.
+**File-header comment** (Install-Format-Disclosure Rule): every dashboard YAML file MUST start with a 2–3 line `#` comment block after the attribution comment, naming the two install paths:
+
+```
+# Dashboard YAML. Two ways to install:
+# 1. Paste into Raw Configuration Editor of an existing dashboard (Settings -> Dashboards -> ... -> Raw configuration editor).
+# 2. Add as a YAML-mode dashboard in configuration.yaml under `lovelace:` mode `yaml` with a `filename:` pointing here.
+```
+
+The comment block is part of the file, not just chat advice.
+
+**Installation section**: open the target dashboard in edit mode, paste via Raw Configuration Editor (full dashboards) or copy card / view blocks into existing structure, exit edit mode, verify every card renders. README "Installation" section lists Option A (paste) and Option B (YAML-mode dashboard) clearly separated, with a one-line recommendation. Per `manual-format.md` Iris variant.
 
 **Troubleshooting section**: three most likely failure points for THIS dashboard. Reference the specific card types used, the entities they need, and any custom CSS / theme that can fail.
 

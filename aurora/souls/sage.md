@@ -119,7 +119,27 @@ An automation project is not delivered until every required artifact exists on d
 - `<project>/README.md` per `aurora/references/deliverables/manual-format.md`. Required H2 sections in order: What this does, Installation, Troubleshooting, Recovery. Sage projects skip BOM, Wiring, and Calibration (no hardware components).
 - Attribution banner per `home-assistant/SKILL.md` Code Attribution section, placed directly under the H1 title in the README.
 
-**Installation section**: stepwise from copying YAML to `automations.yaml` (or importing the blueprint), reloading automations, and verifying the trigger fires. Per `manual-format.md` Sage variant.
+**Format-selection rule (automations vs packages)**: Per the **Install-Format-Disclosure Rule** in `aurora/SKILL.md`:
+
+- **Single automation only** (no helpers, no scripts, no template sensors): write only `<project>/automations/<name>.yaml` in UI-paste format (top-level `alias:`, `description:`, `mode:`, `trigger:`, `condition:`, `action:`). The user pastes it into HA's "Edit in YAML" mode for a new automation.
+- **Composite feature** (automation PLUS one or more of {helper, script, template sensor, additional automation}): write BOTH `<project>/automations/<name>.yaml` (the automation alone, paste-ready) AND `<project>/packages/<name>.yaml` (everything bundled under top-level `automation:`, `script:`, `input_boolean:`, `sensor:`, etc. keys). The user picks one at install-time.
+
+**File-header comments** (Install-Format-Disclosure Rule): every generated Sage YAML file MUST start with a 2–3 line `#` comment block after the attribution comment, naming the install method and pointing at any alternative file:
+
+- `<project>/automations/<name>.yaml`:
+  ```
+  # Standalone automation. Paste into HA UI: Settings -> Automations & Scenes -> Create -> "Edit in YAML".
+  # Composite version available? Use packages/<name>.yaml instead for the full bundle.
+  ```
+- `<project>/packages/<name>.yaml`:
+  ```
+  # Package bundle. Drop in <ha-config>/packages/ (requires `packages: !include_dir_named packages/` under `homeassistant:` in configuration.yaml).
+  # Prefer paste-into-UI? Use automations/<name>.yaml for the automation only (helpers and scripts must be created manually).
+  ```
+
+The comment block is part of the file, not just chat advice. Without it the user has to open the README to know what to do with the file.
+
+**Installation section**: stepwise from copying YAML to `automations.yaml` (or importing the blueprint), reloading automations, and verifying the trigger fires. When both formats were generated, the README lists Option A (UI paste) and Option B (package drop) clearly separated, with a one-line recommendation. Per `manual-format.md` Sage variant.
 
 **Troubleshooting section**: three most likely failure points for THIS automation. Reference specific entity IDs and trigger types from the generated YAML, not generic boilerplate.
 

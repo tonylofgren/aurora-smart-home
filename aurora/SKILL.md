@@ -41,7 +41,7 @@ Command:
 gh release view --json tagName -R tonylofgren/aurora-smart-home --jq '.tagName'
 ```
 
-- If gh returns a valid version tag (like `v1.7.11`), strip the leading `v` and compare to the installed version `1.7.11`. If the fetched version is semver-greater, output the update notice (see below) BEFORE the banner.
+- If gh returns a valid version tag (like `v1.7.12`), strip the leading `v` and compare to the installed version `1.7.12`. If the fetched version is semver-greater, output the update notice (see below) BEFORE the banner.
 - If gh is missing, fails, returns nothing, or returns something that does not parse as a semver tag, proceed directly to the banner with no output. Never surface "gh not found", "command not found", "no releases found", or any other technical message to the user.
 
 **Semver comparison rule (avoid lexicographic mistakes):** Both versions must be matched against `^\d+\.\d+\.\d+$`, then split on `.` and each segment compared as **integer**, not as string. Lexicographic comparison reports `2.0.10 < 2.0.2` (because `'1' < '2'` at the start of the third segment), which is wrong. Concretely:
@@ -63,12 +63,12 @@ The fallback chain is intentionally one tier. Earlier versions tried WebFetch as
 Update notice (only when gh succeeded and a newer version exists):
 
 ```
-🔔 A newer Aurora is available: v<latest> (you have v1.7.11).
+🔔 A newer Aurora is available: v<latest> (you have v1.7.12).
    Update: claude plugin update aurora@aurora-smart-home
    Then /reload-plugins or restart Claude Code.
 ```
 
-Then output `v1.7.11 (released 2026-05-15)` on its own line, then output the banner:
+Then output `v1.7.12 (released 2026-05-15)` on its own line, then output the banner:
 
 ```
   ┌─────────────────────────────────────────────────────────┐
@@ -429,7 +429,31 @@ Detect language from the user's most recent project-describing message — not f
 
 Apply consistently across every specialist that ships project folders (Volt, Sage, Ada, River, Iris, Manual). A Swedish user who said "bygg en CO2-mätare" receives a Swedish `README.md` and a Swedish `INSTALL.md`, with the YAML keys and `entity_id`s still in English. A YAML comment that says `# kalibrering: 400 ppm utomhus` is correct; renaming `sensor.co2_concentration` to `sensor.koldioxidhalt` is not — entity IDs are code.
 
+**Explicit per-file enforcement (no English defaults for the Big Five):** `README.md`, `INSTALL.md`, `TROUBLESHOOTING.md`, `BOM.md`, and `WIRING.md` are human-readable docs and MUST be written in the user's detected language. The default-to-English fallback only fires when the user explicitly wrote their request in English. A Swedish, German, Spanish, or any other non-English conversation never produces an English `INSTALL.md` "because it is technical". The headings, step descriptions, prerequisites, and verification text are all translated. Only quoted commands, paths, identifiers, and code snippets stay English.
+
+**Language detection trigger:** Detect language from the user's last 2–3 project-describing messages, not from a single short reply like "yes" or "ok". If the user opened in Swedish and the last reply is "kör", the language is still Swedish.
+
 The rule for files committed to **the aurora-smart-home repo itself** is separate: those stay English regardless of conversation language, because the repo serves a global audience.
+
+### Install-Format-Disclosure Rule
+
+Generated YAML and JSON files frequently have multiple valid install paths in Home Assistant (paste into UI, drop in config folder, drop in a `packages/` bundle). The user cannot pick the right path if they do not know the alternatives exist. Two-channel disclosure is required:
+
+1. **File-header comment** in each generated YAML / JSON file, at the very top after the attribution comment, naming the primary install method in one sentence and pointing at any alternative file in the same project folder.
+
+2. **README "Installation" section** with clearly labelled options (e.g. "Option A: paste into UI" vs "Option B: drop as package") and a one-line recommendation for which to pick. The user decides at install-time, not at generation-time. Aurora does NOT add a clarifying question to the generation flow asking which format the user wants; both are generated when both apply, and the user picks when installing.
+
+Format-selection per agent:
+
+| Agent  | When to generate both formats | Format A (UI-paste)            | Format B (config-folder)     |
+|--------|-------------------------------|---------------------------------|------------------------------|
+| Sage   | ≥2 of {automation, helper, script, template sensor, additional automation} | `<project>/automations/<name>.yaml` (alias-level) | `<project>/packages/<name>.yaml` (bundled) |
+| Iris   | Always for full dashboards    | `<project>/dashboards/<name>.yaml` (paste into Raw Configuration Editor) | Same file, dropped in HA `dashboards/` via `lovelace:` mode YAML |
+| Volt   | N/A — ESPHome YAML has one install path (`esphome run`) | `<project>/esphome/<device>.yaml` | — |
+| River  | N/A — Node-RED flow JSON has one install path (Import dialog) | `<project>/node-red-flows/<flow>.json` | — |
+| Ada    | N/A — custom integrations have one install path (drop in `custom_components/`) | `<project>/custom_components/<id>/` | — |
+
+Single-format outputs still carry the file-header comment naming the install method, so the user knows where the file goes without opening the README.
 
 ### Project Structure Rule
 
@@ -474,9 +498,23 @@ Canonical layout:
 
 **Project README on root:** Every project folder has a `README.md` at the **root**, written by the agent that started the project (or by Manual if explicitly invoked). The root README is the master document and links to each agent's contribution by subdirectory: "ESPHome firmware: see `esphome/`", "Automations: see `automations/`", etc. Per-subdirectory READMEs are optional for complex deliverables (e.g. `esphome/INSTALL.md` is required, `automations/README.md` only if there is non-obvious context).
 
+**Multi-agent README ownership:** When multiple specialists contribute to one project, the FIRST specialist invoked writes the root `README.md` with sections for its own contribution. Each subsequent specialist APPENDS a new H2 section to the same `README.md` (e.g. Volt writes "Hardware + ESPHome", Sage appends "Automations", Iris appends "Dashboard"). Specialists never overwrite each other's sections, never create competing root READMEs, and never split themselves into a sub-README unless the section grows past ~150 lines and merits its own file linked from the master. The Attribution banner is owned by the first specialist; subsequent specialists do not duplicate it.
+
+**Root-level files exception:** The "ONLY to its own subdirectory" rule has a closed whitelist of root-level files. No other root-level files are allowed.
+
+| Root file                          | Owner                   | Required?                                  |
+|------------------------------------|-------------------------|--------------------------------------------|
+| `README.md`                        | Primary agent + appends | Always                                     |
+| `aurora-project.json`              | Aurora (orchestrator)   | DEEP mode only                             |
+| `hacs.json`                        | Ada                     | HACS-ready integrations only               |
+| `LICENSE`                          | Ada                     | HACS-ready integrations only               |
+| `.github/workflows/validate.yaml`  | Ada                     | HACS-ready integrations only               |
+
 **Project name:** Aurora derives the project name from the user's request (e.g. "CO2 air quality monitor" → `co2-air-quality/`). The name is slug-cased, English (per Language Rule — directory names are code), and stable across the project's lifetime. Specialists do not invent their own variants.
 
-**No flat fallback for single-agent projects.** Even a single Sage automation lives in `<project>/automations/<name>.yaml`, never at the project root. Consistency between QUICK and DEEP mode is what makes the structure dependable — the user always knows where to look.
+**No flat fallback for single-agent projects.** Even a single Sage automation lives in `<project>/automations/<name>.yaml`, never at the project root. Consistency between QUICK and DEEP mode is what makes the structure dependable, so the user always knows where to look.
+
+**User override:** If the user explicitly requests a different structure ("skip the project folder, just put the YAML in the current directory", "don't make subdirectories"), Aurora confirms once with a one-line acknowledgement, then respects the choice. The Project Structure Rule is the default contract, not an absolute ban; users own their workspace. Document the deviation in the chat response so the user can verify Aurora understood the request.
 
 ## Iron Laws Reference
 

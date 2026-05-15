@@ -2,6 +2,38 @@
 
 Format for the project `README.md` that ships in every project folder. The manual is the master document for the project. It is written by Volt for hardware projects, by Sage / Ada / River / Iris for software-only projects, each with its agent-specific Installation section.
 
+## Project structure context
+
+This spec describes the **root** `README.md` at `<project>/README.md`. The root README is the master document. Agent-specific deliverables live in canonical subdirectories per the **Project Structure Rule** in `aurora/SKILL.md`:
+
+- `<project>/esphome/` (Volt)
+- `<project>/automations/`, `<project>/scripts/`, `<project>/blueprints/`, `<project>/packages/` (Sage)
+- `<project>/custom_components/<integration_id>/` (Ada)
+- `<project>/node-red-flows/` (River)
+- `<project>/dashboards/` (Iris)
+
+The root README links to each subdirectory's contribution. Per-subdirectory READMEs (e.g. `<project>/automations/README.md`) are optional and only added when a subdirectory's content has non-obvious context that does not belong in the master. The required sections below apply to the **root** README; sub-READMEs may use any structure.
+
+## Language
+
+The root README and any sub-README MUST be written in the user's detected language per the **Language Rule for Deliverables** in `aurora/SKILL.md`. The same rule applies to every other human-readable file in the project (`INSTALL.md`, `TROUBLESHOOTING.md`, `BOM.md`, `WIRING.md`). The default-to-English fallback only fires when the user explicitly wrote their request in English. A Swedish user gets a Swedish `INSTALL.md` with translated headings, prerequisites, step descriptions, and verification text; only quoted commands, paths, and identifiers stay English.
+
+## Multi-agent README ownership
+
+When multiple specialists contribute to one project, the FIRST specialist invoked writes the root `README.md` with H2 sections for its own contribution. Each subsequent specialist APPENDS a new H2 section to the same root `README.md`:
+
+| First-in agent | First sections written         | Later agent appends            |
+|----------------|---------------------------------|--------------------------------|
+| Volt           | Bill of materials, Wiring, Installation (Volt), Calibration, Troubleshooting (Volt), Recovery (Volt) | Sage adds "Automations", Iris adds "Dashboard", Ada adds "Custom integration" |
+| Sage           | Installation (Sage), Troubleshooting, Recovery | Iris adds "Dashboard", Volt rare in this order |
+| Ada            | Installation (Ada), Configuration, Troubleshooting, Recovery | Sage adds "Automations using this integration" |
+
+The Attribution banner under the H1 is owned by the first specialist; subsequent specialists do not duplicate it. Specialists never overwrite each other's sections, never create competing root READMEs, and never split themselves into a sub-README unless the appended section grows past ~150 lines.
+
+## Install-Format-Disclosure (Sage, Iris)
+
+When the agent ships both a UI-paste-ready file AND a packaged / dashboard-mode-ready file, the README "Installation" section MUST present them as two clearly labelled options (Option A, Option B) with a one-line recommendation for which to pick. Per the **Install-Format-Disclosure Rule** in `aurora/SKILL.md`, the user picks the install path at install-time, not at generation-time. Both files are generated when both apply.
+
 ## Required sections (every project)
 
 Every project README has these sections, in this order, as H2 headings:
@@ -148,26 +180,49 @@ The Installation section is agent-specific. Every variant must be stepwise and r
 
 ### Sage (HA YAML)
 
+When Sage shipped both an `automations/<name>.yaml` (UI-paste form) AND a `packages/<name>.yaml` (bundled form), the Installation section lists both options. When only the single automation was shipped, omit Option B and the recommendation line.
+
 ```
 ## Installation
+
+Two ways to install. Pick one.
+
+### Option A: Paste into the HA UI (recommended for first-time HA users)
 
 1. Prerequisites
    - Home Assistant 2026.4 or later.
    - The entities the automation references must exist (see "What this does").
 
-2. Copy the automation
-   - Open `automations.yaml` (or the dashboard's automation editor).
-   - Append the YAML from this project, or import the blueprint.
+2. Open Settings → Automations & Scenes → Create automation.
 
-3. Reload
-   - Developer Tools → YAML → "Reload Automations".
-   - Or restart Home Assistant if the automation references new
-     helpers / template sensors.
+3. Click the "⋮" menu (top right of the editor) → "Edit in YAML".
 
-4. Verify
-   - Trigger the automation manually from the UI.
-   - Confirm the expected action fires (light turns on, notification
-     sent, etc.).
+4. Paste the contents of `automations/<name>.yaml`.
+
+5. Save. Trigger manually to verify.
+
+### Option B: Drop in as a package (advanced)
+
+Use this when the project ships helpers, scripts, or template sensors
+alongside the automation, and you want everything in one file.
+
+1. Prerequisites
+   - Your `configuration.yaml` has, under `homeassistant:`:
+     `packages: !include_dir_named packages/`
+   - If not, add it now and restart HA once before continuing.
+
+2. Copy `packages/<name>.yaml` to your HA `config/packages/` folder.
+
+3. Settings → System → Restart, OR Developer Tools → YAML → "Restart"
+   (a full restart is needed because packages register helpers and
+   template sensors at boot, not on reload).
+
+4. Verify: the helpers, scripts, and template sensors listed in
+   "What this does" all appear under Settings → Devices & Services →
+   Helpers. Trigger the automation manually.
+
+**Not sure?** Use Option A. It works on any HA install with zero
+extra configuration.
 ```
 
 ### Ada (Python custom integration)
@@ -224,18 +279,45 @@ The Installation section is agent-specific. Every variant must be stepwise and r
 ```
 ## Installation
 
+Two ways to install. Pick one.
+
+### Option A: Paste into Raw Configuration Editor (recommended)
+
 1. Prerequisites
    - The entities the dashboard references must exist.
 
-2. Add the YAML
-   - Open the target dashboard in edit mode.
-   - For full dashboards: Raw configuration editor → paste.
-   - For single cards or views: copy the relevant block into the
-     existing dashboard structure.
+2. Open the target dashboard.
 
-3. Verify
-   - Exit edit mode. The card / view renders without errors.
-   - Every entity referenced shows live state.
+3. Top-right "⋮" menu → "Edit dashboard" → "⋮" → "Raw configuration editor".
+
+4. For a full dashboard: replace the contents with `dashboards/<name>.yaml`.
+   For a single card or view: copy the relevant block into the existing
+   structure at the right indentation level.
+
+5. Save. Exit edit mode. Verify every card renders and every entity
+   shows live state.
+
+### Option B: Add as a YAML-mode dashboard (advanced)
+
+Use this when you want the dashboard tracked as a file on disk instead
+of in HA's `.storage/` database, e.g. for git versioning.
+
+1. Copy `dashboards/<name>.yaml` to your HA `config/dashboards/` folder.
+
+2. In `configuration.yaml`, under `lovelace:`, add:
+   ```
+   dashboards:
+     <name>:
+       mode: yaml
+       title: <Dashboard Title>
+       icon: mdi:view-dashboard
+       show_in_sidebar: true
+       filename: dashboards/<name>.yaml
+   ```
+
+3. Restart Home Assistant. The new dashboard appears in the sidebar.
+
+**Not sure?** Use Option A. It is faster and does not require restarting HA.
 ```
 
 ## Recovery section, per agent

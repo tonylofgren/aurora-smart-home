@@ -8,6 +8,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.7.12] - 2026-05-15
+
+### Added
+
+**Install-Format-Disclosure Rule: Sage now ships both automation and package format when the project has helpers, scripts, or template sensors alongside the automation.** Pick the install path at install-time, not at generation-time. The README "Installation" section presents Option A (paste into HA UI) and Option B (drop as package) clearly separated, with a one-line recommendation. Single automations still ship as one paste-ready file with no Option B noise.
+
+**Iris dashboard installation now shows both options.** Option A: Raw Configuration Editor paste (recommended, fast, no restart). Option B: YAML-mode dashboard in `configuration.yaml` (advanced, file-on-disk, git-friendly).
+
+**File-header comments in every generated YAML.** Every `automations/<name>.yaml`, `packages/<name>.yaml`, and `dashboards/<name>.yaml` opens with a 2-3 line `#` comment that names the install method and points at any alternative file. You know what the file is just from opening it; no need to flip back to the README.
+
+**User override for project structure.** If you explicitly request "skip the project folder, just put the YAML in this directory" or "don't make subdirectories", Aurora confirms once and respects the choice. The Project Structure Rule is the default contract, not an absolute ban; you own your workspace.
+
+### Fixed
+
+**INSTALL.md, TROUBLESHOOTING.md, BOM.md, WIRING.md, and README.md are now written in your language.** A user reported that even when the conversation was in Swedish, INSTALL.md came back in English. The Language Rule for Deliverables in `aurora/SKILL.md` already required this, but the runtime kept defaulting INSTALL.md and TROUBLESHOOTING.md to English "because they are technical". Volt's Iron Law 8 and `esphome/SKILL.md` now explicitly require translation when the user wrote their request in any non-English language. Quoted commands, file paths, and identifiers stay English; the surrounding prose follows you.
+
+**Multi-agent README ownership is now defined.** Earlier versions left it ambiguous whether Volt + Sage projects produced one shared README or two competing ones. The Project Structure Rule now states: the FIRST specialist invoked writes the root README, and each subsequent specialist APPENDS an H2 section for its own contribution. No competing READMEs, no overwrites, no duplicate Attribution banners.
+
+**HACS-ready integrations have an explicit root-level exception.** Ada's `hacs.json`, `LICENSE`, and `.github/workflows/validate.yaml` are allowed at the project root, listed in a closed whitelist in the Project Structure Rule. The "ONLY to its own subdirectory" rule has a documented exception list instead of a contradiction.
+
 ## [1.7.11] - 2026-05-15
 
 ### Added

@@ -94,7 +94,9 @@ Before generating anything for the user:
 
 1. Create a project folder (`<device-name>/` for existing devices, `<product-slug>/` for new products).
 2. Write every artifact as a file in that folder: the device YAML, `secrets.yaml.example`, and `README.md`. The README is the master document and carries (inline or via linked files): What this does, Bill of materials with estimated prices, Wiring with connection table and ASCII diagram, Installation, Calibration (if applicable), Troubleshooting, Recovery.
-3. Run the pre-delivery disk check: every required file must exist before you declare the project complete. A described file is not a written file.
+3. Place every artifact in the hierarchical project structure per the **Project Structure Rule** in `aurora/SKILL.md`. ESPHome firmware + `INSTALL.md` + `TROUBLESHOOTING.md` live under `<project>/esphome/`; the master `README.md` lives at the project root.
+4. Write human-readable docs (`README.md`, `INSTALL.md`, `TROUBLESHOOTING.md`, `BOM.md`, `WIRING.md`) in the user's detected language per the **Language Rule for Deliverables** in `aurora/SKILL.md`. The install templates in `aurora/references/templates/install-*.md` are English by default and MUST be translated when the user wrote their request in any other language. Quoted commands, file paths, and identifiers stay English; the surrounding prose does not.
+5. Run the pre-delivery disk check: every required file must exist before you declare the project complete. A described file is not a written file.
 
 Full contract: Iron Law 8 in `aurora/souls/volt.md`. Format specs: `aurora/references/deliverables/`. Wiring format: `wiring-format.md`. BOM format: `bom-format.md`. README format: `manual-format.md`. PCB tiers: `pcb-format.md`.
 
