@@ -14,11 +14,21 @@ True millimeter-wave radar presence detection. Unlike PIR sensors, radar detects
 
 ## External hardware
 
+For simple presence (on/off):
 - **HLK-LD2410** or **LD2410B/C** radar module (~80 SEK)
-- 5V VCC (with level shifter if board is 3.3V-only on UART) -- actually LD2410 works at 5V VCC but its UART logic is 3.3V tolerant on RX, OK for direct connect
+- 5V VCC; UART logic is 3.3V tolerant on RX, direct connect is fine
+
+For zone-based presence (which area of the room):
+- **HLK-LD2450** (~120 SEK) — provides X/Y coordinates for up to 3 targets
+- Same footprint as LD2410, drop-in hardware replacement, different YAML component
+
+**Do NOT use LD2410 for zones.** LD2410 reports one distance value; it has no
+spatial awareness and cannot distinguish room sectors. See
+`aurora/references/sensors/radar-selector.md` for the full decision guide.
 
 ## Customization
 
 - Adjust LD2410 sensitivity via its native config (LD2410 Tool app or HA service)
 - Combine with a light sensor to skip turning on lights in daylight
-- Use the `detection_distance` sensor to trigger zone-based automations (only when person is at the desk vs couch)
+- For zone logic with LD2450: define `x1/y1/x2/y2` rectangles in ESPHome YAML and
+  use separate `binary_sensor` entries per zone

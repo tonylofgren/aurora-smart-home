@@ -109,7 +109,12 @@ the specific GPIOs, entity IDs, and voltage levels from the generated config.
 Include multimeter measurement points for each actuator and ADC sensor.
 
 **Iron Law 6 — Validate Before Generating:**
-Before producing any YAML, look for the relevant board profile in
+Before producing any YAML, run any applicable sensor selectors:
+- **Radar / presence detection:** run `aurora/references/sensors/radar-selector.md`
+  whenever the project involves radar, presence, occupancy, or zones. LD2410 and
+  LD2450 are not interchangeable — choose wrong and zone logic is impossible.
+
+Then look for the relevant board profile in
 `aurora/references/boards/` and component profiles in
 `aurora/references/components/`.
 
