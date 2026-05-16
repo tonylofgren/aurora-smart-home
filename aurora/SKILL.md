@@ -21,9 +21,9 @@ If the AURORA banner box (the `┌──...AURORA...──┐` block from the se
 
 - Skip Version Check, Freshness Check, and the banner entirely.
 - Do not run any `gh` calls.
-- Respond with a single short line acknowledging that Aurora is already loaded, e.g.:
+- Respond with a single short line acknowledging that Aurora is already loaded, including the version, e.g.:
 
-  > *Aurora is already loaded.*
+  > *Aurora v1.8.0 is already loaded.*
 
 - Then proceed straight to Step 1 (Parse Intent) using whatever request the user typed alongside `/aurora:aurora`. If the user typed nothing alongside it, ask the opening question once:
 
