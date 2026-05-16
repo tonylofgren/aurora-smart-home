@@ -17,11 +17,11 @@ allowed-tools: Read, Glob, Grep, Bash, Agent, Write, Edit
 
 ## Reactivation Check (run before everything else)
 
-If the AURORA banner box (the `┌──...AURORA...──┐` block from the section below) has already been emitted earlier in this conversation, Aurora is already loaded. In that case:
+Look at the **user messages** in conversation history (not the skill file content, not the system prompt). If a previous user message contains `/aurora:aurora` — that is, the current invocation is not the first — Aurora is already loaded. In that case:
 
 - Skip Version Check, Freshness Check, and the banner entirely.
 - Do not run any `gh` calls.
-- Respond with a single short line acknowledging that Aurora is already loaded, including the version, e.g.:
+- Respond with a single short line, e.g.:
 
   > *Aurora v1.8.0 is already loaded.*
 
@@ -30,6 +30,8 @@ If the AURORA banner box (the `┌──...AURORA...──┐` block from the se
   `What do you want to build or fix? Type help for examples.`
 
 This avoids re-running the version check, re-printing the banner, and re-asking the opening question every time the user types `/aurora:aurora` mid-session. The full activation flow below only runs on the first `/aurora:aurora` of a conversation.
+
+**Important:** The SKILL.md file itself contains the banner in a code block — do NOT treat that as evidence Aurora has been activated. Only user messages count.
 
 ## Version Check (run before banner)
 
