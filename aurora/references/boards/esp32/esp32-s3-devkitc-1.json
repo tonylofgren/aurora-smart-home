@@ -2,11 +2,14 @@
   "$schema": "../../schemas/board-profile.schema.json",
   "schema_version": "1.0",
   "board_id": "esp32-s3-devkitc-1",
+  "board_type": "dev_board",
   "display_name": "ESP32-S3 DevKit C-1",
   "chip": "ESP32-S3",
   "manufacturer": "Espressif",
   "wireless": {
-    "wifi": ["2.4GHz"],
+    "wifi": [
+      "2.4GHz"
+    ],
     "wifi_standard": "WiFi 4 (b/g/n)",
     "bluetooth": "BLE 5.0",
     "bluetooth_classic": false,
@@ -35,18 +38,145 @@
     "ram_kb": 512
   },
   "gpio": {
-    "valid_pins": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48],
-    "strapping_pins": [0,3,45,46],
-    "reserved_for_usb": [19,20],
-    "reserved_for_flash": [22,23,24,25],
+    "valid_pins": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48
+    ],
+    "strapping_pins": [
+      0,
+      3,
+      45,
+      46
+    ],
+    "reserved_for_usb": [
+      19,
+      20
+    ],
+    "reserved_for_flash": [
+      22,
+      23,
+      24,
+      25
+    ],
     "input_only": [],
-    "adc1_pins": [1,2,3,4,5,6,7,8,9,10],
-    "adc2_pins": [11,12,13,14,15,16,17,18,19,20],
-    "touch_pins": [1,2,3,4,5,6,7,8,9,10,11,12,13,14],
+    "adc1_pins": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "adc2_pins": [
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "touch_pins": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
     "dac_pins": [],
-    "wake_source_pins": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21],
-    "i2c_default": {"sda": 8, "scl": 9},
-    "spi_default": {"mosi": 11, "miso": 13, "sck": 12, "cs": 10}
+    "wake_source_pins": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21
+    ],
+    "i2c_default": {
+      "sda": 8,
+      "scl": 9
+    },
+    "spi_default": {
+      "mosi": 11,
+      "miso": 13,
+      "sck": 12,
+      "cs": 10
+    }
   },
   "onboard_components": {
     "led_gpio": 38,
@@ -74,20 +204,37 @@
     "factory_reset_pin": 0,
     "external_programmer_needed": false,
     "usb_cdc_recovery": true,
-    "min_required_features_for_unbricking": ["wifi", "ota OR usb_cdc"]
+    "min_required_features_for_unbricking": [
+      "wifi",
+      "ota OR usb_cdc"
+    ]
   },
   "form_factor": {
     "antenna": "PCB",
     "ipex_connector": false,
     "dimensions_mm": "63 x 25.5",
-    "certifications": ["FCC", "CE"],
+    "certifications": [
+      "FCC",
+      "CE"
+    ],
     "operating_temp_c": "-40 to +85"
   },
   "limitations": {
     "max_cpu_mhz": 240,
     "no_dac": true,
-    "usb_blocks_gpio": [19,20],
-    "psram_blocks_gpio": [26,27,28,29,30,31,32],
+    "usb_blocks_gpio": [
+      19,
+      20
+    ],
+    "psram_blocks_gpio": [
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32
+    ],
     "adc2_blocked_when_wifi_active": true,
     "strapping_conflict_warnings": [
       "GPIO 0 must be HIGH at boot, pull-up if used as input",
@@ -106,7 +253,8 @@
     "platform": "esp32",
     "variant": "ESP32S3",
     "framework": "esp-idf",
-    "min_version": "2023.6.0"
+    "min_version": "2023.6.0",
+    "board": "esp32-s3-devkitc-1"
   },
   "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-s3_datasheet_en.pdf",
   "last_verified": "2026-05-13",

@@ -11,6 +11,11 @@
   "properties": {
     "schema_version": {"type": "string", "pattern": "^\\d+\\.\\d+(\\.\\d+)?$"},
     "board_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "board_type": {
+      "type": "string",
+      "enum": ["dev_board", "specialty_board", "commercial_device", "module"],
+      "description": "dev_board = general-purpose dev kit; specialty_board = display/LoRa/etc board; commercial_device = flash-only (Shelly/Sonoff); module = bare chip/module for custom PCB"
+    },
     "display_name": {"type": "string", "minLength": 1},
     "chip": {"type": "string", "minLength": 1},
     "manufacturer": {"type": "string", "minLength": 1},
@@ -162,7 +167,11 @@
         "platform": {"type": "string"},
         "variant": {"type": "string"},
         "framework": {"enum": ["arduino", "esp-idf"]},
-        "min_version": {"type": "string"}
+        "min_version": {"type": "string"},
+        "board": {
+          "type": ["string", "null"],
+          "description": "The exact value for the ESPHome 'board:' YAML key. Null for commercial_device boards where config is device-specific."
+        }
       }
     },
     "datasheet_url": {"type": "string", "format": "uri"},

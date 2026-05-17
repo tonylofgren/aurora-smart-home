@@ -2,11 +2,14 @@
   "$schema": "../../schemas/board-profile.schema.json",
   "schema_version": "1.0",
   "board_id": "sonoff-mini-r3",
+  "board_type": "commercial_device",
   "display_name": "Sonoff Mini R3",
   "chip": "ESP32-C3",
   "manufacturer": "ITEAD",
   "wireless": {
-    "wifi": ["2.4GHz"],
+    "wifi": [
+      "2.4GHz"
+    ],
     "wifi_standard": "WiFi 4 (b/g/n)",
     "bluetooth": "BLE 5.0",
     "bluetooth_classic": false,
@@ -35,18 +38,50 @@
     "ram_kb": 400
   },
   "gpio": {
-    "valid_pins": [4, 5, 6, 9],
-    "strapping_pins": [2, 8, 9],
+    "valid_pins": [
+      4,
+      5,
+      6,
+      9
+    ],
+    "strapping_pins": [
+      2,
+      8,
+      9
+    ],
     "reserved_for_usb": [],
-    "reserved_for_flash": [11, 12, 13, 14, 15, 16, 17],
+    "reserved_for_flash": [
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+    ],
     "input_only": [],
-    "adc1_pins": [4, 5],
+    "adc1_pins": [
+      4,
+      5
+    ],
     "adc2_pins": [],
     "touch_pins": [],
     "dac_pins": [],
-    "wake_source_pins": [4, 5, 9],
-    "i2c_default": {"sda": 5, "scl": 6},
-    "spi_default": {"mosi": 7, "miso": 2, "sck": 6, "cs": 10}
+    "wake_source_pins": [
+      4,
+      5,
+      9
+    ],
+    "i2c_default": {
+      "sda": 5,
+      "scl": 6
+    },
+    "spi_default": {
+      "mosi": 7,
+      "miso": 2,
+      "sck": 6,
+      "cs": 10
+    }
   },
   "onboard_components": {
     "led_gpio": 6,
@@ -74,13 +109,20 @@
     "factory_reset_pin": 9,
     "external_programmer_needed": true,
     "usb_cdc_recovery": false,
-    "min_required_features_for_unbricking": ["wifi", "ota"]
+    "min_required_features_for_unbricking": [
+      "wifi",
+      "ota"
+    ]
   },
   "form_factor": {
     "antenna": "PCB",
     "ipex_connector": false,
     "dimensions_mm": "39.5 x 33 x 16.8",
-    "certifications": ["CE", "FCC", "RoHS"],
+    "certifications": [
+      "CE",
+      "FCC",
+      "RoHS"
+    ],
     "operating_temp_c": "0 to +40"
   },
   "limitations": {
@@ -106,7 +148,8 @@
     "platform": "esp32",
     "variant": "ESP32C3",
     "framework": "esp-idf",
-    "min_version": "2023.4.0"
+    "min_version": "2023.4.0",
+    "board": null
   },
   "datasheet_url": "https://sonoff.tech/product/diy-smart-switch/minir3/",
   "last_verified": "2026-05-13",

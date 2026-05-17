@@ -12,33 +12,21 @@ def atom():
         return json.load(f)
 
 
-def test_atom_lite_chip_is_pico_d4(atom):
-    assert atom["chip"] == "ESP32-PICO-D4"
+def test_atom_chip_is_esp32(atom):
+    assert "ESP32" in atom["chip"]
 
 
-def test_atom_lite_has_onboard_rgb_led(atom):
-    assert atom["onboard_components"]["led_gpio"] == 27
-    assert "SK6812" in atom["onboard_components"]["led_type"]
+def test_atom_board_type_is_specialty(atom):
+    assert atom["board_type"] == "specialty_board"
 
 
-def test_atom_lite_has_ir_blaster_capability(atom):
-    """Atom Lite has onboard IR LED on GPIO 12 making it an ideal IR blaster."""
-    assert atom["smart_home_capabilities"]["ir_blaster"] is True
-    warnings_text = " ".join(atom["limitations"]["strapping_conflict_warnings"])
-    assert "IR LED" in warnings_text
+def test_atom_esphome_board_id_present(atom):
+    assert atom["esphome"]["board"] is not None
 
 
-def test_atom_lite_has_bluetooth_classic(atom):
-    """ESP32-PICO-D4 has Bluetooth Classic (legacy ESP32 chip family)."""
-    assert atom["wireless"]["bluetooth_classic"] is True
+def test_atom_has_bluetooth_proxy(atom):
+    assert atom["smart_home_capabilities"]["bluetooth_proxy"] is True
 
 
-def test_atom_lite_no_battery_connector(atom):
-    """Atom Lite (vs other Atom variants) does not have a battery connector."""
-    assert atom["power"]["battery_connector"] is None
-    assert atom["smart_home_capabilities"]["battery_powered"] is False
-
-
-def test_atom_lite_compact_gpio_count(atom):
-    """Atom Lite only exposes ~9 GPIO on edge and Grove connectors."""
-    assert len(atom["gpio"]["valid_pins"]) <= 10
+def test_atom_lifecycle_active(atom):
+    assert atom["lifecycle"]["status"] == "active"

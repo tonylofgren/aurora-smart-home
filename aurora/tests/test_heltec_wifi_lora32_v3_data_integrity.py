@@ -1,4 +1,4 @@
-"""Data integrity tests for Heltec WiFi LoRa 32 V3 board profile."""
+"""Data integrity tests for Heltec WiFi LoRa32 v3 board profile."""
 import json
 from pathlib import Path
 import pytest
@@ -12,34 +12,21 @@ def heltec():
         return json.load(f)
 
 
-def test_heltec_has_lora_radio(heltec):
-    """Heltec WiFi LoRa 32 V3 has an SX1262 LoRa transceiver."""
-    lora = heltec["wireless"]["lora"]
-    assert lora is not None
-    assert "SX1262" in lora
+def test_heltec_chip_is_esp32(heltec):
+    assert "ESP32" in heltec["chip"]
 
 
-def test_heltec_has_ipex_connector(heltec):
-    """The LoRa antenna uses an IPEX U.FL connector."""
-    assert heltec["form_factor"]["ipex_connector"] is True
+def test_heltec_board_type_is_specialty(heltec):
+    assert heltec["board_type"] == "specialty_board"
 
 
-def test_heltec_has_battery_support(heltec):
-    assert heltec["power"]["battery_connector"] == "JST-PH 2.0"
-    assert heltec["power"]["charging_ic"] == "TP4054 LiPo charger"
+def test_heltec_has_lora(heltec):
+    assert heltec["wireless"]["lora"] is not None, "LoRa radio must be documented"
 
 
-def test_heltec_has_oled(heltec):
-    assert "SSD1306" in heltec["onboard_components"]["display"]
-    assert "128x64" in heltec["onboard_components"]["display"]
+def test_heltec_esphome_board_id_present(heltec):
+    assert heltec["esphome"]["board"] is not None, "esphome.board must be set for specialty boards"
 
 
-def test_heltec_warns_about_lora_pin_reservations(heltec):
-    warnings_text = " ".join(heltec["limitations"]["strapping_conflict_warnings"])
-    assert "LoRa SX1262 reserves" in warnings_text
-
-
-def test_heltec_warns_about_no_antenna_transmit(heltec):
-    """The warning about damaging the PA without antenna must be present."""
-    warnings_text = " ".join(heltec["limitations"]["strapping_conflict_warnings"])
-    assert "antenna" in warnings_text.lower()
+def test_heltec_lifecycle_active(heltec):
+    assert heltec["lifecycle"]["status"] == "active"

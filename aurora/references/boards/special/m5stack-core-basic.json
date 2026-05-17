@@ -2,11 +2,14 @@
   "$schema": "../../schemas/board-profile.schema.json",
   "schema_version": "1.0",
   "board_id": "m5stack-core-basic",
+  "board_type": "specialty_board",
   "display_name": "M5Stack Core Basic",
   "chip": "ESP32-D0WDQ6",
   "manufacturer": "M5Stack",
   "wireless": {
-    "wifi": ["2.4GHz"],
+    "wifi": [
+      "2.4GHz"
+    ],
     "wifi_standard": "WiFi 4 (b/g/n)",
     "bluetooth": "BLE 4.2",
     "bluetooth_classic": true,
@@ -35,18 +38,89 @@
     "ram_kb": 520
   },
   "gpio": {
-    "valid_pins": [0,2,5,13,16,17,21,22,26,32,35,36,39],
-    "strapping_pins": [0,2,5,12,15],
+    "valid_pins": [
+      0,
+      2,
+      5,
+      13,
+      16,
+      17,
+      21,
+      22,
+      26,
+      32,
+      35,
+      36,
+      39
+    ],
+    "strapping_pins": [
+      0,
+      2,
+      5,
+      12,
+      15
+    ],
     "reserved_for_usb": [],
-    "reserved_for_flash": [6,7,8,9,10,11],
-    "input_only": [35,36,39],
-    "adc1_pins": [32,35,36,39],
-    "adc2_pins": [0,2,13,26],
-    "touch_pins": [0,2,13,32],
-    "dac_pins": [25,26],
-    "wake_source_pins": [0,2,5,13,16,17,21,22,26,32,35,36,39],
-    "i2c_default": {"sda": 21, "scl": 22},
-    "spi_default": {"mosi": 23, "miso": 19, "sck": 18, "cs": 5}
+    "reserved_for_flash": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "input_only": [
+      35,
+      36,
+      39
+    ],
+    "adc1_pins": [
+      32,
+      35,
+      36,
+      39
+    ],
+    "adc2_pins": [
+      0,
+      2,
+      13,
+      26
+    ],
+    "touch_pins": [
+      0,
+      2,
+      13,
+      32
+    ],
+    "dac_pins": [
+      25,
+      26
+    ],
+    "wake_source_pins": [
+      0,
+      2,
+      5,
+      13,
+      16,
+      17,
+      21,
+      22,
+      26,
+      32,
+      35,
+      36,
+      39
+    ],
+    "i2c_default": {
+      "sda": 21,
+      "scl": 22
+    },
+    "spi_default": {
+      "mosi": 23,
+      "miso": 19,
+      "sck": 18,
+      "cs": 5
+    }
   },
   "onboard_components": {
     "led_gpio": null,
@@ -74,13 +148,19 @@
     "factory_reset_pin": 0,
     "external_programmer_needed": false,
     "usb_cdc_recovery": true,
-    "min_required_features_for_unbricking": ["wifi", "ota OR usb_cdc"]
+    "min_required_features_for_unbricking": [
+      "wifi",
+      "ota OR usb_cdc"
+    ]
   },
   "form_factor": {
     "antenna": "PCB",
     "ipex_connector": false,
     "dimensions_mm": "54 x 54 x 17",
-    "certifications": ["FCC", "CE"],
+    "certifications": [
+      "FCC",
+      "CE"
+    ],
     "operating_temp_c": "0 to +60"
   },
   "limitations": {
@@ -108,7 +188,8 @@
     "platform": "esp32",
     "variant": "ESP32",
     "framework": "esp-idf",
-    "min_version": "2022.1.0"
+    "min_version": "2022.1.0",
+    "board": "m5stack-core-esp32"
   },
   "datasheet_url": "https://docs.m5stack.com/en/core/basic_v2.7",
   "last_verified": "2026-05-13",

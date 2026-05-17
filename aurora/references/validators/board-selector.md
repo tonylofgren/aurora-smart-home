@@ -30,15 +30,16 @@ Volt runs this when:
 
 ### Mode A: Recommend a board
 
-1. Load all profiles from `aurora/references/boards/**/*.json`
+1. Load all profiles from `aurora/references/boards/**/*.json` — profiles are spread across subdirectories: `esp32/`, `esp8266/`, `rp/`, `special/`, `smart-home/`. Search MUST be recursive (`**`); a flat search misses `special/` and `smart-home/` entirely.
 2. Filter by required capabilities:
    - If `needs_bluetooth_proxy` is true, keep boards where `smart_home_capabilities.bluetooth_proxy` is true
    - Same for `voice_assistant`, `matter_controller`, `zigbee_coordinator`, `thread_border_router`, `ble_tracker`
 3. Filter out boards where `lifecycle.status` is `deprecated` or `obsolete` (warn but allow `legacy`)
-4. Prefer boards where `recommended_for` mentions the user's primary use case
-5. Avoid boards where `not_recommended_for` mentions the user's constraints
-6. Rank by `lifecycle.status` (active > legacy > experimental) and `last_verified` recency
-7. Present top 2-3 with trade-offs from `recommended_for` / `not_recommended_for`
+4. Filter out boards where `board_type` is `commercial_device` — these are flash-only targets, not fresh builds
+5. Prefer boards where `recommended_for` mentions the user's primary use case
+6. Avoid boards where `not_recommended_for` mentions the user's constraints
+7. Rank by `lifecycle.status` (active > legacy > experimental) and `last_verified` recency
+8. Present top 2-3 with trade-offs from `recommended_for` / `not_recommended_for`
 
 ### Mode B: User already owns a board
 

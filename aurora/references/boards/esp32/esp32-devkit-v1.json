@@ -2,11 +2,14 @@
   "$schema": "../../schemas/board-profile.schema.json",
   "schema_version": "1.0",
   "board_id": "esp32-devkit-v1",
+  "board_type": "dev_board",
   "display_name": "ESP32 DevKit V1",
   "chip": "ESP32",
   "manufacturer": "Espressif / various",
   "wireless": {
-    "wifi": ["2.4GHz"],
+    "wifi": [
+      "2.4GHz"
+    ],
     "wifi_standard": "WiFi 4 (b/g/n)",
     "bluetooth": "BLE 4.2 + BT Classic",
     "bluetooth_classic": true,
@@ -35,18 +38,129 @@
     "ram_kb": 520
   },
   "gpio": {
-    "valid_pins": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,25,26,27,32,33,34,35,36,39],
-    "strapping_pins": [0,2,5,12,15],
+    "valid_pins": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      25,
+      26,
+      27,
+      32,
+      33,
+      34,
+      35,
+      36,
+      39
+    ],
+    "strapping_pins": [
+      0,
+      2,
+      5,
+      12,
+      15
+    ],
     "reserved_for_usb": [],
-    "reserved_for_flash": [6,7,8,9,10,11],
-    "input_only": [34,35,36,39],
-    "adc1_pins": [32,33,34,35,36,37,38,39],
-    "adc2_pins": [0,2,4,12,13,14,15,25,26,27],
-    "touch_pins": [0,2,4,12,13,14,15,27,32,33],
-    "dac_pins": [25,26],
-    "wake_source_pins": [0,2,4,12,13,14,15,25,26,27,32,33,34,35,36,39],
-    "i2c_default": {"sda": 21, "scl": 22},
-    "spi_default": {"mosi": 23, "miso": 19, "sck": 18, "cs": 5}
+    "reserved_for_flash": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "input_only": [
+      34,
+      35,
+      36,
+      39
+    ],
+    "adc1_pins": [
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39
+    ],
+    "adc2_pins": [
+      0,
+      2,
+      4,
+      12,
+      13,
+      14,
+      15,
+      25,
+      26,
+      27
+    ],
+    "touch_pins": [
+      0,
+      2,
+      4,
+      12,
+      13,
+      14,
+      15,
+      27,
+      32,
+      33
+    ],
+    "dac_pins": [
+      25,
+      26
+    ],
+    "wake_source_pins": [
+      0,
+      2,
+      4,
+      12,
+      13,
+      14,
+      15,
+      25,
+      26,
+      27,
+      32,
+      33,
+      34,
+      35,
+      36,
+      39
+    ],
+    "i2c_default": {
+      "sda": 21,
+      "scl": 22
+    },
+    "spi_default": {
+      "mosi": 23,
+      "miso": 19,
+      "sck": 18,
+      "cs": 5
+    }
   },
   "onboard_components": {
     "led_gpio": 2,
@@ -74,13 +188,19 @@
     "factory_reset_pin": 0,
     "external_programmer_needed": false,
     "usb_cdc_recovery": false,
-    "min_required_features_for_unbricking": ["wifi", "ota"]
+    "min_required_features_for_unbricking": [
+      "wifi",
+      "ota"
+    ]
   },
   "form_factor": {
     "antenna": "PCB",
     "ipex_connector": false,
     "dimensions_mm": "55 x 28",
-    "certifications": ["FCC", "CE"],
+    "certifications": [
+      "FCC",
+      "CE"
+    ],
     "operating_temp_c": "-40 to +85"
   },
   "limitations": {
@@ -108,7 +228,8 @@
     "platform": "esp32",
     "variant": "ESP32",
     "framework": "arduino",
-    "min_version": "2022.1.0"
+    "min_version": "2022.1.0",
+    "board": "esp32dev"
   },
   "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf",
   "last_verified": "2026-05-13",

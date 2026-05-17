@@ -2,11 +2,14 @@
   "$schema": "../../schemas/board-profile.schema.json",
   "schema_version": "1.0",
   "board_id": "d1-mini",
+  "board_type": "dev_board",
   "display_name": "Wemos D1 Mini (ESP8266)",
   "chip": "ESP8266EX",
   "manufacturer": "Espressif (Wemos clone form factor)",
   "wireless": {
-    "wifi": ["2.4GHz"],
+    "wifi": [
+      "2.4GHz"
+    ],
     "wifi_standard": "WiFi 4 (b/g/n)",
     "bluetooth": null,
     "bluetooth_classic": false,
@@ -35,18 +38,54 @@
     "ram_kb": 80
   },
   "gpio": {
-    "valid_pins": [0,1,2,3,4,5,12,13,14,15,16,17],
-    "strapping_pins": [0,2,15],
+    "valid_pins": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+    ],
+    "strapping_pins": [
+      0,
+      2,
+      15
+    ],
     "reserved_for_usb": [],
-    "reserved_for_flash": [6,7,8,9,10,11],
+    "reserved_for_flash": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
     "input_only": [],
-    "adc1_pins": [17],
+    "adc1_pins": [
+      17
+    ],
     "adc2_pins": [],
     "touch_pins": [],
     "dac_pins": [],
-    "wake_source_pins": [16],
-    "i2c_default": {"sda": 4, "scl": 5},
-    "spi_default": {"mosi": 13, "miso": 12, "sck": 14, "cs": 15}
+    "wake_source_pins": [
+      16
+    ],
+    "i2c_default": {
+      "sda": 4,
+      "scl": 5
+    },
+    "spi_default": {
+      "mosi": 13,
+      "miso": 12,
+      "sck": 14,
+      "cs": 15
+    }
   },
   "onboard_components": {
     "led_gpio": 2,
@@ -74,13 +113,19 @@
     "factory_reset_pin": 0,
     "external_programmer_needed": false,
     "usb_cdc_recovery": false,
-    "min_required_features_for_unbricking": ["wifi", "ota"]
+    "min_required_features_for_unbricking": [
+      "wifi",
+      "ota"
+    ]
   },
   "form_factor": {
     "antenna": "PCB",
     "ipex_connector": false,
     "dimensions_mm": "34.2 x 25.6",
-    "certifications": ["FCC", "CE"],
+    "certifications": [
+      "FCC",
+      "CE"
+    ],
     "operating_temp_c": "-40 to +125"
   },
   "limitations": {
@@ -109,7 +154,8 @@
     "platform": "esp8266",
     "variant": "ESP8266",
     "framework": "arduino",
-    "min_version": "2022.1.0"
+    "min_version": "2022.1.0",
+    "board": "d1_mini"
   },
   "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/0a-esp8266ex_datasheet_en.pdf",
   "last_verified": "2026-05-13",

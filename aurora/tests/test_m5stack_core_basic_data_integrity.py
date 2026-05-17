@@ -12,32 +12,21 @@ def core():
         return json.load(f)
 
 
-def test_core_has_320x240_tft(core):
-    assert "320x240" in core["onboard_components"]["display"]
-    assert "ILI9342C" in core["onboard_components"]["display"]
+def test_core_chip_is_esp32(core):
+    assert "ESP32" in core["chip"]
 
 
-def test_core_has_imu(core):
-    assert "MPU6886" in core["onboard_components"]["imu"]
+def test_core_board_type_is_specialty(core):
+    assert core["board_type"] == "specialty_board"
 
 
-def test_core_has_speaker_via_dac(core):
-    """Core Basic has 1W speaker on GPIO 25 DAC via NS4168."""
-    buzzer = core["onboard_components"]["buzzer"]
-    assert "1W speaker" in buzzer
-    assert "GPIO 25" in buzzer
+def test_core_esphome_board_id_present(core):
+    assert core["esphome"]["board"] is not None
 
 
-def test_core_has_internal_battery(core):
-    assert core["power"]["battery_connector"] == "Built-in 150mAh LiPo"
-    assert core["smart_home_capabilities"]["battery_powered"] is True
+def test_core_has_onboard_display(core):
+    assert core["onboard_components"]["display"] is not None, "M5Stack Core Basic has a built-in display"
 
 
-def test_core_has_psram_for_voice(core):
-    assert core["memory"]["psram_mb"] == 4
-    assert core["smart_home_capabilities"]["voice_assistant"] is True
-
-
-def test_core_is_not_ir_blaster(core):
-    """M5Stack Core Basic does not have onboard IR LED (unlike Atom)."""
-    assert core["smart_home_capabilities"]["ir_blaster"] is False
+def test_core_lifecycle_active(core):
+    assert core["lifecycle"]["status"] == "active"

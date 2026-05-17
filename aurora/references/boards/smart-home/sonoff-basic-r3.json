@@ -2,11 +2,14 @@
   "$schema": "../../schemas/board-profile.schema.json",
   "schema_version": "1.0",
   "board_id": "sonoff-basic-r3",
+  "board_type": "commercial_device",
   "display_name": "Sonoff Basic R3",
   "chip": "ESP8285",
   "manufacturer": "ITEAD",
   "wireless": {
-    "wifi": ["2.4GHz"],
+    "wifi": [
+      "2.4GHz"
+    ],
     "wifi_standard": "WiFi 4 (b/g/n)",
     "bluetooth": null,
     "bluetooth_classic": false,
@@ -35,18 +38,46 @@
     "ram_kb": 80
   },
   "gpio": {
-    "valid_pins": [0, 12, 13, 14],
-    "strapping_pins": [0, 2, 15],
+    "valid_pins": [
+      0,
+      12,
+      13,
+      14
+    ],
+    "strapping_pins": [
+      0,
+      2,
+      15
+    ],
     "reserved_for_usb": [],
-    "reserved_for_flash": [6, 7, 8, 9, 10, 11],
+    "reserved_for_flash": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
     "input_only": [],
-    "adc1_pins": [17],
+    "adc1_pins": [
+      17
+    ],
     "adc2_pins": [],
     "touch_pins": [],
     "dac_pins": [],
-    "wake_source_pins": [0],
-    "i2c_default": {"sda": 4, "scl": 5},
-    "spi_default": {"mosi": 13, "miso": 12, "sck": 14, "cs": 15}
+    "wake_source_pins": [
+      0
+    ],
+    "i2c_default": {
+      "sda": 4,
+      "scl": 5
+    },
+    "spi_default": {
+      "mosi": 13,
+      "miso": 12,
+      "sck": 14,
+      "cs": 15
+    }
   },
   "onboard_components": {
     "led_gpio": 13,
@@ -74,13 +105,20 @@
     "factory_reset_pin": 0,
     "external_programmer_needed": true,
     "usb_cdc_recovery": false,
-    "min_required_features_for_unbricking": ["wifi", "ota"]
+    "min_required_features_for_unbricking": [
+      "wifi",
+      "ota"
+    ]
   },
   "form_factor": {
     "antenna": "PCB",
     "ipex_connector": false,
     "dimensions_mm": "91 x 42 x 20",
-    "certifications": ["CE", "FCC", "RoHS"],
+    "certifications": [
+      "CE",
+      "FCC",
+      "RoHS"
+    ],
     "operating_temp_c": "0 to +40"
   },
   "limitations": {
@@ -106,7 +144,8 @@
     "platform": "esp8266",
     "variant": "ESP8285",
     "framework": "arduino",
-    "min_version": "2022.1.0"
+    "min_version": "2022.1.0",
+    "board": null
   },
   "datasheet_url": "https://sonoff.tech/product/diy-smart-switch/basicr3/",
   "last_verified": "2026-05-13",
