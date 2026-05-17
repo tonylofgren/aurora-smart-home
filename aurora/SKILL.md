@@ -70,6 +70,18 @@ Update notice (only when gh succeeded and a newer version exists):
    Then /reload-plugins or restart Claude Code.
 ```
 
+What's new notice (only when gh succeeded AND fetched version == installed version `1.8.1`):
+
+```
+✨ Aurora v1.8.1 — what's new:
+   • Custom PCB builds: say "bare chip", "module" or "custom board" and Volt picks
+     the right Espressif module (S3-WROOM-2, C3-MINI-1, C6-MINI-1) + prototype-first workflow
+   • Board selector: Shelly and Sonoff no longer appear as fresh-build recommendations
+   • LilyGO T-Display S3: default I2C pins (GPIO43/44) conflict with UART0 logger — now documented
+```
+
+**Update this block at every version bump.** Content must be user-facing (no schema fields, test counts, or CI changes). 3 bullets max.
+
 Then output `v1.8.1 (released 2026-05-17)` on its own line, then output the banner:
 
 ```
