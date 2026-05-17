@@ -1,0 +1,185 @@
+{
+  "$schema": "../../schemas/board-profile.schema.json",
+  "schema_version": "1.0",
+  "board_id": "esp32-c3-mini-1",
+  "board_type": "module",
+  "display_name": "ESP32-C3-MINI-1",
+  "chip": "ESP32-C3",
+  "manufacturer": "Espressif Systems",
+  "wireless": {
+    "wifi": [
+      "2.4GHz"
+    ],
+    "wifi_standard": "WiFi 4 (b/g/n)",
+    "bluetooth": "BLE 5.0",
+    "bluetooth_classic": false,
+    "thread": false,
+    "zigbee": false,
+    "lora": null,
+    "ethernet": null
+  },
+  "power": {
+    "usb_type": null,
+    "operating_voltage": 3.3,
+    "input_voltage_range": "3.0V-3.6V (no onboard regulator)",
+    "battery_connector": null,
+    "charging_ic": null,
+    "vbat_monitor_pin": null,
+    "deep_sleep_current_ua": 5,
+    "light_sleep_current_ma": 0.13,
+    "modem_sleep_current_ma": 20,
+    "solar_input": false,
+    "gpio_5v_tolerant": false
+  },
+  "memory": {
+    "flash_mb": 4,
+    "psram_mb": 0,
+    "psram_type": null,
+    "ram_kb": 400
+  },
+  "gpio": {
+    "valid_pins": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      18,
+      19,
+      20,
+      21
+    ],
+    "strapping_pins": [
+      2,
+      8,
+      9
+    ],
+    "reserved_for_usb": [
+      18,
+      19
+    ],
+    "reserved_for_flash": [
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+    ],
+    "input_only": [],
+    "adc1_pins": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "adc2_pins": [
+      5
+    ],
+    "touch_pins": [],
+    "dac_pins": [],
+    "wake_source_pins": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "i2c_default": null,
+    "spi_default": null
+  },
+  "onboard_components": {
+    "led_gpio": null,
+    "led_type": null,
+    "boot_button_gpio": null,
+    "reset_button": null,
+    "display": null,
+    "imu": null,
+    "buzzer": null
+  },
+  "smart_home_capabilities": {
+    "bluetooth_proxy": true,
+    "voice_assistant": false,
+    "matter_controller": true,
+    "matter_device": true,
+    "zigbee_coordinator": false,
+    "thread_border_router": false,
+    "ble_tracker": true,
+    "camera_support": false,
+    "battery_powered": true,
+    "ir_blaster": true,
+    "rf_proxy_cc1101": true
+  },
+  "ota_safety": {
+    "factory_reset_pin": null,
+    "external_programmer_needed": true,
+    "usb_cdc_recovery": true,
+    "min_required_features_for_unbricking": [
+      "usb_cdc OR external USB-UART programmer"
+    ]
+  },
+  "form_factor": {
+    "antenna": "PCB",
+    "ipex_connector": false,
+    "dimensions_mm": "13.2 x 16.6",
+    "certifications": [
+      "FCC",
+      "CE",
+      "SRRC"
+    ],
+    "operating_temp_c": "-40 to +85"
+  },
+  "limitations": {
+    "max_cpu_mhz": 160,
+    "no_dac": true,
+    "usb_blocks_gpio": [
+      18,
+      19
+    ],
+    "psram_blocks_gpio": [],
+    "adc2_blocked_when_wifi_active": true,
+    "strapping_conflict_warnings": [
+      "GPIO11-17 reserved for internal flash -- never use",
+      "ADC2 (GPIO5 only) blocked when WiFi active",
+      "No onboard USB-UART -- external programmer needed unless using USB CDC (GPIO18/19)",
+      "No onboard regulator -- supply 3.0-3.6V on custom PCB"
+    ]
+  },
+  "lifecycle": {
+    "status": "active",
+    "released": "2021-09",
+    "deprecated_since": null,
+    "reason": null,
+    "successor": null
+  },
+  "esphome": {
+    "platform": "esp32",
+    "variant": "ESP32C3",
+    "framework": "arduino",
+    "min_version": "2022.6.0",
+    "board": "esp32-c3-devkitm-1"
+  },
+  "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-c3-mini-1_datasheet_en.pdf",
+  "last_verified": "2026-05-17",
+  "verified_source": "Espressif ESP32-C3-MINI-1 datasheet v1.4",
+  "recommended_for": [
+    "Ultra-compact custom PCB sensors (13x17mm footprint)",
+    "Battery-powered custom designs (5uA deep sleep)",
+    "Budget custom boards -- cheapest ESP32 module with BLE5 + WiFi",
+    "Simple relay or sensor products replacing Sonoff/Tuya hardware"
+  ],
+  "not_recommended_for": [
+    "Projects requiring more than 12 GPIO -- only 15 pads available",
+    "Voice assistant or camera -- no PSRAM",
+    "Thread/Zigbee -- use ESP32-C6-MINI-1 instead"
+  ]
+}

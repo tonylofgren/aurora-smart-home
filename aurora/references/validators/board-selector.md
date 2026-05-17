@@ -93,6 +93,26 @@ Output:
 }
 ```
 
+### Mode C: User is designing a custom PCB (bare chip/module)
+
+Triggered when the user says "custom board", "custom PCB", "bare chip", "bare module", "designing my own board", or "production hardware".
+
+1. Load all profiles from `aurora/references/boards/module/**/*.json`
+2. Filter by required capabilities (same logic as Mode A)
+3. Present top 1-2 modules with:
+   - Chip capabilities relevant to the project
+   - `esphome.board` value to use in YAML (nearest dev kit ID, since ESPHome has no bare-module board IDs)
+   - Key `limitations.strapping_conflict_warnings` (especially: no onboard regulator, no USB-UART)
+4. Always add this guidance block after the recommendation:
+
+```
+Custom PCB workflow:
+1. Prototype with the corresponding dev kit first (esphome.board value above)
+2. Validate your GPIO assignments on the dev kit before committing to PCB layout
+3. When your ESPHome config is working, swap the carrier board for this module — the board: ID stays the same
+4. Add a 3.3V LDO (e.g. AMS1117-3.3) and a USB-UART bridge (e.g. CP2102) or expose GPIO19/20 for native USB flashing
+```
+
 ## Volt Integration
 
 Volt's Iron Law 6 covers this: load the relevant profile, run the validator, refuse to proceed if board does not match requirements. Board selector adds the up-front "which board?" step before pin-validator and conflict-validator can run.

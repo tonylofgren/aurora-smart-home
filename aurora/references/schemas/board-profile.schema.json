@@ -75,11 +75,11 @@
         "dac_pins": {"type": "array", "items": {"type": "integer"}},
         "wake_source_pins": {"type": "array", "items": {"type": "integer"}},
         "i2c_default": {
-          "type": "object",
+          "type": ["object", "null"],
           "properties": {"sda": {"type": "integer"}, "scl": {"type": "integer"}}
         },
         "spi_default": {
-          "type": "object",
+          "type": ["object", "null"],
           "properties": {
             "mosi": {"type": "integer"}, "miso": {"type": "integer"},
             "sck": {"type": "integer"}, "cs": {"type": "integer"}

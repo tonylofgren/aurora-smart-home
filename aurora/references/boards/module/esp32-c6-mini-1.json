@@ -1,0 +1,196 @@
+{
+  "$schema": "../../schemas/board-profile.schema.json",
+  "schema_version": "1.0",
+  "board_id": "esp32-c6-mini-1",
+  "board_type": "module",
+  "display_name": "ESP32-C6-MINI-1",
+  "chip": "ESP32-C6",
+  "manufacturer": "Espressif Systems",
+  "wireless": {
+    "wifi": [
+      "2.4GHz"
+    ],
+    "wifi_standard": "WiFi 6 (ax)",
+    "bluetooth": "BLE 5.3",
+    "bluetooth_classic": false,
+    "thread": true,
+    "zigbee": true,
+    "lora": null,
+    "ethernet": null
+  },
+  "power": {
+    "usb_type": null,
+    "operating_voltage": 3.3,
+    "input_voltage_range": "3.0V-3.6V (no onboard regulator)",
+    "battery_connector": null,
+    "charging_ic": null,
+    "vbat_monitor_pin": null,
+    "deep_sleep_current_ua": 7,
+    "light_sleep_current_ma": 0.7,
+    "modem_sleep_current_ma": 30,
+    "solar_input": false,
+    "gpio_5v_tolerant": false
+  },
+  "memory": {
+    "flash_mb": 4,
+    "psram_mb": 0,
+    "psram_type": null,
+    "ram_kb": 512
+  },
+  "gpio": {
+    "valid_pins": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+    ],
+    "strapping_pins": [
+      8,
+      9,
+      15
+    ],
+    "reserved_for_usb": [
+      12,
+      13
+    ],
+    "reserved_for_flash": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+    ],
+    "input_only": [],
+    "adc1_pins": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "adc2_pins": [],
+    "touch_pins": [],
+    "dac_pins": [],
+    "wake_source_pins": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "i2c_default": null,
+    "spi_default": null
+  },
+  "onboard_components": {
+    "led_gpio": null,
+    "led_type": null,
+    "boot_button_gpio": null,
+    "reset_button": null,
+    "display": null,
+    "imu": null,
+    "buzzer": null
+  },
+  "smart_home_capabilities": {
+    "bluetooth_proxy": true,
+    "voice_assistant": false,
+    "matter_controller": true,
+    "matter_device": true,
+    "zigbee_coordinator": true,
+    "thread_border_router": true,
+    "ble_tracker": true,
+    "camera_support": false,
+    "battery_powered": true,
+    "ir_blaster": true,
+    "rf_proxy_cc1101": true
+  },
+  "ota_safety": {
+    "factory_reset_pin": null,
+    "external_programmer_needed": true,
+    "usb_cdc_recovery": true,
+    "min_required_features_for_unbricking": [
+      "usb_cdc OR external USB-UART programmer"
+    ]
+  },
+  "form_factor": {
+    "antenna": "PCB",
+    "ipex_connector": false,
+    "dimensions_mm": "13.2 x 16.6",
+    "certifications": [
+      "FCC",
+      "CE",
+      "SRRC"
+    ],
+    "operating_temp_c": "-40 to +85"
+  },
+  "limitations": {
+    "max_cpu_mhz": 160,
+    "no_dac": true,
+    "usb_blocks_gpio": [
+      12,
+      13
+    ],
+    "psram_blocks_gpio": [],
+    "adc2_blocked_when_wifi_active": false,
+    "strapping_conflict_warnings": [
+      "GPIO24-29 reserved for internal flash -- never use",
+      "Thread and WiFi cannot run simultaneously -- radio is time-multiplexed",
+      "No ADC2 -- all 7 ADC channels on ADC1 (no WiFi conflict)",
+      "No onboard USB-UART -- external programmer needed for first flash",
+      "No onboard regulator -- supply 3.0-3.6V on custom PCB"
+    ]
+  },
+  "lifecycle": {
+    "status": "active",
+    "released": "2023-07",
+    "deprecated_since": null,
+    "reason": null,
+    "successor": null
+  },
+  "esphome": {
+    "platform": "esp32",
+    "variant": "ESP32C6",
+    "framework": "esp-idf",
+    "min_version": "2024.2.0",
+    "board": "esp32-c6-devkitc-1"
+  },
+  "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-c6-mini-1_datasheet_en.pdf",
+  "last_verified": "2026-05-17",
+  "verified_source": "Espressif ESP32-C6-MINI-1 datasheet v1.0",
+  "recommended_for": [
+    "Custom Matter devices (native Thread + Matter support)",
+    "Zigbee coordinator or end device on custom PCB",
+    "WiFi 6 custom sensors with low-power requirements",
+    "Thread border router when paired with a WiFi-connected host"
+  ],
+  "not_recommended_for": [
+    "Voice assistant or camera -- no PSRAM",
+    "Projects needing Thread AND WiFi simultaneously -- radio is shared",
+    "Budget designs -- ESP32-C3-MINI-1 is cheaper if Thread/Zigbee not needed"
+  ]
+}
