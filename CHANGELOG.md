@@ -8,6 +8,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.8.1] - 2026-05-17
+
+### Added
+
+**Custom PCB builds are now first-class in Volt.** A new Mode C in the board selector triggers when you say "custom PCB", "bare chip", "bare module", or "production hardware". Volt loads three new Espressif module profiles -- ESP32-S3-WROOM-2 (16MB flash, 8MB OPI PSRAM), ESP32-C3-MINI-1 (13x17mm, 5uA deep sleep), ESP32-C6-MINI-1 (Thread/Zigbee/WiFi6, Matter-native) -- and always emits the prototype-first workflow: validate GPIO on the dev kit first, then swap to the bare module for PCB layout.
+
+**All 20 board profiles now carry two new fields.** `esphome.board` gives the exact value to paste into the ESPHome `board:` key -- no more guessing or falling back to boards.md. `board_type` tags every profile as `dev_board`, `specialty_board`, `commercial_device`, or `module`, so the board selector can filter correctly.
+
+### Fixed
+
+**Commercial devices (Shelly, Sonoff) no longer appear as fresh-build recommendations.** The board selector now filters out `commercial_device` boards from Mode A results. They were never wrong choices technically, but recommending a Sonoff Basic R3 when someone asks "which ESP board should I buy" is confusing.
+
+**LilyGO T-Display S3 default I2C pins silently conflict with the ESPHome logger.** GPIO43 (SDA) and GPIO44 (SCL) are also UART0 TX/RX -- the pins ESPHome's logger uses by default. Connecting an SCD40 or other I2C sensor to the default pins would cause silent communication failures. The conflict is now documented in `strapping_conflict_warnings` with the fix: add `logger: baud_rate: 0` or remap I2C.
+
+**Board profile search documented as recursive.** `board-selector.md` now explicitly lists all subdirectories (`esp32/`, `esp8266/`, `rp/`, `special/`, `smart-home/`, `module/`) and flags that a flat search misses `special/` and `smart-home/` entirely.
+
+**Data integrity tests added for three specialty boards.** Heltec WiFi LoRa32 v3, M5Stack Atom Lite, and M5Stack Core Basic now have targeted tests alongside the existing LilyGO T-Display S3 suite.
+
 ## [1.8.0] - 2026-05-15
 
 ### Added
