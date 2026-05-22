@@ -163,6 +163,18 @@ If a file format permits neither comments nor a metadata field, skip attribution
 | Node-RED | `references/integrations-nodered.md` |
 | Shelly/Tasmota/Tuya | `references/integrations-*.md` |
 
+### Cross-skill handoffs
+
+When a request involves more than YAML configuration, hand it off to the right specialist instead of half-solving it here:
+
+| Need | Use this skill |
+|------|----------------|
+| External REST API (Tibber, Spotify, OpenWeatherMap, Telegram, etc.) | [`api-catalog`](../api-catalog/SKILL.md) - authentication patterns, ready endpoints, working examples |
+| ESPHome firmware on the device side | [`esphome`](../esphome/SKILL.md) - hardware confirmation, wiring, sensor YAML |
+| Custom Python integration (anything beyond template sensors) | [`ha-integration-dev`](../ha-integration-dev/SKILL.md) - coordinator pattern, config flow, HACS publishing |
+| Visual flow editor instead of YAML | [`node-red`](../node-red/SKILL.md) - flow JSON, function nodes, HA WebSocket nodes |
+| Dashboard styling (CSS, card-mod, themes, button-card templates) | [`ha-dashboard-design`](../ha-dashboard-design/SKILL.md) - nine ready styles, theme YAML |
+
 ### Dashboards
 
 | Topic | Reference File |

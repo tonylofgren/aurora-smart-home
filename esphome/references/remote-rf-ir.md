@@ -635,6 +635,51 @@ button:
 
 ---
 
+## Radio Frequency Entity Type (2026.5.0+)
+
+ESPHome 2026.5.0 introduces a new top-level entity type called `radio_frequency` that surfaces RF transceivers in Home Assistant alongside the existing entity classes (climate, lock, cover, etc.). The entity has no knowledge of which underlying RF chip is wired in, so the same YAML triggers can sit on top of a CC1101, an RFM69, an SX127x, or any custom front-end exposed through an external component. No bespoke C++ glue is required for new chip support.
+
+### Basic radio_frequency entity
+
+```yaml
+radio_frequency:
+  - id: my_rf
+    name: "RF Transceiver"
+    on_control:                  # fires when HA sends a control action
+      then:
+        - remote_transmitter.transmit_raw:
+            carrier_frequency: 433.92MHz
+            code: [1000, -1000, 500, -500]
+```
+
+### IR/RF Proxy (ir_rf_proxy)
+
+The `ir_rf_proxy` platform extends the existing IR proxy with RF capability advertising. It tells HA which frequency ranges and modulations the chip supports.
+
+```yaml
+radio_frequency:
+  - platform: ir_rf_proxy
+    name: "RF Proxy"
+    frequency_min: 433.0MHz
+    frequency_max: 434.0MHz
+    # Optional: declare supported modulations
+    modulations:
+      - OOK
+      - FSK
+```
+
+Switching the chip between transmit and receive is delegated to whatever `remote_transmitter` already does via its `on_transmit` and `on_complete` triggers, so the new entity stays free of any chip-specific code. Internally the IR and RF proxies share the same protobuf message family, which keeps the API surface compact.
+
+### When to use radio_frequency vs raw remote_transmitter
+
+| Use case | Use this |
+|----------|----------|
+| Send a fixed code on button press | `remote_transmitter.transmit_*` directly |
+| Expose RF capability to HA, let HA control it | `radio_frequency` entity + `on_control` |
+| Bridge a CC1101/SX127x to HA as a Z-Wave-like RF gateway | `radio_frequency: ir_rf_proxy` |
+
+---
+
 ## Troubleshooting
 
 ### IR Not Working

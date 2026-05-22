@@ -23,7 +23,7 @@ Look at the **user messages** in conversation history (not the skill file conten
 - Do not run any `gh` calls.
 - Respond with a single short line, e.g.:
 
-  > *Aurora v1.8.1 is already loaded.*
+  > *Aurora v1.9.0 is already loaded.*
 
 - Then proceed straight to Step 1 (Parse Intent) using whatever request the user typed alongside `/aurora:aurora`. If the user typed nothing alongside it, ask the opening question once:
 
@@ -32,6 +32,8 @@ Look at the **user messages** in conversation history (not the skill file conten
 This avoids re-running the version check, re-printing the banner, and re-asking the opening question every time the user types `/aurora:aurora` mid-session. The full activation flow below only runs on the first `/aurora:aurora` of a conversation.
 
 **Important:** The SKILL.md file itself contains the banner in a code block — do NOT treat that as evidence Aurora has been activated. Only user messages count.
+
+**Known boundary:** This check matches the literal string `/aurora:aurora` in user-message history. If Claude Code ever changes how skill invocations appear in transcripts (for example, normalising them to a different format or hiding them from the conversation log), reactivation will silently fall back to the full activation flow on every invocation. That degrades the experience but does not break anything. Verify the check still works after major Claude Code updates by typing `/aurora:aurora` twice in a session and confirming the second invocation produces the short re-acknowledgement line, not the full banner.
 
 ## Version Check (run before banner)
 
@@ -43,7 +45,7 @@ Command:
 gh release view --json tagName -R tonylofgren/aurora-smart-home --jq '.tagName'
 ```
 
-- If gh returns a valid version tag (like `v1.7.12`), strip the leading `v` and compare to the installed version `1.8.1`. If the fetched version is semver-greater, output the update notice (see below) BEFORE the banner.
+- If gh returns a valid version tag (like `v1.7.12`), strip the leading `v` and compare to the installed version `1.9.0`. If the fetched version is semver-greater, output the update notice (see below) BEFORE the banner.
 - If gh is missing, fails, returns nothing, or returns something that does not parse as a semver tag, proceed directly to the banner with no output. Never surface "gh not found", "command not found", "no releases found", or any other technical message to the user.
 
 **Semver comparison rule (avoid lexicographic mistakes):** Both versions must be matched against `^\d+\.\d+\.\d+$`, then split on `.` and each segment compared as **integer**, not as string. Lexicographic comparison reports `2.0.10 < 2.0.2` (because `'1' < '2'` at the start of the third segment), which is wrong. Concretely:
@@ -65,24 +67,26 @@ The fallback chain is intentionally one tier. Earlier versions tried WebFetch as
 Update notice (only when gh succeeded and a newer version exists):
 
 ```
-🔔 A newer Aurora is available: v<latest> (you have v1.8.1).
+🔔 A newer Aurora is available: v<latest> (you have v1.9.0).
    Update: claude plugin update aurora@aurora-smart-home
    Then /reload-plugins or restart Claude Code.
 ```
 
-What's new notice (only when gh succeeded AND fetched version == installed version `1.8.1`):
+What's new notice (only when gh succeeded AND fetched version == installed version `1.9.0`):
 
 ```
-✨ Aurora v1.8.1 — what's new:
-   • Custom PCB builds: say "bare chip", "module" or "custom board" and Volt picks
-     the right Espressif module (S3-WROOM-2, C3-MINI-1, C6-MINI-1) + prototype-first workflow
-   • Board selector: Shelly and Sonoff no longer appear as fresh-build recommendations
-   • LilyGO T-Display S3: default I2C pins (GPIO43/44) conflict with UART0 logger — now documented
+✨ Aurora v1.9.0 — what's new:
+   • Full ESPHome 2026.5.0 support: Sendspin multi-room audio, Zigbee on
+     ESP32-C6/H2, radio_frequency entity, BLE proxy fix for Yale/August locks
+   • Examples library: 4 → 27 working projects across sensors, voice, energy,
+     security, displays, lighting, climate, and more
+   • First vendored ESPHome component: Panasonic AC controller ships locally
+     so builds work offline (DomiStyle, MIT-licensed, safety-warned)
 ```
 
 **Update this block at every version bump.** Content must be user-facing (no schema fields, test counts, or CI changes). 3 bullets max.
 
-Then output `v1.8.1 (released 2026-05-17)` on its own line, then output the banner:
+Then output `v1.9.0 (released 2026-05-22)` on its own line, then output the banner:
 
 ```
   ┌─────────────────────────────────────────────────────────┐
@@ -102,7 +106,7 @@ Then output `v1.8.1 (released 2026-05-17)` on its own line, then output the bann
 
 If the Version Check above succeeded, skip this section. This is only the fallback for when gh CLI was unavailable.
 
-The release date of this version is `2026-05-15`.
+The release date of this version is `2026-05-22`.
 
 After the banner, compare today's date (available in your conversation context) to that release date. If more than 90 days have passed AND the version check above did not already produce an update notice, output this line BEFORE asking the project question:
 

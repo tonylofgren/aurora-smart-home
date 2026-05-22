@@ -1,0 +1,62 @@
+# EV Charger Monitor Lovelace dashboard
+# Add this view to your dashboards via Edit Dashboard > Raw Configuration
+# Editor, or copy individual cards into existing views.
+
+title: EV Charger
+path: ev-charger
+icon: mdi:ev-station
+cards:
+
+  # Live state + session totals
+  - type: glance
+    title: Charger
+    entities:
+      - entity: sensor.ev_charger_monitor_state
+        name: State
+      - entity: binary_sensor.ev_charger_monitor_charging
+        name: Charging
+      - entity: binary_sensor.ev_charger_monitor_vehicle_connected
+        name: Plugged in
+
+  # Power, current, voltage
+  - type: horizontal-stack
+    cards:
+      - type: entity
+        entity: sensor.ev_charger_monitor_power
+        name: Power
+        icon: mdi:flash
+      - type: entity
+        entity: sensor.ev_charger_monitor_current
+        name: Current
+        icon: mdi:current-ac
+      - type: entity
+        entity: sensor.ev_charger_monitor_voltage
+        name: Voltage
+        icon: mdi:sine-wave
+
+  # Controls
+  - type: entities
+    title: Controls
+    entities:
+      - entity: switch.ev_charger_monitor_enable
+        name: Charging enabled
+      - entity: number.ev_charger_monitor_max_amps
+        name: Max amps
+
+  # Energy
+  - type: entities
+    title: Energy
+    entities:
+      - entity: sensor.ev_charger_monitor_session_energy
+        name: This session
+      - entity: sensor.ev_charger_monitor_session_time
+        name: Session time
+      - entity: sensor.ev_charger_monitor_lifetime_energy
+        name: Lifetime
+
+  - type: history-graph
+    title: Charging power (24h)
+    hours_to_show: 24
+    entities:
+      - entity: sensor.ev_charger_monitor_power
+        name: Power

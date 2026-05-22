@@ -389,6 +389,28 @@ logger:
 
 ---
 
+## Security Advisories
+
+Notable security fixes by ESPHome release. If you operate any of the affected components, upgrading is recommended.
+
+### 2026.5.0: DSMR missing GCM tag verification
+
+**Component:** `dsmr` (Dutch Smart Meter Requirements, used by P1-port utility meters in the Netherlands, Belgium, and parts of Sweden)
+
+**Issue:** Pre-2026.5.0 the DSMR parser decrypted incoming telegrams but did **not** verify the AES-GCM authentication tag. A malicious actor with access to the P1 serial line (or anything that could inject bytes onto it) could craft a payload that decrypts to attacker-controlled values without triggering a parse failure. Downstream consumers (HA energy dashboard, billing calculations, automations driven off meter readings) would receive forged data.
+
+**Affected configurations:** any device using `dsmr:` with `decryption_key:` to read an encrypted smart meter, regardless of firmware version below 2026.5.0.
+
+**Fix:** the 2026.5.0 DSMR rewrite (PR #15875) adds proper GCM tag verification. Telegrams with bad tags are now rejected at parse time. The rewrite also drops the Crypto-no-arduino dependency, eliminates dynamic allocations during parsing (saves ~1500 bytes per telegram), decrypts in place, fixes a potential event-loop hang, and adds several missing OBIS sensor mappings.
+
+**Action:** upgrade to ESPHome 2026.5.0 or later. No YAML change is required - the fix is transparent. After upgrade, verify your meter still parses correctly (it should; encrypted meters with valid tags are unaffected).
+
+### 2026.5.0: BLE coex behavior changed (not a vulnerability but worth noting)
+
+The fix for `status=0x85` (133) GATT failures on bluetooth_proxy now holds `ESP_COEX_PREFER_BT` for the lifetime of any active BLE connection. This is the correct security/reliability tradeoff (lock operations now complete reliably) but means BLE-heavy configurations can deprioritize concurrent WiFi traffic. See [ble-proxy.md](ble-proxy.md) for details.
+
+---
+
 ## See Also
 
 - [secrets.yaml.example](../../examples/smart-garage/secrets.yaml.example) - Secrets template

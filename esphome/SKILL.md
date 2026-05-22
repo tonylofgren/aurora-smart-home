@@ -207,6 +207,14 @@ If a file format permits neither comments nor a metadata field, skip attribution
 | Topic | Reference File |
 |-------|---------------|
 | Full Lifecycle (idea → production) | `references/product-development.md` |
+
+### Release Notes (version-specific changes)
+
+When the user mentions a specific ESPHome version, is upgrading, or asks "what's new", read the matching release notes BEFORE generating YAML. New components and breaking changes invalidate older patterns.
+
+| Version | Reference File |
+|---------|---------------|
+| ESPHome 2026.5.0 (May 2026): Sendspin multi-room audio, `radio_frequency` entity, `modbus_server`, native ESP-IDF toolchain, Zigbee on H2/C6, main loop overhaul | `references/release-2026-5.md` |
 | Hardware Selection (MCU, sensors, power) | `references/hardware-selection.md` |
 | Enclosures, PCB & Manufacturing | `references/enclosures-manufacturing.md` |
 

@@ -934,6 +934,32 @@ light:
 
 ---
 
+## Starter Kits and Reference Hardware
+
+### Apollo Automation ESPHome Starter Kit (ESK-1)
+
+The Apollo ESK-1 (announced alongside the new ESPHome Device Builder Beta at State of the Open Home 2026) is positioned as the official-ish starter kit for new ESPHome users. The Device Builder integrates first-class pairing with the ESK-1, making it the recommended entry point for newcomers.
+
+**What's in the box (typical kit, verify with current vendor listing):**
+- ESP32-S3 dev board with USB-C
+- Sensor breakouts (temperature/humidity, motion, light)
+- Jumper wires and a small breadboard
+- Pre-flashed firmware that walks through the Device Builder pairing flow
+
+**Why it matters for ESPHome 2026.5.0:**
+- The Device Builder Beta has first-run Wi-Fi onboarding and USB-plug detection. Plugging in an ESK-1 triggers a "set this up" prompt.
+- Pre-flashed firmware uses the Take Control / Adopt flow so the device is yours after pairing.
+- Good for teaching workflows, schools, and people who want to start with ESPHome without bringing their own board.
+
+**Where to buy:** apolloautomation.com (US-based, ships globally). The "ESPHome (beta)" Home Assistant add-on is what you want for the full pairing experience.
+
+**Alternative starter paths** (if you don't want to buy a kit):
+- **Xiao ESP32-C6** ($5, smallest, has Zigbee/Thread radio)
+- **Wemos D1 Mini** ($3, classic, ESP8266)
+- **ESP32-WROOM-32 dev board** ($5-10, the "default" ESP32 starting point)
+
+---
+
 ## Best Practices for Community Devices
 
 ### Finding GPIO Pins

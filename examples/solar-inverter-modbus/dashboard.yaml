@@ -1,0 +1,78 @@
+# Solar Inverter Lovelace Dashboard
+# Add via Edit Dashboard > Raw Configuration Editor, or copy individual cards.
+
+title: Solar
+path: solar
+icon: mdi:solar-power
+cards:
+
+  # Live production gauge
+  - type: gauge
+    entity: sensor.solar_inverter_output_power
+    name: AC output
+    min: 0
+    max: 5000
+    severity:
+      green: 500
+      yellow: 100
+      red: 0
+    unit: W
+
+  # Today vs lifetime energy
+  - type: glance
+    title: Energy
+    entities:
+      - entity: sensor.solar_inverter_energy_today
+        name: Today
+      - entity: sensor.solar_inverter_energy_total
+        name: Lifetime
+      - entity: sensor.solar_inverter_status
+        name: Status
+
+  # PV string detail
+  - type: entities
+    title: PV strings
+    icon: mdi:solar-panel
+    entities:
+      - entity: sensor.solar_inverter_pv1_voltage
+        name: PV1 voltage
+      - entity: sensor.solar_inverter_pv1_power
+        name: PV1 power
+      - entity: sensor.solar_inverter_pv2_voltage
+        name: PV2 voltage
+      - entity: sensor.solar_inverter_pv2_power
+        name: PV2 power
+
+  # Grid side
+  - type: entities
+    title: AC output
+    icon: mdi:transmission-tower
+    entities:
+      - entity: sensor.solar_inverter_ac_voltage
+        name: Voltage
+      - entity: sensor.solar_inverter_ac_frequency
+        name: Frequency
+      - entity: sensor.solar_inverter_temperature
+        name: Inverter temperature
+
+  # Production over the last 24 hours
+  - type: history-graph
+    title: Production (24h)
+    hours_to_show: 24
+    entities:
+      - entity: sensor.solar_inverter_output_power
+        name: AC output
+      - entity: sensor.solar_inverter_pv1_power
+        name: PV1
+      - entity: sensor.solar_inverter_pv2_power
+        name: PV2
+
+  # Diagnostics
+  - type: entities
+    title: Diagnostics
+    icon: mdi:wrench
+    entities:
+      - entity: sensor.solar_inverter_uptime
+        name: Uptime
+      - entity: switch.solar_inverter_restart
+        name: Restart device

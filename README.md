@@ -10,8 +10,8 @@ against schema-checked profiles, and refuses to ship code that does not pass.
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skills-7c3aed.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Home Assistant](https://img.shields.io/badge/Home_Assistant-2024.x--2026.x-41BDF5.svg)](https://www.home-assistant.io/)
-[![ESPHome](https://img.shields.io/badge/ESPHome-2026.4.5-000000.svg)](https://esphome.io/)
-[![Version](https://img.shields.io/badge/Version-v1.8.1-success.svg)](CHANGELOG.md)
+[![ESPHome](https://img.shields.io/badge/ESPHome-2026.5.0-000000.svg)](https://esphome.io/)
+[![Version](https://img.shields.io/badge/Version-v1.9.0-success.svg)](CHANGELOG.md)
 [![Validated](https://img.shields.io/badge/Validated-against_datasheets-success.svg)](aurora/references/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Support Nabu Casa](https://img.shields.io/badge/Support_HA-Nabu_Casa-3b8cd3.svg)](https://www.nabucasa.com)
@@ -24,6 +24,68 @@ against schema-checked profiles, and refuses to ship code that does not pass.
 > can be plausible but wrong. The maintainers, contributors, and Anthropic accept
 > no liability for property damage, personal injury, data loss, or any other harm.
 > See [DISCLAIMER.md](DISCLAIMER.md) for full terms.
+
+---
+
+## What's new: ESPHome 2026.5.0 (May 2026)
+
+Aurora now targets ESPHome 2026.5.0. Twelve user-visible changes landed in this
+release at once - some of them (battery life, Bluetooth proxy stability, the
+audio stack) take effect the moment you reflash, no YAML changes required. Others
+unlock things that were not possible before: synchronized whole-house audio from
+ESP32s, Zigbee built into core for the C6 and H2, and a `radio_frequency` entity
+type that finally treats RF transceivers as first-class devices in Home Assistant.
+
+- **Multi-room synchronized audio via the new Sendspin stack.** One device runs
+  the hub, every other device runs a per-room player, and they stay in lock-step
+  on the LAN. The decoder work in this release is tuned so a non-PSRAM ESP32 can
+  actually keep up with 2-channel Opus, which previously required an S3 with
+  PSRAM. Each room has its own `delay_compensation` to align with whatever
+  amp/DAC chain you wire up.
+- **Zigbee on ESP32-H2 and C6, no external component required.** A Xiao C6 or
+  H2 module can now be flashed straight into a battery-powered Zigbee end device
+  or router; both ZHA and zigbee2mqtt pick it up over standard clusters without
+  custom converters. New `on_join` automation trigger and `power_source` field
+  for advertising battery vs mains.
+- **`radio_frequency` is now a first-class HA entity type.** The entity itself
+  has no knowledge of which RF chip is wired underneath, so a CC1101, RFM69,
+  SX127x, or custom external all work through the same YAML triggers. Pair with
+  the new `ir_rf_proxy` platform if you want HA to know your frequency range.
+- **Battery devices noticeably last longer.** The runtime now actually runs
+  components at the cadence you ask for, and the watchdog feeding cost on
+  ESP-IDF has finally been retuned (the original 3 ms throttle was set for a
+  2019 codepath that cost ~100 ns per feed; the IDF port pushed that to 10 µs
+  per feed without anyone noticing). A reference Thread device measured 2.0 mA
+  dropping to 1.1 mA. New `esp32: watchdog_timeout:` knob lets you trade
+  responsiveness for sleep time, 5 to 60 seconds.
+- **Bluetooth proxy reliability fix.** The `status=133` GATT failures that have
+  hit Yale and August lock owners for years are gone. The proxy now holds BT
+  priority during active connections instead of releasing it after the
+  handshake.
+- **ESPHome Device Builder is in public beta.** A separate web dashboard with a
+  visual component editor alongside Monaco YAML, a firmware job queue, labels,
+  areas, device cloning, out-of-sync badges, cross-config YAML search, a YAML
+  diff view, and a Ctrl-K command palette. Available via the "ESPHome (beta)"
+  Home Assistant add-on; the classic dashboard is still default.
+- **Native ESP-IDF toolchain alongside PlatformIO.** `esp32: toolchain: esp-idf`
+  switches the build system to `idf.py`. ESP-IDF v6.0.1 readiness work landed in
+  the same release.
+- **40 kB more internal RAM on PSRAM boards** via `esp32_ble: use_psram: true`,
+  which moves the Bluedroid stack into SPIRAM.
+- **SPDIF speaker output** through any GPIO using the new `mode: spdif` setting
+  on `i2s_audio`. Drive an optical TOSLINK module or a 75-ohm coax line directly
+  from the ESP, no external DAC.
+- **ESP32-P4 USB high-speed transfers** via `usb_host: max_packet_size: 512`.
+  Previously P4 USB was stuck on 64-byte full-speed packets.
+- **Locks gained OPENING and OPEN states** for motorized smart locks where HA
+  needs to distinguish "bolt disengaged" from "door is hanging open". Existing
+  LOCKED/UNLOCKED-only locks are unaffected.
+- **`modbus_server` is its own component now.** If you used `modbus_controller`
+  in server mode, move the keys to a top-level `modbus_server:` block:
+  `server_registers:` becomes `registers:`, `server_courtesy_response:` becomes
+  `courtesy_response:`. Worth about 60% flash savings on the way out.
+
+Full details, breaking changes, and copy-paste recipes: [`esphome/references/release-2026-5.md`](./esphome/references/release-2026-5.md).
 
 ---
 
@@ -427,6 +489,8 @@ Full guide: [TROUBLESHOOTING.md](./TROUBLESHOOTING.md).
 ## Changelog
 
 Version history lives in [CHANGELOG.md](./CHANGELOG.md).
+
+**What's new in v1.9.0:** Aurora now targets ESPHome 2026.5.0 with a complete release reference, working examples for every new feature (Sendspin multi-room audio, Zigbee on ESP32-C6/H2, `radio_frequency` entity, BLE coex fix for Yale/August locks, soft-brick OTA recovery), and the first vendored external component (`panasonic_ac` from DomiStyle, MIT-licensed, ships locally so builds work offline). The examples library expanded from 4 to 27 working projects covering battery sensors, leak detection, LED strips, smart plugs, soil moisture, voice assistant, solar inverter monitoring, EV charger control, pool chemistry, smart blinds, fingerprint unlocking, e-paper weather stations, LVGL touchscreen panels, and more. Skill orchestrator polish: cross-skill handoffs table in `home-assistant`, Process flowchart added to `node-red`, reactivation boundary documented.
 
 **What's new in v1.8.1:** Custom PCB builds are now first-class. Tell Volt "bare chip", "custom board", or "module" and it routes to a new Mode C: picks the right Espressif module (ESP32-S3-WROOM-2, C3-MINI-1, or C6-MINI-1 for Thread/Matter), explains what a bare module demands (external LDO, no onboard USB-UART), and always walks you through the prototype-first workflow before you commit to a PCB layout. Board recommendation engine fixed: commercial devices (Shelly, Sonoff) no longer appear as fresh-build suggestions. LilyGO T-Display S3 default I2C pins now warn about the silent UART0 conflict.
 

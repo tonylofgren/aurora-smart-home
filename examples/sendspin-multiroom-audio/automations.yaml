@@ -1,0 +1,130 @@
+# Sendspin Multi-Room Audio Automations for Home Assistant
+
+# =============================================================================
+# Wake-up routine: play in bedroom only
+# =============================================================================
+
+- alias: "Sendspin - Wake-up playlist"
+  id: sendspin_wakeup
+  description: "Play the wake-up playlist in the bedroom on weekdays at 06:30"
+  trigger:
+    - platform: time
+      at: "06:30:00"
+  condition:
+    - condition: time
+      weekday:
+        - mon
+        - tue
+        - wed
+        - thu
+        - fri
+  action:
+    - service: media_player.volume_set
+      target:
+        entity_id: media_player.bedroom_speaker
+      data:
+        volume_level: 0.25     # start gentle
+    - service: media_player.play_media
+      target:
+        entity_id: media_player.bedroom_speaker
+      data:
+        media_content_id: "https://example.com/wakeup-playlist.m3u"
+        media_content_type: "music"
+    # Ramp up over 5 minutes
+    - repeat:
+        count: 5
+        sequence:
+          - delay:
+              minutes: 1
+          - service: media_player.volume_set
+            target:
+              entity_id: media_player.bedroom_speaker
+            data:
+              volume_level: >
+                {{ 0.25 + (0.15 * (repeat.index)) }}
+
+# =============================================================================
+# Dinner mode: play in kitchen + dining room together
+# =============================================================================
+
+- alias: "Sendspin - Dinner mode"
+  id: sendspin_dinner_mode
+  description: "Triggered by Lovelace button; plays in kitchen + dining only"
+  trigger:
+    - platform: state
+      entity_id: input_boolean.dinner_mode
+      to: "on"
+  action:
+    - service: media_player.play_media
+      target:
+        entity_id:
+          - media_player.kitchen_speaker
+          - media_player.dining_speaker
+      data:
+        media_content_id: "https://example.com/dinner-playlist.m3u"
+        media_content_type: "music"
+
+# =============================================================================
+# Pause everything when phone rings (or doorbell rings, or alarm fires)
+# =============================================================================
+
+- alias: "Sendspin - Pause on doorbell"
+  id: sendspin_pause_doorbell
+  description: "Pause whole-house audio when someone rings"
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.front_doorbell
+      to: "on"
+  action:
+    - service: media_player.media_pause
+      target:
+        entity_id: media_player.audio_hub_all_rooms
+    - delay:
+        seconds: 30
+    - service: media_player.media_play
+      target:
+        entity_id: media_player.audio_hub_all_rooms
+
+# =============================================================================
+# Bedtime: turn off all rooms gradually
+# =============================================================================
+
+- alias: "Sendspin - Bedtime fade out"
+  id: sendspin_bedtime
+  description: "At 23:00 fade volume to zero over 10 min, then stop"
+  trigger:
+    - platform: time
+      at: "23:00:00"
+  action:
+    - repeat:
+        count: 10
+        sequence:
+          - service: media_player.volume_set
+            target:
+              entity_id: media_player.audio_hub_all_rooms
+            data:
+              volume_level: >
+                {{ (state_attr('media_player.audio_hub_all_rooms', 'volume_level') | float)
+                   - 0.1 }}
+          - delay:
+              minutes: 1
+    - service: media_player.media_stop
+      target:
+        entity_id: media_player.audio_hub_all_rooms
+
+# =============================================================================
+# Visitor announcement: TTS to all rooms
+# =============================================================================
+
+- alias: "Sendspin - Announce visitor"
+  id: sendspin_visitor_announce
+  description: "TTS announcement when someone arrives"
+  trigger:
+    - platform: state
+      entity_id: person.guest
+      to: "home"
+  action:
+    - service: tts.cloud_say
+      data:
+        entity_id: media_player.audio_hub_all_rooms
+        message: "Guest has arrived."

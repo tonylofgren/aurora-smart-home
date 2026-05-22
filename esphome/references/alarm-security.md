@@ -216,6 +216,20 @@ lock:
 | `name` | string | | The name of the lock. |
 | `on_lock` | Automation | | Trigger when lock is locked. |
 | `on_unlock` | Automation | | Trigger when lock is unlocked. |
+| `on_open` | Automation | | Trigger when lock reports OPEN (2026.5.0+, for locks that physically open the door, not just disengage the bolt). |
+
+**Lock states (2026.5.0+):**
+
+The lock entity now supports four states (was two prior to 2026.5.0):
+
+| State | Constant | Meaning |
+|-------|----------|---------|
+| Locked | `LOCK_STATE_LOCKED` | Bolt engaged |
+| Unlocked | `LOCK_STATE_UNLOCKED` | Bolt disengaged, door still closed |
+| Opening | `LOCK_STATE_OPENING` | **2026.5.0+** Transitional state while the latch retracts and the door is being pushed open (motorized locks, smart latches). |
+| Open | `LOCK_STATE_OPEN` | **2026.5.0+** Door is physically open. Distinct from `UNLOCKED` (where the lock is disengaged but the door is still closed). |
+
+Use the new states for motorized smart locks where Home Assistant needs to distinguish "the bolt is disengaged" from "the door is hanging open". Locks that only report engaged/disengaged should keep using `LOCKED`/`UNLOCKED`.
 
 ### 2.2 Template Lock Platform
 

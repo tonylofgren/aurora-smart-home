@@ -59,8 +59,13 @@ filters:
   - clamp:                           # Limit range
       min_value: 0
       max_value: 100
+  - round_to_significant_digits: 3   # 2026.5.0+: keep N significant digits
   - lambda: return x > 0 ? x : 0;    # Custom logic
 ```
+
+> **2026.5.0 filter changes:**
+> - New `round_to_significant_digits: N` filter. Useful for sensors that span many orders of magnitude (e.g. ambient light from 0.01 lux to 100,000 lux) where fixed decimal accuracy wastes precision at one end and overshoots at the other.
+> - `throttle_average` filter now caps `time_period` at **24 hours**. Configs with longer periods will be rejected.
 
 ---
 

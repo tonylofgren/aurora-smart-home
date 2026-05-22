@@ -1,0 +1,82 @@
+# Smart Plug Power Monitor - Home Assistant Automations
+# Add to your automations.yaml or import via the UI.
+
+# =============================================================================
+# Appliance Done (washer, dishwasher, dryer)
+# =============================================================================
+#
+# Detects when power drops below idle threshold for a sustained period
+# after the appliance ran at full load. Useful for washers, dishwashers,
+# dryers, 3D printers, etc.
+
+- alias: "Smart Plug - Appliance Cycle Complete"
+  id: smart_plug_cycle_complete
+  description: "Notify when a connected appliance finishes its cycle"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.smart_plug_power
+      below: 2
+      for:
+        minutes: 3
+  condition:
+    # Only trigger if the appliance was actually running first
+    - condition: template
+      value_template: >
+        {{ states('sensor.smart_plug_energy_today') | float(0) > 0.05 }}
+  action:
+    - service: notify.notify
+      data:
+        title: "Appliance done"
+        message: >
+          {{ states('sensor.smart_plug_energy_today') | round(2) }} kWh used.
+
+# =============================================================================
+# Standby Killer
+# =============================================================================
+#
+# Turn off the plug automatically if standby load persists for an hour.
+
+- alias: "Smart Plug - Auto-Off Standby"
+  id: smart_plug_standby_off
+  description: "Kill vampire load if device sits in standby"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.smart_plug_power
+      above: 0.5
+      below: 5
+      for:
+        hours: 1
+  action:
+    - service: switch.turn_off
+      target:
+        entity_id: switch.smart_plug
+
+# =============================================================================
+# Overload Protection
+# =============================================================================
+
+- alias: "Smart Plug - Overload Cutoff"
+  id: smart_plug_overload
+  description: "Cut power if load exceeds safe limit"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.smart_plug_power
+      above: 2300   # Watts. Most plugs are rated 10 A / 2300 W.
+      for:
+        seconds: 5
+  action:
+    - service: switch.turn_off
+      target:
+        entity_id: switch.smart_plug
+    - service: notify.notify
+      data:
+        title: "Smart Plug overload"
+        message: >
+          Cut power - load was
+          {{ states('sensor.smart_plug_power') }} W.
+
+# =============================================================================
+# Energy Dashboard Integration
+# =============================================================================
+# The "Energy Today" sensor is auto-detected by the HA Energy dashboard
+# (state_class: total_increasing). No extra automation needed.

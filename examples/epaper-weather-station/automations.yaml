@@ -1,0 +1,105 @@
+# E-Paper Weather Station Automations and Template Sensors
+# Add the template sensors to configuration.yaml (or a packages file).
+# Add the automations to automations.yaml or import via the UI.
+
+# =============================================================================
+# Template sensors for the 3-day forecast
+# Put these in configuration.yaml under "template:" - they extract
+# daily forecast values from any weather integration (Met.no, OWM, SMHI).
+# =============================================================================
+#
+# template:
+#   - trigger:
+#       - platform: time_pattern
+#         hours: "/1"
+#       - platform: homeassistant
+#         event: start
+#     action:
+#       - service: weather.get_forecasts
+#         data:
+#           type: daily
+#         target:
+#           entity_id: weather.home
+#         response_variable: forecast
+#     sensor:
+#       - name: "Forecast Today High"
+#         unit_of_measurement: "C"
+#         state: "{{ forecast['weather.home'].forecast[0].temperature }}"
+#       - name: "Forecast Today Low"
+#         unit_of_measurement: "C"
+#         state: "{{ forecast['weather.home'].forecast[0].templow }}"
+#       - name: "Forecast Tomorrow High"
+#         unit_of_measurement: "C"
+#         state: "{{ forecast['weather.home'].forecast[1].temperature }}"
+#       - name: "Forecast Tomorrow Low"
+#         unit_of_measurement: "C"
+#         state: "{{ forecast['weather.home'].forecast[1].templow }}"
+#       - name: "Forecast Day3 High"
+#         unit_of_measurement: "C"
+#         state: "{{ forecast['weather.home'].forecast[2].temperature }}"
+#       - name: "Forecast Day3 Low"
+#         unit_of_measurement: "C"
+#         state: "{{ forecast['weather.home'].forecast[2].templow }}"
+
+# =============================================================================
+# Low Battery Warning
+# =============================================================================
+
+- alias: "E-Paper Weather - Low Battery"
+  id: epaper_weather_low_battery
+  description: "Notify when display battery drops below 20%"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.epaper_weather_battery
+      below: 20
+      for:
+        minutes: 30
+  action:
+    - service: notify.notify
+      data:
+        title: "Weather Display"
+        message: >
+          Battery is at {{ states('sensor.epaper_weather_battery') }}%
+          ({{ states('sensor.epaper_weather_battery_voltage') }} V).
+          Time to recharge.
+
+# =============================================================================
+# Force refresh when severe weather arrives
+# E-paper updates hourly by default - force a redraw on big changes.
+# =============================================================================
+
+- alias: "E-Paper Weather - Refresh on Severe Weather"
+  id: epaper_weather_refresh_severe
+  description: "Push immediate redraw when conditions change to stormy"
+  trigger:
+    - platform: state
+      entity_id: weather.home
+      to:
+        - "lightning"
+        - "lightning-rainy"
+        - "pouring"
+  action:
+    - service: button.press
+      target:
+        entity_id: button.epaper_weather_refresh_now
+
+# =============================================================================
+# Stale display detection
+# =============================================================================
+
+- alias: "E-Paper Weather - Stale Display"
+  id: epaper_weather_stale
+  description: "Alert if display has not woken in 3 hours"
+  trigger:
+    - platform: state
+      entity_id: sensor.epaper_weather_battery_voltage
+      to: "unavailable"
+      for:
+        hours: 3
+  action:
+    - service: notify.notify
+      data:
+        title: "Weather Display Offline"
+        message: >
+          The e-paper has not reported in 3 hours.
+          Battery may be empty or WiFi may be out of range.

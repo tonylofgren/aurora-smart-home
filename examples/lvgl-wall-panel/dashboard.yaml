@@ -1,0 +1,23 @@
+# LVGL Wall Panel Lovelace dashboard
+# Drop into Edit Dashboard > Raw Configuration Editor.
+
+title: Wall Panel
+path: wall-panel
+icon: mdi:tablet-dashboard
+cards:
+  - type: entities
+    title: Panel
+    entities:
+      - entity: light.wall_panel_backlight
+        name: Backlight
+      - entity: sensor.wall_panel_uptime
+        name: Uptime
+      - entity: switch.wall_panel_restart
+        name: Restart device
+
+  - type: entities
+    title: Drives the panel UI
+    entities:
+      - entity: number.thermostat_setpoint
+      - entity: number.audio_group_volume
+      - entity: media_player.audio_hub_all_rooms

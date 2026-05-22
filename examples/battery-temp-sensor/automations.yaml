@@ -1,0 +1,128 @@
+# Battery Temperature Sensor Automations for Home Assistant
+# Add these to your automations.yaml or import via the UI
+
+# =============================================================================
+# Low Battery Warning
+# =============================================================================
+
+- alias: "Battery Sensor - Low Battery Alert"
+  id: battery_sensor_low_battery
+  description: "Notify when sensor battery drops below 20%"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.battery_temp_sensor_battery
+      below: 20
+      for:
+        minutes: 30
+  action:
+    - service: notify.notify
+      data:
+        title: "Battery Sensor"
+        message: >
+          Temperature sensor battery is at
+          {{ states('sensor.battery_temp_sensor_battery') }}%
+          ({{ states('sensor.battery_temp_sensor_battery_voltage') }} V).
+          Recharge or replace soon.
+
+# =============================================================================
+# Critical Battery (force shutdown to protect LiPo)
+# =============================================================================
+
+- alias: "Battery Sensor - Critical Battery"
+  id: battery_sensor_critical_battery
+  description: "Persistent notification when battery is critically low"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.battery_temp_sensor_battery_voltage
+      below: 3.4
+  action:
+    - service: persistent_notification.create
+      data:
+        title: "Critical: Sensor Battery"
+        message: >
+          Battery voltage is
+          {{ states('sensor.battery_temp_sensor_battery_voltage') }} V.
+          Charge immediately to protect the LiPo cell.
+        notification_id: battery_sensor_critical
+
+# =============================================================================
+# Frost Warning
+# =============================================================================
+
+- alias: "Battery Sensor - Frost Warning"
+  id: battery_sensor_frost
+  description: "Alert if monitored location drops near freezing"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.battery_temp_sensor_temperature
+      below: 2
+  action:
+    - service: notify.notify
+      data:
+        title: "Frost Warning"
+        message: >
+          Temperature is now
+          {{ states('sensor.battery_temp_sensor_temperature') }} degrees C.
+          Risk of frost damage.
+
+# =============================================================================
+# High Humidity (mold risk)
+# =============================================================================
+
+- alias: "Battery Sensor - High Humidity"
+  id: battery_sensor_high_humidity
+  description: "Alert if humidity stays high for an hour (mold risk)"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.battery_temp_sensor_humidity
+      above: 70
+      for:
+        hours: 1
+  action:
+    - service: notify.notify
+      data:
+        title: "Humidity Warning"
+        message: >
+          Humidity has been above 70% for an hour
+          (currently {{ states('sensor.battery_temp_sensor_humidity') }}%).
+          Consider ventilating or running a dehumidifier.
+
+# =============================================================================
+# Stale Sensor Detection (sleep cycle stopped)
+# =============================================================================
+
+- alias: "Battery Sensor - Stale Data"
+  id: battery_sensor_stale
+  description: "Alert if no update received in 30 minutes (sensor may be dead)"
+  trigger:
+    - platform: state
+      entity_id: sensor.battery_temp_sensor_temperature
+      to: "unavailable"
+      for:
+        minutes: 30
+  action:
+    - service: notify.notify
+      data:
+        title: "Battery Sensor Offline"
+        message: >
+          The temperature sensor has not reported in 30 minutes.
+          Battery may be empty or device may be out of WiFi range.
+
+# =============================================================================
+# Daily Summary (helpful first-week debugging)
+# =============================================================================
+
+- alias: "Battery Sensor - Daily Summary"
+  id: battery_sensor_daily_summary
+  description: "Daily report of min/max temperature and current battery"
+  trigger:
+    - platform: time
+      at: "08:00:00"
+  action:
+    - service: notify.notify
+      data:
+        title: "Daily Sensor Report"
+        message: >
+          Temperature: {{ states('sensor.battery_temp_sensor_temperature') }} C |
+          Humidity: {{ states('sensor.battery_temp_sensor_humidity') }}% |
+          Battery: {{ states('sensor.battery_temp_sensor_battery') }}%

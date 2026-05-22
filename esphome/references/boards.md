@@ -600,6 +600,15 @@ High-performance Xtensa LX7 dual-core chip focused on multimedia and display. No
 - Video: H.264 hardware encoder, JPEG hardware codec
 - LP core: Yes
 
+**USB High Speed (2026.5.0+):**
+
+```yaml
+usb_host:
+  max_packet_size: 512   # 2026.5.0+: USB 2.0 high-speed 512-byte transfers
+```
+
+Prior to 2026.5.0, ESP32-P4 USB transfers were fragmented to 64-byte full-speed packets even though the chip can do high-speed. Setting `max_packet_size: 512` enables proper 480 Mbps high-speed transfers, which matters for cameras, mass storage, and high-bandwidth USB audio.
+
 **Common Board IDs:**
 
 | Board | ID | Notes |

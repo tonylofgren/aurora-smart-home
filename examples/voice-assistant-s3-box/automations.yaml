@@ -1,0 +1,47 @@
+# Voice Assistant Automations for Home Assistant
+# Add these to your automations.yaml or import via the UI
+
+# =============================================================================
+# Disable wake word during night hours (avoid false triggers while sleeping)
+# =============================================================================
+
+- alias: "Voice Assistant - Quiet Hours On"
+  id: voice_assistant_quiet_on
+  description: "Disable wake word at bedtime"
+  triggers:
+    - trigger: time
+      at: "23:00:00"
+  actions:
+    - action: switch.turn_off
+      target:
+        entity_id: switch.voice_assistant_wake_word_enabled
+
+- alias: "Voice Assistant - Quiet Hours Off"
+  id: voice_assistant_quiet_off
+  description: "Re-enable wake word in the morning"
+  triggers:
+    - trigger: time
+      at: "06:30:00"
+  actions:
+    - action: switch.turn_on
+      target:
+        entity_id: switch.voice_assistant_wake_word_enabled
+
+# =============================================================================
+# Alert if the device goes offline (e.g. WiFi or power loss)
+# =============================================================================
+
+- alias: "Voice Assistant - Offline Alert"
+  id: voice_assistant_offline
+  description: "Notify when the device disconnects for more than 5 minutes"
+  triggers:
+    - trigger: state
+      entity_id: binary_sensor.voice_assistant_online
+      to: "off"
+      for:
+        minutes: 5
+  actions:
+    - action: notify.mobile_app
+      data:
+        title: "Voice Assistant offline"
+        message: "The kitchen voice puck has been unreachable for 5 minutes."

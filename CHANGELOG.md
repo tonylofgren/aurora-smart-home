@@ -8,6 +8,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.9.0] - 2026-05-22
+
+### Added
+
+**Full ESPHome 2026.5.0 alignment.** A new reference file at `esphome/references/release-2026-5.md` documents every user-visible change in the May 2026 ESPHome release: Sendspin multi-room synchronized audio, the `radio_frequency` entity type, Zigbee built into core for ESP32-C6 and H2, the `modbus_server` split, native ESP-IDF toolchain, OTA partition and bootloader updates over the wire, soft-brick recovery via `safe_mode` plus factory partition, the BLE coex fix that resolves `status=133` failures on Yale and August locks, and more. The file includes a step-by-step upgrade playbook, five complete worked recipes, and a separated developer-facing breaking-changes section.
+
+**Examples library expanded from 4 to 27 projects.** Twenty-three new copy-paste-ready examples cover sensors (battery temp, soil moisture, water leak, mailbox, air quality), climate and HVAC (Panasonic AC, smart thermostat, pool), audio and voice (Sendspin whole-house audio, voice assistant on ESP32-S3-BOX), displays (e-paper weather station, LVGL wall panel, M5Stack ATOM), lighting and power (LED strip with effects, smart plug with BL0942 power monitor, motorized blinds), energy and EV (Growatt solar inverter Modbus polling, OpenEVSE charger control), Bluetooth and RF (proxied Yale/August locks, CC1101 RF gateway with `radio_frequency` entity), security and access (ESP32-CAM doorbell, fingerprint unlock), plus a battery-powered Zigbee temperature sensor on ESP32-C6. Each example ships the same five files: ESPHome YAML, README with wiring and safety and troubleshooting, ready-made Home Assistant automations, Lovelace dashboard, and secrets template.
+
+**First vendored ESPHome component.** Aurora now ships a local copy of `panasonic_ac` (originally `DomiStyle/esphome-panasonic-ac`, MIT-licensed) at `esphome/components/panasonic_ac/`. Builds work offline without fetching from GitHub at compile time. The vendored directory preserves the upstream LICENSE verbatim, and a `NOTICE.md` records the upstream commit SHA, SHA-256 hash of each file, and a statement of any Aurora-side modifications (currently none).
+
+**Twelve domain references gained 2026.5.0 sections.** `media-audio.md` got Sendspin multi-room audio, SPDIF speaker output, the new `audio_http` media source, and the WAV-codec and `codec_support_enabled` changes. `ble-proxy.md` got the `status=133` coex fix narrative and the `esp32_ble: use_psram` option. `power-management.md` got `esp32: watchdog_timeout`, the main-loop overhaul, and the per-platform idle-feed defaults. Lock OPENING and OPEN states landed in `alarm-security.md`. Additional 2026.5.0 content in `sensors.md`, `communication.md`, `displays.md`, `remote-rf-ir.md`, `voice-local.md`, `boards.md`, `popular-devices.md`, `security-hardening.md`, and `external-components.md`.
+
+**README "What's new" section** highlights twelve user-visible ESPHome 2026.5.0 wins (multi-room audio, Zigbee on C6/H2, `radio_frequency` entity, longer battery life, BLE proxy reliability, ESPHome Device Builder beta, native ESP-IDF toolchain, more RAM via PSRAM Bluedroid, SPDIF audio, ESP32-P4 USB high-speed, lock OPENING/OPEN states, `modbus_server` split).
+
+### Changed
+
+- ESPHome compatibility badge bumped to 2026.5.0.
+- `esphome/SKILL.md` Quick Reference now includes a Release Notes pointer to `release-2026-5.md`.
+- **Skill orchestrator polish:** fixed a release-date mismatch between the banner and the freshness fallback in `aurora/SKILL.md`; added a cross-skill handoffs table to `home-assistant/SKILL.md` routing external-API, firmware, Python integration, visual-flow, and dashboard-styling requests to the right specialist; added a Process flowchart to `node-red/SKILL.md` for consistency with the other three specialists; documented the reactivation check's literal-string matching as a known boundary with a manual verification recipe.
+
+### Compliance
+
+- New `.claude/CLAUDE.md` "Copyright and Third-Party Content" section governs how Aurora vendors and attributes external code: never copy upstream prose verbatim, always preserve license notices, strip contributor handles from Aurora-authored summaries, paraphrase aggressively when in doubt.
+
 ## [1.8.1] - 2026-05-17
 
 ### Added

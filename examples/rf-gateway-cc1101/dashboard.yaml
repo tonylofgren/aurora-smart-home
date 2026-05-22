@@ -1,0 +1,38 @@
+# RF Gateway Lovelace Dashboard
+
+title: RF Gateway
+path: rf-gateway
+icon: mdi:radio-tower
+cards:
+
+  - type: entities
+    title: Gateway Status
+    icon: mdi:radio-tower
+    entities:
+      - entity: sensor.rf_gateway_wifi_signal
+        name: WiFi signal
+      - entity: sensor.rf_gateway_uptime
+        name: Uptime
+      - entity: text_sensor.rf_gateway_esphome_version
+        name: ESPHome version
+      - entity: switch.rf_gateway_restart
+        name: Restart
+
+  - type: entities
+    title: Quick Send
+    icon: mdi:remote
+    entities:
+      - entity: button.rf_gateway_send_doorbell_test
+        name: Test doorbell
+      - entity: input_boolean.living_room_lamp
+        name: Living Room Lamp (433 MHz)
+
+  - type: markdown
+    content: |
+      ### Capture new codes
+      Open ESPHome Dashboard logs and press buttons on your existing
+      433 MHz remotes. The logger will show the timings:
+      ```
+      [D][remote.raw:051]: Received Raw: 1000, -1000, 500, -500, ...
+      ```
+      Copy those into `automations.yaml` to replay them from HA.

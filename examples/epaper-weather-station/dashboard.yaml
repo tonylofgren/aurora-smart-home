@@ -1,0 +1,61 @@
+# E-Paper Weather Station Lovelace Dashboard
+# Import via: Settings > Dashboards > Add Dashboard > Import
+
+title: Weather Display
+views:
+  - title: Overview
+    path: epaper-weather
+    icon: mdi:image-frame
+    badges: []
+    cards:
+      - type: markdown
+        content: >
+          # E-Paper Weather Display
+
+          Refreshes hourly. Press the "Refresh Now" button to push an
+          immediate redraw, or toggle "Prevent Sleep" to keep the device
+          awake for OTA updates.
+
+      - type: horizontal-stack
+        cards:
+          - type: gauge
+            entity: sensor.epaper_weather_battery
+            name: Display Battery
+            min: 0
+            max: 100
+            needle: true
+            severity:
+              green: 50
+              yellow: 20
+              red: 0
+            unit: "%"
+
+          - type: sensor
+            entity: sensor.epaper_weather_battery_voltage
+            name: Battery Voltage
+            graph: line
+            hours_to_show: 168
+            detail: 2
+
+      - type: entities
+        title: Controls
+        entities:
+          - entity: button.epaper_weather_refresh_now
+            name: Refresh Display Now
+          - entity: switch.epaper_weather_prevent_sleep
+            name: Prevent Sleep (OTA mode)
+          - entity: button.epaper_weather_restart
+            name: Restart Device
+
+      - type: entities
+        title: Diagnostics
+        entities:
+          - entity: sensor.epaper_weather_wifi
+            name: WiFi Signal
+          - entity: sensor.epaper_weather_esphome_version
+            name: Firmware Version
+
+      - type: weather-forecast
+        entity: weather.home
+        forecast_type: daily
+        name: Source Forecast (HA side)

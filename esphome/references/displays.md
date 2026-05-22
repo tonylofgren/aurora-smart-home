@@ -339,17 +339,31 @@ display:
 ```
 
 ### Waveshare Models
-| Model | Resolution | Colors |
-|-------|------------|--------|
-| 1.54in | 200x200 | B/W |
-| 2.13in | 250x122 | B/W |
-| 2.90in | 296x128 | B/W |
-| 2.90inv2 | 296x128 | B/W faster |
-| 4.20in | 400x300 | B/W |
-| 7.50in | 800x480 | B/W |
-| 2.13in-ttgo | 250x122 | TTGO T5 |
-| 2.90in-b | 296x128 | B/W/Red |
-| 4.20in-bv2 | 400x300 | B/W/Red |
+| Model | Resolution | Colors | Added |
+|-------|------------|--------|-------|
+| 1.54in | 200x200 | B/W | |
+| 2.13in | 250x122 | B/W | |
+| 2.90in | 296x128 | B/W | |
+| 2.90inv2 | 296x128 | B/W faster | |
+| 3.97in | 800x480 | B/W | 2026.5.0 |
+| 4.20in | 400x300 | B/W | |
+| 7.50in | 800x480 | B/W | |
+| 2.13in-ttgo | 250x122 | TTGO T5 | |
+| 2.90in-b | 296x128 | B/W/Red | |
+| 4.20in-bv2 | 400x300 | B/W/Red | |
+
+### Other e-paper drivers (2026.5.0+)
+
+- **SSD1683 + Goodisplay GDEY042T81** (4.2", B/W) - new generic SSD1683 driver in 2026.5.0 for the popular Goodisplay GDEY042T81 panel.
+
+```yaml
+display:
+  - platform: epaper_spi
+    model: ssd1683
+    width: 400
+    height: 300
+    update_interval: 60s
+```
 
 ### Partial Update
 ```yaml
@@ -838,6 +852,84 @@ lvgl:
     - touchscreen_id: my_touch
 ```
 
+### LVGL 2026.5.0+ Improvements
+
+ESPHome 2026.5.0 landed several LVGL refinements:
+
+**1. Flexible grid layout shorthands**
+
+```yaml
+lvgl:
+  pages:
+    - id: main_page
+      widgets:
+        - obj:
+            grid_rows: "3x"        # 3 rows, columns auto-derived from widget count
+            # OR:
+            grid_columns: "x4"     # 4 columns, rows auto-derived
+            widgets: [...]
+```
+
+Previously you had to spell out every grid track. The new `Nx` (N rows, columns from widget count) and `xN` (N columns, rows from widget count) shorthands cover the most common cases. A bare integer for either key also works and expands to that many equal FR(1) cells.
+
+**2. Touch coordinates in event lambdas**
+
+```yaml
+- button:
+    on_pressed:
+      - lambda: |-
+          ESP_LOGI("touch", "pressed at x=%d y=%d", point.x, point.y);
+    on_pressing:
+      - lambda: |-
+          ESP_LOGI("touch", "dragging at x=%d y=%d", point.x, point.y);
+    on_release:
+      - lambda: |-
+          ESP_LOGI("touch", "released at x=%d y=%d", point.x, point.y);
+```
+
+The new `point` parameter gives object-relative coordinates inside `on_pressed`, `on_pressing`, and `on_release` event lambdas. Useful for drawing-style widgets, hit-region detection inside custom canvases, and gesture handling.
+
+**3. Distinguishing programmatic vs user value changes**
+
+```yaml
+- slider:
+    on_update:               # new in 2026.5.0
+      trigger: PROGRAMMATIC  # fires only when value was set via API/lambda
+      then:
+        - logger.log: "Value changed programmatically"
+    on_value:
+      trigger: USER          # fires only on user interaction (existing)
+      then:
+        - logger.log: "User dragged the slider"
+```
+
+The new `on_update` trigger with `trigger: PROGRAMMATIC` lets you separate "the user moved this" from "code set this", which avoids infinite-loop pitfalls when binding numbers/sensors to widgets.
+
+**4. Percentage line points (resolution-independent line widgets)**
+
+```yaml
+- line:
+    points:
+      - [10%, 20%]     # parent-relative percentage
+      - [50%, 80%]
+      - [90%, 20%]
+    line_color: 0xFF0000
+```
+
+Mix and match: a single point can be `[120, 300]` (absolute pixels) or `[10%, 20%]` (parent-relative). Useful for chart axes and overlays that need to survive a panel-size change.
+
+**5. Checked-state binary sensors for toggle widgets**
+
+```yaml
+binary_sensor:
+  - platform: lvgl
+    name: "Toggle State"
+    widget: my_toggle
+    state: checked      # new: report current checked state, not just press state
+```
+
+Previously a binary sensor bound to a toggle widget would only report press/release. The `state: checked` mode reports the toggle's logical state, which is what most automations actually want.
+
 ---
 
 ## Common Patterns
@@ -1001,6 +1093,17 @@ lvgl:
 ### Supported Panels
 
 Waveshare ESP32-P4 panels (added in 2026.2) and other MIPI DSI-compatible displays. Check the specific panel datasheet for lane count, resolution, and timing parameters.
+
+**Pre-configured boards added in 2026.5.0:**
+
+| Board | Display | Notes |
+|-------|---------|-------|
+| Sunton ESP32-2424S012 | 240x240 GC9A01 round LCD | mipi_spi |
+| Sunton ESP32-S3 5" / 7" | RGB panels | mipi_rgb |
+| Seeed reTerminal D1001 | DSI display | mipi_dsi, full HMI starter |
+| Waveshare ESP32-C6 LCD 1.47 | 172x320 | mipi_spi, includes Zigbee/Thread radio |
+
+These ship with the board profile already wired in ESPHome, so a minimal config just needs the board name and `framework: type: esp-idf` to boot directly into a working display.
 
 ### Key Notes
 

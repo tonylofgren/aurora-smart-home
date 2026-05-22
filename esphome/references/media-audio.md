@@ -81,6 +81,22 @@ speaker:
 
 > **Note:** Internal DAC is low quality (8-bit). Only on original ESP32, not S2/S3/C3/C6.
 
+#### SPDIF output (2026.5.0+)
+
+New in ESPHome 2026.5.0: send digital audio over any GPIO to an optical/coax SPDIF receiver. No external DAC required.
+
+```yaml
+speaker:
+  - platform: i2s_audio
+    id: spdif_out
+    i2s_dout_pin: GPIO22
+    mode: spdif          # new in 2026.5.0
+    sample_rate: 48000
+    bits_per_sample: 24bit
+```
+
+Useful when piping audio to a hi-fi amplifier or AV receiver that has a TOSLINK/SPDIF input. The GPIO drives an optical TX module (or a 75 ohm coax line) directly.
+
 ### Mixer Speaker
 
 Mixes audio from multiple source speakers into one output speaker.
@@ -315,6 +331,26 @@ At least one of `media_pipeline` or `announcement_pipeline` is required. Each pi
 | `sample_rate` | int | speaker rate | Audio sample rate |
 | `num_channels` | int | | 1 (mono) or 2 (stereo) |
 
+> **2026.5.0 codec changes:**
+> - `codec_support_enabled` is now **deprecated and inert**. Codec inclusion is determined from the pipeline `format:` setting. Use `format: NONE` to include all codecs (old `all` mode), or `format: WAV` for the closest equivalent to the old `none`/`false` mode.
+> - **WAV decoding is no longer always compiled in.** WAV is auto-included when you embed a WAV file, set `format: WAV` as the preferred pipeline format, or use the speaker media player with `format: NONE`. If you only play WAV from arbitrary URLs via YAML actions, add `audio: codecs: wav:` to keep the WAV decoder compiled in.
+> - Audio decoders now sit on the new microMP3 / microWAV / microFLAC streaming libraries. Per-frame CPU drops noticeably, and the previously-flaky Opus-on-plain-ESP32 case is now stable.
+
+#### HTTP Media Source (2026.5.0+)
+
+Streams MP3/WAV/FLAC directly from an HTTP URL, no Home Assistant proxy needed.
+
+```yaml
+media_player:
+  - platform: speaker
+    name: "Speaker"
+    media_sources:
+      - platform: audio_http
+        name: "HTTP Audio"
+```
+
+Use this for playing internet radio streams, podcast URLs, or any web-hosted audio without routing through HA.
+
 ### Speaker Source Media Player (2026.3+)
 
 Adds pluggable source support:
@@ -425,9 +461,121 @@ audio_file:
 
 > **Note:** Audio files are stored in flash. Keep them small. Consider Ogg Opus for compression.
 
+> **2026.5.0 change:** Files embedded in the speaker media player `files:` block now have a **5 MB per-file size limit**. Compress oversized files or pick a more efficient codec before upgrading.
+
 ---
 
-## 7. Complete Examples
+## 7. Multi-Room Synchronized Audio (Sendspin) - 2026.5.0+
+
+ESPHome 2026.5.0 introduces Sendspin, a coordinated audio component family that lets one device act as the audio source and pushes synchronized playback (plus group state) out to any number of speakers on the same LAN. The decoder work in this release was specifically tuned so a plain (no-PSRAM) ESP32 can keep up with 2-channel Opus in real time, which previously was an S3-with-PSRAM workload.
+
+**Component layout:**
+
+| Component | Where | Role |
+|-----------|-------|------|
+| `sendspin:` | Hub only | Server that distributes audio and group state |
+| `media_player: platform: sendspin_group` | Hub only | Group controller (no local audio output) |
+| `media_player: platform: sendspin` | Each speaker | Per-room player that receives + plays synchronized audio |
+| `sensor: platform: sendspin` | Anywhere | Playback progress for driving displays (0-100%) |
+| `text_sensor: platform: sendspin` | Anywhere | Track title, artist, album metadata |
+
+### Hub device
+
+```yaml
+# audio-hub.yaml
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+sendspin:
+  host: 192.168.1.50   # hub's static IP
+  port: 7474
+
+# Group player - controls the whole group, no local audio
+media_player:
+  - platform: sendspin_group
+    name: "All Rooms"
+
+# Optional: track metadata on the hub
+sensor:
+  - platform: sendspin
+    track_progress:
+      name: "Track Progress"
+
+text_sensor:
+  - platform: sendspin
+    title:
+      name: "Now Playing Title"
+    artist:
+      name: "Now Playing Artist"
+```
+
+### Per-room speaker
+
+```yaml
+# living-room.yaml
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+i2s_audio:
+  - id: i2s_out
+    i2s_lrclk_pin: GPIO25
+    i2s_bclk_pin: GPIO26
+
+speaker:
+  - platform: i2s_audio
+    id: room_speaker
+    dac_type: external
+    i2s_dout_pin: GPIO22
+
+media_player:
+  - platform: sendspin
+    name: "Living Room"
+    delay_compensation: 50ms   # tune per room for DAC/amp latency
+```
+
+Each room can have a different `delay_compensation`. Start at `50ms`. If one room sounds ahead of the others, increase its value in 10 ms steps until they align.
+
+### Limitations and notes
+
+- All devices must be on the same LAN (multicast is used for sync).
+- Hub `host:` must be the hub's actual static IP, reachable from every speaker.
+- Stereo Opus on plain ESP32 needed `sendspin-cpp v0.4.0` stutter reduction (shipped in 2026.5.0).
+- For best results, set `psram:` on hub if your board has it - audio buffers can live in internal SRAM via the new ring-buffer memory preference.
+
+### Sendspin Troubleshooting
+
+**Symptom: one room sounds slightly behind or ahead of the others**
+
+Tune `delay_compensation` on the lagging room. Each room's value is independent. Start at 50 ms and adjust in 10 ms steps. The right value depends on the DAC + amp chain in that room. A MAX98357A typically needs ~50 ms; an AVR receiver chain can need 80-120 ms.
+
+**Symptom: speakers occasionally drop out, audible stutters**
+
+1. **Check Wi-Fi signal at the affected room.** Multicast UDP is the transport; weak Wi-Fi means dropped packets and audible gaps. Run `wifi_signal` sensor on each speaker and watch for any room consistently below -70 dBm RSSI.
+2. **Verify the hub has PSRAM-equipped hardware** if running stereo Opus at 48 kHz. Mono or Opus at lower bitrates work on plain ESP32; stereo Opus needs the v0.4.0 stutter reduction *and* benefits from internal SRAM for buffers (set `psram:` so the ring buffer picks the faster region).
+3. **Reduce concurrent BLE/scan workload on the hub.** If the hub is also a BLE proxy, the proxy task can starve the audio task during heavy scans.
+
+**Symptom: speakers do not discover the hub**
+
+The hub's `host:` value must be an IP the speaker can route to. Check:
+- Hub has a static DHCP reservation or `manual_ip:` block (so `host:` stays valid across reboots).
+- No VLAN/firewall blocking the Sendspin port (default 7474) between hub and speakers.
+- Both sides on the same broadcast domain for the initial discovery.
+
+**Symptom: "Audio Hub" appears in HA but plays nothing**
+
+The group player (`sendspin_group`) is a control surface. It distributes the *command* to play, but the per-room `sendspin` media players are what actually play audio. Make sure at least one per-room speaker is online and reachable from the hub before pressing play on the group entity.
+
+**Symptom: speaker crashes or reboots when starting Opus playback**
+
+The 2026.5.0 stutter-reduction work raised the player task priority above the websocket server. If you flashed an early 2026.5.0 dev build *before* the v0.4.0 sendspin-cpp library landed, upgrade to release ESPHome 2026.5.0 or later. The stable release includes the fix.
+
+---
+
+## 8. Complete Examples
 
 ### Voice Assistant with Dual Pipelines (ESP32-S3 + ES8311)
 

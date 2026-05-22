@@ -1,0 +1,96 @@
+# Panasonic Heat Pump Lovelace Dashboard
+# Add this view to your dashboards via Edit Dashboard > Raw Configuration Editor,
+# or copy individual cards into existing views.
+
+title: Panasonic AC
+path: panasonic-ac
+icon: mdi:air-conditioner
+cards:
+
+  # =============================================================================
+  # Main climate control
+  # =============================================================================
+  - type: thermostat
+    entity: climate.panasonic_ac
+    name: Living Room AC
+
+  # =============================================================================
+  # Sensor row: outside temp, power, runtime
+  # =============================================================================
+  - type: horizontal-stack
+    cards:
+      - type: entity
+        entity: sensor.panasonic_ac_outside_temperature
+        name: Outside
+        icon: mdi:thermometer-lines
+      - type: entity
+        entity: sensor.panasonic_ac_estimated_power
+        name: Power
+        icon: mdi:flash
+      - type: entity
+        entity: sensor.panasonic_ac_uptime
+        name: Uptime
+        icon: mdi:timer-sand
+
+  # =============================================================================
+  # Swing control
+  # =============================================================================
+  - type: entities
+    title: Swing
+    icon: mdi:tailwind
+    entities:
+      - entity: select.panasonic_ac_vertical_swing
+        name: Vertical
+      - entity: select.panasonic_ac_horizontal_swing
+        name: Horizontal
+
+  # =============================================================================
+  # Feature switches
+  # =============================================================================
+  - type: entities
+    title: Features
+    icon: mdi:toggle-switch
+    entities:
+      - entity: switch.panasonic_ac_econavi
+        name: Econavi
+        # Add these once enabled in the YAML:
+        # - entity: switch.panasonic_ac_nanoex
+        #   name: NanoeX
+        # - entity: switch.panasonic_ac_eco_mode      # CNT only
+        #   name: Eco mode
+        # - entity: switch.panasonic_ac_mild_dry      # CNT only
+        #   name: Mild Dry
+
+  # =============================================================================
+  # Power consumption history (last 24h)
+  # =============================================================================
+  - type: history-graph
+    title: Power consumption (24h)
+    hours_to_show: 24
+    entities:
+      - entity: sensor.panasonic_ac_estimated_power
+        name: Estimated power
+
+  # =============================================================================
+  # Temperature comparison (inside target vs outside)
+  # =============================================================================
+  - type: history-graph
+    title: Temperatures (24h)
+    hours_to_show: 24
+    entities:
+      - entity: climate.panasonic_ac
+        name: Climate
+      - entity: sensor.panasonic_ac_outside_temperature
+        name: Outside
+
+  # =============================================================================
+  # Maintenance
+  # =============================================================================
+  - type: entities
+    title: Diagnostics
+    icon: mdi:wrench
+    entities:
+      - entity: light.panasonic_ac_status_led
+        name: Status LED
+      - entity: switch.panasonic_ac_restart
+        name: Restart device

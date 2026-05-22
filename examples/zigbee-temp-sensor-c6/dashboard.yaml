@@ -1,0 +1,53 @@
+# Zigbee Temperature Sensor Lovelace Dashboard
+# Add this view to your dashboards, or copy individual cards.
+
+title: Zigbee Sensors
+path: zigbee-sensors
+icon: mdi:zigbee
+cards:
+
+  # =============================================================================
+  # Current readings
+  # =============================================================================
+  - type: glance
+    title: Zigbee Temp 1
+    entities:
+      - entity: sensor.zigbee_temp_1_temperature
+        name: Temperature
+      - entity: sensor.zigbee_temp_1_humidity
+        name: Humidity
+      - entity: sensor.zigbee_temp_1_battery_voltage
+        name: Battery
+
+  # =============================================================================
+  # 24h history
+  # =============================================================================
+  - type: history-graph
+    title: Last 24 hours
+    hours_to_show: 24
+    entities:
+      - entity: sensor.zigbee_temp_1_temperature
+        name: Temperature
+      - entity: sensor.zigbee_temp_1_humidity
+        name: Humidity
+
+  # =============================================================================
+  # Battery trend
+  # =============================================================================
+  - type: history-graph
+    title: Battery voltage (30 days)
+    hours_to_show: 720
+    entities:
+      - entity: sensor.zigbee_temp_1_battery_voltage
+        name: Battery voltage
+
+  # =============================================================================
+  # Status / last seen
+  # =============================================================================
+  - type: entities
+    title: Status
+    icon: mdi:radar
+    entities:
+      - entity: sensor.zigbee_temp_1_temperature
+        name: Last seen
+        secondary_info: last-updated

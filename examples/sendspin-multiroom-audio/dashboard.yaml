@@ -1,0 +1,91 @@
+# Sendspin Multi-Room Audio Lovelace Dashboard
+
+title: Whole-House Audio
+path: sendspin
+icon: mdi:speaker-multiple
+cards:
+
+  # =============================================================================
+  # Group control
+  # =============================================================================
+  - type: media-control
+    entity: media_player.audio_hub_all_rooms
+
+  # =============================================================================
+  # Now playing
+  # =============================================================================
+  - type: glance
+    title: Now Playing
+    columns: 1
+    entities:
+      - entity: text_sensor.audio_hub_now_playing_title
+        name: Title
+      - entity: text_sensor.audio_hub_now_playing_artist
+        name: Artist
+      - entity: text_sensor.audio_hub_now_playing_album
+        name: Album
+
+  - type: gauge
+    name: Progress
+    entity: sensor.audio_hub_progress
+    min: 0
+    max: 100
+    needle: true
+
+  # =============================================================================
+  # Per-room control row
+  # =============================================================================
+  - type: horizontal-stack
+    cards:
+      - type: media-control
+        entity: media_player.living_room_speaker
+      - type: media-control
+        entity: media_player.kitchen_speaker
+      - type: media-control
+        entity: media_player.bedroom_speaker
+
+  # =============================================================================
+  # Quick mode buttons
+  # =============================================================================
+  - type: horizontal-stack
+    cards:
+      - type: button
+        name: Dinner Mode
+        icon: mdi:silverware-fork-knife
+        tap_action:
+          action: toggle
+        entity: input_boolean.dinner_mode
+      - type: button
+        name: Whole House
+        icon: mdi:home-sound-in
+        tap_action:
+          action: call-service
+          service: media_player.media_play
+          target:
+            entity_id: media_player.audio_hub_all_rooms
+      - type: button
+        name: Pause All
+        icon: mdi:pause
+        tap_action:
+          action: call-service
+          service: media_player.media_pause
+          target:
+            entity_id: media_player.audio_hub_all_rooms
+
+  # =============================================================================
+  # Diagnostics
+  # =============================================================================
+  - type: entities
+    title: Diagnostics
+    icon: mdi:wrench
+    entities:
+      - entity: sensor.audio_hub_uptime
+        name: Hub uptime
+      - entity: sensor.living_room_speaker_uptime
+        name: Living Room uptime
+      - entity: sensor.kitchen_speaker_uptime
+        name: Kitchen uptime
+      - entity: sensor.bedroom_speaker_uptime
+        name: Bedroom uptime
+      - entity: switch.audio_hub_restart
+        name: Restart hub

@@ -22,6 +22,53 @@ USE CURRENT NODE NAMES - NEVER OUTDATED ONES
 
 The node-red-contrib-home-assistant-websocket package has renamed several nodes. Using old names produces broken flows that silently fail.
 
+## The Process
+
+```
+User request
+    │
+    ▼
+HA server config node exists in Node-RED?
+    │ no ─────────────────────────┐
+    │ yes                          ▼
+    │                       Set up `server` config first
+    │                       (URL, access token, allow self-signed if needed)
+    │                              │
+    ▼ ◀────────────────────────────┘
+Pick trigger node (current names only — see table below)
+    │
+    │  time-based?    ──▶  inject (time) or trigger-state with cron
+    │  state-change?  ──▶  trigger-state OR events:state
+    │  event?         ──▶  events:all (filtered by event_type)
+    │  external?      ──▶  http in (webhook) / mqtt in
+    │
+    ▼
+Add filter/condition (current-state, switch, template)
+    │
+    ▼
+Pick action node (current names only)
+    │
+    │  call HA service?     ──▶  call-service (`action`, not `service`)
+    │  set entity state?    ──▶  call-service light.turn_on / etc.
+    │  send HTTP?           ──▶  http request
+    │  notify?              ──▶  call-service notify.*
+    │
+    ▼
+Battery-drain risk? ──yes──▶ Add throttle/delay (rate-limit msgs/sec)
+    │ no
+    ▼
+Add status indicators (debug node OR catch node for error path)
+    │
+    ▼
+Test in editor with debug node, fix wiring
+    │
+    ▼
+Deploy and verify in HA
+    │
+    ▼
+Document the flow (description on key nodes)
+```
+
 ## Critical: Node Names Have Changed
 
 **STOP.** If you're about to use any of these node types, you're using outdated names:

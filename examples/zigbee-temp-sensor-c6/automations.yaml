@@ -1,0 +1,100 @@
+# Zigbee Temperature Sensor Automations for Home Assistant
+# Add these to your automations.yaml or via the HA UI.
+
+# =============================================================================
+# Low battery warning
+# =============================================================================
+
+- alias: "Zigbee Temp - Low battery alert"
+  id: zigbee_temp_low_battery
+  description: "Notify when battery voltage drops below 2.4 V (roughly 20% on 2x AA)"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.zigbee_temp_1_battery_voltage
+      below: 2.4
+      for:
+        minutes: 30
+  action:
+    - service: notify.notify
+      data:
+        title: "Zigbee Temp Sensor"
+        message: >
+          Battery is low ({{ states('sensor.zigbee_temp_1_battery_voltage') }} V).
+          Replace cells soon.
+
+# =============================================================================
+# Stale-data detector
+# =============================================================================
+
+- alias: "Zigbee Temp - Sensor went silent"
+  id: zigbee_temp_silent
+  description: "Notify if no update arrives within 2x the expected interval"
+  trigger:
+    - platform: state
+      entity_id: sensor.zigbee_temp_1_temperature
+      to: "unavailable"
+      for:
+        minutes: 30
+  action:
+    - service: notify.notify
+      data:
+        title: "Zigbee Temp Sensor"
+        message: "No data for 30 minutes. Check battery or coordinator range."
+
+# =============================================================================
+# Out-of-range alerts (e.g. fridge or wine cellar)
+# =============================================================================
+
+- alias: "Zigbee Temp - Temperature out of range"
+  id: zigbee_temp_out_of_range
+  description: "Notify when temperature is outside 12-18 C (wine cellar example)"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.zigbee_temp_1_temperature
+      below: 12
+      for:
+        minutes: 30
+    - platform: numeric_state
+      entity_id: sensor.zigbee_temp_1_temperature
+      above: 18
+      for:
+        minutes: 30
+  action:
+    - service: notify.notify
+      data:
+        title: "Zigbee Temp Sensor"
+        message: >
+          Temperature out of safe range:
+          {{ states('sensor.zigbee_temp_1_temperature') }} C.
+
+# =============================================================================
+# Humidity-based ventilation
+# =============================================================================
+
+- alias: "Zigbee Temp - Turn on bathroom fan when humid"
+  id: zigbee_temp_bathroom_fan
+  description: "Turn on fan when humidity stays above 75 % for 5 min"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.zigbee_temp_1_humidity
+      above: 75
+      for:
+        minutes: 5
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id: switch.bathroom_fan
+
+- alias: "Zigbee Temp - Turn off bathroom fan when dry"
+  id: zigbee_temp_bathroom_fan_off
+  description: "Turn off fan when humidity drops below 60 % for 10 min"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.zigbee_temp_1_humidity
+      below: 60
+      for:
+        minutes: 10
+  action:
+    - service: switch.turn_off
+      target:
+        entity_id: switch.bathroom_fan

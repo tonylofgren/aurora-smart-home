@@ -1,0 +1,71 @@
+# Smart Plug Lovelace Dashboard
+# Import via: Settings > Dashboards > Add Dashboard > Import
+
+title: Smart Plug
+views:
+  - title: Overview
+    path: smart-plug
+    icon: mdi:power-socket-eu
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: >
+              # Smart Plug
+
+          # Big on/off tile
+          - type: tile
+            entity: switch.smart_plug
+            icon: mdi:power-socket-eu
+            tap_action:
+              action: toggle
+
+          # Live readings
+          - type: horizontal-stack
+            cards:
+              - type: entity
+                entity: sensor.smart_plug_power
+                name: Power
+                icon: mdi:flash
+
+              - type: entity
+                entity: sensor.smart_plug_voltage
+                name: Voltage
+                icon: mdi:sine-wave
+
+              - type: entity
+                entity: sensor.smart_plug_current
+                name: Current
+                icon: mdi:current-ac
+
+          # Energy totals
+          - type: horizontal-stack
+            cards:
+              - type: entity
+                entity: sensor.smart_plug_energy_today
+                name: Today
+                icon: mdi:counter
+
+              - type: entity
+                entity: sensor.smart_plug_energy_session
+                name: Session
+                icon: mdi:history
+
+      # Power history graph
+      - type: history-graph
+        title: Power (last 24 h)
+        hours_to_show: 24
+        entities:
+          - entity: sensor.smart_plug_power
+
+      # Energy history graph
+      - type: statistics-graph
+        title: Daily energy
+        chart_type: bar
+        period: day
+        days_to_show: 14
+        stat_types:
+          - sum
+        entities:
+          - sensor.smart_plug_energy_today

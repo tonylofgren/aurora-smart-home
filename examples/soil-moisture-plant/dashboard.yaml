@@ -1,0 +1,62 @@
+# Plant Monitor Lovelace Dashboard
+# Import via: Settings > Dashboards > Add Dashboard > Edit Raw YAML
+
+title: Plants
+views:
+  - title: Plant Monitor
+    path: plants
+    icon: mdi:flower
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: >
+              # Plant Monitor
+
+          - type: gauge
+            entity: sensor.plant_monitor_soil_moisture
+            name: Soil moisture
+            min: 0
+            max: 100
+            severity:
+              green: 50
+              yellow: 30
+              red: 0
+
+      - type: horizontal-stack
+        cards:
+          - type: sensor
+            entity: sensor.plant_monitor_air_temperature
+            name: Air temp
+            graph: line
+          - type: sensor
+            entity: sensor.plant_monitor_air_humidity
+            name: Humidity
+            graph: line
+
+      - type: entities
+        title: Status
+        entities:
+          - entity: binary_sensor.plant_monitor_thirsty
+            name: Needs water
+          - entity: sensor.plant_monitor_battery
+            name: Battery
+          - entity: sensor.plant_monitor_battery_voltage
+            name: Battery voltage
+          - entity: sensor.plant_monitor_wifi
+            name: WiFi signal
+
+      - type: history-graph
+        title: Last 48 hours
+        hours_to_show: 48
+        entities:
+          - entity: sensor.plant_monitor_soil_moisture
+          - entity: sensor.plant_monitor_air_humidity
+
+      - type: entities
+        title: Controls
+        entities:
+          - entity: switch.plant_monitor_prevent_sleep
+            name: Prevent sleep (calibration mode)
+          - entity: button.plant_monitor_restart
+            name: Restart device

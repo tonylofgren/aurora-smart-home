@@ -1,0 +1,108 @@
+# EV Charger Monitor automations for Home Assistant.
+# Add these to your automations.yaml or via the HA UI.
+
+# =============================================================================
+# Schedule charging during off-peak hours (23:00 to 07:00)
+# =============================================================================
+
+- alias: "EV - Enable off-peak charging at 23:00"
+  id: ev_offpeak_start
+  description: "Wake the charger when off-peak tariff begins"
+  trigger:
+    - platform: time
+      at: "23:00:00"
+  condition:
+    - condition: state
+      entity_id: binary_sensor.ev_charger_monitor_vehicle_connected
+      state: "on"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id: switch.ev_charger_monitor_enable
+    - service: number.set_value
+      target:
+        entity_id: number.ev_charger_monitor_max_amps
+      data:
+        value: 32
+
+- alias: "EV - Stop charging at 07:00 when peak tariff starts"
+  id: ev_offpeak_stop
+  description: "Sleep the charger when peak tariff begins"
+  trigger:
+    - platform: time
+      at: "07:00:00"
+  action:
+    - service: switch.turn_off
+      target:
+        entity_id: switch.ev_charger_monitor_enable
+
+# =============================================================================
+# Solar-surplus charging: only charge when grid solar export > 1.5 kW
+#
+# Uses sensor.solar_inverter_power from the solar-inverter-modbus integration.
+# Tune the threshold to match the charger's minimum step (typically 6 A * 230 V
+# = 1.4 kW for a 1-phase OpenEVSE).
+# =============================================================================
+
+- alias: "EV - Start solar charging"
+  id: ev_solar_start
+  description: "Begin charging when surplus solar exceeds 1.5 kW"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.solar_inverter_power
+      above: 1500
+      for:
+        minutes: 3
+  condition:
+    - condition: state
+      entity_id: binary_sensor.ev_charger_monitor_vehicle_connected
+      state: "on"
+    - condition: state
+      entity_id: switch.ev_charger_monitor_enable
+      state: "off"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id: switch.ev_charger_monitor_enable
+    - service: number.set_value
+      target:
+        entity_id: number.ev_charger_monitor_max_amps
+      data:
+        value: "{{ ((states('sensor.solar_inverter_power') | float) / 230) | round(0) | min(32) | max(6) }}"
+
+- alias: "EV - Stop solar charging when sun fades"
+  id: ev_solar_stop
+  description: "Sleep the charger when surplus drops under 1.0 kW for 5 minutes"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.solar_inverter_power
+      below: 1000
+      for:
+        minutes: 5
+  action:
+    - service: switch.turn_off
+      target:
+        entity_id: switch.ev_charger_monitor_enable
+
+# =============================================================================
+# Notify on faults (GFI, no ground, stuck relay, diode check)
+# =============================================================================
+
+- alias: "EV - Alert on charger fault"
+  id: ev_fault_alert
+  description: "Push a notification when the charger enters a fault state"
+  trigger:
+    - platform: state
+      entity_id: sensor.ev_charger_monitor_state
+      to:
+        - "gfi_fault"
+        - "no_ground"
+        - "stuck_relay"
+        - "diode_check_failed"
+  action:
+    - service: notify.notify
+      data:
+        title: "EV charger fault"
+        message: >
+          Charger reported {{ states('sensor.ev_charger_monitor_state') }}.
+          Disconnect the vehicle and inspect before retrying.

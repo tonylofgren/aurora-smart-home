@@ -423,6 +423,28 @@ voice_assistant:
   use_wake_word: true
 ```
 
+## Dual Microphone Sources (2026.5.0+)
+
+Voice assistant gained a `MULTI_CHANNEL_AUDIO` feature flag and a secondary microphone source so the voice pipeline can receive two separately-optimized audio streams (for example a main mic for speech and a reference mic for noise cancellation or echo cancellation).
+
+```yaml
+microphone:
+  - platform: i2s_audio
+    id: mic_main
+    sample_rate: 16000
+
+  - platform: i2s_audio
+    id: mic_noise        # reference channel
+    sample_rate: 16000
+
+voice_assistant:
+  microphone: mic_main
+  microphone_secondary: mic_noise   # 2026.5.0+: separate noise/echo reference source
+  use_wake_word: true
+```
+
+This is especially useful for speaker devices that play music while listening, where the second mic captures the speaker output and lets the pipeline subtract it from the main mic's stream before sending audio to the wake-word engine.
+
 ## Troubleshooting
 
 ### Microphone not working

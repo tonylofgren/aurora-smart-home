@@ -1,0 +1,82 @@
+# Battery Temperature Sensor Lovelace Dashboard
+# Import via: Settings > Dashboards > Add Dashboard > Import
+
+title: Battery Sensor
+views:
+  - title: Overview
+    path: battery-sensor
+    icon: mdi:thermometer
+    badges: []
+    cards:
+      # Header
+      - type: markdown
+        content: >
+          # Battery Temperature Sensor
+
+          Reports every 10 minutes. Hold the BOOT button while powering on
+          to keep the sensor awake for OTA updates.
+
+      # Primary readings
+      - type: horizontal-stack
+        cards:
+          - type: sensor
+            entity: sensor.battery_temp_sensor_temperature
+            name: Temperature
+            graph: line
+            hours_to_show: 24
+            detail: 2
+
+          - type: sensor
+            entity: sensor.battery_temp_sensor_humidity
+            name: Humidity
+            graph: line
+            hours_to_show: 24
+            detail: 2
+
+      # Battery status
+      - type: gauge
+        entity: sensor.battery_temp_sensor_battery
+        name: Battery
+        min: 0
+        max: 100
+        severity:
+          green: 50
+          yellow: 20
+          red: 0
+        needle: true
+        unit: "%"
+
+      - type: entities
+        title: Battery Details
+        entities:
+          - entity: sensor.battery_temp_sensor_battery
+            name: Battery Percentage
+          - entity: sensor.battery_temp_sensor_battery_voltage
+            name: Battery Voltage
+            secondary_info: last-changed
+
+      # Diagnostics
+      - type: entities
+        title: Diagnostics
+        entities:
+          - entity: sensor.battery_temp_sensor_wifi
+            name: WiFi Signal
+          - entity: sensor.battery_temp_sensor_uptime
+            name: Uptime (this wake cycle)
+          - entity: binary_sensor.battery_temp_sensor_stay_awake
+            name: Stay Awake Button
+          - entity: switch.battery_temp_sensor_prevent_sleep
+            name: Prevent Sleep (Software)
+          - entity: button.battery_temp_sensor_restart
+            name: Restart Device
+          - entity: sensor.battery_temp_sensor_esphome_version
+            name: Firmware Version
+
+      # History graph
+      - type: history-graph
+        title: Last 7 Days
+        hours_to_show: 168
+        entities:
+          - entity: sensor.battery_temp_sensor_temperature
+          - entity: sensor.battery_temp_sensor_humidity
+          - entity: sensor.battery_temp_sensor_battery

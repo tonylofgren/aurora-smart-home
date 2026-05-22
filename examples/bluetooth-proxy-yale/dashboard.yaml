@@ -1,0 +1,59 @@
+# Bluetooth Proxy Lovelace Dashboard
+
+title: BT Proxies
+path: bt-proxies
+icon: mdi:bluetooth-transfer
+cards:
+
+  # =============================================================================
+  # Per-proxy status panel
+  # =============================================================================
+  - type: entities
+    title: Living Room Proxy
+    icon: mdi:bluetooth-audio
+    entities:
+      - entity: binary_sensor.bt_proxy_living_room_status
+        name: Online
+      - entity: sensor.bt_proxy_living_room_wifi_signal
+        name: WiFi signal
+      - entity: sensor.bt_proxy_living_room_uptime
+        name: Uptime
+      - entity: text_sensor.bt_proxy_living_room_ip_address
+        name: IP address
+      - entity: text_sensor.bt_proxy_living_room_esphome_version
+        name: ESPHome version
+      - entity: switch.bt_proxy_living_room_restart
+        name: Restart
+
+  # =============================================================================
+  # Proxied devices (lock + thermometers + etc)
+  # =============================================================================
+  - type: entities
+    title: Proxied Devices
+    icon: mdi:lock
+    entities:
+      - entity: lock.front_door
+        name: Front Door
+      # Add other BLE-only devices that go through this proxy:
+      # - entity: sensor.living_room_ruuvi_temperature
+      # - entity: sensor.bathroom_ruuvi_humidity
+
+  # =============================================================================
+  # WiFi signal history (placement diagnostic)
+  # =============================================================================
+  - type: history-graph
+    title: WiFi signal at proxy (24h)
+    hours_to_show: 24
+    entities:
+      - entity: sensor.bt_proxy_living_room_wifi_signal
+        name: WiFi RSSI
+
+  # =============================================================================
+  # Uptime trend (catch crash loops visually)
+  # =============================================================================
+  - type: history-graph
+    title: Uptime (7 days)
+    hours_to_show: 168
+    entities:
+      - entity: sensor.bt_proxy_living_room_uptime
+        name: Uptime

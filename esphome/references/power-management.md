@@ -30,6 +30,46 @@ Deep sleep dramatically reduces power consumption by shutting down most of the c
 
 ---
 
+## Idle Power Savings (2026.5.0+)
+
+ESPHome 2026.5.0 reworked how the main loop, scheduler, and watchdog interact. The net effect is lower idle CPU and lower battery draw on every supported chip family, with no YAML change required to get most of the benefit. Two new knobs let you push further if you want to.
+
+### Configurable watchdog timeout (ESP32)
+
+```yaml
+esp32:
+  board: esp32dev
+  watchdog_timeout: 15s   # 5 to 60 s, default 5 s
+  framework:
+    type: esp-idf
+```
+
+The watchdog idle-feed interval is now `watchdog_timeout / 5`. Raising the timeout lets ESPHome spend longer in light sleep between feeds, which materially helps battery-powered configurations. Independent testing on an OpenThread proof-of-concept measured the average current drop from **2.0 mA to 1.1 mA** with raised loop interval + higher watchdog timeout.
+
+### Honored `App.set_loop_interval()`
+
+Prior to 2026.5.0, calling `App.set_loop_interval()` had no power benefit because the main loop was silently pulled forward to ~128 Hz by unrelated scheduler activity. In 2026.5.0 every component's `loop()` actually runs at the configured cadence (default ~62 Hz). Background events (MQTT RX, USB RX, BLE, espnow, sockets) still wake their component within one tick via `wake_loop_threadsafe()` even with multi-second loop intervals.
+
+```cpp
+// in a custom component init:
+App.set_loop_interval(2000);   // run loop() at 0.5 Hz for deep power-save
+```
+
+If your YAML implicitly depended on `loop()` being pulled forward by other scheduled work, components will now run less often. Use `HighFrequencyLoopRequester` to opt back into fast wakes.
+
+### Watchdog idle-feed defaults per platform (2026.5.0+)
+
+| Platform | Default idle feed interval | Note |
+|----------|---------------------------|------|
+| ESP32 | 1000 ms | 1/5 of `watchdog_timeout` (scales automatically) |
+| ESP8266 | 100 ms | |
+| LibreTiny BK72xx | 2000 ms | |
+| Other | 300 ms | |
+
+Real ESP32 + Bluetooth proxy measurements: the watchdog CPU bucket dropped from 46.5 ms to 21.6 ms per 60 s window with no loss of safety margin.
+
+---
+
 ## Deep Sleep Configuration
 
 ### Basic Deep Sleep

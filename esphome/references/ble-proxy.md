@@ -303,6 +303,17 @@ esp32:
 2. **Reduce number of active connections**
 3. **Increase scan interval**
 4. **Check WiFi interference** (2.4GHz)
+5. **Upgrade to ESPHome 2026.5.0+** if you see `status=0x85` / `status=133` GATT failures (see below)
+
+### status=0x85 / 133 GATT failures (fixed in 2026.5.0)
+
+A long-standing class of `status=0x85` (decimal 133) errors hit Bluetooth Proxy users under sustained WiFi traffic. Most visibly affected: Yale and August lock owners.
+
+**Symptom:** under heavy WiFi load, GATT operations time out after ~19 s with `status=133`. Same lock works fine when WiFi is idle.
+
+**Fix in 2026.5.0:** the BLE tracker now holds `ESP_COEX_PREFER_BT` for the full lifetime of any active BLE connection (CONNECTED + ESTABLISHED states), instead of reverting to balanced coex as soon as the handshake settled. Production validation against a Yale BETA211123 lock with host BlueZ disabled: clean unlock via the patched proxy in ~228 ms vs. timeout at 19 s before.
+
+**Side effect:** configs holding long-lived BLE connections (for example a `ble_client` with a persistent sensor) may see lower WiFi throughput while the connection is up. This is expected. If it materially affects your workload, open an issue.
 
 ### High CPU/memory usage
 
@@ -312,7 +323,12 @@ esp32_ble_tracker:
     active: false  # Passive if possible
     interval: 2000ms  # Increase interval
     window: 1000ms
+
+esp32_ble:
+  use_psram: true   # 2026.5.0+: directs Bluedroid to SPIRAM (~40 kB internal RAM freed)
 ```
+
+The `esp32_ble: use_psram: true` option (new in 2026.5.0) is only useful on PSRAM-equipped boards. It moves the Bluedroid stack into SPIRAM, freeing roughly 40 kB of internal RAM for your code/buffers.
 
 ## Home Assistant Integration
 

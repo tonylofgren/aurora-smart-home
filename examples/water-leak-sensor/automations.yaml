@@ -1,0 +1,114 @@
+# Water Leak Sensor Automations for Home Assistant
+# Add these to your automations.yaml or via UI
+
+# =============================================================================
+# Immediate Leak Alert (critical priority)
+# =============================================================================
+
+- alias: "Water Leak - Immediate Alert"
+  id: water_leak_immediate_alert
+  description: "Critical notification the moment water is detected"
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.water_leak_sensor_leak
+      to: "on"
+  action:
+    - service: notify.mobile_app_your_phone
+      data:
+        title: "WATER LEAK DETECTED"
+        message: "Water detected by {{ trigger.to_state.attributes.friendly_name }} at {{ now().strftime('%H:%M:%S') }}"
+        data:
+          priority: high
+          ttl: 0
+          channel: alarm_stream
+          importance: high
+          color: "#ff0000"
+    - service: persistent_notification.create
+      data:
+        title: "Water Leak"
+        message: "Leak detected. Check the area immediately."
+        notification_id: water_leak_active
+
+# =============================================================================
+# Auto-shutoff (if you have a smart water valve)
+# =============================================================================
+
+- alias: "Water Leak - Close Main Valve"
+  id: water_leak_close_valve
+  description: "Automatically close main water valve on leak"
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.water_leak_sensor_leak
+      to: "on"
+  action:
+    # Replace with your actual valve entity (e.g. Shelly, Aqara, Wuuk)
+    - service: switch.turn_off
+      target:
+        entity_id: switch.main_water_valve
+    - service: notify.notify
+      data:
+        title: "Water Valve Closed"
+        message: "Main water supply closed automatically due to detected leak."
+
+# =============================================================================
+# Low Battery Warning
+# =============================================================================
+
+- alias: "Water Leak - Low Battery"
+  id: water_leak_low_battery
+  description: "Warn when sensor battery drops below 20%"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.water_leak_sensor_battery
+      below: 20
+      for:
+        hours: 1
+  action:
+    - service: notify.notify
+      data:
+        title: "Water Leak Sensor - Low Battery"
+        message: "Battery at {{ states('sensor.water_leak_sensor_battery') }}%. Recharge soon."
+
+# =============================================================================
+# Sensor Unreachable (heartbeat missed)
+# =============================================================================
+# Heartbeat is once every 24h. If we miss > 36h, something is wrong.
+
+- alias: "Water Leak - Sensor Offline"
+  id: water_leak_sensor_offline
+  description: "Alert if sensor hasn't reported in 36 hours"
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.water_leak_sensor_status
+      to: "off"
+      for:
+        hours: 36
+  action:
+    - service: notify.notify
+      data:
+        title: "Water Leak Sensor Offline"
+        message: "Sensor has not reported in over 36 hours. Check battery or WiFi."
+
+# =============================================================================
+# Clear Notification When Dry
+# =============================================================================
+
+- alias: "Water Leak - Cleared"
+  id: water_leak_cleared
+  description: "Dismiss notification once probes are dry again"
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.water_leak_sensor_leak
+      to: "off"
+      for:
+        minutes: 5
+  action:
+    - service: persistent_notification.dismiss
+      data:
+        notification_id: water_leak_active
+    - service: notify.notify
+      data:
+        title: "Water Leak Cleared"
+        message: "Probes are dry. Investigate cause and dry the sensor thoroughly."

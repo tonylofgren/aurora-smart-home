@@ -1,0 +1,35 @@
+# Voice Assistant Lovelace Dashboard
+# Import via: Settings > Dashboards > Add Dashboard > Import
+
+title: Voice Assistant
+views:
+  - title: Overview
+    path: voice-assistant
+    icon: mdi:microphone
+    badges: []
+    cards:
+      - type: entities
+        title: Voice Puck
+        show_header_toggle: false
+        entities:
+          - entity: binary_sensor.voice_assistant_online
+            name: Online
+          - entity: switch.voice_assistant_wake_word_enabled
+            name: Wake word
+          - entity: button.voice_assistant_start_listening
+            name: Manual listen
+          - entity: light.voice_assistant_status_led
+            name: Status LED
+
+      - type: markdown
+        title: How to talk to it
+        content: |
+          Say **"okay nabu"** (or your configured wake word) and wait for the
+          yellow ring, then speak your command.
+
+          LED meaning:
+          - **Red dim**: idle, waiting for wake word
+          - **Yellow**: listening (recording your speech)
+          - **Green**: processing (STT done, running intent)
+          - **Blue**: responding (TTS playing)
+          - **Red bright**: error - check Settings > Voice assistants

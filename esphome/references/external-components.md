@@ -197,24 +197,151 @@ climate:
 ```
 
 ### Panasonic AC
-Cloud-free Panasonic air conditioner control.
+
+Cloud-free, bidirectional Panasonic air conditioner control via the AC's
+service port. Reports real temperature, supports all modes/fan speeds/swing
+positions, and exposes the brand-specific features (Econavi, NanoeX, mild
+dry, eco mode, power-consumption estimate) as separate HA entities.
+
+**Safety: bi-directional 5 V / 3.3 V level shifter is mandatory.**
+The CN-CNT and CN-WLAN connectors on the AC main board carry 5 V logic.
+ESP32 GPIOs are 3.3 V. Connecting them directly will damage the AC main
+board, and replacement boards typically cost more than the AC itself. Use
+a TXS0108E (8-channel) or BSS138-based 4-channel module between the ESP
+and the AC. This is not optional.
+
+**Component requirement:** ESPHome 2025.11.0 or newer with
+`framework: type: esp-idf`.
+
+#### Two ways to load the component
+
+**Option 1 - Aurora-vendored (no GitHub fetch at compile time):**
+
+Aurora ships the component locally under
+`esphome/components/panasonic_ac/`. Copy that folder into your project so
+that `components/panasonic_ac/` sits next to your YAML, then:
 
 ```yaml
-# Source: github://DomiStyle/esphome-panasonic-ac
 external_components:
-  - source: github://DomiStyle/esphome-panasonic-ac@main
+  - source:
+      type: local
+      path: components
+    components: [panasonic_ac]
+```
+
+**Option 2 - Upstream GitHub fetch (standard ESPHome pattern):**
+
+```yaml
+external_components:
+  - source: github://DomiStyle/esphome-panasonic-ac
+    components: [panasonic_ac]
+```
+
+Both load the same code. The vendored path is preferred when you want
+reproducible offline builds.
+
+#### Type selection (which port your AC has)
+
+| `type:` | Module | Port | Notes |
+|---------|--------|------|-------|
+| `cnt` | CZ-TACG1 | CN-CNT | Older units. Verified working. |
+| `wlan` | DNSK-P11 | CN-WLAN | Newer units. Can coexist with CN-CNT. |
+
+Newer DomiStyle releases also accept the longer aliases `cz_tacg1` and
+`dnsk_p11`. The short forms above are what Tony's verified working
+config uses and are recommended.
+
+#### Per-type feature support
+
+| Feature | CNT | WLAN |
+|---------|:---:|:----:|
+| Climate (mode, temp, fan, swing) | yes | yes |
+| `vertical_swing_select` | yes | yes |
+| `horizontal_swing_select` | yes | yes |
+| `outside_temperature` | yes | yes |
+| `econavi_switch` | yes | yes |
+| `nanoex_switch` | yes | yes |
+| `current_power_consumption` (estimated) | yes | yes |
+| `eco_switch` | yes | no |
+| `mild_dry_switch` | yes | no |
+
+Enabling a feature your AC does not support can produce undefined
+behavior; consult the physical remote for your unit to see which modes
+are real.
+
+#### Complete YAML example
+
+```yaml
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf    # required by panasonic_ac
+
+external_components:
+  - source:
+      type: local
+      path: components
     components: [panasonic_ac]
 
 uart:
-  tx_pin: GPIO1
-  rx_pin: GPIO3
+  id: ac_uart
+  tx_pin: GPIO17
+  rx_pin: GPIO16
   baud_rate: 9600
+  parity: EVEN
 
 climate:
   - platform: panasonic_ac
-    name: "Panasonic AC"
-    # CNT interface connection
+    type: cnt                        # or 'wlan'
+    name: "Living Room AC"
+
+    # Optional - uncomment the ones your AC supports
+    vertical_swing_select:
+      name: "AC Vertical Swing"
+    horizontal_swing_select:
+      name: "AC Horizontal Swing"
+    outside_temperature:
+      name: "AC Outside Temperature"
+    econavi_switch:
+      name: "AC Econavi"
+    # nanoex_switch:
+    #   name: "AC NanoeX"
+    current_power_consumption:
+      name: "AC Estimated Power"
+
+    # CNT-only features below - do not enable on WLAN
+    # eco_switch:
+    #   name: "AC Eco Mode"
+    # mild_dry_switch:
+    #   name: "AC Mild Dry"
+
+    # Optional temperature offsets if your sensors disagree with reality
+    # current_temperature_offset: -0.5
+    # outside_temperature_offset: 0
 ```
+
+#### Caveats
+
+- `current_power_consumption` is an estimated value derived from the AC's
+  internal state, not a true watt-meter reading.
+- The AC will respond to its IR remote independently of the wired
+  interface, so HA's view of the AC can briefly drift if someone uses
+  the handheld remote.
+- The vendored copy in Aurora tracks a specific upstream commit; see
+  `esphome/components/panasonic_ac/NOTICE.md` for the SHA and refresh
+  cadence.
+
+#### Cross-reference
+
+For IR-only control without wiring into the service port (rental units,
+sealed installations, or no time to open the AC), see "Panasonic AC via
+IR (fallback)" in [`climate.md`](./climate.md). The IR path loses all
+state feedback and brand-specific entities; the UART path above is
+preferred for any permanent install.
+
+**Source:** vendored from `DomiStyle/esphome-panasonic-ac` (MIT). Upstream
+protocol documentation:
+https://github.com/DomiStyle/esphome-panasonic-ac/tree/master/protocol
 
 ### Samsung HVAC (NASA Protocol)
 Control Samsung HVAC with NASA protocol.

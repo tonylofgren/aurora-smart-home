@@ -1,0 +1,60 @@
+# Water Leak Sensor Lovelace Dashboard
+# Import via: Settings > Dashboards > Add Dashboard > Import
+
+title: Water Leak
+views:
+  - title: Overview
+    path: water-leak
+    icon: mdi:water-alert
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: >
+              # Water Leak Sensor
+
+          # Big visual status
+          - type: conditional
+            conditions:
+              - entity: binary_sensor.water_leak_sensor_leak
+                state: "on"
+            card:
+              type: markdown
+              content: >
+                ## LEAK DETECTED
+                Check the area immediately.
+
+          - type: glance
+            entities:
+              - entity: binary_sensor.water_leak_sensor_leak
+                name: Status
+              - entity: sensor.water_leak_sensor_battery
+                name: Battery
+              - entity: binary_sensor.water_leak_sensor_status
+                name: Online
+
+      # Battery trend
+      - type: history-graph
+        title: Battery (30 days)
+        hours_to_show: 720
+        entities:
+          - entity: sensor.water_leak_sensor_battery_voltage
+            name: Voltage
+          - entity: sensor.water_leak_sensor_battery
+            name: Percent
+
+      # Diagnostics
+      - type: entities
+        title: Diagnostics
+        entities:
+          - entity: sensor.water_leak_sensor_wifi
+            name: WiFi Signal
+          - entity: switch.water_leak_sensor_prevent_sleep
+            name: Prevent Sleep (firmware updates)
+          - entity: switch.water_leak_sensor_buzzer
+            name: Buzzer (test)
+          - entity: button.water_leak_sensor_restart
+            name: Restart Device
+          - entity: sensor.water_leak_sensor_esphome_version
+            name: Firmware Version

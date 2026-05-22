@@ -499,6 +499,110 @@ climate:
 
 ---
 
+## Panasonic AC via IR (fallback)
+
+For Panasonic units where wiring into the CN-CNT or CN-WLAN service port
+is not an option (rental flat, sealed unit, no spare hour with the AC
+open) you can drive the AC over IR using an LED placed in front of the
+unit. This loses every benefit of the UART approach - no state feedback,
+no temperature reading, no Econavi or NanoeX control, no power estimate.
+HA can ask the AC to do things, but cannot ask what the AC is currently
+doing.
+
+**For permanent installs, the wired UART path is strongly preferred.**
+See "Panasonic AC" in [`external-components.md`](./external-components.md).
+
+### When IR makes sense
+
+- Rental apartment where modifying the AC voids your lease
+- Sealed AC unit where the service connector is genuinely inaccessible
+- Quick prototyping before committing to opening the AC
+- One-shot scripts where you just want to send a turn-off at bedtime
+
+### Capture-once workflow
+
+ESPHome core does not currently ship a generic `climate_ir_panasonic`
+platform, so the practical path is to record codes from your real
+remote and replay them. One-time setup:
+
+```yaml
+# Step 1: temporary receiver to learn codes
+remote_receiver:
+  pin: GPIO5
+  dump: panasonic       # logs decoded Panasonic codes to the ESPHome console
+  tolerance: 50%
+```
+
+Flash this, point your real Panasonic remote at the IR receiver module
+(a TSOP38238 or similar 38 kHz receiver wired to GPIO5), and press the
+buttons you care about (power on/off, each cooling temperature you use,
+fan low/medium/high, dry mode, swing on/off). Each press logs an
+`address:` and `command:` value. Save those.
+
+### Transmit configuration
+
+After capturing, replace `remote_receiver:` with `remote_transmitter:`
+plus a template climate entity that maps HA actions to the captured
+codes:
+
+```yaml
+remote_transmitter:
+  pin: GPIO22
+  carrier_duty_percent: 50%
+
+climate:
+  - platform: thermostat
+    name: "Panasonic IR (cooling)"
+    sensor: room_temp_sensor       # any other temp sensor in the room
+    default_target_temperature_low: 20 °C
+    default_target_temperature_high: 24 °C
+    cool_action:
+      - remote_transmitter.transmit_panasonic:
+          address: 0x4004           # value from your capture session
+          command: 0x100BCBD        # 'cool 22°C' code from your capture
+    off_action:
+      - remote_transmitter.transmit_panasonic:
+          address: 0x4004
+          command: 0x00000000       # 'power off' code from your capture
+    # Add heat_action, dry_action, fan_only_action with the codes for each
+```
+
+The `thermostat` climate platform wraps an external temperature sensor
+plus your captured IR codes into a normal HA climate entity. It does
+not need any state report from the AC because it tracks its own
+intended state.
+
+### Explicit limitations of the IR path
+
+- **No temperature feedback from the AC.** You drive a separate room
+  sensor and trust the AC to follow.
+- **No outside temperature sensor.** Not exposed via IR.
+- **No power consumption sensor** (the UART path has an estimate; IR has
+  nothing).
+- **No Econavi, NanoeX, mild-dry, eco-mode switches.** The IR protocol
+  does not expose them as separate addressable states.
+- **Line-of-sight required.** Your IR LED must face the AC. Closets,
+  cabinets, and across-the-room placements that worked for an ESP-side
+  service-port wire will not work for IR.
+- **State drift.** If anyone uses the original Panasonic remote, HA's
+  belief about the AC diverges silently from reality until the next HA
+  action.
+- **One-way control only.** HA can command, not query.
+
+### Hardware
+
+| Part | Purpose |
+|------|---------|
+| ESP32 dev board | Host. ESP8266 also works for IR-only. |
+| IR LED + transistor driver | Transmit. A 940 nm IR LED with a 2N2222 or BC547 driver works. Bare LED on a GPIO will not reach across a room. |
+| TSOP38238 (or similar 38 kHz receiver) | Capture-once setup only. Removed after you have all the codes. |
+
+No level shifter is needed for the IR path - this is a 3.3 V LED-side
+circuit, not a connection to the AC's 5 V service bus.
+```
+
+---
+
 ## Climate Actions
 
 ### Set Mode

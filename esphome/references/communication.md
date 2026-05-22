@@ -318,6 +318,27 @@ sensor:
     name: "Second Sensor"
 ```
 
+### 1-Wire Protocol Fix (2026.5.0+)
+
+ESPHome 2026.5.0 fixed a long-standing 1-Wire protocol violation. `OneWireBus::skip()` previously issued the SKIP ROM command without first performing a bus reset, which violated the Dallas/Maxim 1-Wire spec. The symptom most users saw was DS18B20 sensors occasionally reporting the power-on default values (25.0 °C or 85.0 °C) instead of real readings, or going silent after a hot-plug.
+
+**End-user impact:** none if you only use YAML. The fix is transparent and DS18B20 readings should become noticeably more reliable.
+
+**External component impact:** if you maintain an external component that calls `OneWireBus::skip()` from C++, note that its signature changed:
+
+```cpp
+// Before 2026.5.0 (returns void):
+bus->skip();
+
+// 2026.5.0 and later (returns bool):
+if (!bus->skip()) {
+    // reset/presence pulse failed - bail out, don't write to a dead bus
+    return;
+}
+```
+
+The new return value reports whether the bus reset succeeded. False means no device responded (bus disconnected, all sensors gone, etc.) and you should not proceed with writes.
+
 ---
 
 ## CAN Bus
@@ -529,6 +550,43 @@ on_...:
       uint16_t result;
       id(controller1).read_holding_register(0x0000, &result, 1);
 ```
+
+### Modbus Server (Slave) - 2026.5.0+
+
+In ESPHome 2026.5.0 the server (slave) mode was split out of `modbus_controller` into its own `modbus_server` component, with about 60% flash savings (1.8 KB vs 4.5 KB). Use this when your ESP32 needs to **answer** Modbus requests from an external master (PLC, SCADA, or another HA-side master).
+
+```yaml
+uart:
+  tx_pin: GPIO17
+  rx_pin: GPIO16
+  baud_rate: 9600
+
+modbus:
+  id: modbus_bus
+
+modbus_server:
+  - id: my_server
+    address: 0x01            # this device's slave address
+    modbus_id: modbus_bus
+    courtesy_response: true  # renamed from server_courtesy_response in 2026.5.0
+    registers:               # renamed from server_registers in 2026.5.0
+      - address: 0x0100
+        value_type: U_WORD
+        lambda: "return id(my_sensor).state;"
+      - address: 0x0101
+        value_type: FP32
+        lambda: "return id(my_temp).state;"
+```
+
+**Migration from old wedged server mode (pre-2026.5.0):**
+
+| Old (`modbus_controller`) | New (`modbus_server`) |
+|---|---|
+| `modbus_controller:` (top key) | `modbus_server:` (top key) |
+| `server_registers:` | `registers:` |
+| `server_courtesy_response:` | `courtesy_response:` |
+
+Combined client + server on the same device works fine - keep `modbus_controller:` for the client side and add `modbus_server:` for the server side.
 
 ---
 
