@@ -8,6 +8,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.9.1] - 2026-05-23
+
+### Fixed
+
+**`/aurora:aurora` path-resolution regression (latent since 2026-01-03).** The slash command at `commands/aurora.md` instructed Claude to "Read and follow `aurora/SKILL.md` exactly" using a relative path. Claude resolved that path against the user's current working directory rather than the plugin install directory, so `/aurora:aurora` invoked from any project that wasn't itself an Aurora-structured repo produced the message "the aurora directory doesn't exist in the project yet" and offered to create the file in the user's project. This regression existed in every release from the introduction of the aurora plugin structure (commit `1b8410e`, 2026-01-03, pre-v1.7.0) through v1.9.0, a total of 15 releases. It was not visible during local development because the developer's working directory was always the Aurora repo itself, where the relative path resolved correctly by coincidence. A demo-environment test in a non-Aurora working directory exposed it.
+
+The fix updates `commands/aurora.md` to be explicit that the orchestrator file lives in the plugin install directory, not the user's project, and adds a "Path conventions" section at the top of `aurora/SKILL.md` that clarifies the same rule for every reference Aurora makes to its own files (`aurora/`, `esphome/`, `home-assistant/`, `ha-integration-dev/`, `node-red/`, `api-catalog/`, `ha-dashboard-design/`).
+
+If you ever invoked `/aurora:aurora` from a project that wasn't a fresh smart-home build inside the aurora-smart-home repo and got a confusing "doesn't exist" response, this is the bug.
+
 ## [1.9.0] - 2026-05-22
 
 ### Added

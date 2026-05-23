@@ -11,7 +11,7 @@ against schema-checked profiles, and refuses to ship code that does not pass.
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skills-7c3aed.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Home Assistant](https://img.shields.io/badge/Home_Assistant-2024.x--2026.x-41BDF5.svg)](https://www.home-assistant.io/)
 [![ESPHome](https://img.shields.io/badge/ESPHome-2026.5.0-000000.svg)](https://esphome.io/)
-[![Version](https://img.shields.io/badge/Version-v1.9.0-success.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-v1.9.1-success.svg)](CHANGELOG.md)
 [![Validated](https://img.shields.io/badge/Validated-against_datasheets-success.svg)](aurora/references/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Support Nabu Casa](https://img.shields.io/badge/Support_HA-Nabu_Casa-3b8cd3.svg)](https://www.nabucasa.com)
@@ -489,6 +489,8 @@ Full guide: [TROUBLESHOOTING.md](./TROUBLESHOOTING.md).
 ## Changelog
 
 Version history lives in [CHANGELOG.md](./CHANGELOG.md).
+
+**What's new in v1.9.1:** Path-resolution fix. `/aurora:aurora` no longer reports "the aurora directory doesn't exist in the project" when invoked from a working directory that isn't an Aurora-structured repo. The slash command at `commands/aurora.md` now explicitly tells Claude that `aurora/SKILL.md` lives in the plugin install directory, not the user's project. A new Path Conventions section at the top of `aurora/SKILL.md` clarifies the same rule for every reference Aurora makes to its own files. Latent regression since 2026-01-03 when the aurora plugin structure was first introduced; affected 15 releases (v1.0.0 through v1.9.0). If you ever saw such an error and gave up, this is fixed.
 
 **What's new in v1.9.0:** Aurora now targets ESPHome 2026.5.0 with a complete release reference, working examples for every new feature (Sendspin multi-room audio, Zigbee on ESP32-C6/H2, `radio_frequency` entity, BLE coex fix for Yale/August locks, soft-brick OTA recovery), and the first vendored external component (`panasonic_ac` from DomiStyle, MIT-licensed, ships locally so builds work offline). The examples library expanded from 4 to 27 working projects covering battery sensors, leak detection, LED strips, smart plugs, soil moisture, voice assistant, solar inverter monitoring, EV charger control, pool chemistry, smart blinds, fingerprint unlocking, e-paper weather stations, LVGL touchscreen panels, and more. Skill orchestrator polish: cross-skill handoffs table in `home-assistant`, Process flowchart added to `node-red`, reactivation boundary documented.
 
