@@ -8,6 +8,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.9.2] - 2026-05-30
+
+### Changed
+
+**Home Assistant reference refresh from official 2026 docs snapshot.** Four core reference files updated against the official HA documentation (snapshot 2026-05-30, HA 2026.5.4):
+
+- `actions.md` — two new sections: Dashboard Actions (all seven Lovelace tap/hold action types plus confirmation dialogs) and Response Variables (capturing return data from weather, calendar, and other actions). All `service:` keys in YAML examples replaced with `action:`.
+- `conditions.md` — new Device-Specific Conditions section covering seven logical groups (binary state, alarm, climate, numeric/threshold, mobile robots, timer, calendar) including `calendar.is_event_active`. New Selection Guide table. Deprecated `match: any` pattern corrected to `condition: not`.
+- `triggers-advanced.md` — new Device Trigger Inventory covering 18+ domains grouped by type. New Calendar Trigger section. All `platform:` keys in YAML examples replaced with `trigger:`.
+- `automations.md` — modernized throughout: all top-level automation keys use plural forms (`triggers:`, `conditions:`, `actions:`), all trigger list items use `trigger: state` instead of `platform: state`, all step keys use `action:` instead of `service:`.
+
+**Quick Reference now covers all 50 reference files.** The HA YAML skill's Quick Reference table previously listed 27 files. Added the remaining 23: configuration, device-class-units, trigger-templates, utility-meter, statistics, customize, voice-assistants, zigbee-controllers, esphome-patterns, mqtt-integration, integrations-bluetooth, integrations-cameras, integrations-media, integrations-ai-llm, integrations-common, integrations-shelly, integrations-tasmota, integrations-tuya, weather-integration, backup-restore-migration, migration-guide, hacs-popular, system-monitor, custom-components, and custom-card-development.
+
+**Official 2026 reference files wired into skill load order.** `home-assistant/SKILL.md` now includes a dedicated "Official Reference Files" section directing Claude to read `actions-2026-official.md`, `triggers-2026-official.md`, or `conditions-2026-official.md` before generating any automation YAML. These files supersede the older curated files for syntax questions.
+
 ## [1.9.1] - 2026-05-23
 
 ### Fixed

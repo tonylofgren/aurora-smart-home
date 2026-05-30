@@ -11,7 +11,7 @@ against schema-checked profiles, and refuses to ship code that does not pass.
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skills-7c3aed.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Home Assistant](https://img.shields.io/badge/Home_Assistant-2024.x--2026.x-41BDF5.svg)](https://www.home-assistant.io/)
 [![ESPHome](https://img.shields.io/badge/ESPHome-2026.5.0-000000.svg)](https://esphome.io/)
-[![Version](https://img.shields.io/badge/Version-v1.9.1-success.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-v1.9.2-success.svg)](CHANGELOG.md)
 [![Validated](https://img.shields.io/badge/Validated-against_datasheets-success.svg)](aurora/references/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Support Nabu Casa](https://img.shields.io/badge/Support_HA-Nabu_Casa-3b8cd3.svg)](https://www.nabucasa.com)
@@ -26,6 +26,14 @@ against schema-checked profiles, and refuses to ship code that does not pass.
 > See [DISCLAIMER.md](DISCLAIMER.md) for full terms.
 
 ---
+
+## What's new: HA reference refresh (v1.9.2, May 2026)
+
+The Home Assistant YAML skill's reference library has been brought up to date against the official HA documentation snapshot from 2026-05-30.
+
+- **Dashboard actions** — the `actions.md` reference now covers all seven Lovelace tap/hold/double-tap action types (`more-info`, `toggle`, `perform-action`, `navigate`, `url`, `assist`, `none`) including confirmation dialogs. Also added: response variables for capturing return data from calendar, weather, and other actions that produce structured output.
+- **Device-specific conditions and triggers** — `conditions.md` gained a Device-Specific Conditions section covering alarm, climate, timer, calendar (`calendar.is_event_active`), and more, plus a selection guide. `triggers-advanced.md` gained a Device Trigger Inventory spanning 18+ device domains and a dedicated Calendar Trigger section.
+- **Modern syntax throughout** — deprecated `service:`, `platform:`, and singular automation keys (`trigger:`, `condition:`, `action:`) replaced with `action:`, `trigger: state`, `triggers:`, `conditions:`, `actions:` across all four core reference files. The skill now also lists all 50 reference files in its Quick Reference table.
 
 ## What's new: ESPHome 2026.5.0 (May 2026)
 

@@ -33,7 +33,7 @@ Look at the **user messages** in conversation history (not the skill file conten
 - Do not run any `gh` calls.
 - Respond with a single short line, e.g.:
 
-  > *Aurora v1.9.1 is already loaded.*
+  > *Aurora v1.9.2 is already loaded.*
 
 - Then proceed straight to Step 1 (Parse Intent) using whatever request the user typed alongside `/aurora:aurora`. If the user typed nothing alongside it, ask the opening question once:
 
@@ -55,7 +55,7 @@ Command:
 gh release view --json tagName -R tonylofgren/aurora-smart-home --jq '.tagName'
 ```
 
-- If gh returns a valid version tag (like `v1.7.12`), strip the leading `v` and compare to the installed version `1.9.1`. If the fetched version is semver-greater, output the update notice (see below) BEFORE the banner.
+- If gh returns a valid version tag (like `v1.7.12`), strip the leading `v` and compare to the installed version `1.9.2`. If the fetched version is semver-greater, output the update notice (see below) BEFORE the banner.
 - If gh is missing, fails, returns nothing, or returns something that does not parse as a semver tag, proceed directly to the banner with no output. Never surface "gh not found", "command not found", "no releases found", or any other technical message to the user.
 
 **Semver comparison rule (avoid lexicographic mistakes):** Both versions must be matched against `^\d+\.\d+\.\d+$`, then split on `.` and each segment compared as **integer**, not as string. Lexicographic comparison reports `2.0.10 < 2.0.2` (because `'1' < '2'` at the start of the third segment), which is wrong. Concretely:
@@ -77,27 +77,29 @@ The fallback chain is intentionally one tier. Earlier versions tried WebFetch as
 Update notice (only when gh succeeded and a newer version exists):
 
 ```
-🔔 A newer Aurora is available: v<latest> (you have v1.9.1).
+🔔 A newer Aurora is available: v<latest> (you have v1.9.2).
    Update: claude plugin update aurora@aurora-smart-home
    Then /reload-plugins or restart Claude Code.
 ```
 
-What's new notice (only when gh succeeded AND fetched version == installed version `1.9.1`):
+What's new notice (only when gh succeeded AND fetched version == installed version `1.9.2`):
 
 ```
-✨ Aurora v1.9.1 — what's new:
-   • Path-resolution fix: /aurora:aurora no longer says "aurora directory
-     doesn't exist in the project" when invoked from a working directory
-     that isn't an Aurora-structured repo. Latent regression since 2026-01-03
-     when the aurora plugin was first introduced.
-   • Path conventions note in aurora/SKILL.md clarifies that aurora/,
-     esphome/, home-assistant/, etc. paths refer to the plugin install
-     location, never the user's current working project.
+✨ Aurora v1.9.2 — what's new:
+   • Home Assistant reference refresh: actions, triggers, conditions, and
+     automations updated from the official HA 2026 docs snapshot. New
+     sections cover dashboard actions, response variables, device-specific
+     conditions/triggers, and more.
+   • Full Quick Reference coverage: all 50 HA reference files now listed
+     in the skill, including configuration, device classes, utility meter,
+     weather, AI/LLM integrations, and more.
+   • Deprecated YAML syntax fixed throughout: all HA examples now use
+     action:, triggers:, conditions:, actions: (HA 2024.8+/2024.10+).
 ```
 
 **Update this block at every version bump.** Content must be user-facing (no schema fields, test counts, or CI changes). 3 bullets max.
 
-Then output `v1.9.1 (released 2026-05-23)` on its own line, then output the banner:
+Then output `v1.9.2 (released 2026-05-30)` on its own line, then output the banner:
 
 ```
   ┌─────────────────────────────────────────────────────────┐
