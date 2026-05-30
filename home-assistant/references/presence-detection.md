@@ -519,9 +519,9 @@ logger:
 5. **Notifikationer** - Bekräfta kritiska åtgärder
 6. **consider_home** - Öka för opålitliga trackers
 
-## Se även
+## See Also
 
 - `references/automations.md` - Automation patterns
-- `references/conditions.md` - Villkor för presence
+- `references/conditions.md` - Conditions for presence
 - `../esphome/references/ble-proxy.md` - BLE presence
 - `../esphome/references/sensors.md` - mmWave och PIR

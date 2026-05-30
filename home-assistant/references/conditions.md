@@ -54,18 +54,18 @@ condition:
 ```yaml
 automation:
   - id: example
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "on"
-    condition:
+    conditions:
       # Conditions go here
       - condition: state
         entity_id: input_boolean.enabled
         state: "on"
-    action:
+    actions:
       # Actions only run if conditions pass
-      - service: light.turn_on
+      - action: light.turn_on
 ```
 
 ---
@@ -820,19 +820,19 @@ Check which trigger fired the automation.
 ```yaml
 automation:
   - id: multi_trigger
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion_living
         to: "on"
         id: living_room
-      - platform: state
+      - trigger: state
         entity_id: binary_sensor.motion_kitchen
         to: "on"
         id: kitchen
-    condition:
+    conditions:
       - condition: trigger
         id: living_room
-    action:
+    actions:
       # Only runs for living room trigger
 ```
 
@@ -855,12 +855,12 @@ action:
           - condition: trigger
             id: motion_detected
         sequence:
-          - service: light.turn_on
+          - action: light.turn_on
       - conditions:
           - condition: trigger
             id: motion_cleared
         sequence:
-          - service: light.turn_off
+          - action: light.turn_off
 ```
 
 ---
@@ -1278,11 +1278,11 @@ condition:
 # Add logging to trace condition evaluation
 automation:
   - id: debug_condition
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.test
-    action:
-      - service: system_log.write
+    actions:
+      - action: system_log.write
         data:
           message: >
             Conditions met! States:
