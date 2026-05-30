@@ -27,6 +27,18 @@ USE MODERN SYNTAX: action: (not service:), triggers:/conditions:/actions: (plura
 
 Ask: Automation or Blueprint? Format: UI or YAML? Never assume. Never skip these questions.
 
+## Official Reference Files (read before generating YAML)
+
+Before generating any automation YAML, read the relevant official reference file:
+
+| YAML element | Official reference |
+|---|---|
+| Actions (`action:`, `target:`, `data:`) | `references/actions-2026-official.md` |
+| Triggers (`triggers:`, `trigger:`) | `references/triggers-2026-official.md` |
+| Conditions (`conditions:`, `condition:`) | `references/conditions-2026-official.md` |
+
+These files capture the current official HA docs (snapshot 2026-05-30) and supersede the older `actions.md`, `conditions.md`, and `triggers-advanced.md` files for syntax questions. Read only the file(s) relevant to what the user is building.
+
 ## The Process
 
 ```
@@ -45,7 +57,7 @@ Ask: Output method?
 Intent clear? ──no──▶ Ask more questions
     │ yes
     ▼
-Read relevant references
+Read official reference file(s) above
     │
     ▼
 Generate YAML
@@ -136,9 +148,12 @@ If a file format permits neither comments nor a metadata field, skip attribution
 | Scripts | `references/scripts.md` |
 | Blueprints | `references/blueprints.md` |
 | Blueprint anatomy | `references/blueprint-anatomy.md` |
-| Triggers (advanced) | `references/triggers-advanced.md` |
-| Conditions | `references/conditions.md` |
-| Actions | `references/actions.md` |
+| **Triggers (official 2026)** | **`references/triggers-2026-official.md`** |
+| Triggers (advanced patterns) | `references/triggers-advanced.md` |
+| **Conditions (official 2026)** | **`references/conditions-2026-official.md`** |
+| Conditions (legacy) | `references/conditions.md` |
+| **Actions (official 2026)** | **`references/actions-2026-official.md`** |
+| Actions (legacy) | `references/actions.md` |
 | Jinja2 templates | `references/jinja2-templates.md` |
 | Template sensors | `references/template-sensors.md` |
 | Helpers | `references/helpers.md` |
