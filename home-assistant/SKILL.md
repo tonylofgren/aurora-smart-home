@@ -160,23 +160,41 @@ If a file format permits neither comments nor a metadata field, skip attribution
 | Scenes | `references/scenes.md` |
 | Packages | `references/packages.md` |
 | Voice Assist patterns | `references/assist-patterns.md` |
+| Voice assistants (Alexa/Google/Nabu Casa) | `references/voice-assistants.md` |
 | Presence detection | `references/presence-detection.md` |
 | Notification patterns | `references/notification-patterns.md` |
 | Calendar automation | `references/calendar-automation.md` |
+| Configuration (config.yaml, packages, splitting) | `references/configuration.md` |
+| Device classes and units | `references/device-class-units.md` |
+| Trigger-based template sensors | `references/trigger-templates.md` |
+| Utility meter (energy/gas/water tracking) | `references/utility-meter.md` |
+| Statistics sensors (min/max/mean) | `references/statistics.md` |
+| Entity customization (icons, names, hidden) | `references/customize.md` |
 
 ### Integrations
 
 | Integration | Reference File |
 |-------------|---------------|
 | ESPHome | `references/integrations-esphome.md` |
+| ESPHome patterns (HA-side config) | `references/esphome-patterns.md` |
 | MQTT | `references/integrations-mqtt.md` |
+| MQTT integration deep-dive | `references/mqtt-integration.md` |
 | Zigbee2MQTT | `references/integrations-zigbee2mqtt.md` |
+| Zigbee controllers (ZHA/Z2M hardware) | `references/zigbee-controllers.md` |
 | ZHA | `references/integrations-zha.md` |
 | Z-Wave | `references/integrations-zwave.md` |
 | Matter | `references/integrations-matter.md` |
+| Bluetooth | `references/integrations-bluetooth.md` |
+| Cameras | `references/integrations-cameras.md` |
+| Media players | `references/integrations-media.md` |
+| Shelly | `references/integrations-shelly.md` |
+| Tasmota | `references/integrations-tasmota.md` |
+| Tuya | `references/integrations-tuya.md` |
 | Frigate | `references/integrations-frigate.md` |
 | Node-RED | `references/integrations-nodered.md` |
-| Shelly/Tasmota/Tuya | `references/integrations-*.md` |
+| AI/LLM (OpenAI, local models, conversation agent) | `references/integrations-ai-llm.md` |
+| Common integrations overview | `references/integrations-common.md` |
+| Weather | `references/weather-integration.md` |
 
 ### Cross-skill handoffs
 
@@ -207,6 +225,12 @@ When a request involves more than YAML configuration, hand it off to the right s
 | Troubleshooting | `references/troubleshooting.md` |
 | Debug Flowcharts | `references/troubleshooting-flowcharts.md` |
 | Energy/EV | `references/energy-ev-charging.md` |
+| Backup, restore and migration | `references/backup-restore-migration.md` |
+| Migration guide (version upgrades) | `references/migration-guide.md` |
+| HACS popular integrations | `references/hacs-popular.md` |
+| System monitor | `references/system-monitor.md` |
+| Custom components | `references/custom-components.md` |
+| Custom card development | `references/custom-card-development.md` |
 
 ## Templates
 
