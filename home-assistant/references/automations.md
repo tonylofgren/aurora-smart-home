@@ -18,20 +18,22 @@
 
 ## Core Concepts
 
-Home Assistant automations follow a **Trigger → Condition → Action** pattern:
+Home Assistant automations follow a **Trigger -> Condition -> Action** pattern:
 
 ```yaml
 automation:
   - id: "unique_id"
     alias: "Human Readable Name"
     description: "What this automation does"
-    trigger:
+    triggers:
       # WHEN should this run?
-    condition:
+    conditions:
       # Should it run NOW? (optional)
-    action:
+    actions:
       # WHAT should happen?
 ```
+
+> **Syntax history:** HA 2024.8 renamed `service:` (step key) to `action:`. HA 2024.10 pluralized the top-level automation block keys: `trigger:` -> `triggers:`, `condition:` -> `conditions:`, `action:` -> `actions:`. Legacy singular keys still work but new automations should use the plural forms. Inside each trigger list item, `platform: state` etc. also changed to `trigger: state`.
 
 ### Key Terms
 
@@ -57,36 +59,36 @@ automation:
     mode: restart
     max_exceeded: silent
 
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.living_room_motion
         to: "on"
         id: motion_detected
-      - platform: state
+      - trigger: state
         entity_id: binary_sensor.living_room_motion
         to: "off"
         for: "00:05:00"
         id: motion_cleared
 
-    condition:
+    conditions:
       - condition: state
         entity_id: input_boolean.automation_enabled
         state: "on"
 
-    action:
+    actions:
       - choose:
           - conditions:
               - condition: trigger
                 id: motion_detected
             sequence:
-              - service: light.turn_on
+              - action: light.turn_on
                 target:
                   entity_id: light.living_room
           - conditions:
               - condition: trigger
                 id: motion_cleared
             sequence:
-              - service: light.turn_off
+              - action: light.turn_off
                 target:
                   entity_id: light.living_room
 ```
@@ -97,8 +99,8 @@ automation:
 |-------|----------|-------------|
 | `id` | Yes* | Unique identifier (auto-generated in UI) |
 | `alias` | Yes | Human-readable name |
-| `trigger` | Yes | At least one trigger |
-| `action` | Yes | At least one action |
+| `triggers` | Yes | At least one trigger |
+| `actions` | Yes | At least one action |
 
 *Required for UI-managed automations
 
@@ -110,7 +112,7 @@ automation:
 | `mode` | `single` | How concurrent triggers are handled |
 | `max` | 10 | Max parallel runs (for `queued`/`parallel`) |
 | `max_exceeded` | `warning` | Log level when max exceeded |
-| `condition` | None | Conditions to check |
+| `conditions` | None | Conditions to check |
 | `variables` | None | Local variables |
 | `trace` | Enabled | Store trace data |
 
@@ -134,26 +136,26 @@ automation:
 automation:
   - alias: "Daily Backup"
     mode: single
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "03:00:00"
-    action:
-      - service: backup.create
+    actions:
+      - action: backup.create
 
 # Restart - Reset timeout on new trigger
 automation:
   - alias: "Motion Light with Restart"
     mode: restart
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "on"
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.hallway
       - delay: "00:05:00"
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id: light.hallway
 
@@ -162,12 +164,12 @@ automation:
   - alias: "Doorbell Notification Queue"
     mode: queued
     max: 5
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.doorbell
         to: "on"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "Someone at the door!"
       - delay: "00:00:30"
@@ -177,15 +179,15 @@ automation:
   - alias: "Log All Motion Events"
     mode: parallel
     max: 20
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id:
           - binary_sensor.motion_1
           - binary_sensor.motion_2
           - binary_sensor.motion_3
         to: "on"
-    action:
-      - service: logbook.log
+    actions:
+      - action: logbook.log
         data:
           name: "Motion"
           message: "{{ trigger.entity_id }} detected motion"
@@ -207,37 +209,37 @@ automation:
 ### State Trigger
 
 ```yaml
-trigger:
+triggers:
   # Basic state change
-  - platform: state
+  - trigger: state
     entity_id: binary_sensor.door
     to: "on"
 
   # From specific state
-  - platform: state
+  - trigger: state
     entity_id: light.bedroom
     from: "on"
     to: "off"
 
   # Any state change (not attribute)
-  - platform: state
+  - trigger: state
     entity_id: sensor.temperature
 
   # With duration requirement
-  - platform: state
+  - trigger: state
     entity_id: binary_sensor.door
     to: "on"
     for: "00:10:00"
 
   # Dynamic duration
-  - platform: state
+  - trigger: state
     entity_id: binary_sensor.motion
     to: "off"
     for:
       minutes: "{{ states('input_number.motion_timeout') | int }}"
 
   # Multiple entities
-  - platform: state
+  - trigger: state
     entity_id:
       - binary_sensor.window_1
       - binary_sensor.window_2
@@ -245,13 +247,13 @@ trigger:
     to: "on"
 
   # Exclude attribute changes
-  - platform: state
+  - trigger: state
     entity_id: light.bedroom
     attribute: brightness
     # Only triggers on brightness attribute changes
 
   # Not from unavailable
-  - platform: state
+  - trigger: state
     entity_id: sensor.temperature
     not_from:
       - "unknown"
@@ -264,37 +266,37 @@ trigger:
 ### Numeric State Trigger
 
 ```yaml
-trigger:
+triggers:
   # Above threshold
-  - platform: numeric_state
+  - trigger: numeric_state
     entity_id: sensor.temperature
     above: 25
 
   # Below threshold
-  - platform: numeric_state
+  - trigger: numeric_state
     entity_id: sensor.humidity
     below: 30
 
   # Within range
-  - platform: numeric_state
+  - trigger: numeric_state
     entity_id: sensor.battery
     below: 20
     above: 0
 
   # With duration
-  - platform: numeric_state
+  - trigger: numeric_state
     entity_id: sensor.power
     above: 3000
     for: "00:05:00"
 
   # Attribute value
-  - platform: numeric_state
+  - trigger: numeric_state
     entity_id: light.bedroom
     attribute: brightness
     above: 200
 
   # Using template for threshold
-  - platform: numeric_state
+  - trigger: numeric_state
     entity_id: sensor.temperature
     above: "{{ states('input_number.temp_threshold') | float }}"
 ```
@@ -302,49 +304,49 @@ trigger:
 ### Time Trigger
 
 ```yaml
-trigger:
+triggers:
   # Specific time
-  - platform: time
+  - trigger: time
     at: "08:00:00"
 
   # Multiple times
-  - platform: time
+  - trigger: time
     at:
       - "08:00:00"
       - "12:00:00"
       - "18:00:00"
 
   # Using input_datetime
-  - platform: time
+  - trigger: time
     at: input_datetime.wake_up_time
 
   # Using sensor
-  - platform: time
+  - trigger: time
     at: sensor.next_alarm
 ```
 
 ### Time Pattern Trigger
 
 ```yaml
-trigger:
+triggers:
   # Every hour
-  - platform: time_pattern
+  - trigger: time_pattern
     hours: "/1"
 
   # Every 5 minutes
-  - platform: time_pattern
+  - trigger: time_pattern
     minutes: "/5"
 
   # Every 30 seconds
-  - platform: time_pattern
+  - trigger: time_pattern
     seconds: "/30"
 
   # At minute 0 of every hour
-  - platform: time_pattern
+  - trigger: time_pattern
     minutes: 0
 
   # Every 15 minutes during work hours
-  - platform: time_pattern
+  - trigger: time_pattern
     hours: "8-17"
     minutes: "/15"
 ```
@@ -352,22 +354,22 @@ trigger:
 ### Sun Trigger
 
 ```yaml
-trigger:
+triggers:
   # At sunset
-  - platform: sun
+  - trigger: sun
     event: sunset
 
   # At sunrise
-  - platform: sun
+  - trigger: sun
     event: sunrise
 
   # 30 minutes before sunset
-  - platform: sun
+  - trigger: sun
     event: sunset
     offset: "-00:30:00"
 
   # 1 hour after sunrise
-  - platform: sun
+  - trigger: sun
     event: sunrise
     offset: "01:00:00"
 ```
@@ -375,21 +377,21 @@ trigger:
 ### Zone Trigger
 
 ```yaml
-trigger:
+triggers:
   # Person enters zone
-  - platform: zone
+  - trigger: zone
     entity_id: person.john
     zone: zone.home
     event: enter
 
   # Person leaves zone
-  - platform: zone
+  - trigger: zone
     entity_id: person.john
     zone: zone.work
     event: leave
 
   # Multiple people
-  - platform: zone
+  - trigger: zone
     entity_id:
       - person.john
       - person.jane
@@ -400,26 +402,26 @@ trigger:
 ### Event Trigger
 
 ```yaml
-trigger:
+triggers:
   # Home Assistant events
-  - platform: event
+  - trigger: event
     event_type: homeassistant_start
 
   # Call service events
-  - platform: event
+  - trigger: event
     event_type: call_service
     event_data:
       domain: light
       service: turn_on
 
   # Custom events
-  - platform: event
+  - trigger: event
     event_type: my_custom_event
     event_data:
       action: button_pressed
 
   # ESPHome events
-  - platform: event
+  - trigger: event
     event_type: esphome.button_pressed
     event_data:
       device: kitchen_switch
@@ -428,18 +430,18 @@ trigger:
 ### MQTT Trigger
 
 ```yaml
-trigger:
+triggers:
   # Simple topic
-  - platform: mqtt
+  - trigger: mqtt
     topic: "home/doorbell"
 
   # With payload filter
-  - platform: mqtt
+  - trigger: mqtt
     topic: "home/motion/+"
     payload: "ON"
 
   # JSON payload with template
-  - platform: mqtt
+  - trigger: mqtt
     topic: "zigbee2mqtt/motion_sensor"
     value_template: "{{ value_json.occupancy }}"
     payload: "true"
@@ -448,8 +450,8 @@ trigger:
 ### Webhook Trigger
 
 ```yaml
-trigger:
-  - platform: webhook
+triggers:
+  - trigger: webhook
     webhook_id: "my_unique_webhook_id"
     allowed_methods:
       - POST
@@ -459,9 +461,9 @@ trigger:
 ### Device Trigger
 
 ```yaml
-trigger:
+triggers:
   # Device-specific trigger (from UI)
-  - platform: device
+  - trigger: device
     device_id: "abc123..."
     domain: zwave_js
     type: "event.value_notification.entry_control"
@@ -472,14 +474,14 @@ trigger:
 ### Calendar Trigger
 
 ```yaml
-trigger:
+triggers:
   # Calendar event starts
-  - platform: calendar
+  - trigger: calendar
     entity_id: calendar.work
     event: start
 
   # Calendar event ends
-  - platform: calendar
+  - trigger: calendar
     entity_id: calendar.vacation
     event: end
     offset: "-01:00:00"  # 1 hour before end
@@ -488,15 +490,15 @@ trigger:
 ### Template Trigger
 
 ```yaml
-trigger:
+triggers:
   # Template becomes true
-  - platform: template
+  - trigger: template
     value_template: >
       {{ states('sensor.temperature') | float > 25 and
          is_state('climate.living_room', 'off') }}
 
   # With for duration
-  - platform: template
+  - trigger: template
     value_template: "{{ states('sensor.power') | float > 3000 }}"
     for: "00:05:00"
 ```
@@ -504,13 +506,13 @@ trigger:
 ### Tag Trigger
 
 ```yaml
-trigger:
+triggers:
   # NFC tag scanned
-  - platform: tag
+  - trigger: tag
     tag_id: "abc123-def456"
 
   # Multiple tags
-  - platform: tag
+  - trigger: tag
     tag_id:
       - "tag1"
       - "tag2"
@@ -519,9 +521,9 @@ trigger:
 ### Sentence Trigger (Voice)
 
 ```yaml
-trigger:
+triggers:
   # Voice command matching
-  - platform: conversation
+  - trigger: conversation
     command:
       - "turn on the {area} lights"
       - "lights on in the {area}"
@@ -532,27 +534,27 @@ trigger:
 Assign IDs to triggers for use in conditions/actions:
 
 ```yaml
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: binary_sensor.motion_living
     to: "on"
     id: living_motion
-  - platform: state
+  - trigger: state
     entity_id: binary_sensor.motion_kitchen
     to: "on"
     id: kitchen_motion
 
-condition:
+conditions:
   - condition: trigger
     id: living_motion
 
-action:
+actions:
   - choose:
       - conditions:
           - condition: trigger
             id: living_motion
         sequence:
-          - service: light.turn_on
+          - action: light.turn_on
             target:
               entity_id: light.living_room
 ```
@@ -564,7 +566,7 @@ action:
 ### State Condition
 
 ```yaml
-condition:
+conditions:
   # Entity is in state
   - condition: state
     entity_id: light.bedroom
@@ -593,7 +595,7 @@ condition:
 ### Numeric State Condition
 
 ```yaml
-condition:
+conditions:
   # Above threshold
   - condition: numeric_state
     entity_id: sensor.temperature
@@ -620,7 +622,7 @@ condition:
 ### Time Condition
 
 ```yaml
-condition:
+conditions:
   # Within time range
   - condition: time
     after: "08:00:00"
@@ -644,7 +646,7 @@ condition:
 ### Sun Condition
 
 ```yaml
-condition:
+conditions:
   # After sunset
   - condition: sun
     after: sunset
@@ -662,7 +664,7 @@ condition:
 ### Zone Condition
 
 ```yaml
-condition:
+conditions:
   # Person is in zone
   - condition: zone
     entity_id: person.john
@@ -679,7 +681,7 @@ condition:
 ### Template Condition
 
 ```yaml
-condition:
+conditions:
   # Template evaluates to true
   - condition: template
     value_template: >
@@ -696,7 +698,7 @@ condition:
 ### Device Condition
 
 ```yaml
-condition:
+conditions:
   # Device-specific condition (from UI)
   - condition: device
     device_id: "abc123..."
@@ -707,7 +709,7 @@ condition:
 ### Trigger Condition
 
 ```yaml
-condition:
+conditions:
   # Check which trigger fired
   - condition: trigger
     id: motion_detected
@@ -722,7 +724,7 @@ condition:
 ### Logical Conditions
 
 ```yaml
-condition:
+conditions:
   # AND - All must be true (default when multiple conditions)
   - condition: and
     conditions:
@@ -753,7 +755,7 @@ condition:
 ### Shorthand Conditions
 
 ```yaml
-condition:
+conditions:
   # Shorthand for state condition
   - "{{ is_state('light.bedroom', 'on') }}"
 
@@ -766,17 +768,17 @@ condition:
 
 ## Actions
 
-### Service Call
+### Action Call
 
 ```yaml
-action:
-  # Basic service call
-  - service: light.turn_on
+actions:
+  # Basic action call
+  - action: light.turn_on
     target:
       entity_id: light.living_room
 
   # With data
-  - service: light.turn_on
+  - action: light.turn_on
     target:
       entity_id: light.living_room
     data:
@@ -784,22 +786,22 @@ action:
       color_temp: 350
 
   # Target area
-  - service: light.turn_off
+  - action: light.turn_off
     target:
       area_id: living_room
 
   # Target device
-  - service: light.turn_on
+  - action: light.turn_on
     target:
       device_id: "abc123..."
 
   # Target all
-  - service: light.turn_off
+  - action: light.turn_off
     target:
       entity_id: all
 
   # Using templates
-  - service: "light.turn_{{ states('input_select.action') }}"
+  - action: "light.turn_{{ states('input_select.action') }}"
     target:
       entity_id: "{{ states('input_text.target_light') }}"
     data:
@@ -809,7 +811,7 @@ action:
 ### Delay
 
 ```yaml
-action:
+actions:
   # Fixed delay
   - delay: "00:05:00"
 
@@ -824,7 +826,7 @@ action:
 ### Wait Template
 
 ```yaml
-action:
+actions:
   # Wait for condition
   - wait_template: "{{ is_state('binary_sensor.motion', 'off') }}"
 
@@ -837,7 +839,7 @@ action:
 ### Wait for Trigger
 
 ```yaml
-action:
+actions:
   # Wait for trigger
   - wait_for_trigger:
       - platform: state
@@ -851,7 +853,7 @@ action:
 ### Choose (Conditional Branches)
 
 ```yaml
-action:
+actions:
   - choose:
       # First matching condition wins
       - conditions:
@@ -859,7 +861,7 @@ action:
             entity_id: input_select.mode
             state: "movie"
         sequence:
-          - service: scene.turn_on
+          - action: scene.turn_on
             target:
               entity_id: scene.movie_mode
 
@@ -868,13 +870,13 @@ action:
             entity_id: input_select.mode
             state: "dinner"
         sequence:
-          - service: scene.turn_on
+          - action: scene.turn_on
             target:
               entity_id: scene.dinner_mode
 
     # Default if no conditions match
     default:
-      - service: scene.turn_on
+      - action: scene.turn_on
         target:
           entity_id: scene.normal
 ```
@@ -882,18 +884,18 @@ action:
 ### If/Then/Else
 
 ```yaml
-action:
+actions:
   - if:
       - condition: sun
         after: sunset
     then:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.porch
         data:
           brightness_pct: 100
     else:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.porch
         data:
@@ -903,12 +905,12 @@ action:
 ### Repeat
 
 ```yaml
-action:
+actions:
   # Repeat count
   - repeat:
       count: 3
       sequence:
-        - service: light.toggle
+        - action: light.toggle
           target:
             entity_id: light.indicator
         - delay: "00:00:01"
@@ -920,7 +922,7 @@ action:
           entity_id: input_boolean.alarm
           state: "on"
       sequence:
-        - service: notify.mobile_app
+        - action: notify.mobile_app
           data:
             message: "Alarm still active!"
         - delay: "00:01:00"
@@ -932,7 +934,7 @@ action:
           entity_id: lock.front_door
           state: "locked"
       sequence:
-        - service: lock.lock
+        - action: lock.lock
           target:
             entity_id: lock.front_door
         - delay: "00:00:05"
@@ -944,7 +946,7 @@ action:
         - light.bathroom
         - light.kitchen
       sequence:
-        - service: light.turn_off
+        - action: light.turn_off
           target:
             entity_id: "{{ repeat.item }}"
         - delay: "00:00:01"
@@ -953,19 +955,19 @@ action:
 ### Parallel
 
 ```yaml
-action:
+actions:
   # Run actions in parallel
   - parallel:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.living_room
-      - service: media_player.play_media
+      - action: media_player.play_media
         target:
           entity_id: media_player.speaker
         data:
           media_content_id: "welcome_home.mp3"
           media_content_type: "music"
-      - service: climate.set_temperature
+      - action: climate.set_temperature
         target:
           entity_id: climate.living_room
         data:
@@ -975,7 +977,7 @@ action:
 ### Stop
 
 ```yaml
-action:
+actions:
   - if:
       - condition: state
         entity_id: input_boolean.vacation
@@ -984,7 +986,7 @@ action:
       - stop: "Vacation mode active, stopping automation"
 
   # Continue with rest of actions...
-  - service: light.turn_on
+  - action: light.turn_on
     target:
       entity_id: light.welcome
 ```
@@ -992,7 +994,7 @@ action:
 ### Variables
 
 ```yaml
-action:
+actions:
   # Set variables
   - variables:
       brightness: "{{ states('input_number.brightness') | int }}"
@@ -1004,7 +1006,7 @@ action:
         {% endif %}
 
   # Use variables
-  - service: light.turn_on
+  - action: light.turn_on
     target:
       entity_id: light.bedroom
     data:
@@ -1015,7 +1017,7 @@ action:
 ### Fire Event
 
 ```yaml
-action:
+actions:
   - event: custom_event
     event_data:
       action: "automation_completed"
@@ -1025,28 +1027,28 @@ action:
 ### Set Input Helpers
 
 ```yaml
-action:
+actions:
   # Set input_boolean
-  - service: input_boolean.turn_on
+  - action: input_boolean.turn_on
     target:
       entity_id: input_boolean.automation_ran
 
   # Set input_number
-  - service: input_number.set_value
+  - action: input_number.set_value
     target:
       entity_id: input_number.counter
     data:
       value: "{{ states('input_number.counter') | int + 1 }}"
 
   # Set input_select
-  - service: input_select.select_option
+  - action: input_select.select_option
     target:
       entity_id: input_select.mode
     data:
       option: "home"
 
   # Set input_text
-  - service: input_text.set_value
+  - action: input_text.set_value
     target:
       entity_id: input_text.last_motion
     data:
@@ -1066,17 +1068,17 @@ automation:
     variables:
       light_entity: light.living_room
       timeout_minutes: 5
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "on"
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: "{{ light_entity }}"
       - delay:
           minutes: "{{ timeout_minutes }}"
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id: "{{ light_entity }}"
 ```
@@ -1119,7 +1121,7 @@ trigger.payload_json    # Parsed JSON (if valid)
 ### Using Variables in Templates
 
 ```yaml
-action:
+actions:
   - variables:
       room: >
         {% if trigger.entity_id == 'binary_sensor.motion_living' %}
@@ -1130,7 +1132,7 @@ action:
           unknown
         {% endif %}
 
-  - service: light.turn_on
+  - action: light.turn_on
     target:
       area_id: "{{ room }}"
 ```
@@ -1226,12 +1228,12 @@ automation:
   - id: motion_light_with_reset
     alias: "Motion Light with Timeout Reset"
     mode: restart
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "on"
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.hallway
       - wait_for_trigger:
@@ -1239,7 +1241,7 @@ automation:
             entity_id: binary_sensor.motion
             to: "off"
             for: "00:03:00"
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id: light.hallway
 ```
@@ -1250,13 +1252,13 @@ automation:
 automation:
   - id: climate_away_mode
     alias: "Climate - Away Mode"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: group.family
         to: "not_home"
         for: "00:15:00"
-    action:
-      - service: climate.set_preset_mode
+    actions:
+      - action: climate.set_preset_mode
         target:
           entity_id: climate.living_room
         data:
@@ -1264,12 +1266,12 @@ automation:
 
   - id: climate_home_mode
     alias: "Climate - Home Mode"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: group.family
         to: "home"
-    action:
-      - service: climate.set_preset_mode
+    actions:
+      - action: climate.set_preset_mode
         target:
           entity_id: climate.living_room
         data:
@@ -1282,19 +1284,19 @@ automation:
 automation:
   - id: low_battery_notification
     alias: "Low Battery Notification"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id:
           - sensor.phone_battery
           - sensor.tablet_battery
           - sensor.sensor_battery
         below: 20
-    condition:
+    conditions:
       - condition: template
         value_template: >
           {{ trigger.from_state.state | int >= 20 }}
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "Low Battery Alert"
           message: >
@@ -1308,12 +1310,12 @@ automation:
 automation:
   - id: adaptive_brightness
     alias: "Adaptive Brightness Light"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: light.bedroom
         to: "on"
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.bedroom
         data:
@@ -1338,18 +1340,18 @@ automation:
 automation:
   - id: doorbell_snapshot
     alias: "Doorbell with Snapshot"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.doorbell
         to: "on"
-    action:
-      - service: camera.snapshot
+    actions:
+      - action: camera.snapshot
         target:
           entity_id: camera.front_door
         data:
           filename: "/config/www/snapshots/doorbell_{{ now().strftime('%Y%m%d_%H%M%S') }}.jpg"
       - delay: "00:00:02"
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           title: "Doorbell"
           message: "Someone is at the door"
@@ -1388,8 +1390,8 @@ id: climate_away_mode
 
 ```yaml
 # Debounce rapid triggers
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: sensor.power
     for: "00:00:05"  # Wait 5 seconds before triggering
 
@@ -1405,8 +1407,8 @@ max: 5
 
 ```yaml
 # Validate webhook data
-trigger:
-  - platform: webhook
+triggers:
+  - trigger: webhook
     webhook_id: !secret webhook_id
     local_only: true  # Only accept local requests
 
@@ -1449,23 +1451,23 @@ state: "on"         # Correct
 
 | Check | Solution |
 |-------|----------|
-| Service exists | Verify in Developer Tools → Services |
+| Action exists | Verify in Developer Tools -> Actions |
 | Target valid | Ensure entity_id/area_id is correct |
-| Data format | Check data types match service requirements |
+| Data format | Check data types match action requirements |
 | Previous action | Look for errors in earlier actions |
 
 ### Debug Actions
 
 ```yaml
-action:
+actions:
   # Log for debugging
-  - service: system_log.write
+  - action: system_log.write
     data:
       message: "Debug: {{ trigger.entity_id }} = {{ trigger.to_state.state }}"
       level: warning
 
   # Persistent notification
-  - service: persistent_notification.create
+  - action: persistent_notification.create
     data:
       title: "Automation Debug"
       message: "Triggered at {{ now() }}"

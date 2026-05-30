@@ -9,10 +9,12 @@
 - [Zone Condition](#zone-condition)
 - [Template Condition](#template-condition)
 - [Device Condition](#device-condition)
+- [Device-Specific Conditions](#device-specific-conditions)
 - [Trigger Condition](#trigger-condition)
 - [Logical Conditions](#logical-conditions)
 - [Shorthand Conditions](#shorthand-conditions)
 - [Common Patterns](#common-patterns)
+- [Selection Guide](#selection-guide)
 - [Best Practices](#best-practices)
 - [Troubleshooting](#troubleshooting)
 
@@ -144,11 +146,10 @@ condition:
       - cooling
 ```
 
-### Not Equal (match: any)
+### Not Equal
 
 ```yaml
-# Using 'not' for "not equal" (deprecated in 2024.x)
-# Use template condition or logic instead
+# Wrap a state condition in 'not' to express "must not be in this state"
 condition:
   - condition: not
     conditions:
@@ -165,7 +166,7 @@ condition:
 | `state` | string/list | Expected state(s) |
 | `attribute` | string | Attribute to check (optional) |
 | `for` | time | Minimum duration in state |
-| `match` | string | `all` (default) or `any` for multiple entities |
+| `match` | string | `all` (default) requires all entities to match; `any` requires at least one |
 
 ---
 
@@ -625,6 +626,191 @@ condition:
 
 ---
 
+## Device-Specific Conditions
+
+**Source:** https://www.home-assistant.io/docs/scripts/conditions/
+
+Home Assistant exposes domain-specific condition types through the same `condition: device` framework. Each installed integration registers its own `type` values. The full list visible in the UI depends on which integrations are loaded; the groups below cover the most common ones.
+
+All device-specific conditions follow this structure:
+
+```yaml
+conditions:
+  - condition: device
+    device_id: abc123def456
+    domain: light
+    type: is_on
+```
+
+### Binary State Conditions
+
+These check a simple on/off, open/closed, or locked/unlocked state.
+
+| Domain | Types |
+|--------|-------|
+| `light` | `is_on`, `is_off` |
+| `switch` | `is_on`, `is_off` |
+| `fan` | `is_on`, `is_off` |
+| `siren` | `is_on`, `is_off` |
+| `door` | `is_open`, `is_closed` |
+| `window` | `is_open`, `is_closed` |
+| `garage_door` | `is_open`, `is_closed` |
+| `gate` | `is_open`, `is_closed` |
+| `lock` | `is_locked`, `is_unlocked`, `is_open`, `is_jammed` |
+| `motion` | `is_detected`, `is_not_detected` |
+| `binary_sensor` | `is_on`, `is_off` |
+
+Example - check that a door is closed before locking:
+
+```yaml
+conditions:
+  - condition: device
+    device_id: abc123def456
+    domain: door
+    type: is_closed
+```
+
+Example - lock is not jammed:
+
+```yaml
+conditions:
+  - condition: device
+    device_id: abc123def456
+    domain: lock
+    type: is_locked
+```
+
+### Alarm Control Panel Conditions
+
+```yaml
+conditions:
+  - condition: device
+    device_id: abc123def456
+    domain: alarm_control_panel
+    type: is_disarmed
+```
+
+Available types: `is_armed`, `is_armed_away`, `is_armed_home`, `is_armed_night`, `is_armed_vacation`, `is_disarmed`, `is_triggered`.
+
+### Climate and Humidifier Conditions
+
+```yaml
+conditions:
+  - condition: device
+    device_id: abc123def456
+    domain: climate
+    type: is_heating
+```
+
+Climate types: `is_on`, `is_off`, `is_heating`, `is_cooling`, `is_drying`, `is_hvac_mode`, `target_temperature`, `target_humidity`.
+
+Humidifier types: `is_on`, `is_off`, `is_humidifying`, `is_drying`, `is_mode`, `is_target_humidity`.
+
+### Numeric and Threshold Conditions
+
+These require `above` and/or `below` fields in addition to `type`.
+
+```yaml
+# Battery level above 20 percent
+conditions:
+  - condition: device
+    device_id: abc123def456
+    domain: sensor
+    type: is_battery_level
+    above: 20
+
+# Temperature sensor below threshold
+conditions:
+  - condition: device
+    device_id: abc123def456
+    domain: temperature
+    type: is_value
+    below: 25
+```
+
+Domains with numeric types include: `temperature` (`is_value`), `humidity` (`is_value`), `counter` (`is_value`), `light` (`is_brightness`), `air_quality` (various `is_*_value` types for CO2, PM2.5, VOC, etc.).
+
+### Mobile Robot Conditions
+
+```yaml
+# Vacuum is docked (ready to start)
+conditions:
+  - condition: device
+    device_id: abc123def456
+    domain: vacuum
+    type: is_docked
+
+# Lawn mower is mowing
+conditions:
+  - condition: device
+    device_id: abc123def456
+    domain: lawn_mower
+    type: is_mowing
+```
+
+Vacuum types: `is_cleaning`, `is_docked`, `is_paused`, `is_returning`, `is_encountering_an_error`.
+
+Lawn mower types: `is_mowing`, `is_docked`, `is_paused`, `is_returning`, `is_encountering_an_error`.
+
+### Timer Conditions
+
+Check whether a timer helper is running, idle, or paused.
+
+```yaml
+# Cooldown timer has expired (idle means not running)
+conditions:
+  - condition: device
+    device_id: abc123def456
+    domain: timer
+    type: is_idle
+```
+
+Timer types: `is_active`, `is_idle`, `is_paused`.
+
+### Calendar Condition
+
+The `calendar.is_event_active` type checks whether a calendar event is currently active (the calendar entity reads `"on"` while an event is in progress).
+
+```yaml
+conditions:
+  - condition: device
+    device_id: abc123def456
+    domain: calendar
+    type: is_event_active
+```
+
+Alternatively, a calendar entity can be tested with a plain state condition since it exposes `"on"` during an active event and `"off"` otherwise:
+
+```yaml
+conditions:
+  - condition: state
+    entity_id: calendar.my_calendar
+    state: "on"
+```
+
+### Update and To-do Conditions
+
+```yaml
+# A software update is available for a device
+conditions:
+  - condition: device
+    device_id: abc123def456
+    domain: update
+    type: is_available
+
+# All to-do items are completed
+conditions:
+  - condition: device
+    device_id: abc123def456
+    domain: todo
+    type: all_completed
+```
+
+Update types: `is_available`, `is_not_available`.
+To-do types: `all_completed`, `incomplete`.
+
+---
+
 ## Trigger Condition
 
 Check which trigger fired the automation.
@@ -966,6 +1152,36 @@ condition:
           - Away
           - Vacation
 ```
+
+---
+
+## Selection Guide
+
+**Source:** https://www.home-assistant.io/docs/scripts/conditions/
+
+Use this table to pick the right condition type for the job.
+
+| What you want to check | Condition to use |
+|------------------------|-----------------|
+| Entity is in a specific state | `state` |
+| Numeric value is above, below, or in a range | `numeric_state` |
+| After sunset or before sunrise (coarse) | `sun` |
+| Precise outdoor darkness (elevation degrees) | `numeric_state` on `sun.sun` attribute `elevation` |
+| Time of day or specific weekdays | `time` |
+| Only when a particular trigger fired | `trigger` |
+| Person or device tracker is inside a zone | `zone` |
+| Domain-specific device capability (is_heating, is_docked, etc.) | `device` with domain + type |
+| Calendar event is currently active | `device` with `calendar.is_event_active`, or `state` on the calendar entity |
+| Complex expression or cross-entity logic | `template` |
+| All conditions must pass | Implicit AND (sequential list) or `condition: and` |
+| At least one condition must pass | `condition: or` |
+| Condition must fail to proceed | `condition: not` |
+
+**Quick rules:**
+- Reach for `state` or `numeric_state` first; they are faster and produce cleaner automation traces than template conditions.
+- Use `template` only when no built-in type can express the logic.
+- Use `device` conditions when the UI automation editor generates them; they are tied to the device registry and survive entity renames.
+- Wrap `condition: not` around any condition to invert it rather than trying to enumerate all "other" states.
 
 ---
 

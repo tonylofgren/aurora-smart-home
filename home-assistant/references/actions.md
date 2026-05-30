@@ -3,6 +3,7 @@
 ## Table of Contents
 - [Core Concepts](#core-concepts)
 - [Service Calls](#service-calls)
+- [Response Variables](#response-variables)
 - [Delay](#delay)
 - [Wait Template](#wait-template)
 - [Wait for Trigger](#wait-for-trigger)
@@ -15,6 +16,7 @@
 - [Fire Event](#fire-event)
 - [Device Actions](#device-actions)
 - [Scene Actions](#scene-actions)
+- [Dashboard Actions](#dashboard-actions)
 - [Common Patterns](#common-patterns)
 - [Best Practices](#best-practices)
 - [Troubleshooting](#troubleshooting)
@@ -40,11 +42,11 @@ Actions are the things that happen when an automation runs. They execute in sequ
 ```yaml
 action:
   # Actions run in sequence
-  - service: light.turn_on
+  - action: light.turn_on
     target:
       entity_id: light.living_room
   - delay: "00:00:05"
-  - service: light.turn_off
+  - action: light.turn_off
     target:
       entity_id: light.living_room
 ```
@@ -59,7 +61,7 @@ Call Home Assistant services to control entities.
 
 ```yaml
 action:
-  - service: light.turn_on
+  - action: light.turn_on
     target:
       entity_id: light.living_room
 ```
@@ -68,7 +70,7 @@ action:
 
 ```yaml
 action:
-  - service: light.turn_on
+  - action: light.turn_on
     target:
       entity_id: light.living_room
     data:
@@ -107,13 +109,13 @@ target:
 
 ```yaml
 action:
-  - service: light.turn_on
+  - action: light.turn_on
     target:
       entity_id: "{{ trigger.entity_id }}"
 
 # Multiple dynamic entities
 action:
-  - service: light.turn_off
+  - action: light.turn_off
     target:
       entity_id: >
         {{ states.light
@@ -126,7 +128,7 @@ action:
 
 ```yaml
 action:
-  - service: "light.turn_{{ 'on' if is_state('sun.sun', 'below_horizon') else 'off' }}"
+  - action: "light.turn_{{ 'on' if is_state('sun.sun', 'below_horizon') else 'off' }}"
     target:
       entity_id: light.porch
 ```
@@ -135,7 +137,7 @@ action:
 
 ```yaml
 action:
-  - service: light.turn_on
+  - action: light.turn_on
     target:
       entity_id: light.bedroom
     data:
@@ -153,35 +155,35 @@ action:
 
 ```yaml
 # Lights
-- service: light.turn_on
+- action: light.turn_on
   target:
     entity_id: light.lamp
   data:
     brightness_pct: 80
     transition: 2
 
-- service: light.turn_off
+- action: light.turn_off
 
-- service: light.toggle
+- action: light.toggle
 
 # Switches
-- service: switch.turn_on
-- service: switch.turn_off
-- service: switch.toggle
+- action: switch.turn_on
+- action: switch.turn_off
+- action: switch.toggle
 
 # Climate
-- service: climate.set_temperature
+- action: climate.set_temperature
   target:
     entity_id: climate.thermostat
   data:
     temperature: 22
 
-- service: climate.set_hvac_mode
+- action: climate.set_hvac_mode
   data:
     hvac_mode: heat
 
 # Media player
-- service: media_player.play_media
+- action: media_player.play_media
   target:
     entity_id: media_player.speaker
   data:
@@ -189,18 +191,18 @@ action:
     media_content_type: playlist
 
 # Notifications
-- service: notify.mobile_app_phone
+- action: notify.mobile_app_phone
   data:
     title: "Alert"
     message: "Motion detected"
 
 # Scripts
-- service: script.turn_on
+- action: script.turn_on
   target:
     entity_id: script.morning_routine
 
 # Scenes
-- service: scene.turn_on
+- action: scene.turn_on
   target:
     entity_id: scene.movie_mode
 ```
@@ -210,16 +212,78 @@ action:
 ```yaml
 # Capture service response
 action:
-  - service: weather.get_forecasts
+  - action: weather.get_forecasts
     target:
       entity_id: weather.home
     data:
       type: daily
     response_variable: forecast
-  - service: notify.mobile_app
+  - action: notify.mobile_app
     data:
       message: "Tomorrow: {{ forecast['weather.home'].forecast[0].condition }}"
 ```
+
+---
+
+## Response Variables
+
+**Source:** https://www.home-assistant.io/actions/
+
+Certain actions return structured data when called. Store that data in a named variable using the `response_variable:` key, then reference the variable in subsequent template steps within the same automation or script run.
+
+Not all actions produce responses. The ones that do include `weather.get_forecasts`, `calendar.get_events`, `todo.get_items`, and some integration-specific actions. Check Developer Tools or the action's documentation to confirm a response is available.
+
+The returned data structure is action-specific. Use automation traces to inspect the exact shape before building templates against it.
+
+### Calendar events worked example
+
+Fetch upcoming calendar events and send a summary notification:
+
+```yaml
+actions:
+  - action: calendar.get_events
+    target:
+      entity_id: calendar.family
+    data:
+      duration:
+        hours: 24
+    response_variable: todays_events
+
+  - action: notify.notify
+    data:
+      title: "Today's schedule"
+      message: >
+        {% set items = todays_events['calendar.family'].events %}
+        {% if items %}
+          {{ items | length }} event(s). First: {{ items[0].summary }} at {{ items[0].start }}.
+        {% else %}
+          Nothing on the calendar today.
+        {% endif %}
+```
+
+### Weather forecast example
+
+```yaml
+actions:
+  - action: weather.get_forecasts
+    target:
+      entity_id: weather.home
+    data:
+      type: daily
+    response_variable: forecast
+
+  - action: notify.notify
+    data:
+      message: >
+        Tomorrow: {{ forecast['weather.home'].forecast[0].condition }},
+        high {{ forecast['weather.home'].forecast[0].temperature }}.
+```
+
+### Key rules
+
+- The variable is only available within the same automation or script run; it does not persist between runs.
+- Use `| default([])` or guard with `{% if %}` before iterating, since an empty calendar returns an empty list rather than raising an error.
+- When targeting multiple entities, each entity's results are keyed by its `entity_id` string inside the response dict.
 
 ---
 
@@ -305,11 +369,11 @@ action:
       - condition: template
         value_template: "{{ wait.completed }}"
     then:
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           message: "Door is locked"
     else:
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           message: "Door lock timed out!"
 ```
@@ -370,10 +434,10 @@ action:
   - choose:
       - conditions: "{{ wait.trigger.id == 'motion_off' }}"
         sequence:
-          - service: light.turn_off
+          - action: light.turn_off
       - conditions: "{{ wait.trigger.id == 'override' }}"
         sequence:
-          - service: notify.mobile_app
+          - action: notify.mobile_app
             data:
               message: "Override activated"
 ```
@@ -386,7 +450,7 @@ action:
       - platform: state
         entity_id: sensor.temperature
     timeout: "01:00:00"
-  - service: notify.mobile_app
+  - action: notify.mobile_app
     data:
       message: >
         Temperature changed to {{ wait.trigger.to_state.state }}°C
@@ -408,7 +472,7 @@ action:
             entity_id: input_select.mode
             state: "Home"
         sequence:
-          - service: light.turn_on
+          - action: light.turn_on
             target:
               entity_id: light.living_room
       - conditions:
@@ -416,7 +480,7 @@ action:
             entity_id: input_select.mode
             state: "Away"
         sequence:
-          - service: light.turn_off
+          - action: light.turn_off
             target:
               entity_id: all
 ```
@@ -431,7 +495,7 @@ action:
             entity_id: sensor.temperature
             above: 25
         sequence:
-          - service: climate.set_hvac_mode
+          - action: climate.set_hvac_mode
             data:
               hvac_mode: cool
       - conditions:
@@ -439,11 +503,11 @@ action:
             entity_id: sensor.temperature
             below: 18
         sequence:
-          - service: climate.set_hvac_mode
+          - action: climate.set_hvac_mode
             data:
               hvac_mode: heat
     default:
-      - service: climate.set_hvac_mode
+      - action: climate.set_hvac_mode
         data:
           hvac_mode: "off"
 ```
@@ -455,10 +519,10 @@ action:
   - choose:
       - conditions: "{{ trigger.to_state.state == 'on' }}"
         sequence:
-          - service: light.turn_on
+          - action: light.turn_on
       - conditions: "{{ trigger.to_state.state == 'off' }}"
         sequence:
-          - service: light.turn_off
+          - action: light.turn_off
 ```
 
 ### Based on Trigger ID
@@ -479,14 +543,14 @@ action:
           - condition: trigger
             id: living
         sequence:
-          - service: light.turn_on
+          - action: light.turn_on
             target:
               entity_id: light.living_room
       - conditions:
           - condition: trigger
             id: kitchen
         sequence:
-          - service: light.turn_on
+          - action: light.turn_on
             target:
               entity_id: light.kitchen
 ```
@@ -506,7 +570,7 @@ action:
         entity_id: input_boolean.notifications_enabled
         state: "on"
     then:
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           message: "Alert!"
 ```
@@ -519,13 +583,13 @@ action:
       - condition: sun
         after: sunset
     then:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.porch
         data:
           brightness_pct: 100
     else:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.porch
         data:
@@ -545,11 +609,11 @@ action:
           - condition: sun
             after: sunset
         then:
-          - service: light.turn_on
+          - action: light.turn_on
             data:
               brightness_pct: 100
         else:
-          - service: light.turn_on
+          - action: light.turn_on
             data:
               brightness_pct: 50
 ```
@@ -560,7 +624,7 @@ action:
 action:
   - if: "{{ is_state('binary_sensor.motion', 'on') }}"
     then:
-      - service: light.turn_on
+      - action: light.turn_on
 ```
 
 ---
@@ -576,7 +640,7 @@ action:
   - repeat:
       count: 3
       sequence:
-        - service: light.toggle
+        - action: light.toggle
           target:
             entity_id: light.alert
         - delay: "00:00:01"
@@ -594,7 +658,7 @@ action:
         - condition: template
           value_template: "{{ repeat.index <= 10 }}"
       sequence:
-        - service: notify.mobile_app
+        - action: notify.mobile_app
           data:
             message: "Door still open! (attempt {{ repeat.index }})"
         - delay: "00:01:00"
@@ -610,7 +674,7 @@ action:
           entity_id: lock.front_door
           state: "locked"
       sequence:
-        - service: lock.lock
+        - action: lock.lock
           target:
             entity_id: lock.front_door
         - delay: "00:00:05"
@@ -628,7 +692,7 @@ action:
         - light.kitchen
         - light.bedroom
       sequence:
-        - service: light.turn_on
+        - action: light.turn_on
           target:
             entity_id: "{{ repeat.item }}"
         - delay: "00:00:01"
@@ -645,7 +709,7 @@ action:
            | map(attribute='entity_id')
            | list }}
       sequence:
-        - service: light.turn_off
+        - action: light.turn_off
           target:
             entity_id: "{{ repeat.item }}"
         - delay: "00:00:00.5"
@@ -664,7 +728,7 @@ action:
   - repeat:
       count: 5
       sequence:
-        - service: notify.mobile_app
+        - action: notify.mobile_app
           data:
             message: "Iteration {{ repeat.index }} of 5"
 ```
@@ -680,13 +744,13 @@ Run actions simultaneously.
 ```yaml
 action:
   - parallel:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.living_room
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.kitchen
-      - service: media_player.turn_on
+      - action: media_player.turn_on
         target:
           entity_id: media_player.tv
 ```
@@ -697,15 +761,15 @@ action:
 action:
   - parallel:
       - sequence:
-          - service: light.turn_on
+          - action: light.turn_on
             target:
               entity_id: light.living_room
           - delay: "00:00:05"
-          - service: light.turn_off
+          - action: light.turn_off
             target:
               entity_id: light.living_room
       - sequence:
-          - service: notify.mobile_app
+          - action: notify.mobile_app
             data:
               message: "Light sequence started"
 ```
@@ -716,17 +780,17 @@ action:
 action:
   - parallel:
       # Service call
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.lamp
       # Sequence
       - sequence:
           - delay: "00:00:02"
-          - service: switch.turn_on
+          - action: switch.turn_on
             target:
               entity_id: switch.fan
       # Another service
-      - service: media_player.volume_set
+      - action: media_player.volume_set
         target:
           entity_id: media_player.speaker
         data:
@@ -749,7 +813,7 @@ action:
         state: "on"
     then:
       - stop: "Automation disabled by user"
-  - service: light.turn_on
+  - action: light.turn_on
 ```
 
 ### Stop with Error
@@ -802,7 +866,7 @@ action:
   - variables:
       light_entity: light.living_room
       brightness: 80
-  - service: light.turn_on
+  - action: light.turn_on
     target:
       entity_id: "{{ light_entity }}"
     data:
@@ -822,7 +886,7 @@ action:
         {% else %}
           20
         {% endif %}
-  - service: climate.set_temperature
+  - action: climate.set_temperature
     target:
       entity_id: climate.thermostat
     data:
@@ -837,7 +901,7 @@ action:
       entity: "{{ trigger.entity_id }}"
       old_state: "{{ trigger.from_state.state }}"
       new_state: "{{ trigger.to_state.state }}"
-  - service: notify.mobile_app
+  - action: notify.mobile_app
     data:
       message: "{{ entity }} changed from {{ old_state }} to {{ new_state }}"
 ```
@@ -853,7 +917,7 @@ action:
            | map(attribute='entity_id')
            | list }}
       count: "{{ lights_on | count }}"
-  - service: notify.mobile_app
+  - action: notify.mobile_app
     data:
       message: "{{ count }} lights are on"
 ```
@@ -894,7 +958,7 @@ trigger:
     event_data:
       location: living_room
 action:
-  - service: notify.mobile_app
+  - action: notify.mobile_app
     data:
       message: "Motion in {{ trigger.event.data.location }}"
 ```
@@ -946,7 +1010,7 @@ Activate scenes.
 
 ```yaml
 action:
-  - service: scene.turn_on
+  - action: scene.turn_on
     target:
       entity_id: scene.movie_mode
 ```
@@ -955,7 +1019,7 @@ action:
 
 ```yaml
 action:
-  - service: scene.turn_on
+  - action: scene.turn_on
     target:
       entity_id: scene.evening
     data:
@@ -966,22 +1030,129 @@ action:
 
 ```yaml
 action:
-  - service: scene.create
+  - action: scene.create
     data:
       scene_id: before_change
       snapshot_entities:
         - light.living_room
         - light.kitchen
   # Make changes
-  - service: light.turn_off
+  - action: light.turn_off
     target:
       entity_id: all
   - delay: "00:00:30"
   # Restore
-  - service: scene.turn_on
+  - action: scene.turn_on
     target:
       entity_id: scene.before_change
 ```
+
+---
+
+## Dashboard Actions
+
+**Source:** https://www.home-assistant.io/actions/
+
+Lovelace dashboard cards support interactive actions on `tap_action`, `hold_action`, and `double_tap_action`. Each accepts an `action:` key that names the behavior, plus any additional keys that behavior requires.
+
+### Action types
+
+| Action type | What it does |
+|---|---|
+| `more-info` | Opens the entity detail dialog. Default for most cards. |
+| `toggle` | Toggles the card's primary entity where the domain supports toggling. |
+| `perform-action` | Calls a Home Assistant action, equivalent to an automation action step. |
+| `navigate` | Navigates to another dashboard path within the UI. |
+| `url` | Opens a URL, optionally in a new browser tab. |
+| `assist` | Opens the Assist voice/text dialog. |
+| `none` | Does nothing. Useful for disabling the default tap behavior. |
+
+### Examples for each type
+
+#### more-info
+
+```yaml
+tap_action:
+  action: more-info
+```
+
+#### toggle
+
+```yaml
+tap_action:
+  action: toggle
+```
+
+#### perform-action
+
+Calls any Home Assistant action. Use `perform_action:` for the action name, `target:` for entities/areas/devices, and `data:` for parameters.
+
+```yaml
+tap_action:
+  action: perform-action
+  perform_action: light.turn_on
+  target:
+    entity_id: light.living_room
+  data:
+    brightness_pct: 70
+    transition: 1
+```
+
+#### navigate
+
+```yaml
+tap_action:
+  action: navigate
+  navigation_path: /lovelace/cameras
+```
+
+#### url
+
+```yaml
+tap_action:
+  action: url
+  url_path: https://home-assistant.io
+```
+
+#### assist
+
+```yaml
+tap_action:
+  action: assist
+```
+
+#### none
+
+```yaml
+hold_action:
+  action: none
+```
+
+### Confirmation dialog
+
+For actions with significant side effects, attach a confirmation prompt. Use `confirmation: true` for a generic dialog, or `confirmation.text` to show a custom message.
+
+```yaml
+hold_action:
+  action: perform-action
+  perform_action: homeassistant.restart
+  confirmation:
+    text: "Restart Home Assistant? This will interrupt all automations."
+```
+
+```yaml
+double_tap_action:
+  action: perform-action
+  perform_action: alarm_control_panel.alarm_disarm
+  target:
+    entity_id: alarm_control_panel.home
+  data:
+    code: !secret alarm_code
+  confirmation:
+    text: "Disarm the alarm?"
+```
+
+Treat restart, stop, alarm disarm, lock/unlock, and valve controls as high-impact actions that warrant confirmation dialogs in dashboards.
 
 ---
 
@@ -991,7 +1162,7 @@ action:
 
 ```yaml
 action:
-  - service: notify.mobile_app
+  - action: notify.mobile_app
     data:
       title: "Door Open"
       message: "Front door has been open for 5 minutes"
@@ -1012,7 +1183,7 @@ action:
       - condition: template
         value_template: "{{ not wait.completed }}"
     then:
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           message: "Door still open!"
 ```
@@ -1027,7 +1198,7 @@ action:
           entity_id: lock.front_door
           state: "locked"
       sequence:
-        - service: lock.lock
+        - action: lock.lock
           target:
             entity_id: lock.front_door
         - delay: "00:00:05"
@@ -1035,7 +1206,7 @@ action:
             - condition: template
               value_template: "{{ repeat.index >= 3 }}"
           then:
-            - service: notify.mobile_app
+            - action: notify.mobile_app
               data:
                 message: "Failed to lock door after 3 attempts"
             - stop: "Lock failed"
@@ -1052,7 +1223,7 @@ action:
   - repeat:
       count: "{{ steps }}"
       sequence:
-        - service: light.turn_on
+        - action: light.turn_on
           target:
             entity_id: light.bedroom
           data:
@@ -1074,7 +1245,7 @@ action:
         - entity_id: light.light_3
           brightness: 60
       sequence:
-        - service: light.turn_on
+        - action: light.turn_on
           target:
             entity_id: "{{ repeat.item.entity_id }}"
           data:
@@ -1097,7 +1268,7 @@ action:
                 entity_id: person.john
                 state: home
             sequence:
-              - service: tts.speak
+              - action: tts.speak
                 target:
                   entity_id: tts.google
                 data:
@@ -1108,7 +1279,7 @@ action:
                 entity_id: person.john
                 state: not_home
             sequence:
-              - service: notify.mobile_app
+              - action: notify.mobile_app
                 data:
                   message: "{{ message }}"
 ```
@@ -1118,14 +1289,14 @@ action:
 ```yaml
 action:
   # Save current state
-  - service: scene.create
+  - action: scene.create
     data:
       scene_id: temp_state
       snapshot_entities:
         - light.living_room
         - light.kitchen
   # Do something
-  - service: light.turn_on
+  - action: light.turn_on
     target:
       area_id: living_room
     data:
@@ -1133,7 +1304,7 @@ action:
       brightness_pct: 100
   - delay: "00:00:10"
   # Restore
-  - service: scene.turn_on
+  - action: scene.turn_on
     target:
       entity_id: scene.temp_state
 ```
@@ -1167,11 +1338,11 @@ action:
         value_template: >
           {{ states('sensor.api_data') not in ['unknown', 'unavailable'] }}
     then:
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           message: "{{ states('sensor.api_data') }}"
     else:
-      - service: system_log.write
+      - action: system_log.write
         data:
           message: "API data unavailable"
           level: warning
@@ -1183,7 +1354,7 @@ action:
 # Avoid: Long blocking delay
 action:
   - delay: "01:00:00"  # Blocks for 1 hour
-  - service: light.turn_off
+  - action: light.turn_off
 
 # Better: Use wait_for_trigger with timeout
 action:
@@ -1192,7 +1363,7 @@ action:
         entity_id: binary_sensor.motion
         to: "off"
     timeout: "01:00:00"
-  - service: light.turn_off
+  - action: light.turn_off
 ```
 
 ### Use Parallel for Independent Actions
@@ -1200,32 +1371,32 @@ action:
 ```yaml
 # Slow: Sequential
 action:
-  - service: light.turn_on
+  - action: light.turn_on
     target:
       entity_id: light.1
-  - service: light.turn_on
+  - action: light.turn_on
     target:
       entity_id: light.2
-  - service: light.turn_on
+  - action: light.turn_on
     target:
       entity_id: light.3
 
 # Fast: Parallel
 action:
   - parallel:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.1
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.2
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.3
 
 # Best: Single call with multiple targets
 action:
-  - service: light.turn_on
+  - action: light.turn_on
     target:
       entity_id:
         - light.1
@@ -1251,14 +1422,14 @@ action:
 ```yaml
 # Add logging
 action:
-  - service: system_log.write
+  - action: system_log.write
     data:
       message: "Starting action sequence"
       level: info
-  - service: light.turn_on
+  - action: light.turn_on
     target:
       entity_id: light.test
-  - service: system_log.write
+  - action: system_log.write
     data:
       message: "Light turn_on called"
       level: info
@@ -1271,9 +1442,10 @@ action:
 # Enter service name and parameters
 # Click "Call Service" to test
 
-service: light.turn_on
-data:
+action: light.turn_on
+target:
   entity_id: light.living_room
+data:
   brightness_pct: 80
 ```
 
@@ -1282,13 +1454,13 @@ data:
 ```yaml
 # Wrong: target inside data
 action:
-  - service: light.turn_on
+  - action: light.turn_on
     data:
       entity_id: light.lamp  # Wrong location
 
 # Correct: target separate from data
 action:
-  - service: light.turn_on
+  - action: light.turn_on
     target:
       entity_id: light.lamp
     data:

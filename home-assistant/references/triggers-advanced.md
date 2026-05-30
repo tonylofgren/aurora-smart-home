@@ -21,7 +21,7 @@ automation:
   - id: wait_for_state_basic
     alias: "Wait for Door to Close"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: binary_sensor.front_door
         to: "on"
     action:
@@ -29,7 +29,7 @@ automation:
         data:
           message: "Front door opened, waiting for it to close..."
       - wait_for_trigger:
-          - platform: state
+          - trigger: state
             entity_id: binary_sensor.front_door
             to: "off"
         timeout:
@@ -56,7 +56,7 @@ automation:
   - id: wait_for_temperature
     alias: "Wait for Temperature to Drop"
     trigger:
-      - platform: numeric_state
+      - trigger: numeric_state
         entity_id: sensor.outdoor_temperature
         above: 30
     action:
@@ -64,7 +64,7 @@ automation:
         target:
           entity_id: climate.living_room
       - wait_for_trigger:
-          - platform: numeric_state
+          - trigger: numeric_state
             entity_id: sensor.outdoor_temperature
             below: 25
         timeout:
@@ -91,12 +91,12 @@ automation:
 ```yaml
 action:
   - wait_for_trigger:
-      - platform: state
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "off"
         for:
           minutes: 10
-      - platform: state
+      - trigger: state
         entity_id: input_boolean.override
         to: "on"
     timeout:
@@ -115,7 +115,7 @@ action:
 ```yaml
 action:
   - wait_for_trigger:
-      - platform: template
+      - trigger: template
         value_template: >
           {{ states('sensor.power_usage') | float(0) < 100
              and is_state('binary_sensor.grid_available', 'on') }}
@@ -129,7 +129,7 @@ action:
 ```yaml
 action:
   - wait_for_trigger:
-      - platform: state
+      - trigger: state
         entity_id: lock.front_door
         to: "locked"
     timeout:
@@ -162,7 +162,7 @@ automation:
   - id: voice_lights
     alias: "Voice: Control Lights"
     trigger:
-      - platform: conversation
+      - trigger: conversation
         command:
           - "turn on the {area} lights"
           - "turn off the {area} lights"
@@ -189,7 +189,7 @@ automation:
   - id: voice_temperature
     alias: "Voice: Set Temperature"
     trigger:
-      - platform: conversation
+      - trigger: conversation
         command:
           - "set temperature to {temperature}"
           - "set thermostat to {temperature} degrees"
@@ -209,7 +209,7 @@ automation:
   - id: voice_status
     alias: "Voice: Get Status"
     trigger:
-      - platform: conversation
+      - trigger: conversation
         command:
           - "what is the {entity_type} in the {area}"
           - "how is the {entity_type} in {area}"
@@ -242,7 +242,7 @@ automation:
 
 ```yaml
 trigger:
-  - platform: conversation
+  - trigger: conversation
     command:
       - "[please|] turn {state} [the|] {area} [light|lights]"
       - "[please|] {state} [the|] {area} [light|lights]"
@@ -260,7 +260,7 @@ automation:
   - id: voice_contextual
     alias: "Voice: Contextual Commands"
     trigger:
-      - platform: conversation
+      - trigger: conversation
         command:
           - "I'm going to bed"
           - "goodnight"
@@ -282,7 +282,7 @@ automation:
   - id: voice_multi_intent
     alias: "Voice: Complex Commands"
     trigger:
-      - platform: conversation
+      - trigger: conversation
         command:
           - "turn on {device1} and {device2}"
           - "{device1} and {device2} on"
@@ -306,7 +306,7 @@ automation:
   - id: template_multi_entity
     alias: "Monitor Multiple Sensors"
     trigger:
-      - platform: template
+      - trigger: template
         value_template: >
           {% set sensors = [
             'sensor.temp_living_room',
@@ -331,7 +331,7 @@ automation:
   - id: template_rate_limited
     alias: "Rate Limited Trigger"
     trigger:
-      - platform: template
+      - trigger: template
         value_template: >
           {{ states('sensor.power_usage') | float(0) > 5000 }}
         for:
@@ -353,7 +353,7 @@ automation:
   - id: template_rate_of_change
     alias: "Detect Rapid Temperature Change"
     trigger:
-      - platform: template
+      - trigger: template
         value_template: >
           {% set current = states('sensor.temperature') | float(0) %}
           {% set previous = state_attr('sensor.temperature', 'last_value') | float(current) %}
@@ -372,7 +372,7 @@ automation:
   - id: template_complex_condition
     alias: "Complex State Monitoring"
     trigger:
-      - platform: template
+      - trigger: template
         value_template: >
           {% set occupancy = is_state('binary_sensor.occupancy', 'on') %}
           {% set time_ok = now().hour >= 8 and now().hour < 22 %}
@@ -397,19 +397,19 @@ automation:
   - id: device_button_multi
     alias: "Multi-Click Button Handler"
     trigger:
-      - platform: device
+      - trigger: device
         domain: mqtt
         device_id: abc123
         type: action
         subtype: single
         id: single_click
-      - platform: device
+      - trigger: device
         domain: mqtt
         device_id: abc123
         type: action
         subtype: double
         id: double_click
-      - platform: device
+      - trigger: device
         domain: mqtt
         device_id: abc123
         type: action
@@ -441,7 +441,7 @@ automation:
   - id: device_remote
     alias: "Handle Remote Control"
     trigger:
-      - platform: event
+      - trigger: event
         event_type: zha_event
         event_data:
           device_ieee: "00:11:22:33:44:55:66:77"
@@ -488,13 +488,13 @@ automation:
 ```yaml
 # State trigger - for persistent states
 trigger:
-  - platform: state
+  - trigger: state
     entity_id: light.living_room
     to: "on"
 
 # Event trigger - for momentary events
 trigger:
-  - platform: event
+  - trigger: event
     event_type: zha_event
     event_data:
       command: "toggle"
@@ -511,7 +511,7 @@ automation:
   - id: time_dynamic
     alias: "Dynamic Wake Up Time"
     trigger:
-      - platform: time
+      - trigger: time
         at: input_datetime.wake_up_time
     action:
       - service: light.turn_on
@@ -526,7 +526,7 @@ automation:
   - id: time_workday
     alias: "Workday Morning Routine"
     trigger:
-      - platform: time
+      - trigger: time
         at: "06:30:00"
     condition:
       - condition: state
@@ -546,7 +546,7 @@ automation:
   - id: time_sun_offset
     alias: "Lights Before Sunset"
     trigger:
-      - platform: sun
+      - trigger: sun
         event: sunset
         offset: "-00:30:00"  # 30 minutes before
     condition:
@@ -568,7 +568,7 @@ automation:
   - id: time_pattern
     alias: "Every 15 Minutes Check"
     trigger:
-      - platform: time_pattern
+      - trigger: time_pattern
         minutes: "/15"  # Every 15 minutes
     action:
       - service: script.periodic_check
@@ -585,7 +585,7 @@ automation:
   - id: mqtt_json
     alias: "MQTT JSON Trigger"
     trigger:
-      - platform: mqtt
+      - trigger: mqtt
         topic: "sensors/outdoor/weather"
     condition:
       - condition: template
@@ -604,7 +604,7 @@ automation:
   - id: mqtt_wildcard
     alias: "All Room Sensors"
     trigger:
-      - platform: mqtt
+      - trigger: mqtt
         topic: "home/+/temperature"  # + = single level wildcard
     action:
       - variables:
@@ -629,7 +629,7 @@ automation:
   - id: bad_high_frequency
     alias: "Bad: Every Power Update"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: sensor.power_usage
     action:
       # Fires hundreds of times per hour
@@ -639,7 +639,7 @@ automation:
   - id: good_debounced
     alias: "Good: Power Threshold"
     trigger:
-      - platform: numeric_state
+      - trigger: numeric_state
         entity_id: sensor.power_usage
         above: 3000
         for:
@@ -653,7 +653,7 @@ automation:
 ```yaml
 # BAD: Complex template evaluated constantly
 trigger:
-  - platform: template
+  - trigger: template
     value_template: >
       {% set entities = states.light | list %}
       {% set on_count = entities | selectattr('state', 'eq', 'on') | list | count %}
@@ -668,7 +668,7 @@ template:
 
 automation:
   trigger:
-    - platform: numeric_state
+    - trigger: numeric_state
       entity_id: sensor.lights_on_count
       above: 5
 ```
@@ -680,7 +680,7 @@ automation:
   - id: batched_triggers
     alias: "Batched State Changes"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id:
           - binary_sensor.door_1
           - binary_sensor.door_2
@@ -702,15 +702,15 @@ automation:
   - id: efficient_multi_trigger
     alias: "Efficient Multi-Trigger"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: binary_sensor.front_door
         to: "on"
         id: front
-      - platform: state
+      - trigger: state
         entity_id: binary_sensor.back_door
         to: "on"
         id: back
-      - platform: state
+      - trigger: state
         entity_id: binary_sensor.garage_door
         to: "on"
         id: garage
@@ -737,7 +737,7 @@ automation:
   - id: debounce_for
     alias: "Debounced Motion"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "on"
         for:
@@ -756,7 +756,7 @@ automation:
     alias: "Single Mode Debounce"
     mode: single  # Ignore new triggers while running
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: binary_sensor.button
         to: "on"
     action:
@@ -774,7 +774,7 @@ automation:
   - id: rate_limit_counter
     alias: "Rate Limited Notifications"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: binary_sensor.doorbell
         to: "on"
     condition:
@@ -823,6 +823,374 @@ automation:
 | Template trigger slow | Move calculation to sensor |
 | Missing events | Use event trigger instead of state |
 | Timeout not working | Check `continue_on_timeout` setting |
+
+---
+
+## Calendar Trigger
+
+**Source:** https://www.home-assistant.io/docs/automation/trigger/
+
+Use the calendar trigger to react to calendar event start and end times. This is more reliable than watching the calendar entity state directly, because it fires at the precise moment an event begins or ends rather than polling.
+
+### Fields
+
+| Field | Notes |
+|-------|-------|
+| `entity_id` | Required. The `calendar.*` entity to watch. |
+| `event` | Required. `start` or `end`. |
+| `offset` | Optional. Fire this duration before or after the boundary, e.g. `"-00:15:00"` for 15 minutes early. |
+
+### Examples
+
+Fire 10 minutes before a family calendar event starts:
+
+```yaml
+triggers:
+  - trigger: calendar
+    entity_id: calendar.family
+    event: start
+    offset: "-00:10:00"
+    id: family_event_starting_soon
+```
+
+Fire when a work calendar event ends:
+
+```yaml
+triggers:
+  - trigger: calendar
+    entity_id: calendar.work
+    event: end
+    id: work_event_ended
+```
+
+The trigger exposes event metadata through `trigger.calendar_event`:
+
+| Field | Content |
+|-------|---------|
+| `trigger.calendar_event.summary` | Event title |
+| `trigger.calendar_event.start` | Start datetime string |
+| `trigger.calendar_event.end` | End datetime string |
+| `trigger.calendar_event.description` | Event description (if set) |
+
+Example action using event data:
+
+```yaml
+actions:
+  - action: notify.notify
+    data:
+      message: >
+        {{ trigger.calendar_event.summary }} starts in 10 minutes
+        ({{ trigger.calendar_event.start }}).
+```
+
+Full automation example -- announce upcoming meeting:
+
+```yaml
+automation:
+  - alias: "Announce upcoming calendar event"
+    id: announce_upcoming_calendar_event
+    mode: queued
+    triggers:
+      - trigger: calendar
+        entity_id: calendar.work
+        event: start
+        offset: "-00:05:00"
+        id: work_event_soon
+    actions:
+      - action: tts.speak
+        target:
+          entity_id: media_player.office_speaker
+        data:
+          message: >
+            Reminder: {{ trigger.calendar_event.summary }} starts in 5 minutes.
+```
+
+---
+
+## Device Trigger Inventory
+
+**Source:** https://www.home-assistant.io/docs/automation/trigger/
+
+Device triggers are exposed by integrations and represent device-specific events that may not map to a simple entity state. The trigger pattern is:
+
+```yaml
+triggers:
+  - trigger: device
+    device_id: YOUR_DEVICE_ID
+    domain: DOMAIN
+    type: EVENT_TYPE
+    subtype: EVENT_SUBTYPE   # optional, integration-dependent
+    id: my_trigger_id
+```
+
+Use the UI automation editor to discover the correct `device_id`, `domain`, `type`, and `subtype` for a specific device, then copy the generated YAML. The values below are sourced from the official trigger index snapshot (2026-05-30) and represent the semantic trigger types each domain publishes.
+
+### Binary and State Device Triggers
+
+These domains expose open/close or on/off state transitions as device triggers.
+
+**Door, garage door, gate, valve, window:**
+
+```yaml
+triggers:
+  - trigger: device
+    device_id: YOUR_DEVICE_ID
+    domain: door
+    type: door.opened
+    id: door_opened
+```
+
+Types available: `door.opened`, `door.closed`, `garage_door.opened`, `garage_door.closed`, `gate.opened`, `gate.closed`, `window.opened`, `window.closed`, `valve.opened`, `valve.closed`.
+
+**Lock:**
+
+```yaml
+triggers:
+  - trigger: device
+    device_id: YOUR_DEVICE_ID
+    domain: lock
+    type: lock.unlocked
+    id: door_unlocked
+```
+
+Types available: `lock.locked`, `lock.unlocked`, `lock.opened`, `lock.jammed`.
+
+**Motion:**
+
+```yaml
+triggers:
+  - trigger: device
+    device_id: YOUR_DEVICE_ID
+    domain: motion
+    type: motion.detected
+    id: motion_detected
+```
+
+Types available: `motion.detected`, `motion.cleared`.
+
+**Alarm control panel:**
+
+```yaml
+triggers:
+  - trigger: device
+    device_id: YOUR_DEVICE_ID
+    domain: alarm_control_panel
+    type: alarm_control_panel.armed_away
+    id: alarm_armed_away
+```
+
+Types available: `alarm_control_panel.armed`, `alarm_control_panel.armed_away`, `alarm_control_panel.armed_home`, `alarm_control_panel.armed_night`, `alarm_control_panel.armed_vacation`, `alarm_control_panel.disarmed`, `alarm_control_panel.triggered`.
+
+### Environment and Climate Device Triggers
+
+**Climate (HVAC):**
+
+```yaml
+triggers:
+  - trigger: device
+    device_id: YOUR_DEVICE_ID
+    domain: climate
+    type: climate.started_heating
+    id: heating_started
+```
+
+Types available: `climate.turned_on`, `climate.turned_off`, `climate.started_heating`, `climate.started_cooling`, `climate.started_drying`, `climate.hvac_mode_changed`, `climate.target_temperature_changed`, `climate.target_temperature_crossed_threshold`, `climate.target_humidity_changed`, `climate.target_humidity_crossed_threshold`.
+
+**Humidifier:**
+
+```yaml
+triggers:
+  - trigger: device
+    device_id: YOUR_DEVICE_ID
+    domain: humidifier
+    type: humidifier.started_humidifying
+    id: humidifier_on
+```
+
+Types available: `humidifier.turned_on`, `humidifier.turned_off`, `humidifier.started_humidifying`, `humidifier.started_drying`, `humidifier.mode_changed`.
+
+**Temperature and humidity sensors:**
+
+Types available: `temperature.changed`, `temperature.crossed_threshold`, `humidity.changed`, `humidity.crossed_threshold`.
+
+**Air quality:**
+
+Air quality device triggers cover individual pollutant levels. Common types include `air_quality.co2_crossed_threshold`, `air_quality.pm25_crossed_threshold`, `air_quality.voc_crossed_threshold`, `air_quality.smoke_detected`, `air_quality.smoke_cleared`, `air_quality.co_detected`, `air_quality.co_cleared`, and equivalent `_changed` variants for each measured quantity (CO2, CO, NO, NO2, N2O, O3, PM1, PM2.5, PM4, PM10, SO2, VOC).
+
+### Button and Remote Triggers
+
+**Button (momentary press):**
+
+```yaml
+triggers:
+  - trigger: device
+    device_id: YOUR_DEVICE_ID
+    domain: button
+    type: button.pressed
+    id: button_pressed
+```
+
+Types available: `button.pressed`.
+
+**Multi-action remotes via MQTT or ZHA:**
+
+```yaml
+triggers:
+  - trigger: device
+    device_id: YOUR_DEVICE_ID
+    domain: mqtt
+    type: action
+    subtype: single
+    id: remote_single_press
+  - trigger: device
+    device_id: YOUR_DEVICE_ID
+    domain: mqtt
+    type: action
+    subtype: double
+    id: remote_double_press
+  - trigger: device
+    device_id: YOUR_DEVICE_ID
+    domain: mqtt
+    type: action
+    subtype: hold
+    id: remote_hold
+```
+
+The `subtype` values (`single`, `double`, `hold`, `rotate_left`, etc.) depend on the specific device and integration. Use the UI editor to find valid subtypes for a given device.
+
+**Counter:**
+
+```yaml
+triggers:
+  - trigger: device
+    device_id: YOUR_DEVICE_ID
+    domain: counter
+    type: counter.incremented
+    id: counter_incremented
+```
+
+Types available: `counter.incremented`, `counter.decremented`, `counter.reset`, `counter.minimum_reached`, `counter.maximum_reached`.
+
+**Timer:**
+
+```yaml
+triggers:
+  - trigger: device
+    device_id: YOUR_DEVICE_ID
+    domain: timer
+    type: timer.finished
+    id: timer_done
+```
+
+Types available: `timer.started`, `timer.paused`, `timer.cancelled`, `timer.finished`, `timer.restarted`, `timer.time_remaining`.
+
+### Appliance and Robot Device Triggers
+
+**Vacuum:**
+
+```yaml
+triggers:
+  - trigger: device
+    device_id: YOUR_DEVICE_ID
+    domain: vacuum
+    type: vacuum.started_cleaning
+    id: vacuum_cleaning
+```
+
+Types available: `vacuum.started_cleaning`, `vacuum.paused_cleaning`, `vacuum.started_returning`, `vacuum.docked`, `vacuum.errored`.
+
+**Lawn mower:**
+
+```yaml
+triggers:
+  - trigger: device
+    device_id: YOUR_DEVICE_ID
+    domain: lawn_mower
+    type: lawn_mower.started_mowing
+    id: mowing_started
+```
+
+Types available: `lawn_mower.started_mowing`, `lawn_mower.paused_mowing`, `lawn_mower.started_returning`, `lawn_mower.docked`, `lawn_mower.errored`.
+
+### Light, Fan, and Siren Triggers
+
+**Light:**
+
+```yaml
+triggers:
+  - trigger: device
+    device_id: YOUR_DEVICE_ID
+    domain: light
+    type: light.turned_on
+    id: light_on
+```
+
+Types available: `light.turned_on`, `light.turned_off`, `light.brightness_changed`, `light.brightness_crossed_threshold`.
+
+**Fan:**
+
+Types available: `fan.turned_on`, `fan.turned_off`.
+
+**Siren:**
+
+Types available: `siren.turned_on`, `siren.turned_off`.
+
+### Update and Battery Triggers
+
+**Update (pending software updates):**
+
+```yaml
+triggers:
+  - trigger: device
+    device_id: YOUR_DEVICE_ID
+    domain: update
+    type: update.update_became_available
+    id: update_available
+```
+
+Types available: `update.update_became_available`.
+
+**Battery level:**
+
+```yaml
+triggers:
+  - trigger: device
+    device_id: YOUR_DEVICE_ID
+    domain: battery
+    type: battery.level_crossed
+    id: battery_critical
+```
+
+Types available: `battery.level_changed`, `battery.level_crossed`.
+
+### Task and Notification Triggers
+
+**To-do list:**
+
+Types available: `todo.item_added`, `todo.item_completed`, `todo.item_removed`.
+
+### Domain Reference Table
+
+| Domain | Key trigger types |
+|--------|------------------|
+| `door` / `garage_door` / `gate` | `.opened`, `.closed` |
+| `window` / `valve` | `.opened`, `.closed` |
+| `lock` | `.locked`, `.unlocked`, `.opened`, `.jammed` |
+| `motion` | `.detected`, `.cleared` |
+| `alarm_control_panel` | `.armed_*`, `.disarmed`, `.triggered` |
+| `climate` | `.turned_on/off`, `.started_heating/cooling/drying`, `.*_changed` |
+| `humidifier` | `.turned_on/off`, `.started_humidifying/drying`, `.mode_changed` |
+| `temperature` / `humidity` | `.changed`, `.crossed_threshold` |
+| `air_quality` | `.*_detected`, `.*_cleared`, `.*_changed`, `.*_crossed_threshold` |
+| `button` | `.pressed` |
+| `counter` | `.incremented`, `.decremented`, `.reset`, `.*_reached` |
+| `timer` | `.started`, `.paused`, `.cancelled`, `.finished`, `.restarted` |
+| `light` | `.turned_on/off`, `.brightness_changed/crossed_threshold` |
+| `fan` / `siren` | `.turned_on`, `.turned_off` |
+| `vacuum` / `lawn_mower` | `.started_*`, `.paused_*`, `.docked`, `.errored` |
+| `update` | `.update_became_available` |
+| `battery` | `.level_changed`, `.level_crossed` |
+| `todo` | `.item_added`, `.item_completed`, `.item_removed` |
 
 ---
 
