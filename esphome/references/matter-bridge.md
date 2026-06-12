@@ -85,7 +85,7 @@ logger:
 
 esphome:
   name: matter-light-bulb
-  friendly_name: "Matter Glödlampa"
+  friendly_name: "Matter Light Bulb"
 
 esp32:
   board: esp32-c6-devkitc-1
@@ -247,7 +247,7 @@ sensor:
 
 esphome:
   name: matter-motion
-  friendly_name: "Matter Rörelse"
+  friendly_name: "Matter Motion"
 
 esp32:
   board: esp32-c6-devkitc-1
@@ -271,7 +271,7 @@ binary_sensor:
     pin:
       number: GPIO4
       mode: INPUT_PULLDOWN
-    name: "Rörelse"
+    name: "Motion"
     device_class: motion
 ```
 
@@ -283,7 +283,7 @@ binary_sensor:
 
 esphome:
   name: matter-door
-  friendly_name: "Matter Dörr"
+  friendly_name: "Matter Door"
 
 esp32:
   board: esp32-c6-devkitc-1
@@ -308,7 +308,7 @@ binary_sensor:
       number: GPIO4
       mode: INPUT_PULLUP
       inverted: true
-    name: "Dörr"
+    name: "Door"
     device_class: door
 ```
 
