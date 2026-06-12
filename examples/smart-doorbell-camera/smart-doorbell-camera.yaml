@@ -55,8 +55,8 @@ logger:
 api:
   encryption:
     key: !secret api_encryption_key
-  services:
-    - service: take_snapshot
+  actions:
+    - action: take_snapshot
       then:
         - logger.log: "Snapshot requested from HA"
 

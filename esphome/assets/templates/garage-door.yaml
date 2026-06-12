@@ -76,8 +76,8 @@ binary_sensor:
               return call.get_position().has_value();
           then:
             - cover.stop: garage_door
-            - homeassistant.service:
-                service: notify.mobile_app
+            - homeassistant.action:
+                action: notify.mobile_app
                 data:
                   title: "Garage Door Alert"
                   message: "Obstruction detected!"

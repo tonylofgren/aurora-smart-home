@@ -50,8 +50,8 @@ binary_sensor:
     name: "${friendly_name} Button 1"
     threshold: 1000
     on_press:
-      - homeassistant.service:
-          service: light.toggle
+      - homeassistant.action:
+          action: light.toggle
           data:
             entity_id: light.living_room
       - script.execute: beep
@@ -62,8 +62,8 @@ binary_sensor:
     name: "${friendly_name} Button 2"
     threshold: 1000
     on_press:
-      - homeassistant.service:
-          service: light.toggle
+      - homeassistant.action:
+          action: light.toggle
           data:
             entity_id: light.bedroom
       - script.execute: beep
@@ -74,8 +74,8 @@ binary_sensor:
     name: "${friendly_name} Button 3"
     threshold: 1000
     on_press:
-      - homeassistant.service:
-          service: switch.toggle
+      - homeassistant.action:
+          action: switch.toggle
           data:
             entity_id: switch.fan
       - script.execute: beep

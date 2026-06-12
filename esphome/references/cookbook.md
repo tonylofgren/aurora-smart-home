@@ -452,8 +452,8 @@ sensor:
     on_value_range:
       - above: -10.0
         then:
-          - homeassistant.service:
-              service: notify.mobile_app
+          - homeassistant.action:
+              action: notify.mobile_app
               data:
                 title: "Freezer Alert!"
                 message: "Temperature is {{ freezer_temp.state }}°C"
@@ -469,8 +469,8 @@ binary_sensor:
           condition:
             binary_sensor.is_on: freezer_door
           then:
-            - homeassistant.service:
-                service: notify.mobile_app
+            - homeassistant.action:
+                action: notify.mobile_app
                 data:
                   title: "Freezer Door Open!"
                   message: "Door has been open for 5 minutes"
@@ -912,8 +912,8 @@ binary_sensor:
     name: "Water Leak"
     device_class: moisture
     on_press:
-      - homeassistant.service:
-          service: notify.mobile_app
+      - homeassistant.action:
+          action: notify.mobile_app
           data:
             title: "Water Leak Detected!"
             message: "Check immediately!"
@@ -1530,8 +1530,8 @@ binary_sensor:
     id: washer_done
     device_class: running
     on_press:
-      - homeassistant.service:
-          service: notify.mobile_app
+      - homeassistant.action:
+          action: notify.mobile_app
           data:
             title: "Washing Machine"
             message: "Cycle complete!"
@@ -1563,8 +1563,8 @@ wifi:
   password: !secret wifi_password
 
 api:
-  services:
-    - service: make_coffee
+  actions:
+    - action: make_coffee
       then:
         - switch.turn_on: relay
         - delay: 5min
@@ -1628,8 +1628,8 @@ sensor:
     on_value_range:
       - below: 20
         then:
-          - homeassistant.service:
-              service: notify.mobile_app
+          - homeassistant.action:
+              action: notify.mobile_app
               data:
                 title: "Coffee Maker"
                 message: "Water tank is low!"
@@ -1694,8 +1694,8 @@ binary_sensor:
     id: running
     device_class: running
     on_release:
-      - homeassistant.service:
-          service: notify.mobile_app
+      - homeassistant.action:
+          action: notify.mobile_app
           data:
             title: "Dishwasher"
             message: "Cycle complete!"
@@ -2016,8 +2016,8 @@ wifi:
   password: !secret wifi_password
 
 api:
-  services:
-    - service: send_notification
+  actions:
+    - action: send_notification
       variables:
         title: string
         message: string
@@ -2078,8 +2078,8 @@ binary_sensor:
     component_id: 3
     name: "Light Toggle"
     on_press:
-      - homeassistant.service:
-          service: light.toggle
+      - homeassistant.action:
+          action: light.toggle
           data:
             entity_id: light.living_room
 
@@ -2088,8 +2088,8 @@ binary_sensor:
     component_id: 4
     name: "AC Toggle"
     on_press:
-      - homeassistant.service:
-          service: climate.toggle
+      - homeassistant.action:
+          action: climate.toggle
           data:
             entity_id: climate.living_room
 
@@ -2098,8 +2098,8 @@ binary_sensor:
     component_id: 5
     name: "Scene Button"
     on_press:
-      - homeassistant.service:
-          service: scene.turn_on
+      - homeassistant.action:
+          action: scene.turn_on
           data:
             entity_id: scene.movie_mode
 
@@ -2110,8 +2110,8 @@ number:
     component_name: main.brightness
     name: "Brightness Control"
     on_value:
-      - homeassistant.service:
-          service: light.turn_on
+      - homeassistant.action:
+          action: light.turn_on
           data:
             entity_id: light.living_room
             brightness_pct: !lambda return x;

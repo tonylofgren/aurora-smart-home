@@ -817,8 +817,8 @@ sensor:
 **What you get:**
 ```yaml
 api:
-  services:
-    - service: set_led_color
+  actions:
+    - action: set_led_color
       variables:
         red: int
         green: int
@@ -830,7 +830,7 @@ api:
             green: !lambda "return green / 255.0;"
             blue: !lambda "return blue / 255.0;"
 
-    - service: play_rtttl
+    - action: play_rtttl
       variables:
         song: string
       then:

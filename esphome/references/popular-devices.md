@@ -652,8 +652,8 @@ binary_sensor:
     component_id: 2
     name: "Light Button"
     on_press:
-      - homeassistant.service:
-          service: light.toggle
+      - homeassistant.action:
+          action: light.toggle
           data:
             entity_id: light.living_room
 ```

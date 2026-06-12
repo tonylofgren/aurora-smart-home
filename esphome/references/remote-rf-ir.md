@@ -554,8 +554,8 @@ climate:
 ```yaml
 # Use Home Assistant to store learned codes and trigger via service
 api:
-  services:
-    - service: send_raw_ir
+  actions:
+    - action: send_raw_ir
       variables:
         code: int[]
       then:
@@ -572,8 +572,8 @@ binary_sensor:
       code: "001100110011"
       protocol: 1
     on_press:
-      - homeassistant.service:
-          service: notify.mobile_app
+      - homeassistant.action:
+          action: notify.mobile_app
           data:
             message: "Someone at the door!"
 ```

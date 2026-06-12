@@ -443,8 +443,8 @@ condition:
       button: "main"
       count: !lambda return id(press_count);
 
-- homeassistant.service:
-    service: light.turn_on
+- homeassistant.action:
+    action: light.turn_on
     data:
       entity_id: light.living_room
       brightness_pct: "75"

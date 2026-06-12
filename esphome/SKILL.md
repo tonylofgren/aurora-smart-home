@@ -276,18 +276,18 @@ logger:
 ### 2026.1+
 - **Sprinkler latching valve removed** - use H-Bridge switch with standard valve config instead
 
-### Syntax policy: services vs actions (decision 2026-06-12)
+### Syntax policy: actions, not services (verified 2026-06-12)
 
-This skill and its references intentionally use `api: services:` and
-`homeassistant.service:`. The repo's upstream-derived 2026.5 reference
-snapshot contains no rename notice for these keys, so they remain the
-documented forms here. Upstream ESPHome has been aligning terminology
-with Home Assistant's 2024 "actions" rename, and `api: actions:` plus
-`homeassistant.action` may become the preferred forms. Before switching,
-verify against https://esphome.io/components/api/ and update references,
-assets, and examples in one deliberate sweep. Never mix both forms in
-one config, and never auto-emit the new keys without confirming the
-user's ESPHome version supports them.
+Verified against https://esphome.io/components/api/: ESPHome renamed
+user-defined services to actions in line with Home Assistant, and its
+documentation "will only refer to Actions". This repo therefore uses
+`api: actions:` with `- action: <name>` items and `homeassistant.action`
+with an `action:` key throughout references, assets, and examples. The
+old spellings (`services:`, `- service:`, `homeassistant.service` with
+`service:`) remain supported upstream aliases for the foreseeable
+future, so do not flag user configs that still use them - but never
+emit the old forms in new output, and never mix both forms in one
+config.
 
 ### 2026.2+
 - **Cover movement triggers** - new `on_open_started`, `on_close_completed`, etc. triggers

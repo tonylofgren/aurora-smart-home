@@ -3,7 +3,7 @@
 ## Table of Contents
 - [API Configuration](#api-configuration)
 - [Reading HA Entities](#reading-ha-entities)
-- [Custom Services](#custom-services)
+- [Custom Actions](#custom-actions)
 - [Sending Events](#sending-events)
 - [Time Synchronization](#time-synchronization)
 - [Input Components](#input-components)
@@ -37,8 +37,8 @@ api:
   reboot_timeout: 15min                    # Reboot if no client for this duration
                                            # Set to 0s to disable
 
-  services:                                # Custom services (see below)
-    - service: my_service
+  actions:                                # Custom actions (see below)
+    - action: my_service
       then:
         - switch.turn_on: relay
 
@@ -129,14 +129,16 @@ sensor:
 
 ---
 
-## Custom Services
+## Custom Actions
 
-### Basic Service
+ESPHome renamed user-defined services to **actions** in line with Home Assistant's terminology change: the config keys are `api: actions:` with `- action: <name>` items, and the HA-calling action is `homeassistant.action` with an `action:` key. The old spellings (`services:`, `- service:`, `homeassistant.service` with `service:`) remain supported aliases upstream for the foreseeable future, so existing configs keep working, but new output uses the action forms.
+
+### Basic Action
 
 ```yaml
 api:
-  services:
-    - service: reset_filter_timer
+  actions:
+    - action: reset_filter_timer
       then:
         - globals.set:
             id: filter_hours
@@ -144,12 +146,12 @@ api:
         - logger.log: "Filter timer reset"
 ```
 
-### Service with Parameters
+### Action with Parameters
 
 ```yaml
 api:
-  services:
-    - service: set_brightness
+  actions:
+    - action: set_brightness
       variables:
         level: int              # int, float, bool, string
       then:
@@ -157,14 +159,14 @@ api:
             id: led
             brightness: !lambda return level / 100.0;
 
-    - service: play_rtttl
+    - action: play_rtttl
       variables:
         song_str: string
       then:
         - rtttl.play:
             rtttl: !lambda return song_str;
 
-    - service: set_target_temperature
+    - action: set_target_temperature
       variables:
         temp: float
       then:
@@ -173,7 +175,7 @@ api:
             target_temperature: !lambda return temp;
 ```
 
-### Calling Services from HA
+### Calling Them from HA
 
 ```yaml
 # In Home Assistant automation/script:
@@ -582,8 +584,8 @@ ESPHome now supports bidirectional communication with Home Assistant via action 
 
 ```yaml
 api:
-  services:
-    - service: get_sensor_reading
+  actions:
+    - action: get_sensor_reading
       then:
         - lambda: |-
             float temp = id(temperature_sensor).state;

@@ -335,28 +335,28 @@ script:
 
 # Expose the dosing scripts as HA-callable services
 api:
-  services:
-    - service: dose_chlorine_ml
+  actions:
+    - action: dose_chlorine_ml
       variables:
         ml: float
       then:
         - script.execute:
             id: dose_chlorine
             volume_ml: !lambda "return ml;"
-    - service: dose_ph_minus_ml
+    - action: dose_ph_minus_ml
       variables:
         ml: float
       then:
         - script.execute:
             id: dose_ph_minus
             volume_ml: !lambda "return ml;"
-    - service: calibrate_ph
+    - action: calibrate_ph
       variables:
         point: string
       then:
         - lambda: |-
             id(ezo_ph).set_calibration_point_command(point, 0);
-    - service: calibrate_orp
+    - action: calibrate_orp
       variables:
         mv: float
       then:
