@@ -10,7 +10,7 @@ Receive external HTTP requests.
 
 ```json
 {
-  "type": "webhook",
+  "type": "ha-webhook",
   "webhookId": "my_custom_webhook",
   "method": "POST",
   "headers": {
@@ -81,7 +81,7 @@ Trigger on NFC tag scans.
 
 ```json
 {
-  "type": "tag",
+  "type": "ha-tag",
   "tag": "",
   "device": "",
   "exposeAsEntityConfig": ""
@@ -144,7 +144,7 @@ Trigger on voice commands (Assist).
 
 ```json
 {
-  "type": "sentence",
+  "type": "ha-sentence",
   "sentences": [
     "turn on [the] lights",
     "set lights to {brightness} percent"
@@ -219,7 +219,7 @@ Evaluate Home Assistant templates.
 
 ```json
 {
-  "type": "render-template",
+  "type": "api-render-template",
   "template": "{{ states('sensor.temperature') }}",
   "templateLocation": "payload",
   "templateLocationType": "msg"
@@ -295,7 +295,7 @@ Direct Home Assistant REST API calls.
 
 ```json
 {
-  "type": "api",
+  "type": "ha-api",
   "protocol": "http",
   "method": "get",
   "path": "/api/states/light.living_room",
@@ -348,7 +348,7 @@ Fire custom events in Home Assistant.
 
 ```json
 {
-  "type": "fire-event",
+  "type": "ha-fire-event",
   "event": "custom_event",
   "eventType": "str",
   "data": "{\"key\": \"value\"}"
@@ -522,7 +522,7 @@ Pause flow until condition is met.
 
 ```json
 {
-  "type": "wait-until",
+  "type": "ha-wait-until",
   "entityId": "binary_sensor.motion",
   "entityIdType": "exact",
   "property": "state",
@@ -565,7 +565,7 @@ Trigger on zone enter/leave.
 
 ```json
 {
-  "type": "zone",
+  "type": "ha-zone",
   "entities": ["person.john", "person.jane"],
   "zone": "zone.home",
   "event": "enter"
@@ -620,7 +620,7 @@ Trigger at specific times.
 
 ```json
 {
-  "type": "time",
+  "type": "ha-time",
   "crontab": "0 7 * * 1-5",
   "entityId": "",
   "property": ""

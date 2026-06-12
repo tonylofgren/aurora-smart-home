@@ -139,19 +139,19 @@ automation:
   # Motion-activated lights
   - id: ROOM_NAME_motion_lights
     alias: "ROOM_NAME: Motion Lights"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.YOUR_MOTION_SENSOR
         to: "on"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_boolean.ROOM_NAME_automation_enabled
         state: "on"
       - condition: state
         entity_id: light.YOUR_ROOM_LIGHT
         state: "off"
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.YOUR_ROOM_LIGHT
         data:
@@ -167,18 +167,18 @@ automation:
   # Turn off lights when empty
   - id: ROOM_NAME_empty_lights_off
     alias: "ROOM_NAME: Empty - Lights Off"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.ROOM_NAME_occupancy
         to: "off"
         for:
           minutes: 5
-    condition:
+    conditions:
       - condition: state
         entity_id: input_boolean.ROOM_NAME_automation_enabled
         state: "on"
-    action:
-      - service: light.turn_off
+    actions:
+      - action: light.turn_off
         target:
           entity_id: light.YOUR_ROOM_LIGHT
         data:
@@ -187,61 +187,61 @@ automation:
   # Scene selector automation
   - id: ROOM_NAME_scene_changed
     alias: "ROOM_NAME: Scene Changed"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: input_select.ROOM_NAME_scene
-    action:
+    actions:
       - choose:
           - conditions:
               - condition: state
                 entity_id: input_select.ROOM_NAME_scene
                 state: "Normal"
             sequence:
-              - service: script.ROOM_NAME_scene_normal
+              - action: script.ROOM_NAME_scene_normal
 
           - conditions:
               - condition: state
                 entity_id: input_select.ROOM_NAME_scene
                 state: "Movie"
             sequence:
-              - service: script.ROOM_NAME_scene_movie
+              - action: script.ROOM_NAME_scene_movie
 
           - conditions:
               - condition: state
                 entity_id: input_select.ROOM_NAME_scene
                 state: "Reading"
             sequence:
-              - service: script.ROOM_NAME_scene_reading
+              - action: script.ROOM_NAME_scene_reading
 
           - conditions:
               - condition: state
                 entity_id: input_select.ROOM_NAME_scene
                 state: "Night"
             sequence:
-              - service: script.ROOM_NAME_scene_night
+              - action: script.ROOM_NAME_scene_night
 
           - conditions:
               - condition: state
                 entity_id: input_select.ROOM_NAME_scene
                 state: "Off"
             sequence:
-              - service: light.turn_off
+              - action: light.turn_off
                 target:
                   entity_id: light.YOUR_ROOM_LIGHT
 
   # Climate adjustment based on occupancy
   - id: ROOM_NAME_climate_occupied
     alias: "ROOM_NAME: Climate - Occupied"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.ROOM_NAME_occupancy
         to: "on"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_boolean.ROOM_NAME_automation_enabled
         state: "on"
-    action:
-      - service: climate.set_temperature
+    actions:
+      - action: climate.set_temperature
         target:
           entity_id: climate.YOUR_ROOM_CLIMATE
         data:
@@ -250,18 +250,18 @@ automation:
   # Climate setback when empty
   - id: ROOM_NAME_climate_empty
     alias: "ROOM_NAME: Climate - Empty"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.ROOM_NAME_occupancy
         to: "off"
         for:
           minutes: 30
-    condition:
+    conditions:
       - condition: state
         entity_id: input_boolean.ROOM_NAME_automation_enabled
         state: "on"
-    action:
-      - service: climate.set_temperature
+    actions:
+      - action: climate.set_temperature
         target:
           entity_id: climate.YOUR_ROOM_CLIMATE
         data:
@@ -275,7 +275,7 @@ script:
   ROOM_NAME_scene_normal:
     alias: "ROOM_NAME: Normal Scene"
     sequence:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.YOUR_ROOM_LIGHT
         data:
@@ -286,7 +286,7 @@ script:
   ROOM_NAME_scene_movie:
     alias: "ROOM_NAME: Movie Scene"
     sequence:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.YOUR_ROOM_LIGHT
         data:
@@ -298,7 +298,7 @@ script:
   ROOM_NAME_scene_reading:
     alias: "ROOM_NAME: Reading Scene"
     sequence:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.YOUR_ROOM_LIGHT
         data:
@@ -309,7 +309,7 @@ script:
   ROOM_NAME_scene_night:
     alias: "ROOM_NAME: Night Scene"
     sequence:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.YOUR_ROOM_LIGHT
         data:
@@ -320,7 +320,7 @@ script:
   ROOM_NAME_toggle_automation:
     alias: "ROOM_NAME: Toggle Automation"
     sequence:
-      - service: input_boolean.toggle
+      - action: input_boolean.toggle
         target:
           entity_id: input_boolean.ROOM_NAME_automation_enabled
 

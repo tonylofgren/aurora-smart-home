@@ -5,7 +5,7 @@ substitutions:
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}
-  min_version: 2024.6.0
+  min_version: 2025.5.0
   on_boot:
     - priority: 600
       then:
@@ -55,7 +55,7 @@ wifi:
     ssid: "${name} Fallback"
     password: !secret fallback_password
 
-# ----- Mikrofon (PDM) -----
+# ----- Microphone (PDM) -----
 microphone:
   - platform: i2s_audio
     id: atom_mic
@@ -63,7 +63,7 @@ microphone:
     i2s_din_pin: GPIO23
     pdm: true
 
-# ----- Högtalare -----
+# ----- Speaker -----
 speaker:
   - platform: i2s_audio
     id: atom_speaker
@@ -82,7 +82,7 @@ voice_assistant:
   id: va
   microphone: atom_mic
   speaker: atom_speaker
-  use_wake_word: false  # Push-to-talk istället
+  use_wake_word: false  # Push-to-talk instead
   noise_suppression_level: 2
   auto_gain: 31dBFS
   volume_multiplier: 2.0
@@ -130,7 +130,7 @@ voice_assistant:
   on_end:
     - light.turn_off: led
 
-# ----- Push-to-Talk Knapp (GPIO39) -----
+# ----- Push-to-Talk Button (GPIO39) -----
 binary_sensor:
   - platform: gpio
     pin:

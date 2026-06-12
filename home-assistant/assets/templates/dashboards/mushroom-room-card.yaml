@@ -84,8 +84,8 @@ cards:
             grey
           {% endif %}
         tap_action:
-          action: call-service
-          service: light.toggle
+          action: perform-action
+          perform_action: light.toggle
           target:
             entity_id: light.living_room_group
         content: Lights
@@ -154,8 +154,8 @@ cards:
         icon: mdi:movie
         icon_color: purple
         tap_action:
-          action: call-service
-          service: scene.turn_on
+          action: perform-action
+          perform_action: scene.turn_on
           target:
             entity_id: scene.living_room_movie
         content: Movie

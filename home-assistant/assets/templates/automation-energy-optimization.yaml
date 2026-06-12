@@ -30,9 +30,9 @@ automation:
     description: "Triggers appliances when electricity is cheap"
     mode: single
 
-    trigger:
+    triggers:
       # Check every hour
-      - platform: time_pattern
+      - trigger: time_pattern
         hours: "/1"
 
     variables:
@@ -49,25 +49,25 @@ automation:
       pending_dryer: "{{ is_state('input_boolean.pending_dryer', 'on') }}"
       pending_dishwasher: "{{ is_state('input_boolean.pending_dishwasher', 'on') }}"
 
-    condition:
+    conditions:
       - condition: template
         value_template: "{{ is_cheap }}"
       - condition: template
         value_template: "{{ pending_wash or pending_dryer or pending_dishwasher }}"
 
-    action:
+    actions:
       # Start pending appliances in sequence
       - if:
           - condition: template
             value_template: "{{ pending_wash }}"
         then:
-          - service: switch.turn_on
+          - action: switch.turn_on
             target:
               entity_id: switch.washing_machine_smart_plug
-          - service: input_boolean.turn_off
+          - action: input_boolean.turn_off
             target:
               entity_id: input_boolean.pending_washing_machine
-          - service: notify.mobile_app
+          - action: notify.mobile_app
             data:
               title: "Energy Optimization"
               message: >
@@ -78,10 +78,10 @@ automation:
           - condition: template
             value_template: "{{ pending_dishwasher }}"
         then:
-          - service: switch.turn_on
+          - action: switch.turn_on
             target:
               entity_id: switch.dishwasher_smart_plug
-          - service: input_boolean.turn_off
+          - action: input_boolean.turn_off
             target:
               entity_id: input_boolean.pending_dishwasher
 
@@ -95,8 +95,8 @@ automation:
     description: "Activates loads when solar exceeds consumption"
     mode: single
 
-    trigger:
-      - platform: template
+    triggers:
+      - trigger: template
         value_template: >
           {% set solar = states('sensor.solar_production') | float(0) %}
           {% set usage = states('sensor.power_consumption') | float(0) %}
@@ -110,7 +110,7 @@ automation:
       usage: "{{ states('sensor.power_consumption') | float(0) }}"
       surplus: "{{ solar - usage }}"
 
-    action:
+    actions:
       - choose:
           # Large surplus (>2000W) - start EV charging
           - conditions:
@@ -122,15 +122,15 @@ automation:
               - condition: template
                 value_template: "{{ states('sensor.ev_battery') | int < 80 }}"
             sequence:
-              - service: switch.turn_on
+              - action: switch.turn_on
                 target:
                   entity_id: switch.ev_charger
-              - service: number.set_value
+              - action: number.set_value
                 target:
                   entity_id: number.ev_charging_amps
                 data:
                   value: "{{ ((surplus / 230) | int) | min(16) }}"  # Max 16A
-              - service: notify.mobile_app
+              - action: notify.mobile_app
                 data:
                   message: "Charging EV with {{ surplus | round(0) }}W solar surplus"
 
@@ -141,7 +141,7 @@ automation:
               - condition: template
                 value_template: "{{ states('sensor.water_heater_temp') | float < 55 }}"
             sequence:
-              - service: switch.turn_on
+              - action: switch.turn_on
                 target:
                   entity_id: switch.water_heater_boost
 
@@ -152,7 +152,7 @@ automation:
               - condition: template
                 value_template: "{{ states('sensor.home_battery') | int < 90 }}"
             sequence:
-              - service: switch.turn_on
+              - action: switch.turn_on
                 target:
                   entity_id: switch.battery_charge_mode
 
@@ -166,19 +166,19 @@ automation:
     description: "Reduces non-essential loads during peak prices"
     mode: single
 
-    trigger:
+    triggers:
       # Price crosses threshold
-      - platform: numeric_state
+      - trigger: numeric_state
         entity_id: sensor.nordpool_kwh_se3_sek_3_10_025
         above: input_number.peak_price_threshold
         id: peak_start
 
-      - platform: numeric_state
+      - trigger: numeric_state
         entity_id: sensor.nordpool_kwh_se3_sek_3_10_025
         below: input_number.peak_price_threshold
         id: peak_end
 
-    action:
+    actions:
       - choose:
           # Peak started - reduce loads
           - conditions:
@@ -186,7 +186,7 @@ automation:
                 id: peak_start
             sequence:
               # Save current states
-              - service: scene.create
+              - action: scene.create
                 data:
                   scene_id: pre_peak_state
                   snapshot_entities:
@@ -195,7 +195,7 @@ automation:
                     - switch.pool_pump
 
               # Reduce heating/cooling
-              - service: climate.set_temperature
+              - action: climate.set_temperature
                 target:
                   entity_id: climate.living_room
                 data:
@@ -211,14 +211,14 @@ automation:
                     {% endif %}
 
               # Turn off non-essential loads
-              - service: switch.turn_off
+              - action: switch.turn_off
                 target:
                   entity_id:
                     - switch.water_heater
                     - switch.pool_pump
                     - switch.floor_heating_boost
 
-              - service: notify.mobile_app
+              - action: notify.mobile_app
                 data:
                   title: "Peak Price Active"
                   message: >
@@ -230,10 +230,10 @@ automation:
               - condition: trigger
                 id: peak_end
             sequence:
-              - service: scene.turn_on
+              - action: scene.turn_on
                 target:
                   entity_id: scene.pre_peak_state
-              - service: notify.mobile_app
+              - action: notify.mobile_app
                 data:
                   title: "Peak Price Ended"
                   message: "Restoring normal operation"
@@ -248,24 +248,24 @@ automation:
     description: "Schedules EV charging during cheapest hours"
     mode: single
 
-    trigger:
+    triggers:
       # When car plugged in
-      - platform: state
+      - trigger: state
         entity_id: binary_sensor.ev_plugged_in
         to: "on"
         id: plugged_in
 
       # Every hour during night (for recalculation)
-      - platform: time_pattern
+      - trigger: time_pattern
         hours: "/1"
         id: hourly_check
 
-    condition:
+    conditions:
       - condition: state
         entity_id: binary_sensor.ev_plugged_in
         state: "on"
 
-    action:
+    actions:
       - variables:
           # Charging parameters
           current_soc: "{{ states('sensor.ev_battery') | int(50) }}"
@@ -308,7 +308,7 @@ automation:
               - condition: template
                 value_template: "{{ current_soc < target_soc }}"
             sequence:
-              - service: switch.turn_on
+              - action: switch.turn_on
                 target:
                   entity_id: switch.ev_charger
 
@@ -317,7 +317,7 @@ automation:
               - condition: template
                 value_template: "{{ not should_charge }}"
             sequence:
-              - service: switch.turn_off
+              - action: switch.turn_off
                 target:
                   entity_id: switch.ev_charger
 
@@ -331,8 +331,8 @@ automation:
     description: "Prevents circuit overload"
     mode: single
 
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.main_power
         above: input_number.power_limit_warning  # e.g., 15000W for 20A main fuse
         for:
@@ -358,7 +358,7 @@ automation:
           power: 1000
           priority: 4
 
-    action:
+    actions:
       - variables:
           # Sort by priority and find what to shed
           to_shed: >
@@ -375,11 +375,11 @@ automation:
       - repeat:
           for_each: "{{ to_shed }}"
           sequence:
-            - service: switch.turn_off
+            - action: switch.turn_off
               target:
                 entity_id: "{{ repeat.item }}"
 
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           title: "Load Balancing Active"
           message: >
@@ -397,7 +397,7 @@ automation:
       - repeat:
           for_each: "{{ to_shed }}"
           sequence:
-            - service: switch.turn_on
+            - action: switch.turn_on
               target:
                 entity_id: "{{ repeat.item }}"
             - delay:

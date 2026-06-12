@@ -267,10 +267,10 @@ detected by sensor.hallway_motion, and turns it off after 3 minutes"
 
 ```
 "Create a template sensor that shows the home status as:
-- 'Morgon' between 6-9
-- 'Dag' between 9-17
-- 'Kväll' between 17-22
-- 'Natt' between 22-6
+- 'Morning' between 6-9
+- 'Day' between 9-17
+- 'Evening' between 17-22
+- 'Night' between 22-6
 Include icon that matches"
 ```
 
@@ -278,8 +278,8 @@ Include icon that matches"
 
 ```
 "Create a template that shows:
-- 'Hemma: [names]' if anyone home
-- 'Ingen hemma' if empty
+- 'Home: [names]' if anyone home
+- 'Nobody home' if empty
 - Show ETA for closest person if away"
 ```
 

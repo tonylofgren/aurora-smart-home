@@ -103,12 +103,12 @@ variables:
 mode: restart
 max_exceeded: silent
 
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: !input motion_entity
     to: "on"
 
-condition:
+conditions:
   # Time condition
   - condition: time
     after: !input time_start
@@ -123,7 +123,7 @@ condition:
         true
       {% endif %}
 
-action:
+actions:
   # Calculate brightness based on time
   - variables:
       current_brightness: >
@@ -135,7 +135,7 @@ action:
         {% endif %}
 
   # Turn on light
-  - service: light.turn_on
+  - action: light.turn_on
     target: !input light_target
     data:
       brightness_pct: "{{ current_brightness }}"
@@ -143,7 +143,7 @@ action:
 
   # Wait for motion to stop
   - wait_for_trigger:
-      - platform: state
+      - trigger: state
         entity_id: !input motion_entity
         to: "off"
     timeout:
@@ -154,7 +154,7 @@ action:
       seconds: !input no_motion_wait
 
   # Turn off light
-  - service: light.turn_off
+  - action: light.turn_off
     target: !input light_target
     data:
       transition: 3

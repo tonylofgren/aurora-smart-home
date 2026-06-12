@@ -53,50 +53,50 @@ automation:
   # Present -> Recently_Left (when no one detected)
   - id: state_present_to_recently_left
     alias: "State: Present to Recently Left"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.anyone_home  # Replace with your presence sensor
         to: "off"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_select.presence_state
         state: "Present"
-    action:
-      - service: input_select.select_option
+    actions:
+      - action: input_select.select_option
         target:
           entity_id: input_select.presence_state
         data:
           option: "Recently_Left"
-      - service: input_datetime.set_datetime
+      - action: input_datetime.set_datetime
         target:
           entity_id: input_datetime.last_state_change
         data:
           datetime: "{{ now().strftime('%Y-%m-%d %H:%M:%S') }}"
-      - service: timer.start
+      - action: timer.start
         target:
           entity_id: timer.recently_left_timeout
 
   # Recently_Left -> Present (quick return)
   - id: state_recently_left_to_present
     alias: "State: Recently Left to Present"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.anyone_home
         to: "on"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_select.presence_state
         state: "Recently_Left"
-    action:
-      - service: timer.cancel
+    actions:
+      - action: timer.cancel
         target:
           entity_id: timer.recently_left_timeout
-      - service: input_select.select_option
+      - action: input_select.select_option
         target:
           entity_id: input_select.presence_state
         data:
           option: "Present"
-      - service: input_datetime.set_datetime
+      - action: input_datetime.set_datetime
         target:
           entity_id: input_datetime.last_state_change
         data:
@@ -105,110 +105,110 @@ automation:
   # Recently_Left -> Away (timeout expired)
   - id: state_recently_left_to_away
     alias: "State: Recently Left to Away"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: timer.finished
         event_data:
           entity_id: timer.recently_left_timeout
-    action:
-      - service: input_select.select_option
+    actions:
+      - action: input_select.select_option
         target:
           entity_id: input_select.presence_state
         data:
           option: "Away"
-      - service: input_datetime.set_datetime
+      - action: input_datetime.set_datetime
         target:
           entity_id: input_datetime.last_state_change
         data:
           datetime: "{{ now().strftime('%Y-%m-%d %H:%M:%S') }}"
-      - service: timer.start
+      - action: timer.start
         target:
           entity_id: timer.extended_away_timeout
       # Execute away mode actions
-      - service: script.turn_on
+      - action: script.turn_on
         target:
           entity_id: script.enter_away_mode
 
   # Away -> Extended_Away (long absence)
   - id: state_away_to_extended_away
     alias: "State: Away to Extended Away"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: timer.finished
         event_data:
           entity_id: timer.extended_away_timeout
-    action:
-      - service: input_select.select_option
+    actions:
+      - action: input_select.select_option
         target:
           entity_id: input_select.presence_state
         data:
           option: "Extended_Away"
-      - service: input_datetime.set_datetime
+      - action: input_datetime.set_datetime
         target:
           entity_id: input_datetime.last_state_change
         data:
           datetime: "{{ now().strftime('%Y-%m-%d %H:%M:%S') }}"
       # Execute extended away actions
-      - service: script.turn_on
+      - action: script.turn_on
         target:
           entity_id: script.enter_extended_away
 
   # Away/Extended_Away -> Arriving (approaching home)
   - id: state_away_to_arriving
     alias: "State: Away to Arriving"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.YOUR_PHONE_distance  # Replace with your distance sensor
         below: 1000  # meters
-    condition:
+    conditions:
       - condition: state
         entity_id: input_select.presence_state
         state:
           - "Away"
           - "Extended_Away"
-    action:
-      - service: timer.cancel
+    actions:
+      - action: timer.cancel
         target:
           entity_id: timer.extended_away_timeout
-      - service: input_select.select_option
+      - action: input_select.select_option
         target:
           entity_id: input_select.presence_state
         data:
           option: "Arriving"
-      - service: input_datetime.set_datetime
+      - action: input_datetime.set_datetime
         target:
           entity_id: input_datetime.last_state_change
         data:
           datetime: "{{ now().strftime('%Y-%m-%d %H:%M:%S') }}"
       # Pre-arrival actions
-      - service: script.turn_on
+      - action: script.turn_on
         target:
           entity_id: script.prepare_for_arrival
 
   # Arriving -> Present (arrived)
   - id: state_arriving_to_present
     alias: "State: Arriving to Present"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.anyone_home
         to: "on"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_select.presence_state
         state: "Arriving"
-    action:
-      - service: input_select.select_option
+    actions:
+      - action: input_select.select_option
         target:
           entity_id: input_select.presence_state
         data:
           option: "Present"
-      - service: input_datetime.set_datetime
+      - action: input_datetime.set_datetime
         target:
           entity_id: input_datetime.last_state_change
         data:
           datetime: "{{ now().strftime('%Y-%m-%d %H:%M:%S') }}"
       # Welcome home actions
-      - service: script.turn_on
+      - action: script.turn_on
         target:
           entity_id: script.welcome_home
 
@@ -218,10 +218,10 @@ script:
   enter_away_mode:
     alias: "Enter Away Mode"
     sequence:
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id: all
-      - service: climate.set_temperature
+      - action: climate.set_temperature
         target:
           entity_id: climate.YOUR_THERMOSTAT
         data:
@@ -231,13 +231,13 @@ script:
     alias: "Enter Extended Away Mode"
     sequence:
       # Lower temperature further
-      - service: climate.set_temperature
+      - action: climate.set_temperature
         target:
           entity_id: climate.YOUR_THERMOSTAT
         data:
           temperature: 15
       # Notify about extended absence
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           message: "Extended away mode activated (24+ hours)"
 
@@ -245,7 +245,7 @@ script:
     alias: "Prepare for Arrival"
     sequence:
       # Preheat home
-      - service: climate.set_temperature
+      - action: climate.set_temperature
         target:
           entity_id: climate.YOUR_THERMOSTAT
         data:
@@ -253,14 +253,14 @@ script:
       # Turn on outdoor lights if dark
       - condition: sun
         after: sunset
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.outdoor
 
   welcome_home:
     alias: "Welcome Home"
     sequence:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.hallway
         data:

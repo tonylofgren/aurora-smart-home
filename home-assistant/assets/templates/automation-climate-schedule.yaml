@@ -97,10 +97,10 @@ automation:
   # Morning Warmup (Weekdays)
   - id: climate_morning_weekday
     alias: "Climate - Morning Weekday"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "06:00:00"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_boolean.climate_schedule_enabled
         state: "on"
@@ -111,8 +111,8 @@ automation:
           - wed
           - thu
           - fri
-    action:
-      - service: climate.set_temperature
+    actions:
+      - action: climate.set_temperature
         target:
           entity_id: climate.YOUR_THERMOSTAT  # Replace
         data:
@@ -122,10 +122,10 @@ automation:
   # Morning Warmup (Weekend)
   - id: climate_morning_weekend
     alias: "Climate - Morning Weekend"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "07:30:00"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_boolean.climate_schedule_enabled
         state: "on"
@@ -133,8 +133,8 @@ automation:
         weekday:
           - sat
           - sun
-    action:
-      - service: climate.set_temperature
+    actions:
+      - action: climate.set_temperature
         target:
           entity_id: climate.YOUR_THERMOSTAT
         data:
@@ -144,10 +144,10 @@ automation:
   # Daytime Setback (Weekdays)
   - id: climate_daytime_setback
     alias: "Climate - Daytime Setback"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "08:30:00"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_boolean.climate_schedule_enabled
         state: "on"
@@ -161,8 +161,8 @@ automation:
       - condition: state
         entity_id: group.family
         state: "not_home"
-    action:
-      - service: climate.set_temperature
+    actions:
+      - action: climate.set_temperature
         target:
           entity_id: climate.YOUR_THERMOSTAT
         data:
@@ -171,15 +171,15 @@ automation:
   # Evening Comfort
   - id: climate_evening
     alias: "Climate - Evening Comfort"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "16:30:00"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_boolean.climate_schedule_enabled
         state: "on"
-    action:
-      - service: climate.set_temperature
+    actions:
+      - action: climate.set_temperature
         target:
           entity_id: climate.YOUR_THERMOSTAT
         data:
@@ -189,15 +189,15 @@ automation:
   # Night Setback
   - id: climate_night
     alias: "Climate - Night Setback"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "22:30:00"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_boolean.climate_schedule_enabled
         state: "on"
-    action:
-      - service: climate.set_temperature
+    actions:
+      - action: climate.set_temperature
         target:
           entity_id: climate.YOUR_THERMOSTAT
         data:
@@ -206,37 +206,37 @@ automation:
   # Window Open Detection
   - id: climate_window_open
     alias: "Climate - Window Open"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.YOUR_WINDOW  # Replace
         to: "on"
         for:
           minutes: 2
-    action:
-      - service: climate.set_hvac_mode
+    actions:
+      - action: climate.set_hvac_mode
         target:
           entity_id: climate.YOUR_THERMOSTAT
         data:
           hvac_mode: "off"
-      - service: notify.mobile_app_YOUR_PHONE  # Replace
+      - action: notify.mobile_app_YOUR_PHONE  # Replace
         data:
           message: "Window open - climate paused"
 
   # Window Closed - Resume
   - id: climate_window_closed
     alias: "Climate - Window Closed"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.YOUR_WINDOW
         to: "off"
         for:
           minutes: 1
-    condition:
+    conditions:
       - condition: state
         entity_id: input_boolean.climate_schedule_enabled
         state: "on"
-    action:
-      - service: climate.set_hvac_mode
+    actions:
+      - action: climate.set_hvac_mode
         target:
           entity_id: climate.YOUR_THERMOSTAT
         data:

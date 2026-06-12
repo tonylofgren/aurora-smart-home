@@ -77,14 +77,14 @@ script:
              states('input_select.current_scene') != scene_name }}
 
       # Store previous scene for potential undo
-      - service: input_text.set_value
+      - action: input_text.set_value
         target:
           entity_id: input_text.previous_scene
         data:
           value: "{{ states('input_select.current_scene') }}"
 
       # Update current scene
-      - service: input_select.select_option
+      - action: input_select.select_option
         target:
           entity_id: input_select.current_scene
         data:
@@ -100,7 +100,7 @@ script:
               - condition: template
                 value_template: "{{ scene_name == 'Morning' }}"
             sequence:
-              - service: script.scene_morning
+              - action: script.scene_morning
                 data:
                   transition: "{{ trans }}"
 
@@ -108,7 +108,7 @@ script:
               - condition: template
                 value_template: "{{ scene_name == 'Day' }}"
             sequence:
-              - service: script.scene_day
+              - action: script.scene_day
                 data:
                   transition: "{{ trans }}"
 
@@ -116,7 +116,7 @@ script:
               - condition: template
                 value_template: "{{ scene_name == 'Evening' }}"
             sequence:
-              - service: script.scene_evening
+              - action: script.scene_evening
                 data:
                   transition: "{{ trans }}"
 
@@ -124,7 +124,7 @@ script:
               - condition: template
                 value_template: "{{ scene_name == 'Movie' }}"
             sequence:
-              - service: script.scene_movie
+              - action: script.scene_movie
                 data:
                   transition: "{{ trans }}"
 
@@ -132,7 +132,7 @@ script:
               - condition: template
                 value_template: "{{ scene_name == 'Romantic' }}"
             sequence:
-              - service: script.scene_romantic
+              - action: script.scene_romantic
                 data:
                   transition: "{{ trans }}"
 
@@ -140,7 +140,7 @@ script:
               - condition: template
                 value_template: "{{ scene_name == 'Night' }}"
             sequence:
-              - service: script.scene_night
+              - action: script.scene_night
                 data:
                   transition: "{{ trans }}"
 
@@ -148,7 +148,7 @@ script:
               - condition: template
                 value_template: "{{ scene_name == 'Away' }}"
             sequence:
-              - service: script.scene_away
+              - action: script.scene_away
                 data:
                   transition: "{{ trans }}"
 
@@ -156,7 +156,7 @@ script:
               - condition: template
                 value_template: "{{ scene_name == 'Off' }}"
             sequence:
-              - service: script.scene_off
+              - action: script.scene_off
                 data:
                   transition: "{{ trans }}"
 
@@ -172,7 +172,7 @@ script:
         default: 5
     sequence:
       # Gradual wake-up lighting
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id:
             - light.bedroom
@@ -186,7 +186,7 @@ script:
       - delay:
           seconds: "{{ (transition | int) * 2 }}"
 
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id:
             - light.bedroom
@@ -197,7 +197,7 @@ script:
           transition: "{{ transition }}"
 
       # Open blinds slowly
-      - service: cover.set_cover_position
+      - action: cover.set_cover_position
         target:
           entity_id: cover.bedroom_blinds
         data:
@@ -206,12 +206,12 @@ script:
       - delay:
           seconds: "{{ transition }}"
 
-      - service: cover.open_cover
+      - action: cover.open_cover
         target:
           entity_id: cover.bedroom_blinds
 
       # Set comfortable temperature
-      - service: climate.set_temperature
+      - action: climate.set_temperature
         target:
           entity_id: climate.home
         data:
@@ -224,7 +224,7 @@ script:
         default: 3
     sequence:
       # Bright, productive lighting
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id:
             - light.living_room
@@ -236,7 +236,7 @@ script:
           transition: "{{ transition }}"
 
       # Open all blinds
-      - service: cover.open_cover
+      - action: cover.open_cover
         target:
           entity_id: all
 
@@ -247,7 +247,7 @@ script:
         default: 5
     sequence:
       # Warm, relaxed lighting
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id:
             - light.living_room
@@ -258,7 +258,7 @@ script:
           transition: "{{ transition }}"
 
       # Accent lights on
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id:
             - light.living_room_accent
@@ -271,7 +271,7 @@ script:
       # Close blinds if sun is down
       - condition: sun
         after: sunset
-      - service: cover.close_cover
+      - action: cover.close_cover
         target:
           entity_id:
             - cover.living_room_blinds
@@ -284,7 +284,7 @@ script:
         default: 3
     sequence:
       # Dim main lights
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id:
             - light.living_room
@@ -293,7 +293,7 @@ script:
           transition: "{{ transition }}"
 
       # TV backlight / bias lighting
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.tv_backlight
         data:
@@ -302,7 +302,7 @@ script:
           transition: "{{ transition }}"
 
       # Small accent light
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.living_room_accent
         data:
@@ -311,7 +311,7 @@ script:
           transition: "{{ transition }}"
 
       # Close blinds
-      - service: cover.close_cover
+      - action: cover.close_cover
         target:
           entity_id: cover.living_room_blinds
 
@@ -319,7 +319,7 @@ script:
       - condition: state
         entity_id: media_player.living_room_tv
         state: "on"
-      - service: media_player.select_source
+      - action: media_player.select_source
         target:
           entity_id: media_player.living_room_tv
         data:
@@ -332,7 +332,7 @@ script:
         default: 5
     sequence:
       # Warm, dim lighting
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id:
             - light.living_room
@@ -343,7 +343,7 @@ script:
           transition: "{{ transition }}"
 
       # Colored accents
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.living_room_accent
         data:
@@ -352,7 +352,7 @@ script:
           transition: "{{ transition }}"
 
       # Turn off other lights
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id:
             - light.kitchen
@@ -362,7 +362,7 @@ script:
           transition: "{{ transition }}"
 
       # Close all blinds
-      - service: cover.close_cover
+      - action: cover.close_cover
         target:
           entity_id: all
 
@@ -373,7 +373,7 @@ script:
         default: 10
     sequence:
       # Very dim, warm light for bathroom visits
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id:
             - light.hallway
@@ -384,7 +384,7 @@ script:
           transition: "{{ transition }}"
 
       # Turn off all other lights
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id:
             - light.living_room
@@ -394,14 +394,14 @@ script:
           transition: "{{ transition }}"
 
       # Lower temperature
-      - service: climate.set_temperature
+      - action: climate.set_temperature
         target:
           entity_id: climate.home
         data:
           temperature: 18
 
       # Make sure doors are locked
-      - service: lock.lock
+      - action: lock.lock
         target:
           entity_id: all
 
@@ -412,26 +412,26 @@ script:
         default: 5
     sequence:
       # Turn off all lights
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id: all
         data:
           transition: "{{ transition }}"
 
       # Lower temperature
-      - service: climate.set_temperature
+      - action: climate.set_temperature
         target:
           entity_id: climate.home
         data:
           temperature: 17
 
       # Close blinds
-      - service: cover.close_cover
+      - action: cover.close_cover
         target:
           entity_id: all
 
       # Lock all doors
-      - service: lock.lock
+      - action: lock.lock
         target:
           entity_id: all
 
@@ -439,7 +439,7 @@ script:
       - condition: state
         entity_id: alarm_control_panel.home
         state: "disarmed"
-      - service: alarm_control_panel.alarm_arm_away
+      - action: alarm_control_panel.alarm_arm_away
         target:
           entity_id: alarm_control_panel.home
 
@@ -450,14 +450,14 @@ script:
         default: 3
     sequence:
       # Turn off all lights
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id: all
         data:
           transition: "{{ transition }}"
 
       # Turn off media players
-      - service: media_player.turn_off
+      - action: media_player.turn_off
         target:
           entity_id: all
 
@@ -469,7 +469,7 @@ script:
   restore_previous_scene:
     alias: "Restore Previous Scene"
     sequence:
-      - service: script.activate_scene
+      - action: script.activate_scene
         data:
           scene_name: "{{ states('input_text.previous_scene') }}"
           transition: 2
@@ -487,7 +487,7 @@ script:
           current: "{{ states('input_select.current_scene') }}"
           current_index: "{{ scenes.index(current) if current in scenes else -1 }}"
           next_index: "{{ (current_index + 1) % (scenes | length) }}"
-      - service: script.activate_scene
+      - action: script.activate_scene
         data:
           scene_name: "{{ scenes[next_index] }}"
 
@@ -507,7 +507,7 @@ script:
             {% else %}
               Night
             {% endif %}
-      - service: script.activate_scene
+      - action: script.activate_scene
         data:
           scene_name: "{{ scene }}"
 
@@ -528,48 +528,48 @@ automation:
   # Auto-scene based on time (if enabled)
   - id: auto_scene_time_based
     alias: "Auto Scene: Time Based"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "06:30:00"
-      - platform: time
+      - trigger: time
         at: "09:00:00"
-      - platform: time
+      - trigger: time
         at: "18:00:00"
-      - platform: time
+      - trigger: time
         at: "22:30:00"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_boolean.auto_scene_enabled
         state: "on"
       - condition: state
         entity_id: binary_sensor.anyone_home
         state: "on"
-    action:
-      - service: script.set_adaptive_scene
+    actions:
+      - action: script.set_adaptive_scene
 
   # Scene on arriving home
   - id: scene_on_arrival
     alias: "Scene: On Arrival"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.anyone_home
         from: "off"
         to: "on"
-    action:
-      - service: script.set_adaptive_scene
+    actions:
+      - action: script.set_adaptive_scene
 
   # Away scene when leaving
   - id: scene_on_leaving
     alias: "Scene: On Leaving"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.anyone_home
         from: "on"
         to: "off"
         for:
           minutes: 5
-    action:
-      - service: script.activate_scene
+    actions:
+      - action: script.activate_scene
         data:
           scene_name: "Away"
 
@@ -585,7 +585,7 @@ input_boolean:
 #
 # Call from automation or script:
 #
-# service: script.activate_scene
+# action: script.activate_scene
 # data:
 #   scene_name: "Evening"
 #   transition: 5
@@ -594,7 +594,7 @@ input_boolean:
 #
 # type: button
 # tap_action:
-#   action: call-service
-#   service: script.activate_scene
+#   action: perform-action
+#   perform_action: script.activate_scene
 #   data:
 #     scene_name: Movie

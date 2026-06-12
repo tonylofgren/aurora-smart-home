@@ -21,14 +21,14 @@ automation:
     description: "Prepares home before rain using forecast"
     mode: single
 
-    trigger:
+    triggers:
       # Check forecast every 30 minutes
-      - platform: time_pattern
+      - trigger: time_pattern
         minutes: "/30"
 
-    action:
+    actions:
       # Get hourly forecast
-      - service: weather.get_forecasts
+      - action: weather.get_forecasts
         target:
           entity_id: weather.home
         data:
@@ -65,14 +65,14 @@ automation:
             state: "off"
         then:
           # Close outdoor covers
-          - service: cover.close_cover
+          - action: cover.close_cover
             target:
               entity_id:
                 - cover.patio_awning
                 - cover.balcony_shade
 
           # Notify residents
-          - service: notify.mobile_app
+          - action: notify.mobile_app
             data:
               title: "Rain Expected"
               message: >
@@ -82,7 +82,7 @@ automation:
                 tag: weather-rain
 
           # Mark as prepared (prevent repeated actions)
-          - service: input_boolean.turn_on
+          - action: input_boolean.turn_on
             target:
               entity_id: input_boolean.rain_prepared
 
@@ -96,20 +96,20 @@ automation:
     description: "Pre-heats or pre-cools based on forecast"
     mode: single
 
-    trigger:
+    triggers:
       # Run at 6 AM to prepare for the day
-      - platform: time
+      - trigger: time
         at: "06:00:00"
         id: morning
 
       # Also run at 2 PM for afternoon adjustments
-      - platform: time
+      - trigger: time
         at: "14:00:00"
         id: afternoon
 
-    action:
+    actions:
       # Get daily forecast
-      - service: weather.get_forecasts
+      - action: weather.get_forecasts
         target:
           entity_id: weather.home
         data:
@@ -117,7 +117,7 @@ automation:
         response_variable: daily_forecast
 
       # Get hourly for more precision
-      - service: weather.get_forecasts
+      - action: weather.get_forecasts
         target:
           entity_id: weather.home
         data:
@@ -149,13 +149,13 @@ automation:
               - condition: trigger
                 id: morning
             sequence:
-              - service: climate.set_temperature
+              - action: climate.set_temperature
                 target:
                   entity_id: climate.living_room
                 data:
                   hvac_mode: cool
                   temperature: 23
-              - service: notify.mobile_app
+              - action: notify.mobile_app
                 data:
                   title: "Climate Adjustment"
                   message: >
@@ -168,13 +168,13 @@ automation:
               - condition: trigger
                 id: morning
             sequence:
-              - service: climate.set_temperature
+              - action: climate.set_temperature
                 target:
                   entity_id: climate.living_room
                 data:
                   hvac_mode: heat
                   temperature: 21
-              - service: notify.mobile_app
+              - action: notify.mobile_app
                 data:
                   title: "Climate Adjustment"
                   message: >
@@ -185,7 +185,7 @@ automation:
               - condition: template
                 value_template: "{{ (indoor_temp - avg_temp) > 5 }}"
             sequence:
-              - service: climate.set_temperature
+              - action: climate.set_temperature
                 target:
                   entity_id: climate.living_room
                 data:
@@ -202,11 +202,11 @@ automation:
     description: "Automatically closes blinds during high UV"
     mode: single
 
-    trigger:
-      - platform: time_pattern
+    triggers:
+      - trigger: time_pattern
         hours: "/1"  # Check every hour during daytime
 
-    condition:
+    conditions:
       - condition: sun
         after: sunrise
         after_offset: "01:00:00"
@@ -214,7 +214,7 @@ automation:
         before: sunset
         before_offset: "01:00:00"
 
-    action:
+    actions:
       # Get current weather data
       - variables:
           uv_index: "{{ state_attr('weather.home', 'uv_index') | float(0) }}"
@@ -227,7 +227,7 @@ automation:
               - condition: template
                 value_template: "{{ uv_index >= 8 }}"
             sequence:
-              - service: cover.set_cover_position
+              - action: cover.set_cover_position
                 target:
                   entity_id:
                     - cover.living_room_blinds
@@ -240,7 +240,7 @@ automation:
               - condition: template
                 value_template: "{{ uv_index >= 6 }}"
             sequence:
-              - service: cover.set_cover_position
+              - action: cover.set_cover_position
                 target:
                   entity_id:
                     - cover.living_room_blinds
@@ -253,7 +253,7 @@ automation:
               - condition: template
                 value_template: "{{ uv_index >= 3 and cloud_coverage < 30 }}"
             sequence:
-              - service: cover.set_cover_position
+              - action: cover.set_cover_position
                 target:
                   entity_id:
                     - cover.living_room_blinds
@@ -270,13 +270,13 @@ automation:
     description: "Prepares home for incoming storms"
     mode: single
 
-    trigger:
-      - platform: time_pattern
+    triggers:
+      - trigger: time_pattern
         minutes: "/15"
 
-    action:
+    actions:
       # Get forecast
-      - service: weather.get_forecasts
+      - action: weather.get_forecasts
         target:
           entity_id: weather.home
         data:
@@ -329,19 +329,19 @@ automation:
           # Execute storm preparation
           - parallel:
               # Close all covers
-              - service: cover.close_cover
+              - action: cover.close_cover
                 target:
                   entity_id: all
 
               # Secure outdoor devices
-              - service: switch.turn_off
+              - action: switch.turn_off
                 target:
                   entity_id:
                     - switch.outdoor_lights
                     - switch.fountain
 
               # Send warning notification
-              - service: notify.mobile_app
+              - action: notify.mobile_app
                 data:
                   title: "Storm Warning"
                   message: >
@@ -359,7 +359,7 @@ automation:
                     channel: alerts
 
           # Mark as prepared
-          - service: input_boolean.turn_on
+          - action: input_boolean.turn_on
             target:
               entity_id: input_boolean.storm_prepared
 
@@ -373,12 +373,12 @@ automation:
     description: "Warns about frost for plant protection"
     mode: single
 
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "18:00:00"  # Evening check
 
-    action:
-      - service: weather.get_forecasts
+    actions:
+      - action: weather.get_forecasts
         target:
           entity_id: weather.home
         data:
@@ -405,7 +405,7 @@ automation:
           - condition: template
             value_template: "{{ frost_risk.frost }}"
         then:
-          - service: notify.mobile_app
+          - action: notify.mobile_app
             data:
               title: "Frost Warning"
               message: >
@@ -435,8 +435,8 @@ input_boolean:
 automation:
   - id: weather_reset_flags
     alias: "Weather: Reset Preparation Flags"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: weather.home
         to:
           - sunny
@@ -444,8 +444,8 @@ automation:
           - partlycloudy
         for:
           hours: 2
-    action:
-      - service: input_boolean.turn_off
+    actions:
+      - action: input_boolean.turn_off
         target:
           entity_id:
             - input_boolean.rain_prepared

@@ -229,22 +229,22 @@ mode: restart
 # ==========================================
 # TRIGGERS
 # ==========================================
-trigger:
+triggers:
   # Primary trigger
-  - platform: state
+  - trigger: state
     entity_id: !input motion_sensor
     to: "on"
     id: motion_on
 
   # Timeout trigger
-  - platform: state
+  - trigger: state
     entity_id: !input motion_sensor
     to: "off"
     for: !input wait_duration
     id: motion_off
 
   # Additional triggers (if provided)
-  - platform: state
+  - trigger: state
     entity_id: !input additional_triggers
     to: "on"
     id: additional_motion
@@ -252,7 +252,7 @@ trigger:
 # ==========================================
 # CONDITIONS (Optional)
 # ==========================================
-condition:
+conditions:
   # Example: Only run if automation not disabled
   - condition: template
     value_template: "{{ !input operating_mode != 'disabled' }}"
@@ -260,7 +260,7 @@ condition:
 # ==========================================
 # ACTIONS
 # ==========================================
-action:
+actions:
   # Use choose for different trigger handling
   - choose:
       # Motion detected
@@ -277,7 +277,7 @@ action:
                   {{ not has_illuminance or
                      states(illuminance_sensor) | float(0) < 100 }}
             then:
-              - service: light.turn_on
+              - action: light.turn_on
                 target: !input target_light
                 data:
                   brightness_pct: "{{ effective_brightness }}"
@@ -288,7 +288,7 @@ action:
           - condition: trigger
             id: motion_off
         sequence:
-          - service: light.turn_off
+          - action: light.turn_off
             target: !input target_light
             data:
               transition: 5

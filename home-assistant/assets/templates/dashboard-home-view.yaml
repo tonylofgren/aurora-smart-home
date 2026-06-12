@@ -31,24 +31,24 @@ views:
                 name: Home
                 icon: mdi:home
                 tap_action:
-                  action: call-service
-                  service: script.home_mode
+                  action: perform-action
+                  perform_action: script.home_mode
                 show_name: true
 
               - type: button
                 name: Away
                 icon: mdi:home-export-outline
                 tap_action:
-                  action: call-service
-                  service: script.away_mode
+                  action: perform-action
+                  perform_action: script.away_mode
                 show_name: true
 
               - type: button
                 name: Night
                 icon: mdi:weather-night
                 tap_action:
-                  action: call-service
-                  service: script.night_mode
+                  action: perform-action
+                  perform_action: script.night_mode
                 show_name: true
 
       # =====================================================

@@ -13,13 +13,13 @@ automation:
     description: "Turn on light when motion detected, with time-based brightness"
     mode: restart  # Restart on new motion to reset timeout
 
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.ROOM_motion  # Replace with your motion sensor
         to: "on"
         id: motion_on
 
-    condition:
+    conditions:
       # Only when dark enough
       - condition: or
         conditions:
@@ -30,9 +30,9 @@ automation:
             entity_id: sensor.ROOM_illuminance  # Replace or remove if no lux sensor
             below: 100
 
-    action:
+    actions:
       # Turn on light with time-based brightness
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.ROOM  # Replace with your light
         data:
@@ -49,7 +49,7 @@ automation:
 
       # Wait for motion to stop + timeout
       - wait_for_trigger:
-          - platform: state
+          - trigger: state
             entity_id: binary_sensor.ROOM_motion
             to: "off"
             for:
@@ -58,7 +58,7 @@ automation:
           minutes: 30  # Maximum on time
 
       # Turn off light
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id: light.ROOM
         data:

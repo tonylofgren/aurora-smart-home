@@ -30,8 +30,8 @@ sections:
         chips:
           - type: action
             tap_action:
-              action: call-service
-              service: alarm_control_panel.alarm_disarm
+              action: perform-action
+              perform_action: alarm_control_panel.alarm_disarm
               target:
                 entity_id: alarm_control_panel.home_alarm
               data:
@@ -41,8 +41,8 @@ sections:
 
           - type: action
             tap_action:
-              action: call-service
-              service: alarm_control_panel.alarm_arm_home
+              action: perform-action
+              perform_action: alarm_control_panel.alarm_arm_home
               target:
                 entity_id: alarm_control_panel.home_alarm
               data:
@@ -52,8 +52,8 @@ sections:
 
           - type: action
             tap_action:
-              action: call-service
-              service: alarm_control_panel.alarm_arm_away
+              action: perform-action
+              perform_action: alarm_control_panel.alarm_arm_away
               target:
                 entity_id: alarm_control_panel.home_alarm
               data:

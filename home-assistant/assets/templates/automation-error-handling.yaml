@@ -21,8 +21,8 @@ automation:
     description: "Demonstrates retry pattern for unreliable services"
     mode: single
 
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: input_boolean.trigger_action
         to: "on"
 
@@ -30,7 +30,7 @@ automation:
       max_retries: 3
       target_device: light.unreliable_smart_bulb
 
-    action:
+    actions:
       # Track retry attempts
       - repeat:
           count: "{{ max_retries }}"
@@ -39,7 +39,7 @@ automation:
                 attempt: "{{ repeat.index }}"
 
             # Try the service call
-            - service: light.turn_on
+            - action: light.turn_on
               target:
                 entity_id: "{{ target_device }}"
               data:
@@ -60,7 +60,7 @@ automation:
                 - stop: "Success on attempt {{ attempt }}"
 
             # Log the failure
-            - service: logbook.log
+            - action: logbook.log
               data:
                 name: "Error Handling"
                 message: "Attempt {{ attempt }}/{{ max_retries }} failed for {{ target_device }}"
@@ -75,7 +75,7 @@ automation:
                     seconds: "{{ 2 ** attempt }}"  # 2, 4, 8 seconds
 
       # All retries failed - notify
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           title: "Automation Failed"
           message: "Could not control {{ target_device }} after {{ max_retries }} attempts"
@@ -93,8 +93,8 @@ automation:
     description: "Saves state and rolls back on failure"
     mode: single
 
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: input_boolean.start_scene
         to: "on"
 
@@ -104,7 +104,7 @@ automation:
         - light.kitchen
         - light.hallway
 
-    action:
+    actions:
       # ---- SAVE CURRENT STATE ----
       - variables:
           saved_states: >
@@ -121,7 +121,7 @@ automation:
             {{ ns.states }}
 
       # ---- ATTEMPT NEW SCENE ----
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: "{{ target_lights }}"
         data:
@@ -156,18 +156,18 @@ automation:
                     - condition: template
                       value_template: "{{ repeat.item.state == 'on' }}"
                   then:
-                    - service: light.turn_on
+                    - action: light.turn_on
                       target:
                         entity_id: "{{ repeat.item.entity_id }}"
                       data:
                         brightness: "{{ repeat.item.brightness }}"
                   else:
-                    - service: light.turn_off
+                    - action: light.turn_off
                       target:
                         entity_id: "{{ repeat.item.entity_id }}"
 
           # Notify about rollback
-          - service: notify.mobile_app
+          - action: notify.mobile_app
             data:
               title: "Scene Rolled Back"
               message: "Failed to set scene, restored previous state"
@@ -183,18 +183,18 @@ automation:
     mode: queued
     max: 10
 
-    trigger:
+    triggers:
       # Watch for automation failures
-      - platform: event
+      - trigger: event
         event_type: automation_triggered
         id: automation_event
 
       # Watch for service call errors
-      - platform: event
+      - trigger: event
         event_type: call_service
         id: service_event
 
-    condition:
+    conditions:
       # Only process failures
       - condition: template
         value_template: >
@@ -206,7 +206,7 @@ automation:
                trigger.event.data.response.error is defined }}
           {% endif %}
 
-    action:
+    actions:
       - variables:
           error_info: >
             {% if trigger.id == 'automation_event' %}
@@ -223,13 +223,13 @@ automation:
           {% set last = state_attr('input_datetime.last_error_notification', 'timestamp') | default(0) %}
           {{ (as_timestamp(now()) - last) > 300 }}
 
-      - service: input_datetime.set_datetime
+      - action: input_datetime.set_datetime
         target:
           entity_id: input_datetime.last_error_notification
         data:
           datetime: "{{ now().isoformat() }}"
 
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           title: "Home Assistant Error"
           message: "{{ error_info }}"
@@ -253,11 +253,11 @@ automation:
     mode: queued
     max: 20
 
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: automation_error_occurred
 
-    action:
+    actions:
       - variables:
           error_entry: >
             {{ {
@@ -268,13 +268,13 @@ automation:
             } }}
 
       # Append to dead letter queue (stored in file notification or input_text)
-      - service: notify.file
+      - action: notify.file
         data:
           message: "{{ error_entry | to_json }}"
           target: /config/dead_letter_queue.json
 
       # Increment error counter
-      - service: counter.increment
+      - action: counter.increment
         target:
           entity_id: counter.automation_errors_today
 
@@ -284,7 +284,7 @@ automation:
             value_template: >
               {{ states('counter.automation_errors_today') | int > 10 }}
         then:
-          - service: notify.mobile_app
+          - action: notify.mobile_app
             data:
               title: "High Error Rate"
               message: >
@@ -321,10 +321,10 @@ counter:
 automation:
   - id: error_counter_reset
     alias: "Error Counter: Daily Reset"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "00:00:00"
-    action:
-      - service: counter.reset
+    actions:
+      - action: counter.reset
         target:
           entity_id: counter.automation_errors_today

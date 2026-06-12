@@ -68,7 +68,7 @@ script:
           {% endif %}
 
       # Send notification
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           title: "{{ title }}"
           message: "{{ message }}"
@@ -76,7 +76,7 @@ script:
             tag: "{{ tag }}"
 
       # Update last sent time
-      - service: input_datetime.set_datetime
+      - action: input_datetime.set_datetime
         target:
           entity_id: "{{ last_sent_entity }}"
         data:
@@ -120,7 +120,7 @@ script:
           {{ states(counter_entity) | int(0) < max_actions | int }}
 
       # Increment counter
-      - service: counter.increment
+      - action: counter.increment
         target:
           entity_id: "{{ counter_entity }}"
 
@@ -158,18 +158,18 @@ script:
           {{ states('counter.doorbell_rings') | int(0) < 5 }}
 
       # Update tracking
-      - service: input_datetime.set_datetime
+      - action: input_datetime.set_datetime
         target:
           entity_id: input_datetime.last_doorbell
         data:
           datetime: "{{ now().isoformat() }}"
 
-      - service: counter.increment
+      - action: counter.increment
         target:
           entity_id: counter.doorbell_rings
 
       # Send notification with camera snapshot
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           title: "Doorbell"
           message: "Someone is at the door"
@@ -184,7 +184,7 @@ script:
                 title: "Ignore"
 
       # Optional: Play announcement on speakers
-      - service: tts.speak
+      - action: tts.speak
         target:
           entity_id: tts.piper
         data:
@@ -244,13 +244,13 @@ script:
           {% endif %}
 
       # Update tracking
-      - service: input_datetime.set_datetime
+      - action: input_datetime.set_datetime
         target:
           entity_id: "input_datetime.last_motion_{{ area | lower | replace(' ', '_') }}"
         data:
           datetime: "{{ now().isoformat() }}"
 
-      - service: counter.increment
+      - action: counter.increment
         target:
           entity_id: "counter.motion_alerts_{{ area | lower | replace(' ', '_') }}"
 
@@ -259,7 +259,7 @@ script:
           # First alert - normal notification
           - conditions: "{{ alert_level == 'normal' }}"
             sequence:
-              - service: notify.mobile_app
+              - action: notify.mobile_app
                 data:
                   title: "Motion: {{ area }}"
                   message: "Motion detected in {{ area }}"
@@ -269,7 +269,7 @@ script:
           # Repeated alerts - elevated
           - conditions: "{{ alert_level == 'elevated' }}"
             sequence:
-              - service: notify.mobile_app
+              - action: notify.mobile_app
                 data:
                   title: "Repeated Motion: {{ area }}"
                   message: "{{ alert_count + 1 }} motion events in {{ area }}"
@@ -280,7 +280,7 @@ script:
           # Many alerts - high priority
           - conditions: "{{ alert_level == 'high' }}"
             sequence:
-              - service: notify.mobile_app
+              - action: notify.mobile_app
                 data:
                   title: "Continuous Motion: {{ area }}"
                   message: "Ongoing activity in {{ area }} ({{ alert_count + 1 }} events)"
@@ -344,17 +344,17 @@ script:
           - condition: template
             value_template: "{{ seconds_elapsed >= 60 }}"
         then:
-          - service: counter.reset
+          - action: counter.reset
             target:
               entity_id: "counter.{{ api_name }}_calls"
-          - service: input_datetime.set_datetime
+          - action: input_datetime.set_datetime
             target:
               entity_id: "input_datetime.{{ api_name }}_window_start"
             data:
               datetime: "{{ now().isoformat() }}"
 
       # Increment call counter
-      - service: counter.increment
+      - action: counter.increment
         target:
           entity_id: "counter.{{ api_name }}_calls"
 
@@ -422,11 +422,11 @@ automation:
   - id: rate_limit_counter_reset
     alias: "Rate Limit: Reset Counters"
     description: "Resets rate limit counters every 10 minutes"
-    trigger:
-      - platform: time_pattern
+    triggers:
+      - trigger: time_pattern
         minutes: "/10"
-    action:
-      - service: counter.reset
+    actions:
+      - action: counter.reset
         target:
           entity_id:
             - counter.doorbell_rings
@@ -436,10 +436,10 @@ automation:
   - id: rate_limit_daily_reset
     alias: "Rate Limit: Daily Reset"
     description: "Resets all rate limit counters at midnight"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "00:00:00"
-    action:
-      - service: counter.reset
+    actions:
+      - action: counter.reset
         target:
           entity_id: all

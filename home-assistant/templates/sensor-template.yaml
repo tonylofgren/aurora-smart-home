@@ -181,8 +181,8 @@ template:
   # ==========================================
   # TRIGGER-BASED SENSOR
   # ==========================================
-  - trigger:
-      - platform: time_pattern
+  - triggers:
+      - trigger: time_pattern
         hours: "/1"  # Every hour
     sensor:
       - name: "Hourly Energy"
@@ -199,7 +199,7 @@ template:
   - button:
       - name: "Reset Energy Counter"
         press:
-          - service: utility_meter.reset
+          - action: utility_meter.reset
             target:
               entity_id: utility_meter.daily_energy
 
@@ -214,7 +214,7 @@ template:
         unit_of_measurement: "°C"
         state: "{{ states('input_number.thermostat_offset') }}"
         set_value:
-          - service: input_number.set_value
+          - action: input_number.set_value
             target:
               entity_id: input_number.thermostat_offset
             data:

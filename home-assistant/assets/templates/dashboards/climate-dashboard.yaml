@@ -159,8 +159,8 @@ sections:
         chips:
           - type: action
             tap_action:
-              action: call-service
-              service: climate.set_preset_mode
+              action: perform-action
+              perform_action: climate.set_preset_mode
               target:
                 entity_id:
                   - climate.living_room
@@ -172,8 +172,8 @@ sections:
 
           - type: action
             tap_action:
-              action: call-service
-              service: climate.set_preset_mode
+              action: perform-action
+              perform_action: climate.set_preset_mode
               target:
                 entity_id:
                   - climate.living_room
@@ -185,8 +185,8 @@ sections:
 
           - type: action
             tap_action:
-              action: call-service
-              service: climate.set_preset_mode
+              action: perform-action
+              perform_action: climate.set_preset_mode
               target:
                 entity_id:
                   - climate.living_room
@@ -198,8 +198,8 @@ sections:
 
           - type: action
             tap_action:
-              action: call-service
-              service: climate.turn_off
+              action: perform-action
+              perform_action: climate.turn_off
               target:
                 entity_id:
                   - climate.living_room

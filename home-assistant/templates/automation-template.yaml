@@ -17,9 +17,9 @@ mode: single
 # -------------------
 # TRIGGERS
 # -------------------
-trigger:
+triggers:
   # State change trigger
-  - platform: state
+  - trigger: state
     entity_id: binary_sensor.motion_sensor
     from: "off"
     to: "on"
@@ -27,60 +27,60 @@ trigger:
     id: motion_detected  # Optional trigger ID for choose
 
   # Time trigger
-  - platform: time
+  - trigger: time
     at: "07:00:00"
     id: morning_time
 
   # Sun trigger
-  - platform: sun
+  - trigger: sun
     event: sunset
     offset: "-00:30:00"  # 30 min before sunset
 
   # Numeric state trigger
-  - platform: numeric_state
+  - trigger: numeric_state
     entity_id: sensor.temperature
     above: 25
     # below: 30
     # for: "00:05:00"
 
   # Template trigger
-  - platform: template
+  - trigger: template
     value_template: "{{ states('sensor.power') | float > 1000 }}"
     for: "00:01:00"
 
   # Event trigger
-  - platform: event
+  - trigger: event
     event_type: call_service
     event_data:
       domain: light
-      service: turn_on
+      action: turn_on
 
   # MQTT trigger
-  - platform: mqtt
+  - trigger: mqtt
     topic: "home/sensor/motion"
     payload: "detected"
 
   # Device trigger (from UI)
-  - platform: device
+  - trigger: device
     device_id: "abc123"
     domain: zha
     type: remote_button_short_press
     subtype: button_1
 
   # Calendar trigger
-  - platform: calendar
+  - trigger: calendar
     event: start
     entity_id: calendar.family
     offset: "-00:15:00"
 
   # Zone trigger
-  - platform: zone
+  - trigger: zone
     entity_id: person.john
     zone: zone.home
     event: enter  # or leave
 
   # Webhook trigger
-  - platform: webhook
+  - trigger: webhook
     webhook_id: "my_webhook_id"
     allowed_methods:
       - POST
@@ -88,7 +88,7 @@ trigger:
 # -------------------
 # CONDITIONS (Optional)
 # -------------------
-condition:
+conditions:
   # State condition
   - condition: state
     entity_id: input_boolean.automation_enabled
@@ -155,9 +155,9 @@ condition:
 # -------------------
 # ACTIONS
 # -------------------
-action:
+actions:
   # Service call
-  - service: light.turn_on
+  - action: light.turn_on
     target:
       entity_id: light.living_room
     data:
@@ -165,7 +165,7 @@ action:
       color_temp: 400
 
   # Service with target areas/devices
-  - service: light.turn_on
+  - action: light.turn_on
     target:
       area_id: living_room
       device_id:
@@ -181,7 +181,7 @@ action:
 
   # Wait for trigger
   - wait_for_trigger:
-      - platform: state
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "off"
     timeout:
@@ -198,18 +198,18 @@ action:
           - condition: trigger
             id: motion_detected
         sequence:
-          - service: light.turn_on
+          - action: light.turn_on
             target:
               entity_id: light.hallway
       - conditions:
           - condition: trigger
             id: morning_time
         sequence:
-          - service: scene.turn_on
+          - action: scene.turn_on
             target:
               entity_id: scene.morning
     default:
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           message: "Default action"
 
@@ -219,11 +219,11 @@ action:
         entity_id: sun.sun
         state: "below_horizon"
     then:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.porch
     else:
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id: light.porch
 
@@ -231,7 +231,7 @@ action:
   - repeat:
       count: 3
       sequence:
-        - service: light.toggle
+        - action: light.toggle
           target:
             entity_id: light.warning
         - delay:
@@ -244,7 +244,7 @@ action:
           entity_id: binary_sensor.door
           state: "on"
       sequence:
-        - service: notify.mobile_app
+        - action: notify.mobile_app
           data:
             message: "Door still open!"
         - delay:
@@ -263,10 +263,10 @@ action:
 
   # Parallel execution
   - parallel:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.kitchen
-      - service: media_player.play_media
+      - action: media_player.play_media
         target:
           entity_id: media_player.speaker
         data:
@@ -283,7 +283,7 @@ action:
     error: false  # Set true to mark as error
 
   # Enable/disable automation
-  - service: automation.turn_off
+  - action: automation.turn_off
     target:
       entity_id: automation.other_automation
     data:
@@ -296,19 +296,19 @@ action:
       value: 123
 
   # Run script
-  - service: script.my_script
+  - action: script.my_script
     data:
       parameter1: "value"
 
   # Activate scene
-  - service: scene.turn_on
+  - action: scene.turn_on
     target:
       entity_id: scene.movie_night
     data:
       transition: 2
 
   # Send notification
-  - service: notify.mobile_app_phone
+  - action: notify.mobile_app_phone
     data:
       title: "Alert"
       message: "Motion detected at {{ now().strftime('%H:%M') }}"
@@ -320,7 +320,7 @@ action:
             title: "Turn off lights"
 
   # TTS announcement
-  - service: tts.speak
+  - action: tts.speak
     target:
       entity_id: tts.google_en
     data:

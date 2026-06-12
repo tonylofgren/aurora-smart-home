@@ -209,8 +209,8 @@ sections:
         chips:
           - type: action
             tap_action:
-              action: call-service
-              service: switch.turn_off
+              action: perform-action
+              perform_action: switch.turn_off
               target:
                 entity_id:
                   - switch.non_essential_loads
@@ -219,8 +219,8 @@ sections:
 
           - type: action
             tap_action:
-              action: call-service
-              service: input_select.select_option
+              action: perform-action
+              perform_action: input_select.select_option
               target:
                 entity_id: input_select.ev_charging_mode
               data:
