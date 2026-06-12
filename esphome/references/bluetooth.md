@@ -495,7 +495,7 @@ logger:
 ### Common Issues
 
 **No devices found:**
-```yaml
+```text
 # Enable scan logging
 esp32_ble_tracker:
   on_ble_advertise:

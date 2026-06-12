@@ -801,7 +801,7 @@ How do I use the new weather.get_forecasts service?"
 ```
 
 **New pattern:**
-```yaml
+```jinja2
 # Old (deprecated):
 {{ state_attr('weather.home', 'forecast')[0].temperature }}
 

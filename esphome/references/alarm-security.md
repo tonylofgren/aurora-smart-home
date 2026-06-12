@@ -283,7 +283,7 @@ lock:
 
 **Publishing State (from lambdas or automations):**
 
-```yaml
+```text
 # From YAML automation
 - lock.template.publish:
     id: my_lock

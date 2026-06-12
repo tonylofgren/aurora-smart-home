@@ -38,7 +38,7 @@ sensor:
 
 ### Common Filters
 
-```yaml
+```text
 filters:
   - offset: 2.0                      # Add constant
   - multiply: 1.2                    # Multiply by factor

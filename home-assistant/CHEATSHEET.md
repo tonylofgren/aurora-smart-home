@@ -252,7 +252,7 @@ actions:
 
 ## Template Syntax
 
-```yaml
+```jinja2
 # State
 "{{ states('sensor.temperature') }}"
 
@@ -288,7 +288,7 @@ actions:
 
 ## Jinja Filters
 
-```yaml
+```text
 # Numbers
 | int
 | float

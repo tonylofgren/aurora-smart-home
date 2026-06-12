@@ -594,7 +594,7 @@ script:
 
 ### Parameterized Scripts
 
-```yaml
+```text
 script:
   - id: blink_led
     parameters:
@@ -616,7 +616,7 @@ script:
 
 ### Script Control
 
-```yaml
+```text
 # Execute
 - script.execute: my_script
 
@@ -674,7 +674,7 @@ globals:
 
 ### Usage
 
-```yaml
+```text
 # Set in action
 - globals.set:
     id: counter

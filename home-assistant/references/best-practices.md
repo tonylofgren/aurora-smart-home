@@ -45,7 +45,7 @@
 
 ### Entity Naming
 
-```yaml
+```text
 # Pattern: domain.location_device_function
 # Use: snake_case (lowercase with underscores)
 
@@ -83,7 +83,7 @@ binary_sensor.living_room_motion
 
 ### Function Suffixes
 
-```yaml
+```text
 # Indicate entity purpose with suffix
 
 # Sensors
@@ -205,7 +205,7 @@ config/
 
 ### Package Organization
 
-```yaml
+```text
 # configuration.yaml
 homeassistant:
   packages: !include_dir_named packages/
@@ -529,7 +529,7 @@ http:
 
 ### Secrets Protection
 
-```yaml
+```text
 # 1. Use secrets.yaml for all sensitive data
 api_key: !secret service_api_key
 
@@ -780,7 +780,7 @@ target:
 
 ### Template Testing
 
-```yaml
+```jinja2
 # Developer Tools > Template
 
 # Test conditions
@@ -1068,7 +1068,7 @@ sensor:
 
 ### Common Mistakes
 
-```yaml
+```jinja2
 # Wrong: Missing "to" state
 triggers:
   - trigger: state

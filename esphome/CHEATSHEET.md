@@ -425,7 +425,7 @@ text_sensor:
 
 ## Quick Debug
 
-```yaml
+```text
 logger:
   level: DEBUG
 

@@ -67,7 +67,7 @@
 ### Home Assistant 2024.x Notable Changes
 
 #### 2024.1
-```yaml
+```jinja2
 # Weather entity forecast attribute deprecated
 # OLD:
 {{ state_attr('weather.home', 'forecast')[0].temperature }}
@@ -140,7 +140,7 @@ views:
 ```
 
 #### 2024.8
-```yaml
+```jinja2
 # "Service calls" renamed to "actions": the action: key replaces service:
 # OLD (still works, deprecated):
 actions:
@@ -282,7 +282,7 @@ conditions:
 
 #### States Object
 
-```yaml
+```jinja2
 # OLD (deprecated):
 {{ states.sensor.temperature.state }}
 
@@ -298,7 +298,7 @@ conditions:
 
 #### Timestamp Conversions
 
-```yaml
+```jinja2
 # OLD:
 {{ as_timestamp(states.sensor.time.last_changed) }}
 
@@ -310,7 +310,7 @@ conditions:
 
 #### Float/Int Defaults
 
-```yaml
+```jinja2
 # OLD (could error on unavailable):
 {{ states('sensor.temp') | float }}
 
@@ -784,7 +784,7 @@ WARNING: Not officially supported, may cause issues
 
 ### Template Errors After Upgrade
 
-```yaml
+```jinja2
 # Problem: Templates that worked before now fail
 
 # Common causes:

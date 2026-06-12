@@ -329,7 +329,7 @@ Most Shelly devices include power monitoring.
 
 ### Available Sensors
 
-```yaml
+```text
 # For Shelly Plus 1PM:
 sensor.shelly_plus_1pm_power       # Current power (W)
 sensor.shelly_plus_1pm_energy      # Total energy (kWh)
@@ -392,7 +392,7 @@ In Shelly web UI:
 
 ### MQTT Topics
 
-```yaml
+```text
 # Gen1 topic structure
 shellies/<device-id>/relay/0
 shellies/<device-id>/relay/0/command

@@ -86,7 +86,7 @@ weather.forecast_home
 
 ### Sensors Created
 
-```yaml
+```text
 # Weather entity
 weather.openweathermap
 
@@ -111,7 +111,7 @@ sensor.openweathermap_forecast_condition
 
 ### Accessing Current Conditions
 
-```yaml
+```jinja2
 # Current temperature
 {{ states('weather.home') }}  # Returns condition: sunny, cloudy, etc.
 {{ state_attr('weather.home', 'temperature') }}

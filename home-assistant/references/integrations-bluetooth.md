@@ -43,7 +43,7 @@ Recommended USB adapters for better range and reliability:
 
 #### Configuration for USB Adapters
 
-```yaml
+```text
 # For Docker installations, pass the Bluetooth device:
 # docker-compose.yml
 services:

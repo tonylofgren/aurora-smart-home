@@ -206,7 +206,7 @@ camera:
 
 ### Common RTSP URLs by Brand
 
-```yaml
+```text
 # Hikvision
 rtsp://user:pass@ip:554/Streaming/Channels/101  # Main stream
 rtsp://user:pass@ip:554/Streaming/Channels/102  # Sub stream

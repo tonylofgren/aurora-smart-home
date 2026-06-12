@@ -217,7 +217,7 @@ digitalWrite(LED_BUILTIN, HIGH);
 ```
 
 **ESPHome:**
-```yaml
+```text
 output:
   - platform: gpio
     pin: GPIO2
@@ -245,7 +245,7 @@ analogWrite(LED_PIN, 128);
 ```
 
 **ESPHome:**
-```yaml
+```text
 sensor:
   - platform: adc
     pin: GPIO34
@@ -306,7 +306,7 @@ Serial.printf("Value: %d\n", value);
 ```
 
 **ESPHome:**
-```yaml
+```text
 logger:
   level: DEBUG
 
@@ -518,7 +518,7 @@ if (Serial1.available()) {
 ```
 
 **ESPHome:**
-```yaml
+```text
 uart:
   tx_pin: GPIO17
   rx_pin: GPIO16

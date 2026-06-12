@@ -40,7 +40,7 @@ digraph automation_debug {
 ```
 
 **Debug Commands:**
-```yaml
+```jinja2
 # Check automation state
 {{ states.automation.your_automation.state }}
 
@@ -91,7 +91,7 @@ digraph entity_unavailable {
 ```
 
 **Useful Checks:**
-```yaml
+```jinja2
 # Check all unavailable entities
 {% for state in states if state.state == 'unavailable' %}
   {{ state.entity_id }}
@@ -138,7 +138,7 @@ digraph template_error {
 
 **Common Template Fixes:**
 
-```yaml
+```jinja2
 # BAD - No error handling
 {{ states.sensor.temperature.state }}
 
@@ -301,7 +301,7 @@ Developer Tools → States → Filter by entity_id
 
 ### Developer Tools - Actions
 
-```yaml
+```text
 # Test any service call
 Developer Tools → Actions → Select action → Fill data → Perform Action
 
@@ -314,7 +314,7 @@ Service Data:
 
 ### Developer Tools - Template
 
-```yaml
+```jinja2
 # Test templates live
 Developer Tools → Template
 
@@ -325,7 +325,7 @@ Developer Tools → Template
 
 ### Logs
 
-```yaml
+```text
 # Filter logs for specific integration
 Configuration → Settings → Logs → Filter
 

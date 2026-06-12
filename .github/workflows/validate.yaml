@@ -45,6 +45,9 @@ jobs:
       - name: Run pytest suite
         run: python -m pytest aurora/tests/ -v
 
+      - name: Lint HA syntax (legacy-syntax guard + yaml fence parsing)
+        run: python aurora/scripts/lint_ha_syntax.py
+
       - name: Report test count
         if: always()
         run: |

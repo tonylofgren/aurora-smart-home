@@ -269,7 +269,7 @@ homeassistant:
 
 ### Mixed Approach
 
-```yaml
+```text
 # configuration.yaml
 homeassistant:
   packages:

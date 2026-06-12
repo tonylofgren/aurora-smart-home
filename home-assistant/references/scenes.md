@@ -882,7 +882,7 @@ scene:
 
 ### Debug Scene Application
 
-```yaml
+```jinja2
 # Check what's in a scene
 {{ state_attr('scene.movie_mode', 'entity_id') }}
 

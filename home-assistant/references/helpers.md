@@ -207,7 +207,7 @@ target:
 
 ### Using in Templates
 
-```yaml
+```jinja2
 # Get value as float
 {{ states('input_number.target_temperature') | float }}
 
@@ -604,7 +604,7 @@ conditions:
 
 ### Attributes
 
-```yaml
+```jinja2
 # Available attributes for datetime
 {{ state_attr('input_datetime.next_appointment', 'year') }}
 {{ state_attr('input_datetime.next_appointment', 'month') }}
@@ -676,7 +676,7 @@ automation:
 
 ### State
 
-```yaml
+```jinja2
 # State is timestamp of last press
 {{ states('input_button.restart_router') }}
 # Returns: "2024-01-15T10:30:00.000000+00:00"
@@ -913,7 +913,7 @@ triggers:
 
 ### Timer Attributes
 
-```yaml
+```jinja2
 # Get remaining time
 {{ state_attr('timer.laundry', 'remaining') }}
 # Returns: "0:45:30" when active

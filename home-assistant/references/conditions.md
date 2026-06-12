@@ -1253,7 +1253,7 @@ conditions:
 
 ### Test Conditions
 
-```yaml
+```jinja2
 # Test in Developer Tools > Template
 {{ is_state('input_boolean.test', 'on') and
    is_state('binary_sensor.motion', 'on') }}
@@ -1293,7 +1293,7 @@ automation:
 
 ### Check Condition in Template
 
-```yaml
+```jinja2
 # Developer Tools > Template
 # Test your condition logic
 

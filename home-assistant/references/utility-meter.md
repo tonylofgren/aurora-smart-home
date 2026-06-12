@@ -106,7 +106,7 @@ utility_meter:
 
 ### Entities Created
 
-```yaml
+```text
 # For the above configuration:
 sensor.daily_energy_peak       # Peak consumption
 sensor.daily_energy_offpeak    # Off-peak consumption

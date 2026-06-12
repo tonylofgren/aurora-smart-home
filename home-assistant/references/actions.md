@@ -1451,7 +1451,7 @@ data:
 
 ### Common Mistakes
 
-```yaml
+```jinja2
 # Wrong: target inside data
 actions:
   - action: light.turn_on

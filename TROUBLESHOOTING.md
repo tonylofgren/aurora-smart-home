@@ -186,7 +186,7 @@ esp32:
 **Common fixes:**
 
 1. **Missing default filter**
-   ```yaml
+   ```jinja2
    # Bad - fails if entity unavailable
    {{ states('sensor.temperature') | float * 1.8 + 32 }}
 
@@ -195,7 +195,7 @@ esp32:
    ```
 
 2. **Wrong state access**
-   ```yaml
+   ```jinja2
    # Bad - returns all states (slow)
    {{ states() | selectattr('domain', 'eq', 'light') | list }}
 
@@ -204,7 +204,7 @@ esp32:
    ```
 
 3. **Numeric comparisons**
-   ```yaml
+   ```jinja2
    # Bad - string comparison
    {{ states('sensor.temp') > 20 }}
 

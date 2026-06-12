@@ -1074,7 +1074,7 @@ tap_action:
 
 ### Deep Linking
 
-```yaml
+```text
 # Link directly to specific views
 # Format: /dashboard-name/view-path
 
@@ -1526,7 +1526,7 @@ action: homeassistant.check_config
 
 ### YAML Validation
 
-```yaml
+```text
 # Common YAML mistakes
 
 # Wrong: Missing quotes for special characters

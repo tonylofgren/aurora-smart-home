@@ -479,7 +479,7 @@ mqtt:
 
 ### Entities Created
 
-```yaml
+```text
 # Per camera entities:
 camera.front_door                          # Live stream
 binary_sensor.front_door_motion            # Motion detection

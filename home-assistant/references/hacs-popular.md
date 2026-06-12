@@ -465,7 +465,7 @@ Automatically adjust light color temperature and brightness based on time of day
 
 ### Entities Created
 
-```yaml
+```text
 # Per configuration:
 switch.adaptive_lighting_living_room          # Main on/off
 switch.adaptive_lighting_adapt_brightness_living_room
@@ -569,7 +569,7 @@ Battery Notes automatically detects devices with battery sensors and adds metada
 
 ### Entities Created
 
-```yaml
+```text
 # Per battery device:
 sensor.device_name_battery_plus          # Enhanced battery sensor
 binary_sensor.device_name_battery_low    # Low battery indicator

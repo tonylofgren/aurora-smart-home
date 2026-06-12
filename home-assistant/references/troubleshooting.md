@@ -97,7 +97,7 @@ hass --safe-mode
 
 ### Recovery Mode
 
-```yaml
+```text
 # If web UI unavailable:
 
 # 1. SSH access
@@ -124,7 +124,7 @@ ha core restart
 
 **Common Mistakes:**
 
-```yaml
+```text
 # Wrong: Tabs instead of spaces
 automation:
 	alias: Test  # TAB character
@@ -194,7 +194,7 @@ automation: !include_dir_list automations/
 
 ### Secret File Issues
 
-```yaml
+```text
 # secrets.yaml must be in config directory
 
 # Check secrets file
@@ -354,7 +354,7 @@ automation:
 
 ### Condition Testing
 
-```yaml
+```jinja2
 # Test conditions in Developer Tools > Template
 
 {% if is_state('sun.sun', 'below_horizon') %}
@@ -1316,7 +1316,7 @@ systemctl restart home-assistant
 
 ### Useful Templates
 
-```yaml
+```jinja2
 # Debug entity state
 {{ states('entity_id') }}
 {{ state_attr('entity_id', 'attribute') }}

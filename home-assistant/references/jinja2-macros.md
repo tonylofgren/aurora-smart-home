@@ -83,14 +83,14 @@ template:
 
 Importing the whole file as a namespace also works:
 
-```yaml
+```jinja2
 {% import 'formatters.jinja' as fmt %}
 {{ fmt.pct(states('sensor.cpu_load'), 1) }}
 ```
 
 **Context matters.** By default an imported macro runs without the calling template's context. Home Assistant's own functions (`states()`, `now()`, `is_state()`, and friends) are globals and work either way, but if your macro reads variables from the calling template, import it `with context`:
 
-```yaml
+```jinja2
 {% from 'batteries.jinja' import battery_report with context %}
 ```
 
@@ -142,7 +142,7 @@ No restart is needed. Template entities re-render with the new macro on their ne
 {%- endmacro -%}
 ```
 
-```yaml
+```jinja2
 # Anywhere a template renders:
 {% from 'formatters.jinja' import time_ago %}
 Front door last opened {{ time_ago(states.binary_sensor.front_door.last_changed) }}.

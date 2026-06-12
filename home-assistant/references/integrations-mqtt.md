@@ -758,7 +758,7 @@ home/garage/cover/door/position
 
 ### Use JSON for Complex Data
 
-```yaml
+```text
 # Instead of multiple topics
 sensors/temp
 sensors/humidity

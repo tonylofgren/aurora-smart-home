@@ -1021,7 +1021,7 @@ Access trigger data in conditions and actions.
 
 ### Common Trigger Variables
 
-```yaml
+```jinja2
 # Available for all triggers
 {{ trigger.platform }}      # Trigger type
 {{ trigger.id }}           # Trigger ID (if set)
@@ -1031,7 +1031,7 @@ Access trigger data in conditions and actions.
 
 ### State Trigger Variables
 
-```yaml
+```jinja2
 {{ trigger.entity_id }}           # Entity that triggered
 {{ trigger.from_state }}          # Previous state object
 {{ trigger.from_state.state }}    # Previous state value
@@ -1046,7 +1046,7 @@ Access trigger data in conditions and actions.
 
 ### Numeric State Variables
 
-```yaml
+```jinja2
 {{ trigger.entity_id }}
 {{ trigger.from_state }}
 {{ trigger.to_state }}
@@ -1057,7 +1057,7 @@ Access trigger data in conditions and actions.
 
 ### Event Trigger Variables
 
-```yaml
+```jinja2
 {{ trigger.event }}               # Event object
 {{ trigger.event.event_type }}    # Event type
 {{ trigger.event.data }}          # Event data
@@ -1068,7 +1068,7 @@ Access trigger data in conditions and actions.
 
 ### MQTT Trigger Variables
 
-```yaml
+```jinja2
 {{ trigger.topic }}               # MQTT topic
 {{ trigger.payload }}             # Raw payload
 {{ trigger.payload_json }}        # Parsed JSON payload
@@ -1077,7 +1077,7 @@ Access trigger data in conditions and actions.
 
 ### Webhook Trigger Variables
 
-```yaml
+```jinja2
 {{ trigger.json }}                # JSON body
 {{ trigger.data }}                # Form data
 {{ trigger.query }}               # Query parameters
@@ -1085,7 +1085,7 @@ Access trigger data in conditions and actions.
 
 ### Calendar Trigger Variables
 
-```yaml
+```jinja2
 {{ trigger.calendar_event }}      # Calendar event object
 {{ trigger.calendar_event.summary }}
 {{ trigger.calendar_event.start }}
@@ -1096,7 +1096,7 @@ Access trigger data in conditions and actions.
 
 ### Zone Trigger Variables
 
-```yaml
+```jinja2
 {{ trigger.entity_id }}           # Person/device tracker
 {{ trigger.from_state }}
 {{ trigger.to_state }}
@@ -1106,7 +1106,7 @@ Access trigger data in conditions and actions.
 
 ### Tag Trigger Variables
 
-```yaml
+```jinja2
 {{ trigger.tag_id }}              # Tag identifier
 {{ trigger.device_id }}           # Scanning device
 ```
@@ -1377,7 +1377,7 @@ automation:
 
 ### Common Mistakes
 
-```yaml
+```jinja2
 # Wrong: Boolean values not quoted
 triggers:
   - trigger: state

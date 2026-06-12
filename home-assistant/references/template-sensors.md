@@ -1191,7 +1191,7 @@ template:
 
 ### Debug Templates
 
-```yaml
+```jinja2
 # Test in Developer Tools > Template
 {% set value = states('sensor.test') %}
 Value: {{ value }}
@@ -1201,7 +1201,7 @@ As float: {{ value | float('error') }}
 
 ### Common Errors
 
-```yaml
+```jinja2
 # Error: 'None' has no attribute
 # Fix: Check entity exists
 state: >

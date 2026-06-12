@@ -708,7 +708,7 @@ script:
 
 ### Disaster Recovery Plan Template
 
-```yaml
+```text
 # disaster_recovery.yaml (keep printed copy!)
 
 # Critical Information

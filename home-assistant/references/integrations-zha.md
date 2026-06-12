@@ -54,7 +54,7 @@ zha:
 
 ### USB Device Path
 
-```yaml
+```text
 # Common paths
 /dev/ttyUSB0          # Generic USB
 /dev/ttyACM0          # CDC ACM devices

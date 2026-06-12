@@ -1085,7 +1085,7 @@ automation:
 
 ### Trigger Variables
 
-```yaml
+```text
 # Available in all triggers
 trigger.platform        # "state", "time", etc.
 trigger.id              # Trigger ID if set
@@ -1431,7 +1431,7 @@ triggers:
 
 ### Template Errors
 
-```yaml
+```jinja2
 # Common mistakes:
 
 # Missing quotes

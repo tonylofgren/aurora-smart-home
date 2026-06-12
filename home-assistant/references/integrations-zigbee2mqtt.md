@@ -589,7 +589,7 @@ automation:
 
 ### Check Device Availability
 
-```yaml
+```jinja2
 # In templates
 {{ states('binary_sensor.living_room_motion_availability') }}
 

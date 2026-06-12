@@ -659,7 +659,7 @@ sensor.temperature:
 
 ### Check Entity ID
 
-```yaml
+```text
 # Developer Tools > States
 # Find exact entity_id
 

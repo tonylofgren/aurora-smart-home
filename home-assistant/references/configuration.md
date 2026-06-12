@@ -298,7 +298,7 @@ sensor: !include includes/sensors.yaml
 
 Merges files as a list (for domains that accept lists).
 
-```yaml
+```jinja2
 # Directory structure:
 # includes/sensors/
 # ├── temperature.yaml
@@ -384,7 +384,7 @@ frontend:
 
 ### Nested Includes
 
-```yaml
+```text
 # configuration.yaml
 homeassistant:
   customize: !include customize.yaml
@@ -483,7 +483,7 @@ Invalid config for [sensor.template]: required key not provided @ data['sensors'
 
 ### YAML Syntax Validation
 
-```yaml
+```text
 # Common YAML issues
 
 # Bad - tabs instead of spaces
@@ -656,7 +656,7 @@ mqtt:
 
 ### Backup-Friendly Configuration
 
-```yaml
+```text
 # Keep secrets separate for easy backup exclusion
 
 # .gitignore
@@ -722,7 +722,7 @@ template:
 
 ### Naming Conventions
 
-```yaml
+```text
 # Files: lowercase with underscores
 automations.yaml          # Good
 Automations.yaml          # Avoid
@@ -769,7 +769,7 @@ mqtt:
 
 ### Security
 
-```yaml
+```text
 # Never commit secrets
 # .gitignore
 secrets.yaml
@@ -791,7 +791,7 @@ http:
 
 ### Version Control
 
-```yaml
+```text
 # Track configuration in git
 git init
 git add .
@@ -833,7 +833,7 @@ logger:
 
 ### Common YAML Errors
 
-```yaml
+```text
 # Error: found character '\t' that cannot start any token
 # Cause: Tab character used
 # Fix: Replace tabs with spaces

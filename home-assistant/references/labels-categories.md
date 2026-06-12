@@ -115,7 +115,7 @@ Note that the action still only affects entities its domain supports. `light.tur
 
 All of these are also available as filters (`'holiday_lights' | label_entities`). The lookup functions accept either the label name or the label id.
 
-```yaml
+```jinja2
 # All entities labeled battery-check that are below 20 percent
 {{ label_entities('battery_check')
    | select('is_state_attr', 'device_class', 'battery')

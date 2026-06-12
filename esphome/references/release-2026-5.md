@@ -246,7 +246,7 @@ PR #14771, #16244, #16266.
 
 ## LVGL Improvements
 
-```yaml
+```text
 display:
   - platform: ili9xxx
     ...
