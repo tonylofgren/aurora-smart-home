@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.9.3] - 2026-06-12
+
 ### Added
 
 - Four new reference files, each wired into its skill's Quick Reference:
@@ -15,12 +17,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - `home-assistant/references/jinja2-macros.md` - reusable Jinja2 macros via `custom_templates/`, imports, reload, limitations, recipes.
   - `home-assistant/references/labels-categories.md` - labels and categories for organizing entities and automations, label targeting in actions, label template functions.
   - `node-red/references/dashboard-2.md` - Dashboard 2.0 (@flowfuse/node-red-dashboard): core ui nodes, layout, HA sensor panel example, migration from Dashboard 1.
+- `aurora/scripts/lint_ha_syntax.py` - CI-enforced guard against reintroduction of legacy HA syntax, with built-in knowledge of all intentional exceptions, plus strict parsing of every yaml-labelled markdown fence. 14 unit tests in `aurora/tests/test_lint_ha_syntax.py`.
 
 ### Changed
 
 - **Repo-wide modernization to current HA automation syntax.** All starter templates, all 56 markdown files in `home-assistant/`, all `examples/*/automations.yaml` and dashboards, plus HA YAML snippets in `api-catalog`, `aurora`, `ha-dashboard-design`, `ha-integration-dev`, `node-red`, and the root TROUBLESHOOTING guide now use plural automation keys (`triggers:`, `conditions:`, `actions:`), `trigger:` instead of `platform:` in trigger lists, `action:` instead of `service:` in steps, and Lovelace `perform-action` instead of the deprecated `call-service` tap action. Intentional exceptions kept as-is: blueprint selector keys, sensor/device_tracker `platform:` keys, browser_mod fire-dom-event blocks, ESPHome `homeassistant.service:` and `api: services:` schema, and the legacy sides of before/after examples in `migration-guide.md` and the official 2026 snapshots.
 - `migration-guide.md` now documents the HA 2024.8 action rename and the HA 2024.10 trigger/plural-key rename, and its "NEW" examples were brought up to current syntax.
 - UI references updated across 16 files: "Developer Tools > Services" is now "Developer Tools > Actions", matching the renamed HA panel.
+- 93 markdown fences that were never YAML (Jinja templates, entity lists, CLI output) relabeled from yaml to jinja2 or text, so fence validation is now strict.
+- ESPHome syntax policy documented in `esphome/SKILL.md`: the repo keeps `api: services:` and `homeassistant.service:` until the upstream rename to `actions:`/`homeassistant.action` is verified against current ESPHome docs.
+- `examples/pool-controller/README.md` attribution banner moved below the H1 per the canonical manual format (fixes a failing attribution test present since v1.9.0).
 - Remaining Swedish comments and example strings translated to English in the M5Stack Atom Echo configs and the HA usage guide.
 - HA skill Quick Reference now marks the official 2026 trigger/condition/action files as primary and the older curated files as supplementary legacy depth.
 

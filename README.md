@@ -11,7 +11,7 @@ against schema-checked profiles, and refuses to ship code that does not pass.
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skills-7c3aed.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Home Assistant](https://img.shields.io/badge/Home_Assistant-2024.x--2026.x-41BDF5.svg)](https://www.home-assistant.io/)
 [![ESPHome](https://img.shields.io/badge/ESPHome-2026.5.0-000000.svg)](https://esphome.io/)
-[![Version](https://img.shields.io/badge/Version-v1.9.2-success.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-v1.9.3-success.svg)](CHANGELOG.md)
 [![Validated](https://img.shields.io/badge/Validated-against_datasheets-success.svg)](aurora/references/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Support Nabu Casa](https://img.shields.io/badge/Support_HA-Nabu_Casa-3b8cd3.svg)](https://www.nabucasa.com)
@@ -26,6 +26,14 @@ against schema-checked profiles, and refuses to ship code that does not pass.
 > See [DISCLAIMER.md](DISCLAIMER.md) for full terms.
 
 ---
+
+## What's new: modern syntax everywhere + 4 new references (v1.9.3, June 2026)
+
+Every YAML example in the entire plugin now uses current Home Assistant syntax.
+
+- **Modern syntax everywhere:** all references, starter templates, dashboards, and the 27 complete examples now use `triggers:`, `conditions:`, `actions:`, `action:` calls, and `perform-action` dashboard taps. The migration guide documents the 2024.8 and 2024.10 renames with before/after examples, so older configs are easy to bring forward.
+- **Four new reference files:** ESPHome `packages:` for modular fleet configs (20-line device files), reusable Jinja2 macros via `custom_templates/`, HA labels and categories for organizing large installs, and Node-RED Dashboard 2.0 for building web panels.
+- **Deeper troubleshooting:** automation debugging with traces (opening them, common findings, a "my automation did not run" flowchart) and git-based Node-RED Projects for versioning flows.
 
 ## What's new: HA reference refresh (v1.9.2, May 2026)
 
