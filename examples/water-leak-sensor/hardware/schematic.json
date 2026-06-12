@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "project": {
+    "name": "water-leak-sensor",
+    "board": "seeed_xiao_esp32c3",
+    "revision": "A",
+    "generated": "2026-06-12",
+    "generated_with": "aurora@aurora-smart-home (esphome skill)"
+  },
+  "components": [
+    {"refdes": "U1", "value": "Seeed Studio XIAO ESP32-C3", "description": "MCU module with USB-C, LiPo charger, JST-PH battery pads", "package": "module", "lcsc": "TBD", "bom_row": 1},
+    {"refdes": "J1", "value": "2-pin screw terminal 5.0mm", "description": "Leak probe connector (stainless probes, sensor strip, or float switch)", "package": "TH-5.0mm", "lcsc": "TBD", "bom_row": 2},
+    {"refdes": "R1", "value": "1M", "description": "Pull-down on leak sense pin, keeps wake pin LOW when dry", "package": "TH-axial", "lcsc": "TBD", "bom_row": 3},
+    {"refdes": "BZ1", "value": "Active piezo buzzer 3.3V", "description": "Local alarm, fires before WiFi handshake completes", "package": "TH-12mm", "lcsc": "TBD", "bom_row": 4},
+    {"refdes": "R2", "value": "100k", "description": "Battery voltage divider, top half", "package": "TH-axial", "lcsc": "TBD", "bom_row": 5},
+    {"refdes": "R3", "value": "100k", "description": "Battery voltage divider, bottom half", "package": "TH-axial", "lcsc": "TBD", "bom_row": 5},
+    {"refdes": "BT1", "value": "LiPo 2000 mAh JST-PH", "description": "Battery, charged by U1 over USB-C", "package": "JST-PH-2", "lcsc": "TBD", "bom_row": 6}
+  ],
+  "nets": [
+    {"name": "3V3", "pins": ["U1.3V3", "J1.1"], "note": "Probe A is energized; 1M pull-down limits standing current to ~3.3 uA when wet"},
+    {"name": "LEAK_SENSE", "pins": ["U1.GPIO3", "J1.2", "R1.A"], "note": "Deep sleep wake pin, wakes on HIGH when water bridges the probes"},
+    {"name": "BUZZER", "pins": ["U1.GPIO4", "BZ1.POS"]},
+    {"name": "VBAT", "pins": ["BT1.POS", "U1.BAT+", "R2.A"], "note": "Divider draws ~21 uA continuously; acceptable against 30 uA sleep floor"},
+    {"name": "BAT_SENSE", "pins": ["U1.GPIO2", "R2.B", "R3.A"], "note": "ADC reads half of VBAT; attenuation 12db in firmware"},
+    {"name": "GND", "pins": ["U1.GND", "R1.B", "R3.B", "BZ1.NEG", "BT1.NEG"]}
+  ]
+}

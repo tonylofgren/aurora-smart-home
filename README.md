@@ -11,7 +11,7 @@ against schema-checked profiles, and refuses to ship code that does not pass.
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skills-7c3aed.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Home Assistant](https://img.shields.io/badge/Home_Assistant-2024.x--2026.x-41BDF5.svg)](https://www.home-assistant.io/)
 [![ESPHome](https://img.shields.io/badge/ESPHome-2026.5.0-000000.svg)](https://esphome.io/)
-[![Version](https://img.shields.io/badge/Version-v1.9.3-success.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-v1.10.0-success.svg)](CHANGELOG.md)
 [![Validated](https://img.shields.io/badge/Validated-against_datasheets-success.svg)](aurora/references/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Support Nabu Casa](https://img.shields.io/badge/Support_HA-Nabu_Casa-3b8cd3.svg)](https://www.nabucasa.com)
@@ -26,6 +26,14 @@ against schema-checked profiles, and refuses to ship code that does not pass.
 > See [DISCLAIMER.md](DISCLAIMER.md) for full terms.
 
 ---
+
+## What's new: fab-ready hardware delivery (v1.10.0, June 2026)
+
+Hardware projects can now go from idea to a PCB order without leaving Aurora.
+
+- **Machine-readable manufacturing exports:** custom-PCB and production projects ship `hardware/schematic.json` (a netlist you can tick off while redrawing in KiCad) and `hardware/BOM.csv` in the exact column format JLCPCB assembly expects. Part numbers are never invented; `TBD` marks parts still waiting for sourcing.
+- **Printable enclosures:** a parametric OpenSCAD template generates a two-part box with PCB standoffs, ventilation slots, cable opening, and an optional sensor window, sized from your board dimensions.
+- **Safer and smarter orchestration:** projects involving batteries, mains power, actuators, water, or outdoor mounting now always start with a hazard analysis before any firmware is generated, and requests that span several specialists are routed with clear tiebreaker rules.
 
 ## What's new: modern syntax everywhere + 4 new references (v1.9.3, June 2026)
 

@@ -27,7 +27,9 @@ The user can override the recommended tier. If they pick `breadboard` for a proj
 └── hardware/
     ├── BOM.md              (table with LCSC part numbers and packages)
     ├── SCHEMATIC.md
-    └── PCB-NOTES.md
+    ├── PCB-NOTES.md
+    ├── schematic.json      (recommended: machine-readable netlist, see fab-export-format.md)
+    └── BOM.csv             (recommended: JLCPCB/KiCad BOM export, see fab-export-format.md)
 ```
 
 ### Production
@@ -41,11 +43,15 @@ The user can override the recommended tier. If they pick `breadboard` for a proj
     ├── BOM.md
     ├── SCHEMATIC.md
     ├── PCB-NOTES.md
-    ├── MANUFACTURING.md    (assembly service, stencil, finish, file expectations)
+    ├── schematic.json      (required: machine-readable netlist, see fab-export-format.md)
+    ├── BOM.csv             (required: JLCPCB/KiCad BOM export, see fab-export-format.md)
+    ├── MANUFACTURING.md    (assembly service, stencil, finish, file expectations, fab order log)
     ├── COST-ANALYSIS.md    (prototype vs volume pricing, break-even)
     ├── CERTIFICATION.md    (CE / FCC / RoHS path, pre-certified module strategy)
     └── TEST-JIG.md         (production test rig: bed of nails, fixtures, pass/fail)
 ```
+
+An optional `hardware/ENCLOSURE.scad` (parametric OpenSCAD box from `aurora/references/templates/enclosure.scad`) can join any tier when the user wants a printable enclosure. Formats for schematic.json, BOM.csv, the enclosure parameters, and the JLCPCB order log are specified in `fab-export-format.md`.
 
 ## SCHEMATIC.md format
 

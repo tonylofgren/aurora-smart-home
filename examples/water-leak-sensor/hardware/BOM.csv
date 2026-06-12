@@ -1,0 +1,7 @@
+Comment,Designator,Footprint,LCSC Part #
+Seeed Studio XIAO ESP32-C3,U1,module,TBD
+Screw terminal 2P 5.0mm,J1,TH-5.0mm,TBD
+1M axial,R1,TH-axial,TBD
+Active piezo buzzer 3.3V,BZ1,TH-12mm,TBD
+"100k axial","R2,R3",TH-axial,TBD
+LiPo 2000mAh JST-PH,BT1,JST-PH-2,TBD

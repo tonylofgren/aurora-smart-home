@@ -65,6 +65,12 @@ Always at least one note per row, even if it is short. Useful note categories:
 - **Calibration requirement** so buyers know if a sensor needs prep before use.
 - **Lifecycle warning** when the part is end-of-lifed or has a recommended successor.
 
+## CSV export (custom-PCB and production tiers)
+
+`hardware/BOM.csv` is the machine-readable fab companion to BOM.md, in the column order JLCPCB assembly expects: `Comment,Designator,Footprint,LCSC Part #`. It carries no prices and omits DNP parts. Full spec with rules and a worked example: `fab-export-format.md`. Recommended at custom-PCB tier, required at production tier.
+
+`TBD` is allowed only in the `LCSC Part #` column and only means "part decided, JLCPCB sourcing not yet chosen". The corresponding BOM.md row still names a real source per the rules below; the no-TBD-rows rule for BOM.md is unchanged.
+
 ## What NOT to put in the BOM
 
 - No prices without a date stamp in the footer.

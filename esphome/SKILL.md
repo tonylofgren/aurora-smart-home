@@ -98,7 +98,7 @@ Before generating anything for the user:
 4. Write human-readable docs (`README.md`, `INSTALL.md`, `TROUBLESHOOTING.md`, `BOM.md`, `WIRING.md`) in the user's detected language per the **Language Rule for Deliverables** in `aurora/SKILL.md`. The install templates in `aurora/references/templates/install-*.md` are English by default and MUST be translated when the user wrote their request in any other language. Quoted commands, file paths, and identifiers stay English; the surrounding prose does not.
 5. Run the pre-delivery disk check: every required file must exist before you declare the project complete. A described file is not a written file.
 
-Full contract: Iron Law 8 in `aurora/souls/volt.md`. Format specs: `aurora/references/deliverables/`. Wiring format: `wiring-format.md`. BOM format: `bom-format.md`. README format: `manual-format.md`. PCB tiers: `pcb-format.md`.
+Full contract: Iron Law 8 in `aurora/souls/volt.md`. Format specs: `aurora/references/deliverables/`. Wiring format: `wiring-format.md`. BOM format: `bom-format.md`. README format: `manual-format.md`. PCB tiers: `pcb-format.md`. Fab exports (schematic.json, BOM.csv, OpenSCAD enclosure, JLCPCB order log): `fab-export-format.md`.
 
 ## First Step: Determine Scope
 

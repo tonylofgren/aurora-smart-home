@@ -8,6 +8,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.10.0] - 2026-06-12
+
+### Added
+
+- **Fab-ready hardware delivery.** New machine-readable manufacturing exports specified in `aurora/references/deliverables/fab-export-format.md`:
+  - `hardware/schematic.json` - netlist companion to SCHEMATIC.md, validated by the new `aurora/references/schemas/schematic.schema.json` (components with refdes/package/LCSC, nets with pins and design notes). Required at production tier, recommended at custom-PCB.
+  - `hardware/BOM.csv` - JLCPCB-assembly-compatible BOM export (`Comment,Designator,Footprint,LCSC Part #`), prices stay in BOM.md.
+  - `aurora/references/templates/enclosure.scad` - parametric OpenSCAD enclosure template (PCB standoffs, friction-fit lid, vents, cable opening, sensor window) ready to copy into `hardware/ENCLOSURE.scad`.
+  - KiCad redraw workflow and a JLCPCB ordering workflow with a manual fab order log in MANUFACTURING.md (JLCPCB has no public status API).
+  - Complete worked example shipped in `examples/water-leak-sensor/hardware/`, plus 17 tests in `aurora/tests/test_fab_export_specs.py`.
+- Volt's Iron Law 8 tier lists, `pcb-format.md`, and `bom-format.md` wired to the new fab spec; `TBD` is allowed only in the LCSC column and never as an invented part number.
+
 ### Changed
 
 - **Orchestrator working method hardened** after a full souls/routing audit:

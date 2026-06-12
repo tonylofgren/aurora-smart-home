@@ -303,11 +303,12 @@ The BOM **must** include an estimated unit price per row and an estimated total 
 - `<project>/hardware/SCHEMATIC.md` — component list with reference designators, net list, ASCII block diagram, per-net design notes.
 - `<project>/hardware/PCB-NOTES.md` — board outline, layer count, antenna clearance, decoupling positions, power section, connector placement, critical traces.
 
-The BOM gains two columns (LCSC part number and package) per `bom-format.md`.
+The BOM gains two columns (LCSC part number and package) per `bom-format.md`. Recommended at this tier, required at production: the machine-readable fab exports `hardware/schematic.json` (validates against `aurora/references/schemas/schematic.schema.json`) and `hardware/BOM.csv`, both per `aurora/references/deliverables/fab-export-format.md`. Never invent LCSC part numbers; use `TBD` until sourcing is decided.
 
 **Files required for tier `production`** (in addition to the custom-PCB set):
 
-- `<project>/hardware/MANUFACTURING.md` — assembly service, stencil, finish, file expectations, panelization, test points.
+- `<project>/hardware/schematic.json` and `<project>/hardware/BOM.csv` — machine-readable fab exports per `fab-export-format.md` (recommended at custom-PCB, required here).
+- `<project>/hardware/MANUFACTURING.md` — assembly service, stencil, finish, file expectations, panelization, test points, and the fab order log per `fab-export-format.md`.
 - `<project>/hardware/COST-ANALYSIS.md` — per-volume cost table (prototype, small batch, production) with date stamp and source assumptions.
 - `<project>/hardware/CERTIFICATION.md` — target markets, pre-certified module strategy, additional testing, test labs by region.
 - `<project>/hardware/TEST-JIG.md` — test point list, pass/fail criteria, fixture mechanical layout, programming interface, test sequence.
