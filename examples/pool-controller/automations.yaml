@@ -9,27 +9,27 @@ automation:
     alias: "Pool: summer pump schedule (8 h/day)"
     description: "Runs the main pump from 09:00 to 17:00 when in Summer mode."
     mode: single
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "09:00:00"
         id: start
-      - platform: time
+      - trigger: time
         at: "17:00:00"
         id: stop
-    condition:
+    conditions:
       - condition: state
         entity_id: select.pool_operating_mode
         state: "Summer"
-    action:
+    actions:
       - choose:
           - conditions: "{{ trigger.id == 'start' }}"
             sequence:
-              - service: switch.turn_on
+              - action: switch.turn_on
                 target:
                   entity_id: switch.pool_main_pump
           - conditions: "{{ trigger.id == 'stop' }}"
             sequence:
-              - service: switch.turn_off
+              - action: switch.turn_off
                 target:
                   entity_id: switch.pool_main_pump
 
@@ -37,20 +37,20 @@ automation:
     alias: "Pool: winter anti-freeze circulation"
     description: "In Winter mode, run the pump for 10 min if water drops below 4 C."
     mode: single
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.pool_water_temperature
         below: 4
-    condition:
+    conditions:
       - condition: state
         entity_id: select.pool_operating_mode
         state: "Winter"
-    action:
-      - service: switch.turn_on
+    actions:
+      - action: switch.turn_on
         target:
           entity_id: switch.pool_main_pump
       - delay: "00:10:00"
-      - service: switch.turn_off
+      - action: switch.turn_off
         target:
           entity_id: switch.pool_main_pump
 
@@ -58,12 +58,12 @@ automation:
     alias: "Pool: dose pH minus when pH > target high"
     description: "Doses 5 ml pH minus if pH is above the high target for 5 minutes."
     mode: single
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.pool_ph
         above: input_number.ph_high_alias
         for: "00:05:00"
-    condition:
+    conditions:
       - condition: state
         entity_id: binary_sensor.pool_flow_detected
         state: "on"
@@ -75,8 +75,8 @@ automation:
           - condition: state
             entity_id: select.pool_operating_mode
             state: "Service"
-    action:
-      - service: esphome.pool_controller_dose_ph_minus_ml
+    actions:
+      - action: esphome.pool_controller_dose_ph_minus_ml
         data:
           ml: 5
       # Wait long enough for the dose to disperse before reconsidering
@@ -86,12 +86,12 @@ automation:
     alias: "Pool: dose chlorine when ORP below target low"
     description: "Doses 10 ml chlorine if ORP stays below the low target for 5 minutes."
     mode: single
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.pool_orp
         below: input_number.orp_low_alias
         for: "00:05:00"
-    condition:
+    conditions:
       - condition: state
         entity_id: binary_sensor.pool_flow_detected
         state: "on"
@@ -103,8 +103,8 @@ automation:
           - condition: state
             entity_id: select.pool_operating_mode
             state: "Service"
-    action:
-      - service: esphome.pool_controller_dose_chlorine_ml
+    actions:
+      - action: esphome.pool_controller_dose_chlorine_ml
         data:
           ml: 10
       - delay: "00:30:00"
@@ -112,17 +112,17 @@ automation:
   - id: pool_alert_ph_out_of_range
     alias: "Pool: alert if pH out of safe range for 30 min"
     mode: single
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.pool_ph
         above: 8.0
         for: "00:30:00"
-      - platform: numeric_state
+      - trigger: numeric_state
         entity_id: sensor.pool_ph
         below: 6.8
         for: "00:30:00"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "Pool pH out of range"
           message: "pH is {{ states('sensor.pool_ph') }} - check chemistry."
@@ -130,17 +130,17 @@ automation:
   - id: pool_alert_orp_out_of_range
     alias: "Pool: alert if ORP out of safe range for 30 min"
     mode: single
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.pool_orp
         below: 550
         for: "00:30:00"
-      - platform: numeric_state
+      - trigger: numeric_state
         entity_id: sensor.pool_orp
         above: 850
         for: "00:30:00"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "Pool ORP out of range"
           message: "ORP is {{ states('sensor.pool_orp') }} mV - sanitiser level abnormal."

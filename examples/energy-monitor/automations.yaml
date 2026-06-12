@@ -8,14 +8,14 @@
 - alias: "Energy - High Usage Alert"
   id: energy_high_usage_alert
   description: "Alert when power consumption exceeds 5000W"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.energy_monitor_power
       above: 5000
       for:
         minutes: 5
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "⚡ High Energy Usage"
         message: >
@@ -25,20 +25,20 @@
 - alias: "Energy - Overload Warning"
   id: energy_overload_warning
   description: "Critical alert for potential electrical overload"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.energy_monitor_power
       above: 7000
       for:
         seconds: 30
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "🚨 ELECTRICAL OVERLOAD WARNING"
         message: >
           Power consumption is {{ states('sensor.energy_monitor_power') }}W!
           Risk of tripping breaker. Turn off unnecessary appliances immediately.
-    - service: persistent_notification.create
+    - action: persistent_notification.create
       data:
         title: "Electrical Overload"
         message: "Extremely high power usage detected!"
@@ -51,11 +51,11 @@
 - alias: "Energy - Night Standby Check"
   id: energy_standby_check
   description: "Check standby power at night"
-  trigger:
-    - platform: time
+  triggers:
+    - trigger: time
       at: "02:00:00"
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "Night Energy Report"
         message: >
@@ -73,11 +73,11 @@
 - alias: "Energy - Daily Summary"
   id: energy_daily_summary
   description: "Send daily energy consumption summary"
-  trigger:
-    - platform: time
+  triggers:
+    - trigger: time
       at: "21:00:00"
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "⚡ Daily Energy Summary"
         message: >
@@ -92,15 +92,15 @@
 - alias: "Energy - Weekly Report"
   id: energy_weekly_report
   description: "Weekly energy consumption report"
-  trigger:
-    - platform: time
+  triggers:
+    - trigger: time
       at: "18:00:00"
-  condition:
+  conditions:
     - condition: time
       weekday:
         - sun
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "📊 Weekly Energy Report"
         message: >
@@ -114,19 +114,19 @@
 - alias: "Energy - Unusual Daytime Usage"
   id: energy_unusual_daytime
   description: "Alert for unusual usage when nobody home"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.energy_monitor_power
       above: 1000
       for:
         minutes: 30
-  condition:
+  conditions:
     # Nobody home (adjust entity)
     - condition: state
       entity_id: group.family
       state: "not_home"
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "🏠 Unusual Energy Usage"
         message: >
@@ -140,14 +140,14 @@
 - alias: "Energy - Appliance Running Too Long"
   id: energy_appliance_too_long
   description: "Detect if high-power appliance running unusually long"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.energy_monitor_power
       above: 2000
       for:
         hours: 2
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "⏰ Appliance Running Long"
         message: >
@@ -161,12 +161,12 @@
 - alias: "Energy - Daily Cost Threshold"
   id: energy_cost_threshold
   description: "Alert when daily cost exceeds threshold"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.energy_monitor_daily_cost
       above: 5  # €5 daily threshold
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "💰 High Daily Energy Cost"
         message: >
@@ -180,14 +180,14 @@
 - alias: "Energy - Monthly Reset Notification"
   id: energy_monthly_reset
   description: "Notification when monthly meter resets"
-  trigger:
-    - platform: time
+  triggers:
+    - trigger: time
       at: "00:01:00"
-  condition:
+  conditions:
     - condition: template
       value_template: "{{ now().day == 1 }}"
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "📅 Monthly Energy Reset"
         message: "Monthly energy counter has been reset. New billing period started."

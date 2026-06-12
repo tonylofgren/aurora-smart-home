@@ -7,10 +7,10 @@
 - alias: "Sendspin - Wake-up playlist"
   id: sendspin_wakeup
   description: "Play the wake-up playlist in the bedroom on weekdays at 06:30"
-  trigger:
-    - platform: time
+  triggers:
+    - trigger: time
       at: "06:30:00"
-  condition:
+  conditions:
     - condition: time
       weekday:
         - mon
@@ -18,13 +18,13 @@
         - wed
         - thu
         - fri
-  action:
-    - service: media_player.volume_set
+  actions:
+    - action: media_player.volume_set
       target:
         entity_id: media_player.bedroom_speaker
       data:
         volume_level: 0.25     # start gentle
-    - service: media_player.play_media
+    - action: media_player.play_media
       target:
         entity_id: media_player.bedroom_speaker
       data:
@@ -36,7 +36,7 @@
         sequence:
           - delay:
               minutes: 1
-          - service: media_player.volume_set
+          - action: media_player.volume_set
             target:
               entity_id: media_player.bedroom_speaker
             data:
@@ -50,12 +50,12 @@
 - alias: "Sendspin - Dinner mode"
   id: sendspin_dinner_mode
   description: "Triggered by Lovelace button; plays in kitchen + dining only"
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: input_boolean.dinner_mode
       to: "on"
-  action:
-    - service: media_player.play_media
+  actions:
+    - action: media_player.play_media
       target:
         entity_id:
           - media_player.kitchen_speaker
@@ -71,17 +71,17 @@
 - alias: "Sendspin - Pause on doorbell"
   id: sendspin_pause_doorbell
   description: "Pause whole-house audio when someone rings"
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: binary_sensor.front_doorbell
       to: "on"
-  action:
-    - service: media_player.media_pause
+  actions:
+    - action: media_player.media_pause
       target:
         entity_id: media_player.audio_hub_all_rooms
     - delay:
         seconds: 30
-    - service: media_player.media_play
+    - action: media_player.media_play
       target:
         entity_id: media_player.audio_hub_all_rooms
 
@@ -92,14 +92,14 @@
 - alias: "Sendspin - Bedtime fade out"
   id: sendspin_bedtime
   description: "At 23:00 fade volume to zero over 10 min, then stop"
-  trigger:
-    - platform: time
+  triggers:
+    - trigger: time
       at: "23:00:00"
-  action:
+  actions:
     - repeat:
         count: 10
         sequence:
-          - service: media_player.volume_set
+          - action: media_player.volume_set
             target:
               entity_id: media_player.audio_hub_all_rooms
             data:
@@ -108,7 +108,7 @@
                    - 0.1 }}
           - delay:
               minutes: 1
-    - service: media_player.media_stop
+    - action: media_player.media_stop
       target:
         entity_id: media_player.audio_hub_all_rooms
 
@@ -119,12 +119,12 @@
 - alias: "Sendspin - Announce visitor"
   id: sendspin_visitor_announce
   description: "TTS announcement when someone arrives"
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: person.guest
       to: "home"
-  action:
-    - service: tts.cloud_say
+  actions:
+    - action: tts.cloud_say
       data:
         entity_id: media_player.audio_hub_all_rooms
         message: "Guest has arrived."

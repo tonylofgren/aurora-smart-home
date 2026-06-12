@@ -11,8 +11,8 @@
 - alias: "Front Door - Authorized Fingerprint"
   id: front_door_authorized
   description: "Notify when a known fingerprint unlocks the door"
-  trigger:
-    - platform: event
+  triggers:
+    - trigger: event
       event_type: esphome.fingerprint_matched
   variables:
     finger_names:
@@ -20,12 +20,12 @@
       1: "Partner"
       2: "Guest"
     name: "{{ finger_names.get(trigger.event.data.finger_id, 'Slot ' ~ trigger.event.data.finger_id) }}"
-  action:
-    - service: logbook.log
+  actions:
+    - action: logbook.log
       data:
         name: "Front Door"
         message: "unlocked by {{ name }} (confidence {{ trigger.event.data.confidence }})"
-    - service: notify.notify
+    - action: notify.notify
       data:
         title: "Front Door"
         message: "{{ name }} unlocked the door (confidence {{ trigger.event.data.confidence }})"
@@ -37,11 +37,11 @@
 - alias: "Front Door - Unknown Fingerprint Attempt"
   id: front_door_unknown_attempt
   description: "Alert and offer remote unlock when an unknown finger is presented"
-  trigger:
-    - platform: event
+  triggers:
+    - trigger: event
       event_type: esphome.fingerprint_unmatched
-  action:
-    - service: notify.mobile_app_your_phone
+  actions:
+    - action: notify.mobile_app_your_phone
       data:
         title: "Front Door - Unknown Attempt"
         message: "An unrecognized fingerprint was presented at the front door."
@@ -55,13 +55,13 @@
 - alias: "Front Door - Mobile Action Remote Unlock"
   id: front_door_mobile_unlock
   description: "Handle the Unlock action from the unknown-attempt notification"
-  trigger:
-    - platform: event
+  triggers:
+    - trigger: event
       event_type: mobile_app_notification_action
       event_data:
         action: FRONT_DOOR_REMOTE_UNLOCK
-  action:
-    - service: switch.turn_on
+  actions:
+    - action: switch.turn_on
       target:
         entity_id: switch.front_door_remote_unlock
 
@@ -72,14 +72,14 @@
 - alias: "Front Door - Low Battery Warning"
   id: front_door_low_battery
   description: "Notify when backup battery is getting low"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.front_door_battery_voltage
       below: 3.6
       for:
         minutes: 5
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "Front Door"
         message: "Backup battery low ({{ states('sensor.front_door_battery_voltage') }} V). The strike will refuse to fire below 3.4 V."
@@ -91,11 +91,11 @@
 - alias: "Front Door - Enrollment Scan Progress"
   id: front_door_enroll_progress
   description: "Echo enrollment scan progress to a persistent notification"
-  trigger:
-    - platform: event
+  triggers:
+    - trigger: event
       event_type: esphome.fingerprint_enrollment_scan
-  action:
-    - service: persistent_notification.create
+  actions:
+    - action: persistent_notification.create
       data:
         notification_id: front_door_enrollment
         title: "Enrolling slot {{ trigger.event.data.finger_id }}"
@@ -104,14 +104,14 @@
 - alias: "Front Door - Enrollment Done"
   id: front_door_enroll_done
   description: "Confirm successful enrollment"
-  trigger:
-    - platform: event
+  triggers:
+    - trigger: event
       event_type: esphome.fingerprint_enrollment_done
-  action:
-    - service: persistent_notification.dismiss
+  actions:
+    - action: persistent_notification.dismiss
       data:
         notification_id: front_door_enrollment
-    - service: notify.notify
+    - action: notify.notify
       data:
         title: "Front Door"
         message: "Fingerprint enrolled in slot {{ trigger.event.data.finger_id }}."

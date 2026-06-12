@@ -21,8 +21,8 @@ views:
             icon: mdi:lock-open-variant
             entity: switch.front_door_remote_unlock
             tap_action:
-              action: call-service
-              service: switch.turn_on
+              action: perform-action
+              perform_action: switch.turn_on
               target:
                 entity_id: switch.front_door_remote_unlock
             hold_action:

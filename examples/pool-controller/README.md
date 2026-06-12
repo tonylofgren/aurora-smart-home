@@ -111,14 +111,14 @@ This config exposes two services for calibration:
 
 ```yaml
 # Three-point pH calibration
-service: esphome.pool_controller_calibrate_ph
+action: esphome.pool_controller_calibrate_ph
 data:
   point: "mid"   # then "low", then "high" - dunk probe in each buffer first
 ```
 
 ```yaml
 # Single-point ORP calibration against the Atlas 225 mV solution
-service: esphome.pool_controller_calibrate_orp
+action: esphome.pool_controller_calibrate_orp
 data:
   mv: 225
 ```

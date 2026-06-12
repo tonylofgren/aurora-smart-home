@@ -8,25 +8,25 @@
 - alias: "Garage - Auto Close After 10 Minutes"
   id: garage_auto_close
   description: "Automatically close garage door if left open"
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: cover.garage_door
       to: "open"
       for:
         minutes: 10
-  condition:
+  conditions:
     # Only auto-close during certain hours (safety)
     - condition: time
       after: "07:00:00"
       before: "22:00:00"
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "Garage"
         message: "Garage door has been open for 10 minutes. Closing automatically."
     - delay:
         seconds: 30
-    - service: cover.close_cover
+    - action: cover.close_cover
       target:
         entity_id: cover.garage_door
 
@@ -37,19 +37,19 @@
 - alias: "Garage - Left Open Alert"
   id: garage_left_open_alert
   description: "Alert if garage door left open at night"
-  trigger:
-    - platform: time
+  triggers:
+    - trigger: time
       at: "22:00:00"
-  condition:
+  conditions:
     - condition: state
       entity_id: cover.garage_door
       state: "open"
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "🚗 Garage Alert"
         message: "Garage door is still open at night!"
-    - service: persistent_notification.create
+    - action: persistent_notification.create
       data:
         title: "Garage Door Open"
         message: "The garage door is open. Close it for security."
@@ -62,18 +62,18 @@
 - alias: "Garage - Car Arrived"
   id: garage_car_arrived
   description: "Notification when car arrives home"
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: binary_sensor.garage_car_present
       from: "off"
       to: "on"
-  condition:
+  conditions:
     # Only notify if someone is not already home
     - condition: state
       entity_id: person.owner
       state: "not_home"
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "🚗 Car Arrived"
         message: "A car has parked in the garage."
@@ -81,15 +81,15 @@
 - alias: "Garage - Car Left"
   id: garage_car_left
   description: "Notification when car leaves"
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: binary_sensor.garage_car_present
       from: "on"
       to: "off"
       for:
         minutes: 2
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "🚗 Car Left"
         message: "The car has left the garage."
@@ -103,12 +103,12 @@
   id: garage_auto_open_arrival
   description: "Open garage when approaching home"
   mode: single
-  trigger:
-    - platform: zone
+  triggers:
+    - trigger: zone
       entity_id: device_tracker.your_phone
       zone: zone.home
       event: enter
-  condition:
+  conditions:
     # Car must not already be in garage
     - condition: state
       entity_id: binary_sensor.garage_car_present
@@ -121,11 +121,11 @@
     - condition: time
       after: "06:00:00"
       before: "23:00:00"
-  action:
-    - service: cover.open_cover
+  actions:
+    - action: cover.open_cover
       target:
         entity_id: cover.garage_door
-    - service: notify.notify
+    - action: notify.notify
       data:
         title: "Garage"
         message: "Welcome home! Opening garage door."
@@ -137,17 +137,17 @@
 - alias: "Garage - Motion Light"
   id: garage_motion_light
   description: "Turn on garage light on motion"
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: binary_sensor.garage_motion
       to: "on"
-  action:
-    - service: light.turn_on
+  actions:
+    - action: light.turn_on
       target:
         entity_id: light.garage  # Your garage light entity
     - delay:
         minutes: 5
-    - service: light.turn_off
+    - action: light.turn_off
       target:
         entity_id: light.garage
 
@@ -158,12 +158,12 @@
 - alias: "Garage - Freeze Warning"
   id: garage_freeze_warning
   description: "Alert if garage temperature drops below freezing"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.garage_temperature
       below: 2
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "🥶 Garage Freeze Warning"
         message: "Garage temperature is {{ states('sensor.garage_temperature') }}°C - protect sensitive items!"
@@ -175,12 +175,12 @@
 - alias: "Garage - Door Opened"
   id: garage_door_opened
   description: "Log and notify when garage door opens"
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: cover.garage_door
       to: "open"
-  action:
-    - service: logbook.log
+  actions:
+    - action: logbook.log
       data:
         name: "Garage Door"
         message: "opened"
@@ -189,11 +189,11 @@
 - alias: "Garage - Door Closed"
   id: garage_door_closed
   description: "Clear notifications when door closes"
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: cover.garage_door
       to: "closed"
-  action:
-    - service: persistent_notification.dismiss
+  actions:
+    - action: persistent_notification.dismiss
       data:
         notification_id: garage_open_night

@@ -12,19 +12,19 @@
 - alias: "Smart Plug - Appliance Cycle Complete"
   id: smart_plug_cycle_complete
   description: "Notify when a connected appliance finishes its cycle"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.smart_plug_power
       below: 2
       for:
         minutes: 3
-  condition:
+  conditions:
     # Only trigger if the appliance was actually running first
     - condition: template
       value_template: >
         {{ states('sensor.smart_plug_energy_today') | float(0) > 0.05 }}
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "Appliance done"
         message: >
@@ -39,15 +39,15 @@
 - alias: "Smart Plug - Auto-Off Standby"
   id: smart_plug_standby_off
   description: "Kill vampire load if device sits in standby"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.smart_plug_power
       above: 0.5
       below: 5
       for:
         hours: 1
-  action:
-    - service: switch.turn_off
+  actions:
+    - action: switch.turn_off
       target:
         entity_id: switch.smart_plug
 
@@ -58,17 +58,17 @@
 - alias: "Smart Plug - Overload Cutoff"
   id: smart_plug_overload
   description: "Cut power if load exceeds safe limit"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.smart_plug_power
       above: 2300   # Watts. Most plugs are rated 10 A / 2300 W.
       for:
         seconds: 5
-  action:
-    - service: switch.turn_off
+  actions:
+    - action: switch.turn_off
       target:
         entity_id: switch.smart_plug
-    - service: notify.notify
+    - action: notify.notify
       data:
         title: "Smart Plug overload"
         message: >

@@ -8,14 +8,14 @@
 - alias: "Battery Sensor - Low Battery Alert"
   id: battery_sensor_low_battery
   description: "Notify when sensor battery drops below 20%"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.battery_temp_sensor_battery
       below: 20
       for:
         minutes: 30
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "Battery Sensor"
         message: >
@@ -31,12 +31,12 @@
 - alias: "Battery Sensor - Critical Battery"
   id: battery_sensor_critical_battery
   description: "Persistent notification when battery is critically low"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.battery_temp_sensor_battery_voltage
       below: 3.4
-  action:
-    - service: persistent_notification.create
+  actions:
+    - action: persistent_notification.create
       data:
         title: "Critical: Sensor Battery"
         message: >
@@ -52,12 +52,12 @@
 - alias: "Battery Sensor - Frost Warning"
   id: battery_sensor_frost
   description: "Alert if monitored location drops near freezing"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.battery_temp_sensor_temperature
       below: 2
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "Frost Warning"
         message: >
@@ -72,14 +72,14 @@
 - alias: "Battery Sensor - High Humidity"
   id: battery_sensor_high_humidity
   description: "Alert if humidity stays high for an hour (mold risk)"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.battery_temp_sensor_humidity
       above: 70
       for:
         hours: 1
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "Humidity Warning"
         message: >
@@ -94,14 +94,14 @@
 - alias: "Battery Sensor - Stale Data"
   id: battery_sensor_stale
   description: "Alert if no update received in 30 minutes (sensor may be dead)"
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: sensor.battery_temp_sensor_temperature
       to: "unavailable"
       for:
         minutes: 30
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "Battery Sensor Offline"
         message: >
@@ -115,11 +115,11 @@
 - alias: "Battery Sensor - Daily Summary"
   id: battery_sensor_daily_summary
   description: "Daily report of min/max temperature and current battery"
-  trigger:
-    - platform: time
+  triggers:
+    - trigger: time
       at: "08:00:00"
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "Daily Sensor Report"
         message: >

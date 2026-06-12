@@ -149,7 +149,7 @@ roughly 4x the range of a bare CC1101. Costs about 8 USD vs 3 USD.
 ### Sending RF from automations
 
 ```yaml
-service: remote_transmitter.transmit_raw
+action: remote_transmitter.transmit_raw
 target:
   entity_id: button.rf_gateway_send_doorbell_test
 data:

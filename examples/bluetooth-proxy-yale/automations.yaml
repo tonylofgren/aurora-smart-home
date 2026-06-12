@@ -7,14 +7,14 @@
 - alias: "BT Proxy - Offline alert"
   id: bt_proxy_offline
   description: "Notify if the proxy goes offline for 5+ minutes"
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: binary_sensor.bt_proxy_living_room_status
       to: "off"
       for:
         minutes: 5
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "Bluetooth Proxy"
         message: "Living room proxy went offline. Lock may be unreachable."
@@ -26,14 +26,14 @@
 - alias: "BT Proxy - Weak WiFi signal"
   id: bt_proxy_weak_wifi
   description: "Suggest moving the proxy if WiFi RSSI is consistently bad"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.bt_proxy_living_room_wifi_signal
       below: -70
       for:
         minutes: 30
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "Bluetooth Proxy"
         message: >
@@ -47,18 +47,18 @@
 - alias: "BT Proxy - Lock unreachable despite proxy online"
   id: bt_proxy_lock_unreachable
   description: "Catch cases where the proxy is fine but the lock dropped"
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: lock.front_door
       to: "unavailable"
       for:
         minutes: 10
-  condition:
+  conditions:
     - condition: state
       entity_id: binary_sensor.bt_proxy_living_room_status
       state: "on"
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "Front Door Lock"
         message: >
@@ -72,14 +72,14 @@
 - alias: "BT Proxy - Crash loop detection"
   id: bt_proxy_crash_loop
   description: "If uptime stays under 30 min for an hour, something is wrong"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.bt_proxy_living_room_uptime
       below: 1800        # 30 min in seconds
       for:
         minutes: 60
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "Bluetooth Proxy"
         message: >

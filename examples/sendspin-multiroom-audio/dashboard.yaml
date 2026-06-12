@@ -59,16 +59,16 @@ cards:
         name: Whole House
         icon: mdi:home-sound-in
         tap_action:
-          action: call-service
-          service: media_player.media_play
+          action: perform-action
+          perform_action: media_player.media_play
           target:
             entity_id: media_player.audio_hub_all_rooms
       - type: button
         name: Pause All
         icon: mdi:pause
         tap_action:
-          action: call-service
-          service: media_player.media_pause
+          action: perform-action
+          perform_action: media_player.media_pause
           target:
             entity_id: media_player.audio_hub_all_rooms
 

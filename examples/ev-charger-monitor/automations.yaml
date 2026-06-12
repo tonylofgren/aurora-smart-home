@@ -8,18 +8,18 @@
 - alias: "EV - Enable off-peak charging at 23:00"
   id: ev_offpeak_start
   description: "Wake the charger when off-peak tariff begins"
-  trigger:
-    - platform: time
+  triggers:
+    - trigger: time
       at: "23:00:00"
-  condition:
+  conditions:
     - condition: state
       entity_id: binary_sensor.ev_charger_monitor_vehicle_connected
       state: "on"
-  action:
-    - service: switch.turn_on
+  actions:
+    - action: switch.turn_on
       target:
         entity_id: switch.ev_charger_monitor_enable
-    - service: number.set_value
+    - action: number.set_value
       target:
         entity_id: number.ev_charger_monitor_max_amps
       data:
@@ -28,11 +28,11 @@
 - alias: "EV - Stop charging at 07:00 when peak tariff starts"
   id: ev_offpeak_stop
   description: "Sleep the charger when peak tariff begins"
-  trigger:
-    - platform: time
+  triggers:
+    - trigger: time
       at: "07:00:00"
-  action:
-    - service: switch.turn_off
+  actions:
+    - action: switch.turn_off
       target:
         entity_id: switch.ev_charger_monitor_enable
 
@@ -47,24 +47,24 @@
 - alias: "EV - Start solar charging"
   id: ev_solar_start
   description: "Begin charging when surplus solar exceeds 1.5 kW"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.solar_inverter_power
       above: 1500
       for:
         minutes: 3
-  condition:
+  conditions:
     - condition: state
       entity_id: binary_sensor.ev_charger_monitor_vehicle_connected
       state: "on"
     - condition: state
       entity_id: switch.ev_charger_monitor_enable
       state: "off"
-  action:
-    - service: switch.turn_on
+  actions:
+    - action: switch.turn_on
       target:
         entity_id: switch.ev_charger_monitor_enable
-    - service: number.set_value
+    - action: number.set_value
       target:
         entity_id: number.ev_charger_monitor_max_amps
       data:
@@ -73,14 +73,14 @@
 - alias: "EV - Stop solar charging when sun fades"
   id: ev_solar_stop
   description: "Sleep the charger when surplus drops under 1.0 kW for 5 minutes"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.solar_inverter_power
       below: 1000
       for:
         minutes: 5
-  action:
-    - service: switch.turn_off
+  actions:
+    - action: switch.turn_off
       target:
         entity_id: switch.ev_charger_monitor_enable
 
@@ -91,16 +91,16 @@
 - alias: "EV - Alert on charger fault"
   id: ev_fault_alert
   description: "Push a notification when the charger enters a fault state"
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: sensor.ev_charger_monitor_state
       to:
         - "gfi_fault"
         - "no_ground"
         - "stuck_relay"
         - "diode_check_failed"
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "EV charger fault"
         message: >

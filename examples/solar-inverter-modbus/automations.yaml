@@ -8,12 +8,12 @@
 - alias: "Solar - Inverter fault alert"
   id: solar_inverter_fault
   description: "Push a notification when the inverter enters fault state"
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: sensor.solar_inverter_status
       to: "fault"
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "Solar inverter"
         message: >
@@ -28,12 +28,12 @@
 - alias: "Solar - Daily yield summary"
   id: solar_daily_summary
   description: "Send today's solar production at sunset"
-  trigger:
-    - platform: sun
+  triggers:
+    - trigger: sun
       event: sunset
       offset: "+00:15:00"
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "Solar today"
         message: >
@@ -47,21 +47,21 @@
 - alias: "Solar - Start dishwasher on surplus"
   id: solar_surplus_dishwasher
   description: "Turn on the dishwasher plug when output exceeds 1500 W for 5 min"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.solar_inverter_output_power
       above: 1500
       for:
         minutes: 5
-  condition:
+  conditions:
     - condition: state
       entity_id: switch.dishwasher_plug
       state: "off"
     - condition: time
       after: "10:00:00"
       before: "16:00:00"
-  action:
-    - service: switch.turn_on
+  actions:
+    - action: switch.turn_on
       target:
         entity_id: switch.dishwasher_plug
 
@@ -72,12 +72,12 @@
 - alias: "Solar - Inverter data stale"
   id: solar_data_stale
   description: "Notify if the inverter has not reported in 10 minutes"
-  trigger:
-    - platform: template
+  triggers:
+    - trigger: template
       value_template: >
         {{ (now() - states.sensor.solar_inverter_output_power.last_updated).total_seconds() > 600 }}
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "Solar inverter"
         message: "No fresh data from the inverter for 10 minutes. Check RS485 wiring or the ESP32."

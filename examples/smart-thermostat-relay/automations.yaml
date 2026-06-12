@@ -11,11 +11,11 @@
 - alias: "Thermostat - Night Setback"
   id: thermostat_night_setback
   description: "Switch to eco preset at night"
-  trigger:
-    - platform: time
+  triggers:
+    - trigger: time
       at: "23:00:00"
-  action:
-    - service: climate.set_preset_mode
+  actions:
+    - action: climate.set_preset_mode
       target:
         entity_id: climate.thermostat_climate
       data:
@@ -28,11 +28,11 @@
 - alias: "Thermostat - Morning Comfort"
   id: thermostat_morning_comfort
   description: "Pre-heat to comfort temperature before wake-up"
-  trigger:
-    - platform: time
+  triggers:
+    - trigger: time
       at: "06:30:00"
-  action:
-    - service: climate.set_preset_mode
+  actions:
+    - action: climate.set_preset_mode
       target:
         entity_id: climate.thermostat_climate
       data:
@@ -45,14 +45,14 @@
 - alias: "Thermostat - Away on Departure"
   id: thermostat_away_on_departure
   description: "Drop to Away preset when everyone leaves home"
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: group.family
       to: "not_home"
       for:
         minutes: 30
-  action:
-    - service: climate.set_preset_mode
+  actions:
+    - action: climate.set_preset_mode
       target:
         entity_id: climate.thermostat_climate
       data:
@@ -65,19 +65,19 @@
 - alias: "Thermostat - Pause on Open Window"
   id: thermostat_pause_window
   description: "Turn off heating if a window is opened"
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: binary_sensor.living_room_window
       to: "on"
       for:
         minutes: 2
-  action:
-    - service: climate.set_hvac_mode
+  actions:
+    - action: climate.set_hvac_mode
       target:
         entity_id: climate.thermostat_climate
       data:
         hvac_mode: "off"
-    - service: notify.notify
+    - action: notify.notify
       data:
         title: "Thermostat"
         message: "Window open - heating paused."
@@ -85,14 +85,14 @@
 - alias: "Thermostat - Resume on Closed Window"
   id: thermostat_resume_window
   description: "Resume heating when window closes"
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: binary_sensor.living_room_window
       to: "off"
       for:
         minutes: 1
-  action:
-    - service: climate.set_hvac_mode
+  actions:
+    - action: climate.set_hvac_mode
       target:
         entity_id: climate.thermostat_climate
       data:
@@ -105,12 +105,12 @@
 - alias: "Thermostat - Runaway Temperature Alert"
   id: thermostat_runaway_alert
   description: "Alert if room temperature exceeds safety cutoff"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.thermostat_room_temperature
       above: 27
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "Thermostat Safety"
         message: >

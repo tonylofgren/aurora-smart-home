@@ -14,14 +14,14 @@ automation:
     alias: "Air Quality: High CO2 alert"
     description: "Notify when CO2 exceeds 1200 ppm for 10 minutes"
     mode: single
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.air_quality_co2
         above: 1200
         for:
           minutes: 10
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "High CO2 in the room"
           message: >-
@@ -36,23 +36,23 @@ automation:
     alias: "Air Quality: Auto-start ventilation"
     description: "Turn on ventilation fan when CO2 exceeds 1000 ppm"
     mode: single
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.air_quality_co2
         above: 1000
         for:
           minutes: 2
-    condition:
+    conditions:
       - condition: state
         entity_id: switch.ventilation_fan
         state: "off"
-    action:
-      - service: switch.turn_on
+    actions:
+      - action: switch.turn_on
         target:
           entity_id: switch.ventilation_fan
       - delay:
           minutes: 30
-      - service: switch.turn_off
+      - action: switch.turn_off
         target:
           entity_id: switch.ventilation_fan
 
@@ -64,14 +64,14 @@ automation:
     alias: "Air Quality: High particulate alert"
     description: "Notify when PM2.5 exceeds 35 ug/m3"
     mode: single
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.air_quality_pm2_5
         above: 35
         for:
           minutes: 5
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "High particulate matter"
           message: >-
@@ -85,11 +85,11 @@ automation:
     alias: "Air Quality: Daily summary at 09:00"
     description: "Send a daily readout of air quality at 09:00"
     mode: single
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "09:00:00"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "Daily air quality summary"
           message: >-
@@ -107,21 +107,21 @@ automation:
     alias: "Air Quality: HVAC fan on high VOC"
     description: "Run HVAC fan for 20 minutes when VOC index exceeds 250"
     mode: single
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.air_quality_voc_index
         above: 250
         for:
           minutes: 15
-    action:
-      - service: climate.set_fan_mode
+    actions:
+      - action: climate.set_fan_mode
         target:
           entity_id: climate.living_room
         data:
           fan_mode: "on"
       - delay:
           minutes: 20
-      - service: climate.set_fan_mode
+      - action: climate.set_fan_mode
         target:
           entity_id: climate.living_room
         data:
@@ -134,15 +134,15 @@ automation:
     alias: "Air Quality: Weekly calibration reminder"
     description: "Sunday 10:00 reminder to recalibrate the SCD41 outdoors"
     mode: single
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "10:00:00"
-    condition:
+    conditions:
       - condition: time
         weekday:
           - sun
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "Air quality monitor: weekly calibration"
           message: >-

@@ -34,8 +34,8 @@ views:
             name: Open
             icon: mdi:garage-open
             tap_action:
-              action: call-service
-              service: cover.open_cover
+              action: perform-action
+              perform_action: cover.open_cover
               target:
                 entity_id: cover.garage_door
             show_state: false
@@ -46,8 +46,8 @@ views:
             icon: mdi:stop
             icon_height: 40px
             tap_action:
-              action: call-service
-              service: cover.stop_cover
+              action: perform-action
+              perform_action: cover.stop_cover
               target:
                 entity_id: cover.garage_door
             show_state: false
@@ -57,8 +57,8 @@ views:
             name: Close
             icon: mdi:garage
             tap_action:
-              action: call-service
-              service: cover.close_cover
+              action: perform-action
+              perform_action: cover.close_cover
               target:
                 entity_id: cover.garage_door
             show_state: false

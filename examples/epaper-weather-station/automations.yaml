@@ -48,14 +48,14 @@
 - alias: "E-Paper Weather - Low Battery"
   id: epaper_weather_low_battery
   description: "Notify when display battery drops below 20%"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.epaper_weather_battery
       below: 20
       for:
         minutes: 30
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "Weather Display"
         message: >
@@ -71,15 +71,15 @@
 - alias: "E-Paper Weather - Refresh on Severe Weather"
   id: epaper_weather_refresh_severe
   description: "Push immediate redraw when conditions change to stormy"
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: weather.home
       to:
         - "lightning"
         - "lightning-rainy"
         - "pouring"
-  action:
-    - service: button.press
+  actions:
+    - action: button.press
       target:
         entity_id: button.epaper_weather_refresh_now
 
@@ -90,14 +90,14 @@
 - alias: "E-Paper Weather - Stale Display"
   id: epaper_weather_stale
   description: "Alert if display has not woken in 3 hours"
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: sensor.epaper_weather_battery_voltage
       to: "unavailable"
       for:
         hours: 3
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "Weather Display Offline"
         message: >

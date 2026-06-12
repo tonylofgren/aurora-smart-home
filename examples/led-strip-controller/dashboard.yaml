@@ -41,8 +41,8 @@ views:
                 icon: mdi:weather-sunset
                 icon_color: orange
                 tap_action:
-                  action: call-service
-                  service: light.turn_on
+                  action: perform-action
+                  perform_action: light.turn_on
                   target:
                     entity_id: light.led_strip
                   data:
@@ -55,8 +55,8 @@ views:
                 icon: mdi:snowflake
                 icon_color: light-blue
                 tap_action:
-                  action: call-service
-                  service: light.turn_on
+                  action: perform-action
+                  perform_action: light.turn_on
                   target:
                     entity_id: light.led_strip
                   data:
@@ -69,8 +69,8 @@ views:
                 icon: mdi:heart
                 icon_color: red
                 tap_action:
-                  action: call-service
-                  service: light.turn_on
+                  action: perform-action
+                  perform_action: light.turn_on
                   target:
                     entity_id: light.led_strip
                   data:
@@ -85,8 +85,8 @@ views:
                 content: Rainbow
                 icon: mdi:looks
                 tap_action:
-                  action: call-service
-                  service: light.turn_on
+                  action: perform-action
+                  perform_action: light.turn_on
                   target:
                     entity_id: light.led_strip
                   data:
@@ -95,8 +95,8 @@ views:
                 content: Twinkle
                 icon: mdi:star-four-points
                 tap_action:
-                  action: call-service
-                  service: light.turn_on
+                  action: perform-action
+                  perform_action: light.turn_on
                   target:
                     entity_id: light.led_strip
                   data:
@@ -105,8 +105,8 @@ views:
                 content: Scan
                 icon: mdi:radar
                 tap_action:
-                  action: call-service
-                  service: light.turn_on
+                  action: perform-action
+                  perform_action: light.turn_on
                   target:
                     entity_id: light.led_strip
                   data:
@@ -115,8 +115,8 @@ views:
                 content: Fireworks
                 icon: mdi:firework
                 tap_action:
-                  action: call-service
-                  service: light.turn_on
+                  action: perform-action
+                  perform_action: light.turn_on
                   target:
                     entity_id: light.led_strip
                   data:

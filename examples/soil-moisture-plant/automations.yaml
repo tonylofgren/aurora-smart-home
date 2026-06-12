@@ -8,14 +8,14 @@
 - alias: "Plant - Thirsty notification"
   id: plant_thirsty_notify
   description: "Send a notification when the soil moisture drops below threshold"
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: binary_sensor.plant_monitor_thirsty
       to: "on"
       for:
         minutes: 10
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "Thirsty plant"
         message: >
@@ -33,13 +33,13 @@
 - alias: "Plant - Auto water when soil is dry"
   id: plant_auto_water
   description: "Run the watering pump for a short burst when soil is dry"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.plant_monitor_soil_moisture
       below: 25
       for:
         minutes: 15
-  condition:
+  conditions:
     # Do not water at night, you will not see leaks
     - condition: time
       after: "07:00:00"
@@ -50,16 +50,16 @@
       state: "off"
       for:
         minutes: 60
-  action:
-    - service: switch.turn_on
+  actions:
+    - action: switch.turn_on
       target:
         entity_id: switch.plant_pump
     - delay:
         seconds: 8
-    - service: switch.turn_off
+    - action: switch.turn_off
       target:
         entity_id: switch.plant_pump
-    - service: notify.notify
+    - action: notify.notify
       data:
         title: "Plant watered"
         message: "Pump ran for 8 seconds. Soil was {{ states('sensor.plant_monitor_soil_moisture') }}%."
@@ -71,12 +71,12 @@
 - alias: "Plant - Low battery"
   id: plant_low_battery
   description: "Warn when the LiPo cell needs charging"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.plant_monitor_battery
       below: 20
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "Plant monitor battery low"
         message: "Battery is at {{ states('sensor.plant_monitor_battery') }}%. Recharge soon."

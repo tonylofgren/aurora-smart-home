@@ -8,12 +8,12 @@
   alias: "Mailbox: Mail arrived"
   description: "Send a notification when the mailbox lid is opened."
   mode: single
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: binary_sensor.mailbox_lid
       to: "on"
-  action:
-    - service: notify.mobile_app_your_phone
+  actions:
+    - action: notify.mobile_app_your_phone
       data:
         title: "You have mail"
         message: "The mailbox was just opened."
@@ -21,7 +21,7 @@
           tag: mailbox
           channel: Mailbox
           importance: high
-    - service: input_datetime.set_datetime
+    - action: input_datetime.set_datetime
       target:
         entity_id: input_datetime.last_mail_arrival
       data:
@@ -31,13 +31,13 @@
   alias: "Mailbox: Battery low warning"
   description: "Warn when battery drops below 3.30V (about 15% remaining)."
   mode: single
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.mailbox_battery_voltage
       below: 3.30
       for: "00:01:00"
-  action:
-    - service: notify.mobile_app_your_phone
+  actions:
+    - action: notify.mobile_app_your_phone
       data:
         title: "Mailbox battery low"
         message: >-
@@ -49,12 +49,12 @@
   alias: "Mailbox: Battery critical"
   description: "Critical warning when battery drops below 3.10V."
   mode: single
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.mailbox_battery_voltage
       below: 3.10
-  action:
-    - service: notify.mobile_app_your_phone
+  actions:
+    - action: notify.mobile_app_your_phone
       data:
         title: "Mailbox battery CRITICAL"
         message: >-
@@ -70,13 +70,13 @@
     Warn if no mail event has been registered in 14 days.
     Could be normal, but could also mean the device died.
   mode: single
-  trigger:
-    - platform: template
+  triggers:
+    - trigger: template
       value_template: >-
         {{ (now() - states.input_datetime.last_mail_arrival.last_changed)
            .total_seconds() > 14 * 86400 }}
-  action:
-    - service: notify.mobile_app_your_phone
+  actions:
+    - action: notify.mobile_app_your_phone
       data:
         title: "Mailbox unusually quiet"
         message: >-

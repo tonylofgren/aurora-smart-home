@@ -28,8 +28,8 @@ views:
             name: Open
             icon: mdi:arrow-up-bold
             tap_action:
-              action: call-service
-              service: cover.open_cover
+              action: perform-action
+              perform_action: cover.open_cover
               target:
                 entity_id: cover.blinds
             show_state: false
@@ -39,8 +39,8 @@ views:
             name: Stop
             icon: mdi:stop
             tap_action:
-              action: call-service
-              service: cover.stop_cover
+              action: perform-action
+              perform_action: cover.stop_cover
               target:
                 entity_id: cover.blinds
             show_state: false
@@ -50,8 +50,8 @@ views:
             name: Close
             icon: mdi:arrow-down-bold
             tap_action:
-              action: call-service
-              service: cover.close_cover
+              action: perform-action
+              perform_action: cover.close_cover
               target:
                 entity_id: cover.blinds
             show_state: false

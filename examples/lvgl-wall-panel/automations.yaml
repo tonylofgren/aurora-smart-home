@@ -8,18 +8,18 @@
 - alias: "Wall panel - Wake on doorbell"
   id: wall_panel_wake_doorbell
   description: "Force the panel backlight on for 30 s when the doorbell rings"
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: binary_sensor.front_doorbell
       to: "on"
-  action:
-    - service: light.turn_on
+  actions:
+    - action: light.turn_on
       target:
         entity_id: light.wall_panel_backlight
       data:
         brightness_pct: 100
     - delay: "00:00:30"
-    - service: light.turn_off
+    - action: light.turn_off
       target:
         entity_id: light.wall_panel_backlight
 
@@ -30,13 +30,13 @@
 - alias: "Wall panel - Night brightness"
   id: wall_panel_night_brightness
   description: "Cap backlight at 20% between 22:00 and 06:00 to avoid glare"
-  trigger:
-    - platform: time
+  triggers:
+    - trigger: time
       at: "22:00:00"
-    - platform: time
+    - trigger: time
       at: "06:00:00"
-  action:
-    - service: light.turn_on
+  actions:
+    - action: light.turn_on
       target:
         entity_id: light.wall_panel_backlight
       data:

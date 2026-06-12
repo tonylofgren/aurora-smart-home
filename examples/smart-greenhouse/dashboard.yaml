@@ -96,8 +96,8 @@ views:
             name: Water Now
             icon: mdi:watering-can
             tap_action:
-              action: call-service
-              service: button.press
+              action: perform-action
+              perform_action: button.press
               target:
                 entity_id: button.greenhouse_water_now
 

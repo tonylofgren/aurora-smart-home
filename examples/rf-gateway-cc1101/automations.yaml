@@ -7,24 +7,24 @@
 - alias: "RF - Living Room Lamp on"
   id: rf_lamp_on
   description: "Turn on a 433 MHz outlet by replaying its captured code"
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: input_boolean.living_room_lamp
       to: "on"
-  action:
-    - service: esphome.rf_gateway_transmit_raw
+  actions:
+    - action: esphome.rf_gateway_transmit_raw
       data:
         # Replace with codes captured from your real remote
         code: [1000, -1000, 500, -500, 1000, -1000]
 
 - alias: "RF - Living Room Lamp off"
   id: rf_lamp_off
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: input_boolean.living_room_lamp
       to: "off"
-  action:
-    - service: esphome.rf_gateway_transmit_raw
+  actions:
+    - action: esphome.rf_gateway_transmit_raw
       data:
         code: [500, -500, 1000, -1000, 500, -500]
 
@@ -35,17 +35,17 @@
 - alias: "RF - Doorbell announce"
   id: rf_doorbell_announce
   description: "When the proxy detects the doorbell code, announce it"
-  trigger:
+  triggers:
     # The on_control trigger on the radio_frequency entity fires with the
     # received code. Replace with the address+command your doorbell uses.
-    - platform: event
+    - trigger: event
       event_type: esphome.radio_frequency_received
       event_data:
         device: rf_gateway
         address: "0x4004"        # captured from your real doorbell
         command: "0xA1B2"        # captured from your real doorbell
-  action:
-    - service: tts.cloud_say
+  actions:
+    - action: tts.cloud_say
       data:
         entity_id: media_player.living_room
         message: "Doorbell"
@@ -58,20 +58,20 @@
 - alias: "RF - Auto-close garage at 23:00"
   id: rf_garage_close
   description: "Send garage close code if door is still open at night"
-  trigger:
-    - platform: time
+  triggers:
+    - trigger: time
       at: "23:00:00"
-  condition:
+  conditions:
     - condition: state
       entity_id: cover.garage_door
       state: "open"
-  action:
-    - service: esphome.rf_gateway_transmit_raw
+  actions:
+    - action: esphome.rf_gateway_transmit_raw
       data:
         # Garage opener code. WARNING: rolling-code openers (post-2012) will
         # not work with simple replay - you need a learning remote bridge.
         code: [400, -400, 800, -800, 400, -400]
-    - service: notify.notify
+    - action: notify.notify
       data:
         title: "Garage"
         message: "Auto-closing garage door at 23:00."
@@ -83,18 +83,18 @@
 - alias: "RF - Weather station packet"
   id: rf_weather_station
   description: "Log raw weather station packets for later decode"
-  trigger:
-    - platform: event
+  triggers:
+    - trigger: event
       event_type: esphome.radio_frequency_received
       event_data:
         device: rf_gateway
-  condition:
+  conditions:
     # Filter to packets that look like an Acurite 5n1 weather station
     - condition: template
       value_template: >
         {{ trigger.event.data.length | int > 50 }}
-  action:
-    - service: logbook.log
+  actions:
+    - action: logbook.log
       data:
         name: "Weather station"
         message: >

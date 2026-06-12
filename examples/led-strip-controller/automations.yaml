@@ -11,12 +11,12 @@
 - alias: "LED Strip - Sunset Warm Glow"
   id: led_strip_sunset
   description: "Fade strip to warm color at sunset"
-  trigger:
-    - platform: sun
+  triggers:
+    - trigger: sun
       event: sunset
       offset: "-00:15:00"
-  action:
-    - service: light.turn_on
+  actions:
+    - action: light.turn_on
       target:
         entity_id: light.led_strip
       data:
@@ -31,11 +31,11 @@
 - alias: "LED Strip - Bedtime Fade Out"
   id: led_strip_bedtime
   description: "Gradually dim strip before bed"
-  trigger:
-    - platform: time
+  triggers:
+    - trigger: time
       at: "23:00:00"
-  action:
-    - service: light.turn_on
+  actions:
+    - action: light.turn_on
       target:
         entity_id: light.led_strip
       data:
@@ -43,7 +43,7 @@
         transition: 600
     - delay:
         minutes: 10
-    - service: light.turn_off
+    - action: light.turn_off
       target:
         entity_id: light.led_strip
       data:
@@ -56,16 +56,16 @@
 - alias: "LED Strip - Motion Welcome"
   id: led_strip_motion_welcome
   description: "Play color wipe effect on motion in hallway"
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: binary_sensor.hallway_motion
       to: "on"
-  condition:
+  conditions:
     - condition: sun
       after: sunset
       before: sunrise
-  action:
-    - service: light.turn_on
+  actions:
+    - action: light.turn_on
       target:
         entity_id: light.led_strip
       data:
@@ -79,19 +79,19 @@
 - alias: "LED Strip - Doorbell Strobe"
   id: led_strip_doorbell_strobe
   description: "Strobe effect when doorbell rings"
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: binary_sensor.doorbell
       to: "on"
-  action:
-    - service: light.turn_on
+  actions:
+    - action: light.turn_on
       target:
         entity_id: light.led_strip
       data:
         effect: "Strobe"
     - delay:
         seconds: 5
-    - service: light.turn_off
+    - action: light.turn_off
       target:
         entity_id: light.led_strip
 
@@ -102,12 +102,12 @@
 - alias: "LED Strip - Party Mode On"
   id: led_strip_party_on
   description: "Switch to rainbow effect via input boolean"
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: input_boolean.party_mode
       to: "on"
-  action:
-    - service: light.turn_on
+  actions:
+    - action: light.turn_on
       target:
         entity_id: light.led_strip
       data:
@@ -117,12 +117,12 @@
 - alias: "LED Strip - Party Mode Off"
   id: led_strip_party_off
   description: "Restore static color when party mode disabled"
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: input_boolean.party_mode
       to: "off"
-  action:
-    - service: light.turn_on
+  actions:
+    - action: light.turn_on
       target:
         entity_id: light.led_strip
       data:

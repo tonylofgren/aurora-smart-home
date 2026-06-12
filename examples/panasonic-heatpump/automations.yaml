@@ -8,22 +8,22 @@
 - alias: "Panasonic - Enable Econavi at night"
   id: panasonic_econavi_night
   description: "Turn on Econavi between 22:00 and 06:00 to reduce power"
-  trigger:
-    - platform: time
+  triggers:
+    - trigger: time
       at: "22:00:00"
-  action:
-    - service: switch.turn_on
+  actions:
+    - action: switch.turn_on
       target:
         entity_id: switch.panasonic_ac_econavi
 
 - alias: "Panasonic - Disable Econavi in the morning"
   id: panasonic_econavi_morning
   description: "Turn Econavi off at wake-up time so the AC can fully respond"
-  trigger:
-    - platform: time
+  triggers:
+    - trigger: time
       at: "06:00:00"
-  action:
-    - service: switch.turn_off
+  actions:
+    - action: switch.turn_off
       target:
         entity_id: switch.panasonic_ac_econavi
 
@@ -34,23 +34,23 @@
 - alias: "Panasonic - Pre-cool before arrival"
   id: panasonic_precool
   description: "Start cooling 15 minutes before person enters home zone"
-  trigger:
-    - platform: zone
+  triggers:
+    - trigger: zone
       entity_id: person.you
       zone: zone.home
       event: enter
-  condition:
+  conditions:
     # Only when it's actually warm outside
     - condition: numeric_state
       entity_id: sensor.panasonic_ac_outside_temperature
       above: 26
-  action:
-    - service: climate.set_hvac_mode
+  actions:
+    - action: climate.set_hvac_mode
       target:
         entity_id: climate.panasonic_ac
       data:
         hvac_mode: cool
-    - service: climate.set_temperature
+    - action: climate.set_temperature
       target:
         entity_id: climate.panasonic_ac
       data:
@@ -63,14 +63,14 @@
 - alias: "Panasonic - High power alert"
   id: panasonic_high_power
   description: "Notify if estimated power stays above 2 kW for 10 minutes"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.panasonic_ac_estimated_power
       above: 2000
       for:
         minutes: 10
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "Panasonic AC"
         message: >
@@ -85,20 +85,20 @@
 - alias: "Panasonic - Auto off when room empty"
   id: panasonic_auto_off
   description: "Turn off AC if presence sensor has been clear for 1 hour"
-  trigger:
-    - platform: state
+  triggers:
+    - trigger: state
       entity_id: binary_sensor.living_room_presence
       to: "off"
       for:
         hours: 1
-  condition:
+  conditions:
     - condition: not
       conditions:
         - condition: state
           entity_id: climate.panasonic_ac
           state: "off"
-  action:
-    - service: climate.set_hvac_mode
+  actions:
+    - action: climate.set_hvac_mode
       target:
         entity_id: climate.panasonic_ac
       data:
@@ -111,23 +111,23 @@
 - alias: "Panasonic - Switch to heat when outside is cold"
   id: panasonic_winter_mode
   description: "Automatically use heat mode when outside drops below 5 C"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.panasonic_ac_outside_temperature
       below: 5
       for:
         minutes: 30
-  condition:
+  conditions:
     - condition: state
       entity_id: climate.panasonic_ac
       state: "cool"
-  action:
-    - service: climate.set_hvac_mode
+  actions:
+    - action: climate.set_hvac_mode
       target:
         entity_id: climate.panasonic_ac
       data:
         hvac_mode: heat
-    - service: notify.notify
+    - action: notify.notify
       data:
         title: "Panasonic AC"
         message: "Switched to heat mode (outside is now {{ states('sensor.panasonic_ac_outside_temperature') }} C)."

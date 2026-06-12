@@ -8,27 +8,27 @@
 - alias: "Greenhouse - Morning Watering"
   id: greenhouse_morning_watering
   description: "Water greenhouse plants at 6 AM if soil is dry"
-  trigger:
-    - platform: time
+  triggers:
+    - trigger: time
       at: "06:00:00"
-  condition:
+  conditions:
     - condition: numeric_state
       entity_id: sensor.greenhouse_soil_moisture
       below: 50
-  action:
-    - service: switch.turn_on
+  actions:
+    - action: switch.turn_on
       target:
         entity_id:
           - switch.greenhouse_water_valve
           - switch.greenhouse_water_pump
     - delay:
         minutes: 5
-    - service: switch.turn_off
+    - action: switch.turn_off
       target:
         entity_id:
           - switch.greenhouse_water_pump
           - switch.greenhouse_water_valve
-    - service: notify.notify
+    - action: notify.notify
       data:
         title: "Greenhouse"
         message: "Morning watering complete. Soil moisture was {{ states('sensor.greenhouse_soil_moisture') }}%"
@@ -36,22 +36,22 @@
 - alias: "Greenhouse - Evening Watering"
   id: greenhouse_evening_watering
   description: "Water greenhouse plants at 6 PM if soil is dry"
-  trigger:
-    - platform: time
+  triggers:
+    - trigger: time
       at: "18:00:00"
-  condition:
+  conditions:
     - condition: numeric_state
       entity_id: sensor.greenhouse_soil_moisture
       below: 40
-  action:
-    - service: switch.turn_on
+  actions:
+    - action: switch.turn_on
       target:
         entity_id:
           - switch.greenhouse_water_valve
           - switch.greenhouse_water_pump
     - delay:
         minutes: 5
-    - service: switch.turn_off
+    - action: switch.turn_off
       target:
         entity_id:
           - switch.greenhouse_water_pump
@@ -64,26 +64,26 @@
 - alias: "Greenhouse - Emergency Water"
   id: greenhouse_emergency_water
   description: "Emergency watering when soil is critically dry"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.greenhouse_soil_moisture
       below: 15
       for:
         minutes: 10
-  action:
-    - service: switch.turn_on
+  actions:
+    - action: switch.turn_on
       target:
         entity_id:
           - switch.greenhouse_water_valve
           - switch.greenhouse_water_pump
     - delay:
         minutes: 3
-    - service: switch.turn_off
+    - action: switch.turn_off
       target:
         entity_id:
           - switch.greenhouse_water_pump
           - switch.greenhouse_water_valve
-    - service: notify.notify
+    - action: notify.notify
       data:
         title: "Greenhouse Alert"
         message: "Emergency watering triggered! Soil moisture was critically low ({{ states('sensor.greenhouse_soil_moisture') }}%)"
@@ -95,47 +95,47 @@
 - alias: "Greenhouse - Grow Light On (Low Light)"
   id: greenhouse_light_on
   description: "Turn on grow light when natural light is low during day"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.greenhouse_light
       below: 500
       for:
         minutes: 15
-  condition:
+  conditions:
     - condition: sun
       after: sunrise
       after_offset: "01:00:00"
     - condition: sun
       before: sunset
       before_offset: "-01:00:00"
-  action:
-    - service: switch.turn_on
+  actions:
+    - action: switch.turn_on
       target:
         entity_id: switch.greenhouse_grow_light
 
 - alias: "Greenhouse - Grow Light Off (Enough Light)"
   id: greenhouse_light_off
   description: "Turn off grow light when natural light is sufficient"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.greenhouse_light
       above: 1000
       for:
         minutes: 10
-  action:
-    - service: switch.turn_off
+  actions:
+    - action: switch.turn_off
       target:
         entity_id: switch.greenhouse_grow_light
 
 - alias: "Greenhouse - Grow Light Off (Night)"
   id: greenhouse_light_off_night
   description: "Turn off grow light at night"
-  trigger:
-    - platform: sun
+  triggers:
+    - trigger: sun
       event: sunset
       offset: "01:00:00"
-  action:
-    - service: switch.turn_off
+  actions:
+    - action: switch.turn_off
       target:
         entity_id: switch.greenhouse_grow_light
 
@@ -146,12 +146,12 @@
 - alias: "Greenhouse - Frost Warning"
   id: greenhouse_frost_warning
   description: "Alert when temperature drops below 5°C"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.greenhouse_temperature
       below: 5
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "🥶 Greenhouse Frost Warning!"
         message: "Temperature has dropped to {{ states('sensor.greenhouse_temperature') }}°C. Take action to protect plants!"
@@ -159,14 +159,14 @@
 - alias: "Greenhouse - Heat Warning"
   id: greenhouse_heat_warning
   description: "Alert when temperature exceeds 35°C"
-  trigger:
-    - platform: numeric_state
+  triggers:
+    - trigger: numeric_state
       entity_id: sensor.greenhouse_temperature
       above: 35
       for:
         minutes: 5
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "🔥 Greenhouse Heat Warning!"
         message: "Temperature has reached {{ states('sensor.greenhouse_temperature') }}°C. Fan should be running."
@@ -178,11 +178,11 @@
 - alias: "Greenhouse - Daily Summary"
   id: greenhouse_daily_summary
   description: "Send daily greenhouse status summary"
-  trigger:
-    - platform: time
+  triggers:
+    - trigger: time
       at: "20:00:00"
-  action:
-    - service: notify.notify
+  actions:
+    - action: notify.notify
       data:
         title: "🌱 Greenhouse Daily Summary"
         message: >

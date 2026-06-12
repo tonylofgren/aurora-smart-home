@@ -173,7 +173,7 @@ The config ships with 9 effects. To add more, see [ESPHome addressable effects d
 ### Calling Effects from Automations
 
 ```yaml
-service: light.turn_on
+action: light.turn_on
 target:
   entity_id: light.led_strip
 data:
@@ -188,7 +188,7 @@ Available effect names: `Rainbow`, `Color Wipe`, `Boot Wipe`, `Scan`, `Twinkle`,
 Use the `transition` parameter (in seconds):
 
 ```yaml
-service: light.turn_on
+action: light.turn_on
 target:
   entity_id: light.led_strip
 data:
