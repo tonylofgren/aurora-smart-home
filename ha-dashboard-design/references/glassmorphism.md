@@ -215,8 +215,8 @@ cards:
     name: Movie
     icon: mdi:movie-open
     tap_action:
-      action: call-service
-      service: scene.turn_on
+      action: perform-action
+      perform_action: scene.turn_on
       target:
         entity_id: scene.YOUR_SCENE
     styles:

@@ -177,11 +177,11 @@ api:
 
 ```yaml
 # In Home Assistant automation/script:
-service: esphome.device_name_set_brightness
+action: esphome.device_name_set_brightness
 data:
   level: 75
 
-service: esphome.device_name_play_rtttl
+action: esphome.device_name_play_rtttl
 data:
   song_str: "TakeOnMe:d=4,o=4,b=160:8f#5,8f#5,8f#5,8d5,8p,8b,8p,8e5"
 ```

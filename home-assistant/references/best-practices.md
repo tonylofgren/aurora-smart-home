@@ -623,7 +623,7 @@ template:
 
 # Good: Use trigger-based for complex calculations
 template:
-  - trigger:
+  - triggers:
       - trigger: time_pattern
         minutes: "/5"  # Every 5 minutes
       - trigger: homeassistant

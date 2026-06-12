@@ -512,7 +512,7 @@ Trigger-based templates only update when specified triggers fire, improving perf
 
 ```yaml
 template:
-  - trigger:
+  - triggers:
       - trigger: time_pattern
         minutes: "/5"
     sensor:
@@ -524,7 +524,7 @@ template:
 
 ```yaml
 template:
-  - trigger:
+  - triggers:
       - trigger: state
         entity_id: sensor.power
     sensor:
@@ -540,7 +540,7 @@ template:
 
 ```yaml
 template:
-  - trigger:
+  - triggers:
       - trigger: state
         entity_id:
           - sensor.temp_1
@@ -560,7 +560,7 @@ template:
 
 ```yaml
 template:
-  - trigger:
+  - triggers:
       - trigger: state
         entity_id: sensor.energy
     sensor:
@@ -581,7 +581,7 @@ template:
 
 ```yaml
 template:
-  - trigger:
+  - triggers:
       - trigger: time
         at: "00:00:00"
     actions:
@@ -620,7 +620,7 @@ template:
 
 ```yaml
 template:
-  - trigger:
+  - triggers:
       - trigger: state
         entity_id: sensor.power
     sensor:
@@ -643,7 +643,7 @@ template:
 
 ```yaml
 template:
-  - trigger:
+  - triggers:
       - trigger: state
         entity_id: binary_sensor.door
         to: "on"
@@ -725,7 +725,7 @@ template:
 
 # Good: Only updates when needed
 template:
-  - trigger:
+  - triggers:
       - trigger: time_pattern
         minutes: "/5"
     sensor:
@@ -1011,7 +1011,7 @@ template:
 
 # GOOD: Use trigger-based for expensive operations
 template:
-  - trigger:
+  - triggers:
       - trigger: time_pattern
         minutes: "/5"
     sensor:

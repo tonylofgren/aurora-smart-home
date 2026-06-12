@@ -383,9 +383,9 @@ actions:
 ### Actions (formerly Service Calls)
 ```yaml
 # Old (deprecated since HA 2024.8)
-action: light.turn_on
-action: "{{ 'light.turn_on' if is_on else 'light.turn_off' }}"
-data:
+service: light.turn_on
+service_template: "{{ 'light.turn_on' if is_on else 'light.turn_off' }}"
+data_template:
   entity_id: light.living_room
 
 # Current (correct)
@@ -402,8 +402,8 @@ action: "{{ 'light.turn_on' if is_on else 'light.turn_off' }}"
 ### Automation Keys (plural since HA 2024.10)
 ```yaml
 # Old (deprecated)
-triggers:
-  - trigger: state
+trigger:
+  - platform: state
 
 # Current (correct)
 triggers:

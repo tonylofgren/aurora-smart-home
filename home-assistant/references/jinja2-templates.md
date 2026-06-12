@@ -932,7 +932,7 @@ template:
 
 ```yaml
 template:
-  - trigger:
+  - triggers:
       - trigger: state
         entity_id: sensor.power
     sensor:

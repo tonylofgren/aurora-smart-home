@@ -389,11 +389,11 @@ return msg;
 ```yaml
 automation:
   - alias: "Handle custom event"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: nodered_motion_detected
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "Motion in {{ trigger.event.data.room }}"
 ```

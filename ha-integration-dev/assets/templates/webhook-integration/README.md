@@ -38,11 +38,11 @@ Listen for webhook events:
 ```yaml
 automation:
   - alias: "Handle Webhook Data"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: my_webhook_received
-    action:
-      - service: notify.notify
+    actions:
+      - action: notify.notify
         data:
           message: "Received: {{ trigger.event.data.data.value }}"
 ```

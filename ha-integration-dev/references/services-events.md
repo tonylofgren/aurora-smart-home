@@ -366,15 +366,15 @@ get_statistics:
 ```yaml
 # automation.yaml
 automation:
-  - trigger:
-      - platform: time
+  - triggers:
+      - trigger: time
         at: "09:00:00"
-    action:
-      - service: my_integration.get_info
+    actions:
+      - action: my_integration.get_info
         data:
           device_id: "abc123"
         response_variable: device_info
-      - service: notify.mobile
+      - action: notify.mobile
         data:
           message: "Device firmware: {{ device_info.firmware }}"
 ```

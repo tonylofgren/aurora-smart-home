@@ -930,7 +930,7 @@ automation:
 
 ```yaml
 template:
-  - trigger:
+  - triggers:
       - trigger: time_pattern
         minutes: /15
     actions:

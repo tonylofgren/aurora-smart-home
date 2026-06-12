@@ -418,11 +418,11 @@ telegram_chat_id: 123456789
 # Example automation - motion alert
 automation:
   - alias: "Motion alert with photo"
-    trigger:
+    triggers:
       - trigger: state
         entity_id: binary_sensor.front_door_motion
         to: "on"
-    action:
+    actions:
       - action: notify.telegram
         data:
           title: "Motion detected"
@@ -526,15 +526,15 @@ github_token: "Bearer github_pat_..."
 ```yaml
 automation:
   - alias: "HA new release notification"
-    trigger:
+    triggers:
       - trigger: state
         entity_id: sensor.ha_latest_release
-    condition:
+    conditions:
       - condition: template
         value_template: >
           {{ states('sensor.ha_latest_release') !=
              state_attr('update.home_assistant_core_update', 'installed_version') }}
-    action:
+    actions:
       - action: notify.telegram
         data:
           message: "Home Assistant {{ states('sensor.ha_latest_release') }} is available!"

@@ -470,7 +470,7 @@ binary_sensor:
 ```yaml
 # Home Assistant automation
 automation:
-  - trigger:
+  - triggers:
       - trigger: state
         entity_id: input_boolean.party_mode
         to: "on"

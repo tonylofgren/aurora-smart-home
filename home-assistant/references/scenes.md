@@ -888,7 +888,7 @@ scene:
 
 # Log scene activation
 automation:
-  - trigger:
+  - triggers:
       - trigger: event
         event_type: call_service
         event_data:

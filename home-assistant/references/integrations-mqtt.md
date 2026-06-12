@@ -640,7 +640,7 @@ mqtt:
 # Matches: sensors/a, sensors/a/b, sensors/a/b/c
 
 automation:
-  - trigger:
+  - triggers:
       - trigger: mqtt
         topic: "sensors/#"
     actions:

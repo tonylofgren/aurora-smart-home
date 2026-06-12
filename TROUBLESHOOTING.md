@@ -133,8 +133,8 @@ esp32:
 
 1. **Check trigger state**
    ```yaml
-   trigger:
-     - platform: state
+   triggers:
+     - trigger: state
        entity_id: binary_sensor.motion
        to: "on"           # Must be string with quotes!
        # NOT: to: on      # This is a boolean, not string
@@ -145,7 +145,7 @@ esp32:
 
 3. **Check conditions**
    ```yaml
-   condition:
+   conditions:
      - condition: state
        entity_id: input_boolean.automation_enabled
        state: "on"
@@ -228,7 +228,7 @@ data_template:
   entity_id: "{{ light_entity }}"
 
 # New (correct)
-service: "{{ 'light.turn_on' if on else 'light.turn_off' }}"
+action: "{{ 'light.turn_on' if on else 'light.turn_off' }}"
 target:
   entity_id: "{{ light_entity }}"
 data:

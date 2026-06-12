@@ -147,7 +147,7 @@ actions:
 
 ```yaml
 template:
-  - trigger:
+  - triggers:
       - trigger: time_pattern
         hours: /1  # Update every hour
     actions:
@@ -409,7 +409,7 @@ template:
 
 ```yaml
 template:
-  - trigger:
+  - triggers:
       - trigger: time_pattern
         hours: /1
     actions:

@@ -72,15 +72,15 @@
 # OLD:
 {{ state_attr('weather.home', 'forecast')[0].temperature }}
 
-# NEW: Use weather.get_forecasts service
-action:
-  - service: weather.get_forecasts
+# NEW: Use the weather.get_forecasts action
+actions:
+  - action: weather.get_forecasts
     target:
       entity_id: weather.home
     data:
       type: daily
     response_variable: forecast
-  - service: notify.mobile
+  - action: notify.mobile
     data:
       message: "Tomorrow: {{ forecast['weather.home'].forecast[0].temperature }}°C"
 ```
@@ -119,7 +119,7 @@ script:
 # NEW (both work):
 script:
   my_script:
-    - service: light.turn_on
+    - action: light.turn_on
       target:
         entity_id: light.living_room
 ```
@@ -141,6 +141,22 @@ views:
 
 #### 2024.8
 ```yaml
+# "Service calls" renamed to "actions": the action: key replaces service:
+# OLD (still works, deprecated):
+actions:
+  - service: light.turn_on
+    target:
+      entity_id: light.living_room
+
+# NEW:
+actions:
+  - action: light.turn_on
+    target:
+      entity_id: light.living_room
+
+# Dashboards: tap_action call-service renamed to perform-action,
+# with perform_action: replacing service:
+
 # Template 'is_state_attr' behavior change for unavailable entities
 # Now returns False for unavailable entities
 
@@ -155,6 +171,23 @@ views:
 
 #### 2024.10
 ```yaml
+# Automation block keys pluralized and trigger: replaces platform:
+# OLD (still works, deprecated):
+trigger:
+  - platform: state
+    entity_id: binary_sensor.motion
+condition: []
+action:
+  - action: light.turn_on
+
+# NEW:
+triggers:
+  - trigger: state
+    entity_id: binary_sensor.motion
+conditions: []
+actions:
+  - action: light.turn_on
+
 # Python 3.12 minimum requirement
 # Some custom components may need updates
 
@@ -180,9 +213,9 @@ mqtt:
 # Service data validation stricter
 # Extra keys in service data now generate warnings
 
-# Check your automations for typos in service data:
-action:
-  - service: light.turn_on
+# Check your automations for typos in action data:
+actions:
+  - action: light.turn_on
     data:
       brightness_pct: 100
       typo_key: "value"  # Will warn in 2024.12+
@@ -204,8 +237,8 @@ trigger:
     to: 'on'  # Quotes around boolean-like strings
 
 # NEW (preferred):
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: binary_sensor.motion
     to: "on"  # Use double quotes consistently
     # OR for actual boolean (some integrations):
@@ -221,8 +254,8 @@ action:
     entity_id: light.living_room  # Direct entity_id
 
 # NEW (current):
-action:
-  - service: light.turn_on
+actions:
+  - action: light.turn_on
     target:
       entity_id: light.living_room
     data:
@@ -239,7 +272,7 @@ condition:
   state: 'on'
 
 # NEW (both work, list format preferred):
-condition:
+conditions:
   - condition: state
     entity_id: binary_sensor.motion
     state: "on"
@@ -367,14 +400,14 @@ template:
 # YAML version with complex template:
 automation:
   - id: complex_template_example
-    trigger:
-      - platform: template
+    triggers:
+      - trigger: template
         value_template: >
           {% set temp = states('sensor.outside_temp') | float(0) %}
           {% set humidity = states('sensor.humidity') | float(0) %}
           {{ temp > 25 and humidity > 70 }}
-    action:
-      - service: climate.set_hvac_mode
+    actions:
+      - action: climate.set_hvac_mode
         target:
           entity_id: climate.living_room
         data:
@@ -598,14 +631,14 @@ script:
   pre_upgrade_check:
     alias: "Pre-Upgrade System Check"
     sequence:
-      - service: system_log.write
+      - action: system_log.write
         data:
           message: "Starting pre-upgrade check"
           level: info
-      - service: backup.create
+      - action: backup.create
         data:
           name: "pre_upgrade_{{ now().strftime('%Y%m%d_%H%M') }}"
-      - service: notify.admin
+      - action: notify.admin
         data:
           title: "Upgrade Ready"
           message: "Backup created. Review logs before proceeding."
@@ -656,16 +689,16 @@ script:
 automation:
   - id: post_upgrade_verification
     alias: "Post-Upgrade System Verification"
-    trigger:
-      - platform: homeassistant
+    triggers:
+      - trigger: homeassistant
         event: start
-    condition:
+    conditions:
       - condition: template
         value_template: >
           {{ (as_timestamp(now()) - as_timestamp(states('sensor.uptime'))) < 600 }}
-    action:
+    actions:
       - delay: "00:02:00"  # Wait for systems to stabilize
-      - service: notify.admin
+      - action: notify.admin
         data:
           title: "Home Assistant Restarted"
           message: >
@@ -830,11 +863,11 @@ automation ui: !include automations.yaml
 automation:
   - id: log_unavailable_entities
     alias: "Log Unavailable Entities"
-    trigger:
-      - platform: time_pattern
+    triggers:
+      - trigger: time_pattern
         hours: "/1"
-    action:
-      - service: system_log.write
+    actions:
+      - action: system_log.write
         data:
           message: >
             Unavailable entities:
@@ -863,19 +896,19 @@ python -c "import yaml; yaml.safe_load(open('configuration.yaml'))"
 automation:
   - id: backup_verification
     alias: "Weekly Backup Verification"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "03:00:00"
-    condition:
+    conditions:
       - condition: time
         weekday:
           - sun
-    action:
-      - service: hassio.backup_full
+    actions:
+      - action: hassio.backup_full
         data:
           name: "weekly_{{ now().strftime('%Y%m%d') }}"
       - delay: "00:30:00"
-      - service: notify.admin
+      - action: notify.admin
         data:
           title: "Backup Complete"
           message: "Weekly backup created successfully"

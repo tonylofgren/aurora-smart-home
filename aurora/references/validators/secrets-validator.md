@@ -172,8 +172,8 @@ Warnings: []
 
 Input (`automations.yaml`):
 ```yaml
-trigger:
-  - platform: webhook
+triggers:
+  - trigger: webhook
     webhook_secret: "{{ states('input_text.shared_secret') }}"
 ```
 

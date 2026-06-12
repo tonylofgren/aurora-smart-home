@@ -106,11 +106,11 @@ Use an HA automation to pull on a schedule or on demand:
 ```yaml
 automation:
   - alias: "Git pull config on demand"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: ha_config_pull_requested
-    action:
-      - service: shell_command.git_pull_config
+    actions:
+      - action: shell_command.git_pull_config
 
 shell_command:
   git_pull_config: "cd /config && git pull origin main"

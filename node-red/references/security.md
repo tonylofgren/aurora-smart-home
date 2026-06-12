@@ -199,8 +199,8 @@ node_red_webhook_token: "your-secret-token"
 # configuration.yaml
 automation:
   - alias: "Webhook trigger"
-    trigger:
-      - platform: webhook
+    triggers:
+      - trigger: webhook
         webhook_id: !secret node_red_webhook_token
 ```
 
