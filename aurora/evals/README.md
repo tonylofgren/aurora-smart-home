@@ -1,9 +1,9 @@
-# Aurora Regression Eval Suite
+﻿# Aurora Regression Eval Suite
 
 Regression eval suite added in v1.7.8 to verify that the runtime
 principles introduced in v1.7.7 (specific-board confirmation, deployment
 method question, Question Rule with recommendations, Language Rule for
-deliverables) actually hold against realistic prompts — not just against
+deliverables) actually hold against realistic prompts â€” not just against
 the principle-pinning pytests.
 
 The pytests in `aurora/tests/test_v177_principles.py` check that the
@@ -13,10 +13,10 @@ prompt.
 
 ## What's here
 
-- `evals.json` — three test prompts plus assertions per prompt.
-- `grade.py` — runs assertions against eval outputs and writes
+- `evals.json` â€” nine test prompts plus assertions per prompt: three delivery-contract evals (1-3) and six routing/triggering evals (4-9) that exercise the routing precedence rules and the Vera safety gate.
+- `grade.py` â€” runs assertions against eval outputs and writes
   `grading.json` per run and a `grading-summary.json` per iteration.
-- `README.md` — this file.
+- `README.md` â€” this file.
 
 ## How to run
 
@@ -47,7 +47,7 @@ which is gitignored.
 
 ## Eval design
 
-Each eval is intentionally narrow — one prompt, 3-4 assertions tied to
+Each eval is intentionally narrow â€” one prompt, 3-4 assertions tied to
 specific Iron Laws or Communication Rules. Surface coverage matters
 more than depth. A passing eval is not proof that Aurora is perfect for
 that scenario; it is proof that the rule the assertion pins did not
@@ -83,5 +83,5 @@ The eval-3 tie comes from both runs missing the same assertion (the
 INSTALL template's literal "pip install esphome" phrasing); the
 with_skill agent adapted the template language but kept the flow. The
 eval-2 difference comes from the baseline omitting INSTALL.md entirely
-and skipping the attribution banner — both gaps the v1.7.7 Iron Laws
+and skipping the attribution banner â€” both gaps the v1.7.7 Iron Laws
 catch.

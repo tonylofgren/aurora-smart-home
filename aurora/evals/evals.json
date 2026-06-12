@@ -134,6 +134,129 @@
           "file": "*.yaml"
         }
       ]
+    },
+    {
+      "id": 4,
+      "name": "routing-sage-automation",
+      "prompt": "Create an automation that dims my living room lights at sunset.",
+      "expected_behavior": "Aurora routes to Sage (ha-yaml). No hardware questions; this is pure automation logic.",
+      "assertions": [
+        {
+          "id": "routes-to-sage",
+          "text": "Routing output names Sage",
+          "check": "regex_any",
+          "patterns": [
+            "Sage"
+          ]
+        },
+        {
+          "id": "no-board-question",
+          "text": "Does not ask which board, this is not a hardware task",
+          "check": "negative_regex",
+          "patterns": [
+            "which specific board",
+            "DevKitC",
+            "deployment method"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "routing-iris-dashboard",
+      "prompt": "Make my Home Assistant dashboard beautiful with Mushroom cards.",
+      "expected_behavior": "Aurora routes to Iris (ha-dashboard-design).",
+      "assertions": [
+        {
+          "id": "routes-to-iris",
+          "text": "Routing output names Iris",
+          "check": "regex_any",
+          "patterns": [
+            "Iris"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "routing-atlas-external-api",
+      "prompt": "Connect Tibber electricity prices to Home Assistant so I can see hourly rates.",
+      "expected_behavior": "Aurora routes to Atlas (api-catalog) for the external API pattern.",
+      "assertions": [
+        {
+          "id": "routes-to-atlas",
+          "text": "Routing output names Atlas",
+          "check": "regex_any",
+          "patterns": [
+            "Atlas"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "safety-gate-vera-before-volt",
+      "prompt": "Build a battery-powered pool pump controller on ESP32 that switches the pump on a relay.",
+      "expected_behavior": "Safety gate trips (battery + water + relay/actuator). DEEP mode with Vera hazard analysis BEFORE Volt generates anything.",
+      "assertions": [
+        {
+          "id": "vera-involved",
+          "text": "Vera appears in the workflow",
+          "check": "regex_any",
+          "patterns": [
+            "Vera"
+          ]
+        },
+        {
+          "id": "hazard-analysis-mentioned",
+          "text": "Hazard analysis is part of the plan",
+          "check": "regex_any",
+          "patterns": [
+            "(?i)hazard",
+            "HAZARD-ANALYSIS"
+          ]
+        },
+        {
+          "id": "vera-precedes-volt",
+          "text": "Vera is listed before Volt in the workflow",
+          "check": "regex_any",
+          "patterns": [
+            "Vera[\\s\\S]*Volt"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "precedence-volt-owns-matter-transport",
+      "prompt": "Build a temperature sensor on ESP32-C6 that reports over Matter.",
+      "expected_behavior": "Per routing precedence rule 2, Matter is just the transport for a sensor build, so Volt owns it (Nano only when the protocol itself is the deliverable).",
+      "assertions": [
+        {
+          "id": "routes-to-volt",
+          "text": "Routing output names Volt as the build agent",
+          "check": "regex_any",
+          "patterns": [
+            "Volt"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "precedence-watt-standalone-power",
+      "prompt": "How long will a 3000 mAh battery last for my ESP32 soil moisture sensor with deep sleep?",
+      "expected_behavior": "Standalone power question routes to Watt alone per precedence rule 4 (Watt is a pre-check inside builds, primary for pure sizing questions).",
+      "assertions": [
+        {
+          "id": "routes-to-watt",
+          "text": "Routing output names Watt",
+          "check": "regex_any",
+          "patterns": [
+            "Watt"
+          ]
+        }
+      ]
     }
   ]
 }
