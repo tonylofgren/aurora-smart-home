@@ -1,6 +1,6 @@
 {
   "$schema": "../../schemas/component-profile.schema.json",
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "component_id": "ds18b20",
   "display_name": "DS18B20 1-Wire Temperature Sensor",
   "type": "temperature",
@@ -51,5 +51,8 @@
     "platform": "dallas_temp",
     "min_version": "2023.12.0"
   },
-  "datasheet_url": "https://www.analog.com/media/en/technical-documentation/data-sheets/ds18b20.pdf"
+  "datasheet_url": "https://www.analog.com/media/en/technical-documentation/data-sheets/ds18b20.pdf",
+  "sourcing": {
+    "lcsc": "TBD"
+  }
 }

@@ -1,6 +1,6 @@
 {
   "$schema": "../../schemas/component-profile.schema.json",
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "component_id": "bme280",
   "display_name": "BME280 Temperature/Humidity/Pressure",
   "type": "environment_combined",
@@ -18,7 +18,10 @@
     "verification_method": "Read chip ID register: 0x60 = BME280, 0x58 = BMP280"
   },
   "i2c": {
-    "default_addresses": ["0x76", "0x77"],
+    "default_addresses": [
+      "0x76",
+      "0x77"
+    ],
     "address_strap_pin": "SDO (LOW=0x76, HIGH=0x77)",
     "max_speed_khz": 400
   },
@@ -33,8 +36,15 @@
     "interrupt_capable_required": false
   },
   "external_components": {
-    "pullup_resistor": {"value_ohm": 4700, "required": true, "note": "External pull-ups if board does not provide them"},
-    "decoupling_cap": {"value_uf": 0.1, "required": true}
+    "pullup_resistor": {
+      "value_ohm": 4700,
+      "required": true,
+      "note": "External pull-ups if board does not provide them"
+    },
+    "decoupling_cap": {
+      "value_uf": 0.1,
+      "required": true
+    }
   },
   "power": {
     "voltage_min": 1.8,
@@ -62,5 +72,8 @@
     "min_version": "2022.1.0",
     "config_template": "templates/components/bme280.yaml"
   },
-  "datasheet_url": "https://www.bosch-sensortec.com/products/environmental-sensors/humidity-sensors-bme280/"
+  "datasheet_url": "https://www.bosch-sensortec.com/products/environmental-sensors/humidity-sensors-bme280/",
+  "sourcing": {
+    "lcsc": "TBD"
+  }
 }

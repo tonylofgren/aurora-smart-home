@@ -1,6 +1,6 @@
 {
   "$schema": "../../schemas/component-profile.schema.json",
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "component_id": "bmp280",
   "display_name": "BMP280 Temperature & Pressure",
   "type": "temperature_pressure",
@@ -19,7 +19,10 @@
     "verification_method": "Read chip ID register: 0x58 = BMP280 (no humidity), 0x60 = BME280 (with humidity)"
   },
   "i2c": {
-    "default_addresses": ["0x76", "0x77"],
+    "default_addresses": [
+      "0x76",
+      "0x77"
+    ],
     "address_strap_pin": "SDO (LOW=0x76, HIGH=0x77)",
     "max_speed_khz": 400
   },
@@ -67,5 +70,8 @@
     "platform": "bmp280_i2c",
     "min_version": "2024.6.0"
   },
-  "datasheet_url": "https://www.bosch-sensortec.com/products/environmental-sensors/pressure-sensors/bmp280/"
+  "datasheet_url": "https://www.bosch-sensortec.com/products/environmental-sensors/pressure-sensors/bmp280/",
+  "sourcing": {
+    "lcsc": "TBD"
+  }
 }

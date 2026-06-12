@@ -1,6 +1,6 @@
 {
   "$schema": "../../schemas/component-profile.schema.json",
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "component_id": "ntc-thermistor-10k",
   "display_name": "NTC Thermistor 10K",
   "type": "temperature",
@@ -56,5 +56,8 @@
   "esphome": {
     "platform": "ntc",
     "min_version": "2022.1.0"
+  },
+  "sourcing": {
+    "lcsc": "TBD"
   }
 }

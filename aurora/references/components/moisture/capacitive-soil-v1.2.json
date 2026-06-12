@@ -1,6 +1,6 @@
 {
   "$schema": "../../../schemas/component-profile.schema.json",
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "component_id": "capacitive-soil-v12",
   "display_name": "Capacitive Soil Moisture Sensor v1.2",
   "type": "soil_moisture",
@@ -50,5 +50,8 @@
   "esphome": {
     "platform": "adc",
     "min_version": "2022.1.0"
+  },
+  "sourcing": {
+    "lcsc": "TBD"
   }
 }

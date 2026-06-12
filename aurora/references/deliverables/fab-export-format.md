@@ -106,6 +106,23 @@ Production-tier MANUFACTURING.md gains a **Fab order log** section. JLCPCB has n
 
 Ordering sequence the log tracks: upload gerber zip, confirm DFM review, upload BOM.csv and CPL for assembly quote, resolve part availability (replace every `TBD` with a real LCSC number or mark the part for hand-assembly), pay, then track production stages from the JLCPCB order page into the log.
 
+## Component sourcing data
+
+Component profiles in `aurora/references/components/` carry a `sourcing` block:
+
+```json
+"sourcing": {
+  "lcsc": "TBD",
+  "jlcpcb_library_type": "base",
+  "jlcpcb_moq": 20,
+  "jlcpcb_checked": "2026-06-12"
+}
+```
+
+Population procedure: search the part at jlcpcb.com/parts (browser), copy the exact C-number into `lcsc`, then run `python aurora/scripts/sync_jlcpcb_status.py --download` to fill in library type, MOQ, and check date from the CDFER jlcpcb-parts-database CSV. The monthly `jlcpcb-sync.yaml` GitHub Action keeps the status current after that. `lcsc` stays `TBD` until a human has verified the number; the no-invented-numbers rule applies here exactly as in schematic.json. `not_listed` means the part is outside JLCPCB's basic/preferred subset (extended library or out of stock), which usually adds a per-part fee at assembly.
+
+When a component profile has a verified `lcsc`, Volt copies it into schematic.json and BOM.csv instead of writing `TBD`.
+
 ## What NOT to do
 
 - Do not invent LCSC part numbers, prices, or stock levels. `TBD` plus a sourcing instruction beats a fabricated number that wastes a fab round.

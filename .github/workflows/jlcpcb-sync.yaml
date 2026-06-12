@@ -1,0 +1,40 @@
+# Monthly sync of JLCPCB basic/preferred library status for component
+# profiles, sourced from the public CDFER jlcpcb-parts-database CSV
+# (no scraping on our side). Only profiles with a verified sourcing.lcsc
+# C-number are touched; TBD profiles are skipped by the script.
+
+name: JLCPCB Parts Status Sync
+
+on:
+  schedule:
+    - cron: "0 4 5 * *"  # 04:00 UTC on the 5th of every month
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Sync part status from CDFER database
+        run: python aurora/scripts/sync_jlcpcb_status.py --download
+
+      - name: Commit changes if any
+        run: |
+          if git diff --quiet; then
+            echo "No status changes this month."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add aurora/references/components aurora/references/expanders
+          git commit -m "chore: sync JLCPCB part status from CDFER database"
+          git push

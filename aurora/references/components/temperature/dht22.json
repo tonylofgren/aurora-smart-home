@@ -1,6 +1,6 @@
 {
   "$schema": "../../schemas/component-profile.schema.json",
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "component_id": "dht22",
   "display_name": "DHT22 / AM2302 Temperature & Humidity",
   "type": "temperature_humidity",
@@ -58,5 +58,8 @@
     "platform": "dht",
     "min_version": "2022.1.0"
   },
-  "datasheet_url": "https://www.sparkfun.com/datasheets/Sensors/Temperature/DHT22.pdf"
+  "datasheet_url": "https://www.sparkfun.com/datasheets/Sensors/Temperature/DHT22.pdf",
+  "sourcing": {
+    "lcsc": "TBD"
+  }
 }

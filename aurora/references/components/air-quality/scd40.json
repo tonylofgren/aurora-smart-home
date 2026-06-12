@@ -1,6 +1,6 @@
 {
   "$schema": "../../../schemas/component-profile.schema.json",
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "component_id": "scd40",
   "display_name": "SCD40 CO2 / Temperature / Humidity",
   "type": "co2_temperature_humidity",
@@ -19,7 +19,9 @@
     "verification_method": "Check Sensirion silkscreen; both SCD40 and SCD41 use identical I2C address 0x62"
   },
   "i2c": {
-    "default_addresses": ["0x62"],
+    "default_addresses": [
+      "0x62"
+    ],
     "address_strap_pin": null,
     "max_speed_khz": 100
   },
@@ -68,5 +70,8 @@
     "platform": "scd4x",
     "min_version": "2022.5.0"
   },
-  "datasheet_url": "https://www.sensirion.com/products/catalog/SCD40/"
+  "datasheet_url": "https://www.sensirion.com/products/catalog/SCD40/",
+  "sourcing": {
+    "lcsc": "TBD"
+  }
 }

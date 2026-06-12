@@ -1,6 +1,6 @@
 {
   "$schema": "../../../schemas/component-profile.schema.json",
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "component_id": "mh-z19b",
   "display_name": "MH-Z19B CO2 Sensor",
   "type": "co2",
@@ -53,5 +53,8 @@
   "esphome": {
     "platform": "mhz19",
     "min_version": "2022.1.0"
+  },
+  "sourcing": {
+    "lcsc": "TBD"
   }
 }
