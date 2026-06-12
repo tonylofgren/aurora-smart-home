@@ -80,6 +80,16 @@ class TestSyncScript:
         assert s["jlcpcb_library_type"] == "not_listed"
         assert "jlcpcb_moq" not in s
 
+    def test_known_expand_part_not_clobbered_to_not_listed(self, tmp_path):
+        """Extended-library parts are absent from the basic/preferred CSV;
+        the sync must keep their verified expand status."""
+        status = sync.load_status(CSV_FIXTURE)
+        p = make_profile(tmp_path, {"lcsc": "C3659421", "jlcpcb_library_type": "expand"})
+        sync.sync_profile(p, status, "2026-06-12")
+        s = json.loads(p.read_text(encoding="utf-8"))["sourcing"]
+        assert s["jlcpcb_library_type"] == "expand"
+        assert s["jlcpcb_checked"] == "2026-06-12"
+
     def test_tbd_profile_skipped(self, tmp_path):
         status = sync.load_status(CSV_FIXTURE)
         p = make_profile(tmp_path, {"lcsc": "TBD"})

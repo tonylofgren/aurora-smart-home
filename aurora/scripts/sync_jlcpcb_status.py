@@ -73,7 +73,11 @@ def sync_profile(path: Path, status: dict[str, dict], today: str) -> str:
         if entry["moq"]:
             new["jlcpcb_moq"] = entry["moq"]
     else:
-        new["jlcpcb_library_type"] = "not_listed"
+        # The CDFER CSV only carries the basic/preferred subset. A part
+        # already known to be in the extended library stays "expand";
+        # anything else absent becomes "not_listed".
+        if sourcing.get("jlcpcb_library_type") != "expand":
+            new["jlcpcb_library_type"] = "not_listed"
         new.pop("jlcpcb_moq", None)
     new["jlcpcb_checked"] = today
 

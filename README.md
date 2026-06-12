@@ -11,7 +11,7 @@ against schema-checked profiles, and refuses to ship code that does not pass.
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skills-7c3aed.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Home Assistant](https://img.shields.io/badge/Home_Assistant-2024.x--2026.x-41BDF5.svg)](https://www.home-assistant.io/)
 [![ESPHome](https://img.shields.io/badge/ESPHome-2026.5.0-000000.svg)](https://esphome.io/)
-[![Version](https://img.shields.io/badge/Version-v1.10.0-success.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-v1.11.0-success.svg)](CHANGELOG.md)
 [![Validated](https://img.shields.io/badge/Validated-against_datasheets-success.svg)](aurora/references/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Support Nabu Casa](https://img.shields.io/badge/Support_HA-Nabu_Casa-3b8cd3.svg)](https://www.nabucasa.com)
@@ -26,6 +26,15 @@ against schema-checked profiles, and refuses to ship code that does not pass.
 > See [DISCLAIMER.md](DISCLAIMER.md) for full terms.
 
 ---
+
+## What's new: verified part numbers + validated netlists (v1.11.0, June 2026)
+
+The fab-ready pipeline from v1.10.0 is now complete and verified end to end.
+
+- **Real JLCPCB part numbers:** 9 of 10 sensor profiles carry LCSC numbers verified live against the JLCPCB parts catalog, and a monthly sync keeps their library status current. Hardware projects get orderable BOMs instead of placeholders.
+- **Machine-validated netlists:** every custom-PCB delivery now runs `validate_schematic.py`, which catches shorts (one pin in two nets), undeclared components, duplicate nets, and missing ground before anything reaches a fab. The OpenSCAD enclosure template is render-verified to produce a printable, manifold STL.
+- **Current ESPHome syntax:** all ESPHome examples and references use the actions terminology (`api: actions:`, `homeassistant.action`) that ESPHome adopted in line with Home Assistant. Old configs keep working; new output follows the current docs.
+- **Smarter multi-agent builds:** the debugging, QA, review, and documentation specialists now coordinate through the shared project snapshot, so a debugging pass mid-project sees the real board, pins, and entity IDs instead of guessing from conversation history.
 
 ## What's new: fab-ready hardware delivery (v1.10.0, June 2026)
 

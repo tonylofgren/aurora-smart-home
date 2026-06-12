@@ -53,6 +53,8 @@
   },
   "datasheet_url": "https://www.analog.com/media/en/technical-documentation/data-sheets/ds18b20.pdf",
   "sourcing": {
-    "lcsc": "TBD"
+    "lcsc": "C9753",
+    "jlcpcb_library_type": "expand",
+    "jlcpcb_checked": "2026-06-12"
   }
 }

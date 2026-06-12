@@ -8,8 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.11.0] - 2026-06-12
+
 ### Added
 
+- **Verified LCSC part numbers in component profiles.** 9 of 10 sensor profiles now carry real JLCPCB part numbers verified live against the JLCPCB parts catalog (SCD40-D-R2 C3659421, MH-Z19B C242514, BME280 C92489, BMP280 C83291, AM2302/DHT22 C83988, DS18B20+ C9753, HLK-LD2410-P C5183133, AM312 C114881, MF52A 10k B3950 C5439712), all extended-library. The capacitive soil sensor v1.2 stays TBD: it is a hobby breakout JLCPCB does not stock. Volt copies verified numbers into schematic.json and BOM.csv instead of TBD.
 - **JLCPCB parts-status sync.** Component profiles gain an optional `sourcing` block (LCSC number, library type, MOQ, check date; schema minor-bumped to 1.1). `aurora/scripts/sync_jlcpcb_status.py` fills status from the public CDFER jlcpcb-parts-database CSV (format verified live), and the monthly `jlcpcb-sync.yaml` GitHub Action keeps it current. All 10 profiles stubbed with `lcsc: TBD`; a contract test rejects C-numbers without a verification date so numbers cannot be invented.
 - **Support agents wired into DEEP mode.** Glitch, Probe, Lens, and Manual gain the Snapshot-Aware Coordination Iron Law: they reconstruct state from `aurora-project.json` instead of chat history, write only `validation_results.<name>` and `conflict_log` entries, and are now covered by the same 9 contract tests as the core specialists (108 snapshot tests total). The handoff protocol documents their read-only pattern.
 - `aurora/scripts/validate_schematic.py` - executable netlist validator for `hardware/schematic.json`: schema validation plus refdes uniqueness, pin-in-two-nets (short) detection, undeclared component references, duplicate nets, ground-net presence, and TBD part reporting. Required to pass with zero errors before custom-PCB/production delivery (Volt Iron Law 8).

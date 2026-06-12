@@ -55,6 +55,8 @@
     "min_version": "2022.1.0"
   },
   "sourcing": {
-    "lcsc": "TBD"
+    "lcsc": "C242514",
+    "jlcpcb_library_type": "expand",
+    "jlcpcb_checked": "2026-06-12"
   }
 }

@@ -72,6 +72,8 @@
   },
   "datasheet_url": "https://www.bosch-sensortec.com/products/environmental-sensors/pressure-sensors/bmp280/",
   "sourcing": {
-    "lcsc": "TBD"
+    "lcsc": "C83291",
+    "jlcpcb_library_type": "expand",
+    "jlcpcb_checked": "2026-06-12"
   }
 }

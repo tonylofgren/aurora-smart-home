@@ -60,6 +60,8 @@
   },
   "datasheet_url": "https://www.sparkfun.com/datasheets/Sensors/Temperature/DHT22.pdf",
   "sourcing": {
-    "lcsc": "TBD"
+    "lcsc": "C83988",
+    "jlcpcb_library_type": "expand",
+    "jlcpcb_checked": "2026-06-12"
   }
 }
