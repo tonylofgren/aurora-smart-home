@@ -93,6 +93,26 @@ class TestFabExportSpec:
 
 
 class TestEnclosureTemplate:
+    def test_template_renders_manifold_stl(self, tmp_path):
+        """Render the template with OpenSCAD when available (verified manually
+        2026-06-12: manifold STL, four standoffs, vents, lid). Skips on
+        machines and CI runners without OpenSCAD installed."""
+        import shutil
+        import subprocess
+        exe = shutil.which("openscad") or (
+            r"C:\Program Files\OpenSCAD\openscad.exe"
+            if Path(r"C:\Program Files\OpenSCAD\openscad.exe").is_file() else None
+        )
+        if not exe:
+            pytest.skip("OpenSCAD not installed")
+        out = tmp_path / "enclosure.stl"
+        result = subprocess.run(
+            [exe, "-o", str(out), "--export-format", "binstl", str(SCAD_PATH)],
+            capture_output=True, text=True, timeout=120,
+        )
+        assert result.returncode == 0, result.stderr[-500:]
+        assert out.stat().st_size > 10_000, "STL suspiciously small"
+
     def test_template_exists_with_parameter_block(self):
         text = SCAD_PATH.read_text(encoding="utf-8")
         for param in ("board_l", "board_w", "wall", "standoff_h",
@@ -101,6 +121,54 @@ class TestEnclosureTemplate:
 
     def test_template_carries_attribution(self):
         assert "aurora@aurora-smart-home" in SCAD_PATH.read_text(encoding="utf-8")
+
+
+class TestSchematicValidator:
+    @pytest.fixture(scope="class")
+    def vs(self):
+        import sys
+        sys.path.insert(0, str(REPO_ROOT / "aurora" / "scripts"))
+        import validate_schematic
+        return validate_schematic
+
+    def _doc(self, nets):
+        return {
+            "schema_version": "1.0",
+            "project": {"name": "t", "board": "b", "generated": "2026-06-12"},
+            "components": [
+                {"refdes": "U1", "value": "MCU", "description": "mcu"},
+                {"refdes": "R1", "value": "10k", "description": "pull-up"},
+            ],
+            "nets": nets,
+        }
+
+    def test_repo_example_passes(self, vs):
+        assert vs.validate(EXAMPLE_DIR / "schematic.json", quiet=True) == 0
+
+    def test_pin_in_two_nets_is_error(self, vs):
+        doc = self._doc([
+            {"name": "A", "pins": ["U1.GPIO1", "R1.A"]},
+            {"name": "B", "pins": ["U1.GPIO1", "R1.B"]},
+        ])
+        errors, _ = vs.check_netlist(doc)
+        assert any("cannot belong to two nets" in e for e in errors)
+
+    def test_undeclared_component_is_error(self, vs):
+        doc = self._doc([{"name": "GND", "pins": ["U1.GND", "R9.B"]}])
+        errors, _ = vs.check_netlist(doc)
+        assert any("R9 is not declared" in e for e in errors)
+
+    def test_duplicate_refdes_is_error(self, vs):
+        doc = self._doc([{"name": "GND", "pins": ["U1.GND", "R1.B"]}])
+        doc["components"].append({"refdes": "R1", "value": "1k", "description": "dup"})
+        errors, _ = vs.check_netlist(doc)
+        assert any("declared 2 times" in e for e in errors)
+
+    def test_missing_ground_is_warning_not_error(self, vs):
+        doc = self._doc([{"name": "3V3", "pins": ["U1.3V3", "R1.A"]}])
+        errors, warnings = vs.check_netlist(doc)
+        assert not errors
+        assert any("ground net" in w for w in warnings)
 
 
 class TestWiring:

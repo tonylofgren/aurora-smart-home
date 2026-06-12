@@ -11,6 +11,7 @@ Volt MUST run this validator after pin allocation (Step 7 of the validation work
 - `board_profile`: parsed JSON from `aurora/references/boards/<chip>/<board>.json`
 - `pin_assignments`: object mapping component_id to a list of GPIO numbers, e.g. `{"bme280": [8, 9], "ld2410": [4, 5]}`
 - `config_flags`: optional object describing project features that affect pin reservation, e.g. `{"usb_cdc_enabled": true, "psram_used": true, "wifi_enabled": true}`
+- `schematic` (optional): parsed `<project>/hardware/schematic.json` when the project has one (custom-PCB and production tiers, per `fab-export-format.md`). Derive `pin_assignments` from its `nets[]` pin lists instead of re-reading the YAML, and run `python aurora/scripts/validate_schematic.py` first so netlist-level errors (shorts, undeclared refdes, duplicate nets) are caught before the pin checks run.
 
 ## Checks
 

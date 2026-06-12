@@ -42,6 +42,7 @@ Rules:
 2. **`lcsc` is the real LCSC part number when sourcing is decided, the literal string `TBD` when it is not.** Never invent part numbers. Sourcing happens at jlcpcb.com/parts, and the BOM footer carries the date stamp for when prices were checked.
 3. **`bom_row` cross-references BOM.md** so a reader can move between the priced table and the netlist without guessing.
 4. **Net notes carry constraints** (pull-up values, impedance, antenna keep-out), mirroring the per-net design notes in SCHEMATIC.md.
+5. **Validate before delivery:** `python aurora/scripts/validate_schematic.py <project>/hardware/schematic.json` checks the schema plus netlist rules (refdes uniqueness, no pin in two nets, no undeclared components, ground net present). Zero errors required; warnings (TBD parts, unconnected components) are allowed but must be intentional.
 
 ## BOM.csv
 

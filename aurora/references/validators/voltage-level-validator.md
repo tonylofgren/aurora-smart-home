@@ -16,6 +16,7 @@ Volt MUST run this validator after pin allocation (Step 7) and before generating
 - `component_profiles`: object mapping `component_id` to parsed profile. Reads:
   - `power.voltage_min` / `voltage_max` — supply tolerance
   - `power.tolerates_5v` — boolean (whether the sensor can run at 5V)
+- `schematic` (optional): parsed `<project>/hardware/schematic.json` when present. Supply rails are explicit nets there (3V3, 5V, VBAT), so each component's `supply_voltage` can be read from which rail net its power pin sits on; run `python aurora/scripts/validate_schematic.py` first.
   - `power.level_shifter_required_on_5v_board` — boolean
 
 ## Checks

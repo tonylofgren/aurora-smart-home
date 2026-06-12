@@ -11,6 +11,7 @@ Volt runs this validator after pin allocation (Step 7) and after pin-validator p
 - `board_profile`: parsed board JSON
 - `component_assignments`: list of objects, each `{"component_id": "bme280", "component_profile": <loaded JSON>, "pins": [8, 9], "i2c_address": "0x76"}`
 - `config_flags`: same as for pin-validator
+- `schematic` (optional): parsed `<project>/hardware/schematic.json` when present; `component_assignments` pins can be derived from its `nets[]`. Run `python aurora/scripts/validate_schematic.py` first, since its pin-in-two-nets check is the netlist-level form of the cross-component conflict this validator hunts.
 
 ## Checks
 

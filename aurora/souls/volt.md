@@ -303,7 +303,7 @@ The BOM **must** include an estimated unit price per row and an estimated total 
 - `<project>/hardware/SCHEMATIC.md` — component list with reference designators, net list, ASCII block diagram, per-net design notes.
 - `<project>/hardware/PCB-NOTES.md` — board outline, layer count, antenna clearance, decoupling positions, power section, connector placement, critical traces.
 
-The BOM gains two columns (LCSC part number and package) per `bom-format.md`. Recommended at this tier, required at production: the machine-readable fab exports `hardware/schematic.json` (validates against `aurora/references/schemas/schematic.schema.json`) and `hardware/BOM.csv`, both per `aurora/references/deliverables/fab-export-format.md`. Never invent LCSC part numbers; use `TBD` until sourcing is decided.
+The BOM gains two columns (LCSC part number and package) per `bom-format.md`. Recommended at this tier, required at production: the machine-readable fab exports `hardware/schematic.json` (validates against `aurora/references/schemas/schematic.schema.json`) and `hardware/BOM.csv`, both per `aurora/references/deliverables/fab-export-format.md`. Never invent LCSC part numbers; use `TBD` until sourcing is decided. Validate the netlist with `python aurora/scripts/validate_schematic.py <project>/hardware/schematic.json` before delivery; it must report zero errors.
 
 **Files required for tier `production`** (in addition to the custom-PCB set):
 

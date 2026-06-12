@@ -58,6 +58,12 @@ silently regress.
 | 1. vague-board-triggers-question | User names only the chip family; agent must ask for specific board and deployment method, with Recommended: format | Iron Law 1, Iron Law 8 deployment-method, Question Rule |
 | 2. swedish-prompt-swedish-deliverables | User typed Swedish, gave full context; agent must produce Swedish README + INSTALL while keeping YAML keys, entity_ids, and attribution banner in English | Language Rule for Deliverables |
 | 3. complete-context-no-extra-questions | User specified board, sensor, wiring, deployment method; agent must NOT re-ask, must use the local-CLI INSTALL template | Volt Iron Law 8 conditional deliverables, install-cli.md template |
+| 4. routing-sage-automation | Plain automation request routes to Sage with no hardware questions | Step 2 registry |
+| 5. routing-iris-dashboard | Dashboard styling request routes to Iris | Step 2 registry |
+| 6. routing-atlas-external-api | External API request routes to Atlas | Step 2 registry |
+| 7. safety-gate-vera-before-volt | Battery + pump + relay project orders Vera before Volt | Step 2.6 Safety Gate, Precedence rule 1 |
+| 8. precedence-volt-owns-matter-transport | Matter as transport for a sensor build stays with Volt | Precedence rule 2 |
+| 9. precedence-watt-standalone-power | Standalone battery-life question routes to Watt alone | Precedence rule 4 |
 
 ## Why the workspace is gitignored
 

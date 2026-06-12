@@ -8,6 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- `aurora/scripts/validate_schematic.py` - executable netlist validator for `hardware/schematic.json`: schema validation plus refdes uniqueness, pin-in-two-nets (short) detection, undeclared component references, duplicate nets, ground-net presence, and TBD part reporting. Required to pass with zero errors before custom-PCB/production delivery (Volt Iron Law 8).
+- The pin, I2C address, voltage-level, and conflict validator procedures now accept `schematic.json` as a machine-readable input when the project has one.
+- OpenSCAD render test for the enclosure template (skips when OpenSCAD is not installed); template verified to produce a manifold STL with all four standoffs, vents, cable opening, and lid.
+- Eval design table in `aurora/evals/README.md` now documents routing evals 4-9.
+
 ## [1.10.0] - 2026-06-12
 
 ### Added

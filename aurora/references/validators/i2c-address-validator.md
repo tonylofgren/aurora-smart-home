@@ -13,6 +13,7 @@ The validator also runs on GPIO expanders (`aurora/references/expanders/`) and I
 - `bus_assignments`: list of objects, one per planned I2C device, with shape `{"component_id": "<id>", "default_addresses": [<int>, ...], "strap_pin_state": "<low|high|unset>", "bus": "<bus_id>"}`. `bus` is `default` for projects with a single bus; for multi-bus or multiplexed setups it identifies which physical bus the component sits on.
 - `component_profiles`: object mapping each `component_id` to its parsed component profile (loaded from `aurora/references/components/`). The validator reads `i2c.default_addresses` and `i2c.address_strap_pin`.
 - `expander_profiles` (optional): parsed expander profiles for any chips on the bus.
+- `schematic` (optional): parsed `<project>/hardware/schematic.json` when present. The members of each I2C bus can be read directly from the nets that carry SDA/SCL (one net pair per bus); run `python aurora/scripts/validate_schematic.py` first to rule out netlist errors.
 
 ## Checks
 
