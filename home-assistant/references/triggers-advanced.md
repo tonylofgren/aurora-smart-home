@@ -20,12 +20,12 @@ The `wait_for_trigger` action with state triggers was enhanced in 2024.4 to supp
 automation:
   - id: wait_for_state_basic
     alias: "Wait for Door to Close"
-    trigger:
+    triggers:
       - trigger: state
         entity_id: binary_sensor.front_door
         to: "on"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "Front door opened, waiting for it to close..."
       - wait_for_trigger:
@@ -37,12 +37,12 @@ automation:
       - choose:
           - conditions: "{{ wait.trigger == none }}"
             sequence:
-              - service: notify.mobile_app
+              - action: notify.mobile_app
                 data:
                   message: "Warning: Front door still open after 5 minutes!"
           - conditions: "{{ wait.trigger != none }}"
             sequence:
-              - service: notify.mobile_app
+              - action: notify.mobile_app
                 data:
                   message: "Front door closed"
 ```
@@ -55,12 +55,12 @@ Wait for numeric state changes with operators:
 automation:
   - id: wait_for_temperature
     alias: "Wait for Temperature to Drop"
-    trigger:
+    triggers:
       - trigger: numeric_state
         entity_id: sensor.outdoor_temperature
         above: 30
-    action:
-      - service: climate.turn_on
+    actions:
+      - action: climate.turn_on
         target:
           entity_id: climate.living_room
       - wait_for_trigger:
@@ -69,7 +69,7 @@ automation:
             below: 25
         timeout:
           hours: 4
-      - service: climate.turn_off
+      - action: climate.turn_off
         target:
           entity_id: climate.living_room
 ```
@@ -89,7 +89,7 @@ automation:
 #### Multiple Conditions Wait
 
 ```yaml
-action:
+actions:
   - wait_for_trigger:
       - trigger: state
         entity_id: binary_sensor.motion
@@ -105,7 +105,7 @@ action:
   - choose:
       - conditions: "{{ wait.trigger.platform == 'state' and wait.trigger.entity_id == 'input_boolean.override' }}"
         sequence:
-          - service: notify.mobile_app
+          - action: notify.mobile_app
             data:
               message: "Override activated"
 ```
@@ -113,7 +113,7 @@ action:
 #### Wait with Template Condition
 
 ```yaml
-action:
+actions:
   - wait_for_trigger:
       - trigger: template
         value_template: >
@@ -127,7 +127,7 @@ action:
 #### Timeout Handling
 
 ```yaml
-action:
+actions:
   - wait_for_trigger:
       - trigger: state
         entity_id: lock.front_door
@@ -139,10 +139,10 @@ action:
       - condition: template
         value_template: "{{ wait.trigger == none }}"
     then:
-      - service: lock.lock
+      - action: lock.lock
         target:
           entity_id: lock.front_door
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           message: "Auto-locked front door after timeout"
 ```
@@ -161,14 +161,14 @@ Conversation triggers allow automations to respond to natural language commands 
 automation:
   - id: voice_lights
     alias: "Voice: Control Lights"
-    trigger:
+    triggers:
       - trigger: conversation
         command:
           - "turn on the {area} lights"
           - "turn off the {area} lights"
           - "lights on in {area}"
           - "lights off in {area}"
-    action:
+    actions:
       - variables:
           action: >
             {% if 'on' in trigger.sentence | lower %}
@@ -177,7 +177,7 @@ automation:
               turn_off
             {% endif %}
           target_area: "{{ trigger.slots.area }}"
-      - service: "light.{{ action }}"
+      - action: "light.{{ action }}"
         target:
           area_id: "{{ target_area }}"
 ```
@@ -188,14 +188,14 @@ automation:
 automation:
   - id: voice_temperature
     alias: "Voice: Set Temperature"
-    trigger:
+    triggers:
       - trigger: conversation
         command:
           - "set temperature to {temperature}"
           - "set thermostat to {temperature} degrees"
           - "make it {temperature} degrees"
-    action:
-      - service: climate.set_temperature
+    actions:
+      - action: climate.set_temperature
         target:
           entity_id: climate.living_room
         data:
@@ -208,12 +208,12 @@ automation:
 automation:
   - id: voice_status
     alias: "Voice: Get Status"
-    trigger:
+    triggers:
       - trigger: conversation
         command:
           - "what is the {entity_type} in the {area}"
           - "how is the {entity_type} in {area}"
-    action:
+    actions:
       - variables:
           entity_type: "{{ trigger.slots.entity_type }}"
           area: "{{ trigger.slots.area }}"
@@ -241,7 +241,7 @@ automation:
 #### Wildcards and Alternatives
 
 ```yaml
-trigger:
+triggers:
   - trigger: conversation
     command:
       - "[please|] turn {state} [the|] {area} [light|lights]"
@@ -259,18 +259,18 @@ Syntax:
 automation:
   - id: voice_contextual
     alias: "Voice: Contextual Commands"
-    trigger:
+    triggers:
       - trigger: conversation
         command:
           - "I'm going to bed"
           - "goodnight"
           - "time for bed"
-    condition:
+    conditions:
       - condition: time
         after: "20:00:00"
         before: "06:00:00"
-    action:
-      - service: script.bedtime_routine
+    actions:
+      - action: script.bedtime_routine
       - stop: ""
         response_variable: "Good night! Running bedtime routine."
 ```
@@ -281,16 +281,16 @@ automation:
 automation:
   - id: voice_multi_intent
     alias: "Voice: Complex Commands"
-    trigger:
+    triggers:
       - trigger: conversation
         command:
           - "turn on {device1} and {device2}"
           - "{device1} and {device2} on"
-    action:
-      - service: homeassistant.turn_on
+    actions:
+      - action: homeassistant.turn_on
         target:
           entity_id: "{{ trigger.slots.device1 }}"
-      - service: homeassistant.turn_on
+      - action: homeassistant.turn_on
         target:
           entity_id: "{{ trigger.slots.device2 }}"
 ```
@@ -305,7 +305,7 @@ automation:
 automation:
   - id: template_multi_entity
     alias: "Monitor Multiple Sensors"
-    trigger:
+    triggers:
       - trigger: template
         value_template: >
           {% set sensors = [
@@ -316,8 +316,8 @@ automation:
           {% set temps = sensors | map('states') | map('float', 0) | list %}
           {% set avg = temps | average %}
           {{ avg > 25 }}
-    action:
-      - service: climate.set_hvac_mode
+    actions:
+      - action: climate.set_hvac_mode
         target:
           entity_id: climate.main
         data:
@@ -330,7 +330,7 @@ automation:
 automation:
   - id: template_rate_limited
     alias: "Rate Limited Trigger"
-    trigger:
+    triggers:
       - trigger: template
         value_template: >
           {{ states('sensor.power_usage') | float(0) > 5000 }}
@@ -338,8 +338,8 @@ automation:
           seconds: 30  # Debounce: must be true for 30s
     mode: single
     max_exceeded: silent
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "High power usage detected"
       - delay:
@@ -352,15 +352,15 @@ automation:
 automation:
   - id: template_rate_of_change
     alias: "Detect Rapid Temperature Change"
-    trigger:
+    triggers:
       - trigger: template
         value_template: >
           {% set current = states('sensor.temperature') | float(0) %}
           {% set previous = state_attr('sensor.temperature', 'last_value') | float(current) %}
           {% set change_rate = (current - previous) | abs %}
           {{ change_rate > 2 }}  # More than 2 degrees change
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "Rapid temperature change detected!"
 ```
@@ -371,7 +371,7 @@ automation:
 automation:
   - id: template_complex_condition
     alias: "Complex State Monitoring"
-    trigger:
+    triggers:
       - trigger: template
         value_template: >
           {% set occupancy = is_state('binary_sensor.occupancy', 'on') %}
@@ -380,8 +380,8 @@ automation:
           {% set lights_off = expand('group.all_lights')
              | selectattr('state', 'eq', 'on') | list | count == 0 %}
           {{ occupancy and time_ok and not_vacation and lights_off }}
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           area_id: living_room
 ```
@@ -396,7 +396,7 @@ automation:
 automation:
   - id: device_button_multi
     alias: "Multi-Click Button Handler"
-    trigger:
+    triggers:
       - trigger: device
         domain: mqtt
         device_id: abc123
@@ -415,21 +415,21 @@ automation:
         type: action
         subtype: hold
         id: hold
-    action:
+    actions:
       - choose:
           - conditions: "{{ trigger.id == 'single_click' }}"
             sequence:
-              - service: light.toggle
+              - action: light.toggle
                 target:
                   entity_id: light.ceiling
           - conditions: "{{ trigger.id == 'double_click' }}"
             sequence:
-              - service: scene.turn_on
+              - action: scene.turn_on
                 target:
                   entity_id: scene.bright
           - conditions: "{{ trigger.id == 'hold' }}"
             sequence:
-              - service: light.turn_off
+              - action: light.turn_off
                 target:
                   area_id: living_room
 ```
@@ -440,29 +440,29 @@ automation:
 automation:
   - id: device_remote
     alias: "Handle Remote Control"
-    trigger:
+    triggers:
       - trigger: event
         event_type: zha_event
         event_data:
           device_ieee: "00:11:22:33:44:55:66:77"
-    action:
+    actions:
       - variables:
           command: "{{ trigger.event.data.command }}"
           args: "{{ trigger.event.data.args }}"
       - choose:
           - conditions: "{{ command == 'on' }}"
             sequence:
-              - service: light.turn_on
+              - action: light.turn_on
                 target:
                   entity_id: light.main
           - conditions: "{{ command == 'off' }}"
             sequence:
-              - service: light.turn_off
+              - action: light.turn_off
                 target:
                   entity_id: light.main
           - conditions: "{{ command == 'move_with_on_off' }}"
             sequence:
-              - service: light.turn_on
+              - action: light.turn_on
                 target:
                   entity_id: light.main
                 data:
@@ -487,13 +487,13 @@ automation:
 
 ```yaml
 # State trigger - for persistent states
-trigger:
+triggers:
   - trigger: state
     entity_id: light.living_room
     to: "on"
 
 # Event trigger - for momentary events
-trigger:
+triggers:
   - trigger: event
     event_type: zha_event
     event_data:
@@ -510,11 +510,11 @@ trigger:
 automation:
   - id: time_dynamic
     alias: "Dynamic Wake Up Time"
-    trigger:
+    triggers:
       - trigger: time
         at: input_datetime.wake_up_time
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.bedroom
 ```
@@ -525,18 +525,18 @@ automation:
 automation:
   - id: time_workday
     alias: "Workday Morning Routine"
-    trigger:
+    triggers:
       - trigger: time
         at: "06:30:00"
-    condition:
+    conditions:
       - condition: state
         entity_id: binary_sensor.workday_sensor
         state: "on"
       - condition: state
         entity_id: person.john
         state: "home"
-    action:
-      - service: script.morning_routine
+    actions:
+      - action: script.morning_routine
 ```
 
 ### Sunrise/Sunset with Offset
@@ -545,16 +545,16 @@ automation:
 automation:
   - id: time_sun_offset
     alias: "Lights Before Sunset"
-    trigger:
+    triggers:
       - trigger: sun
         event: sunset
         offset: "-00:30:00"  # 30 minutes before
-    condition:
+    conditions:
       - condition: state
         entity_id: group.family
         state: "home"
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           area_id: living_room
         data:
@@ -567,11 +567,11 @@ automation:
 automation:
   - id: time_pattern
     alias: "Every 15 Minutes Check"
-    trigger:
+    triggers:
       - trigger: time_pattern
         minutes: "/15"  # Every 15 minutes
-    action:
-      - service: script.periodic_check
+    actions:
+      - action: script.periodic_check
 ```
 
 ---
@@ -584,15 +584,15 @@ automation:
 automation:
   - id: mqtt_json
     alias: "MQTT JSON Trigger"
-    trigger:
+    triggers:
       - trigger: mqtt
         topic: "sensors/outdoor/weather"
-    condition:
+    conditions:
       - condition: template
         value_template: >
           {{ trigger.payload_json.temperature | float(0) > 30 }}
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "Outdoor temperature is {{ trigger.payload_json.temperature }}°C"
 ```
@@ -603,14 +603,14 @@ automation:
 automation:
   - id: mqtt_wildcard
     alias: "All Room Sensors"
-    trigger:
+    triggers:
       - trigger: mqtt
         topic: "home/+/temperature"  # + = single level wildcard
-    action:
+    actions:
       - variables:
           room: "{{ trigger.topic.split('/')[1] }}"
           temp: "{{ trigger.payload | float }}"
-      - service: input_number.set_value
+      - action: input_number.set_value
         target:
           entity_id: "input_number.temp_{{ room }}"
         data:
@@ -628,23 +628,23 @@ automation:
 automation:
   - id: bad_high_frequency
     alias: "Bad: Every Power Update"
-    trigger:
+    triggers:
       - trigger: state
         entity_id: sensor.power_usage
-    action:
+    actions:
       # Fires hundreds of times per hour
 
 # GOOD: Debounced with threshold
 automation:
   - id: good_debounced
     alias: "Good: Power Threshold"
-    trigger:
+    triggers:
       - trigger: numeric_state
         entity_id: sensor.power_usage
         above: 3000
         for:
           seconds: 30
-    action:
+    actions:
       # Fires only when sustained above threshold
 ```
 
@@ -652,7 +652,7 @@ automation:
 
 ```yaml
 # BAD: Complex template evaluated constantly
-trigger:
+triggers:
   - trigger: template
     value_template: >
       {% set entities = states.light | list %}
@@ -667,7 +667,7 @@ template:
           {{ states.light | selectattr('state', 'eq', 'on') | list | count }}
 
 automation:
-  trigger:
+  triggers:
     - trigger: numeric_state
       entity_id: sensor.lights_on_count
       above: 5
@@ -679,7 +679,7 @@ automation:
 automation:
   - id: batched_triggers
     alias: "Batched State Changes"
-    trigger:
+    triggers:
       - trigger: state
         entity_id:
           - binary_sensor.door_1
@@ -689,8 +689,8 @@ automation:
         to: "on"
     mode: queued
     max: 10
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "{{ trigger.to_state.name }} opened"
 ```
@@ -701,7 +701,7 @@ automation:
 automation:
   - id: efficient_multi_trigger
     alias: "Efficient Multi-Trigger"
-    trigger:
+    triggers:
       - trigger: state
         entity_id: binary_sensor.front_door
         to: "on"
@@ -714,8 +714,8 @@ automation:
         entity_id: binary_sensor.garage_door
         to: "on"
         id: garage
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: >
             {% set door_names = {
@@ -736,14 +736,14 @@ automation:
 automation:
   - id: debounce_for
     alias: "Debounced Motion"
-    trigger:
+    triggers:
       - trigger: state
         entity_id: binary_sensor.motion
         to: "on"
         for:
           seconds: 5  # Must stay "on" for 5 seconds
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.room
 ```
@@ -755,12 +755,12 @@ automation:
   - id: debounce_mode
     alias: "Single Mode Debounce"
     mode: single  # Ignore new triggers while running
-    trigger:
+    triggers:
       - trigger: state
         entity_id: binary_sensor.button
         to: "on"
-    action:
-      - service: light.toggle
+    actions:
+      - action: light.toggle
         target:
           entity_id: light.room
       - delay:
@@ -773,16 +773,16 @@ automation:
 automation:
   - id: rate_limit_counter
     alias: "Rate Limited Notifications"
-    trigger:
+    triggers:
       - trigger: state
         entity_id: binary_sensor.doorbell
         to: "on"
-    condition:
+    conditions:
       - condition: template
         value_template: >
           {{ (as_timestamp(now()) - as_timestamp(state_attr('automation.rate_limit_counter', 'last_triggered') | default(0))) > 30 }}
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "Doorbell pressed"
 ```

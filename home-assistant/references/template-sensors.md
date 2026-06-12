@@ -513,7 +513,7 @@ Trigger-based templates only update when specified triggers fire, improving perf
 ```yaml
 template:
   - trigger:
-      - platform: time_pattern
+      - trigger: time_pattern
         minutes: "/5"
     sensor:
       - name: "Slow Update Sensor"
@@ -525,7 +525,7 @@ template:
 ```yaml
 template:
   - trigger:
-      - platform: state
+      - trigger: state
         entity_id: sensor.power
     sensor:
       - name: "Power Moving Average"
@@ -541,12 +541,12 @@ template:
 ```yaml
 template:
   - trigger:
-      - platform: state
+      - trigger: state
         entity_id:
           - sensor.temp_1
           - sensor.temp_2
           - sensor.temp_3
-      - platform: time_pattern
+      - trigger: time_pattern
         hours: "*"
     sensor:
       - name: "Temperature Summary"
@@ -561,7 +561,7 @@ template:
 ```yaml
 template:
   - trigger:
-      - platform: state
+      - trigger: state
         entity_id: sensor.energy
     sensor:
       - name: "Energy Consumption Rate"
@@ -582,10 +582,10 @@ template:
 ```yaml
 template:
   - trigger:
-      - platform: time
+      - trigger: time
         at: "00:00:00"
-    action:
-      - service: input_number.set_value
+    actions:
+      - action: input_number.set_value
         target:
           entity_id: input_number.daily_energy_start
         data:
@@ -621,7 +621,7 @@ template:
 ```yaml
 template:
   - trigger:
-      - platform: state
+      - trigger: state
         entity_id: sensor.power
     sensor:
       - name: "Power Statistics"
@@ -644,7 +644,7 @@ template:
 ```yaml
 template:
   - trigger:
-      - platform: state
+      - trigger: state
         entity_id: binary_sensor.door
         to: "on"
     sensor:
@@ -670,7 +670,7 @@ template:
         unit_of_measurement: "%"
         state: "{{ states('input_number.brightness') }}"
         set_value:
-          - service: input_number.set_value
+          - action: input_number.set_value
             target:
               entity_id: input_number.brightness
             data:
@@ -687,7 +687,7 @@ template:
         state: "{{ states('input_select.mode') }}"
         options: "{{ state_attr('input_select.mode', 'options') }}"
         select_option:
-          - service: input_select.select_option
+          - action: input_select.select_option
             target:
               entity_id: input_select.mode
             data:
@@ -702,7 +702,7 @@ template:
       - name: "Reset Counter"
         unique_id: reset_counter_button
         press:
-          - service: counter.reset
+          - action: counter.reset
             target:
               entity_id: counter.my_counter
 ```
@@ -726,7 +726,7 @@ template:
 # Good: Only updates when needed
 template:
   - trigger:
-      - platform: time_pattern
+      - trigger: time_pattern
         minutes: "/5"
     sensor:
       - name: "Complex Calculation"
@@ -1012,7 +1012,7 @@ template:
 # GOOD: Use trigger-based for expensive operations
 template:
   - trigger:
-      - platform: time_pattern
+      - trigger: time_pattern
         minutes: "/5"
     sensor:
       - name: "Periodic Expensive Calculation"
@@ -1227,7 +1227,7 @@ state: "{{ states('sensor.test') | float(0) }}"
 # Developer Tools > YAML > Reload Template Entities
 
 # Or via service
-service: homeassistant.reload_config_entry
+action: homeassistant.reload_config_entry
 data:
   entry_id: <template_config_entry_id>
 ```

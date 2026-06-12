@@ -55,12 +55,12 @@ Home Assistant supports numerous camera integrations:
 ```yaml
 automation:
   - alias: "Reolink Motion Alert"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.reolink_front_door_motion
         to: "on"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "Motion detected at front door"
           data:
@@ -69,12 +69,12 @@ automation:
 # Person-specific detection
 automation:
   - alias: "Person at Front Door"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.reolink_front_door_person
         to: "on"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "Person detected at front door"
           data:
@@ -88,12 +88,12 @@ automation:
 
 ```yaml
 # Move to preset
-service: button.press
+action: button.press
 target:
   entity_id: button.reolink_ptz_preset_1
 
 # PTZ movement
-service: camera.ptz
+action: camera.ptz
 target:
   entity_id: camera.reolink_front_door
 data:
@@ -104,14 +104,14 @@ data:
 
 ```yaml
 # Turn on floodlight
-service: light.turn_on
+action: light.turn_on
 target:
   entity_id: light.reolink_front_door_floodlight
 data:
   brightness_pct: 100
 
 # Trigger siren
-service: siren.turn_on
+action: siren.turn_on
 target:
   entity_id: siren.reolink_front_door
 data:
@@ -143,17 +143,17 @@ data:
 ```yaml
 automation:
   - alias: "Synology Motion Recording"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.synology_front_cam_motion
         to: "on"
-    action:
-      - service: camera.snapshot
+    actions:
+      - action: camera.snapshot
         target:
           entity_id: camera.synology_front_cam
         data:
           filename: "/config/www/snapshots/front_{{ now().strftime('%Y%m%d_%H%M%S') }}.jpg"
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           message: "Motion at front camera"
           data:
@@ -166,24 +166,24 @@ automation:
 # Enable home mode (disables recording)
 automation:
   - alias: "Synology Home Mode When Home"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: group.family
         to: "home"
-    action:
-      - service: switch.turn_on
+    actions:
+      - action: switch.turn_on
         target:
           entity_id: switch.synology_home_mode
 
 # Disable home mode (enables recording)
 automation:
   - alias: "Synology Away Mode"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: group.family
         to: "not_home"
-    action:
-      - service: switch.turn_off
+    actions:
+      - action: switch.turn_off
         target:
           entity_id: switch.synology_home_mode
 ```
@@ -273,7 +273,7 @@ camera:
 
 ```yaml
 # ONVIF PTZ service
-service: onvif.ptz
+action: onvif.ptz
 target:
   entity_id: camera.onvif_camera
 data:
@@ -283,7 +283,7 @@ data:
   zoom: 0.0   # -1 to 1
 
 # Stop PTZ
-service: onvif.ptz
+action: onvif.ptz
 target:
   entity_id: camera.onvif_camera
 data:
@@ -299,12 +299,12 @@ data:
 ```yaml
 automation:
   - alias: "Motion Snapshot"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.front_door_motion
         to: "on"
-    action:
-      - service: camera.snapshot
+    actions:
+      - action: camera.snapshot
         target:
           entity_id: camera.front_door
         data:
@@ -316,12 +316,12 @@ automation:
 ```yaml
 automation:
   - alias: "Doorbell Notification"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.doorbell_press
         to: "on"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "Doorbell"
           message: "Someone at the door"
@@ -342,12 +342,12 @@ automation:
 # Record video clip on motion
 automation:
   - alias: "Record on Motion"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.front_door_motion
         to: "on"
-    action:
-      - service: camera.record
+    actions:
+      - action: camera.record
         target:
           entity_id: camera.front_door
         data:
@@ -362,11 +362,11 @@ automation:
 # Some cameras support IR control
 automation:
   - alias: "Enable Night Vision"
-    trigger:
-      - platform: sun
+    triggers:
+      - trigger: sun
         event: sunset
-    action:
-      - service: switch.turn_on
+    actions:
+      - action: switch.turn_on
         target:
           entity_id: switch.front_door_ir_lights
 ```

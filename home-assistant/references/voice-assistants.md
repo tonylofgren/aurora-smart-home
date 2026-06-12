@@ -281,12 +281,12 @@ sample_rate: 22050
 automation:
   - id: doorbell_announce
     alias: "Doorbell Announcement"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.doorbell
         to: "on"
-    action:
-      - service: tts.speak
+    actions:
+      - action: tts.speak
         target:
           entity_id: tts.piper
         data:
@@ -532,24 +532,24 @@ intent_script:
   MovieMode:
     speech:
       text: "Starting movie mode. Enjoy your movie!"
-    action:
-      - service: script.turn_on
+    actions:
+      - action: script.turn_on
         target:
           entity_id: script.movie_mode
 
   GoodNight:
     speech:
       text: "Good night! Setting everything up for sleep."
-    action:
-      - service: script.turn_on
+    actions:
+      - action: script.turn_on
         target:
           entity_id: script.goodnight_routine
 
   SetRoomTemperature:
     speech:
       text: "Setting {{ room }} to {{ temperature }} degrees."
-    action:
-      - service: climate.set_temperature
+    actions:
+      - action: climate.set_temperature
         target:
           entity_id: "climate.{{ room | replace(' ', '_') }}"
         data:
@@ -722,15 +722,15 @@ instructions: |
 automation:
   - id: voice_rate_limit
     alias: "Voice: Rate Limit OpenAI"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: conversation.openai
-    condition:
+    conditions:
       - condition: template
         value_template: >
           {{ states('counter.openai_calls') | int > 50 }}
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "OpenAI usage limit reached for today"
 ```
@@ -894,10 +894,10 @@ binary_sensor:
 automation:
   - id: voice_hybrid_routing
     alias: "Voice: Hybrid LLM Routing"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: assist_pipeline_run_start
-    action:
+    actions:
       - choose:
           # Use local Ollama if available
           - conditions:
@@ -905,7 +905,7 @@ automation:
                 entity_id: binary_sensor.ollama_available
                 state: "on"
             sequence:
-              - service: conversation.process
+              - action: conversation.process
                 data:
                   agent_id: conversation.ollama
                   text: "{{ trigger.event.data.text }}"
@@ -915,7 +915,7 @@ automation:
                 entity_id: binary_sensor.ollama_available
                 state: "off"
             sequence:
-              - service: conversation.process
+              - action: conversation.process
                 data:
                   agent_id: conversation.openai
                   text: "{{ trigger.event.data.text }}"
@@ -931,14 +931,14 @@ Enhanced conversation triggers with slot handling and response variables.
 automation:
   - id: voice_movie_mode
     alias: "Voice: Movie Mode"
-    trigger:
-      - platform: conversation
+    triggers:
+      - trigger: conversation
         command:
           - "movie time"
           - "start movie mode"
           - "I want to watch a movie"
-    action:
-      - service: script.movie_mode
+    actions:
+      - action: script.movie_mode
       - stop: ""
         response_variable: "Movie mode activated. Enjoy your movie!"
 ```
@@ -949,14 +949,14 @@ automation:
 automation:
   - id: voice_set_light
     alias: "Voice: Set Light Brightness"
-    trigger:
-      - platform: conversation
+    triggers:
+      - trigger: conversation
         command:
           - "set {room} lights to {level} percent"
           - "dim {room} to {level}"
           - "{level} percent in {room}"
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           area_id: "{{ trigger.slots.room | replace(' ', '_') }}"
         data:
@@ -977,13 +977,13 @@ automation:
 automation:
   - id: voice_flexible
     alias: "Voice: Flexible Commands"
-    trigger:
-      - platform: conversation
+    triggers:
+      - trigger: conversation
         command:
           - "[please|] turn {state} [the|] {room} [light|lights]"
           - "[can you|] set {room} [lights|] to {state}"
-    action:
-      - service: "light.turn_{{ trigger.slots.state }}"
+    actions:
+      - action: "light.turn_{{ trigger.slots.state }}"
         target:
           area_id: "{{ trigger.slots.room | replace(' ', '_') }}"
 ```
@@ -1058,20 +1058,20 @@ vad_threshold: 0.5
 automation:
   - id: voice_followup
     alias: "Voice: Handle Follow-up"
-    trigger:
-      - platform: conversation
+    triggers:
+      - trigger: conversation
         command:
           - "and {action} {target}"
           - "also {action} {target}"
           - "what about {target}"
-    condition:
+    conditions:
       - condition: template
         value_template: >
           {{ states('input_text.last_voice_context') != '' }}
-    action:
+    actions:
       - variables:
           context: "{{ states('input_text.last_voice_context') }}"
-      - service: conversation.process
+      - action: conversation.process
         data:
           agent_id: conversation.openai
           text: >
@@ -1096,13 +1096,13 @@ input_select:
 automation:
   - id: voice_confirmation_flow
     alias: "Voice: Confirmation Flow"
-    trigger:
-      - platform: conversation
+    triggers:
+      - trigger: conversation
         command:
           - "lock all doors"
           - "arm the alarm"
-    action:
-      - service: input_select.select_option
+    actions:
+      - action: input_select.select_option
         target:
           entity_id: input_select.conversation_state
         data:
@@ -1113,20 +1113,20 @@ automation:
 
   - id: voice_handle_confirmation
     alias: "Voice: Handle Confirmation"
-    trigger:
-      - platform: conversation
+    triggers:
+      - trigger: conversation
         command:
           - "yes"
           - "confirm"
           - "do it"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_select.conversation_state
         state: awaiting_confirmation
-    action:
+    actions:
       # Execute pending action
-      - service: script.execute_pending_voice_action
-      - service: input_select.select_option
+      - action: script.execute_pending_voice_action
+      - action: input_select.select_option
         target:
           entity_id: input_select.conversation_state
         data:

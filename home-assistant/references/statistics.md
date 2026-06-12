@@ -61,7 +61,7 @@ template:
 # - "State class changed"
 
 # Fix via service call:
-service: recorder.clear_statistics
+action: recorder.clear_statistics
 data:
   statistic_ids:
     - sensor.problematic_sensor
@@ -358,15 +358,15 @@ template:
 ```yaml
 automation:
   - alias: "Temperature Anomaly Alert"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.outdoor_temperature
         above: sensor.temperature_mean_24h
         value_template: >
           {{ float(trigger.to_state.state, 0) -
              float(states('sensor.temperature_mean_24h'), 0) > 10 }}
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: >
             Temperature {{ states('sensor.outdoor_temperature') }}°C is
@@ -380,12 +380,12 @@ automation:
 ```yaml
 automation:
   - alias: "Excessive TV Usage Alert"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.tv_on_today
         above: 8  # More than 8 hours
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "TV has been on for {{ states('sensor.tv_on_today') | round(1) }} hours today"
 ```
@@ -395,15 +395,15 @@ automation:
 ```yaml
 automation:
   - alias: "Weekly Usage Summary"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "09:00:00"
-    condition:
+    conditions:
       - condition: time
         weekday:
           - sun
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "📊 Weekly Summary"
           message: >

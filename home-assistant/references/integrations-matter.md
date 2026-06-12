@@ -359,24 +359,24 @@ Existing smart home systems can expose devices to Matter via bridges.
 automation:
   - id: matter_light_motion
     alias: "Matter Light - Motion Activated"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.matter_motion
         to: "on"
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.matter_bulb
 
   - id: matter_light_off
     alias: "Matter Light - Motion Timeout"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.matter_motion
         to: "off"
         for: "00:05:00"
-    action:
-      - service: light.turn_off
+    actions:
+      - action: light.turn_off
         target:
           entity_id: light.matter_bulb
 ```
@@ -405,14 +405,14 @@ scene:
 automation:
   - id: matter_battery_alert
     alias: "Matter Device Battery Alert"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id:
           - sensor.eve_door_battery
           - sensor.eve_motion_battery
         below: 20
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "Low Battery"
           message: "{{ trigger.to_state.attributes.friendly_name }} battery at {{ trigger.to_state.state }}%"

@@ -949,8 +949,8 @@ tap_action:
   action: toggle
 
 hold_action:
-  action: call-service
-  service: light.turn_on
+  action: perform-action
+  perform_action: light.turn_on
   service_data:
     entity_id: light.living_room
     brightness_pct: 100
@@ -964,8 +964,8 @@ double_tap_action:
 
 ```yaml
 tap_action:
-  action: call-service
-  service: script.turn_on
+  action: perform-action
+  perform_action: script.turn_on
   target:
     entity_id: script.movie_mode
   data:
@@ -1163,8 +1163,8 @@ cards:
         name: Heat
         icon: mdi:fire
         tap_action:
-          action: call-service
-          service: climate.set_hvac_mode
+          action: perform-action
+          perform_action: climate.set_hvac_mode
           target:
             entity_id: climate.living_room
           data:
@@ -1174,8 +1174,8 @@ cards:
         name: Cool
         icon: mdi:snowflake
         tap_action:
-          action: call-service
-          service: climate.set_hvac_mode
+          action: perform-action
+          perform_action: climate.set_hvac_mode
           target:
             entity_id: climate.living_room
           data:
@@ -1185,8 +1185,8 @@ cards:
         name: "Off"
         icon: mdi:power
         tap_action:
-          action: call-service
-          service: climate.set_hvac_mode
+          action: perform-action
+          perform_action: climate.set_hvac_mode
           target:
             entity_id: climate.living_room
           data:
@@ -1239,8 +1239,8 @@ cards:
         icon: mdi:spotify
         name: Spotify
         tap_action:
-          action: call-service
-          service: media_player.select_source
+          action: perform-action
+          perform_action: media_player.select_source
           target:
             entity_id: media_player.living_room
           data:
@@ -1249,8 +1249,8 @@ cards:
         icon: mdi:television
         name: TV
         tap_action:
-          action: call-service
-          service: media_player.select_source
+          action: perform-action
+          perform_action: media_player.select_source
           target:
             entity_id: media_player.living_room
           data:
@@ -1486,8 +1486,8 @@ type: heading
 heading: All Lights Off
 icon: mdi:lightbulb-off
 tap_action:
-  action: call-service
-  service: light.turn_off
+  action: perform-action
+  perform_action: light.turn_off
   target:
     entity_id: all
 ```

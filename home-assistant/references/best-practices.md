@@ -251,16 +251,16 @@ template:
 # Automations
 automation:
   - alias: "Living Room - Motion - Lights On"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.living_room_motion
         to: "on"
-    condition:
+    conditions:
       - condition: state
         entity_id: sun.sun
         state: "below_horizon"
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.living_room_main
 
@@ -269,12 +269,12 @@ script:
   living_room_movie_mode:
     alias: "Living Room Movie Mode"
     sequence:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.living_room_tv_backlight
         data:
           brightness: 50
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id: light.living_room_main
 ```
@@ -375,34 +375,34 @@ sensor: !include_dir_merge_named sensors/
 # Good: One automation, one purpose
 automation:
   - alias: "Living Room - Motion - Lights On"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.living_room_motion
         to: "on"
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.living_room
 
   - alias: "Living Room - No Motion - Lights Off"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.living_room_motion
         to: "off"
         for:
           minutes: 5
-    action:
-      - service: light.turn_off
+    actions:
+      - action: light.turn_off
         target:
           entity_id: light.living_room
 
 # Bad: Multiple unrelated actions
 automation:
   - alias: "Motion Handler"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.living_room_motion
-    action:
+    actions:
       - if: motion on
         then: turn on lights, send notification, start music, adjust climate
         else: turn off everything
@@ -415,11 +415,11 @@ automation:
 
 automation:
   - alias: "Motion Light with Conditions"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "on"
-    condition:
+    conditions:
       # Multiple conditions = AND logic
       - condition: state
         entity_id: sun.sun
@@ -432,8 +432,8 @@ automation:
           - condition: state
             entity_id: input_boolean.guest_mode
             state: "on"
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.hallway
 ```
@@ -443,21 +443,21 @@ automation:
 ```yaml
 automation:
   - alias: "Robust Automation"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.trigger
         to: "on"
-    action:
+    actions:
       # Check entity availability before use
       - if:
           - condition: template
             value_template: "{{ states('light.target') not in ['unavailable', 'unknown'] }}"
         then:
-          - service: light.turn_on
+          - action: light.turn_on
             target:
               entity_id: light.target
         else:
-          - service: notify.admin
+          - action: notify.admin
             data:
               message: "Light unavailable - automation failed"
 ```
@@ -467,8 +467,8 @@ automation:
 ```yaml
 automation:
   - alias: "Dynamic Brightness Based on Time"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "on"
     variables:
@@ -481,8 +481,8 @@ automation:
         {% else %}
           100
         {% endif %}
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.hallway
         data:
@@ -624,9 +624,9 @@ template:
 # Good: Use trigger-based for complex calculations
 template:
   - trigger:
-      - platform: time_pattern
+      - trigger: time_pattern
         minutes: "/5"  # Every 5 minutes
-      - platform: homeassistant
+      - trigger: homeassistant
         event: start
     sensor:
       - name: "All Lights On"
@@ -684,11 +684,11 @@ refresh_interval: 60  # Not real-time
 # Automated backups
 automation:
   - alias: "System - Daily Backup"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "03:00:00"
-    action:
-      - service: backup.create
+    actions:
+      - action: backup.create
 
 # Backup retention
 # Keep: 7 daily, 4 weekly, 3 monthly
@@ -712,12 +712,12 @@ automation:
 # Update automation
 automation:
   - alias: "System - Update Available Notification"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: update.home_assistant_core_update
         to: "on"
-    action:
-      - service: notify.admin
+    actions:
+      - action: notify.admin
         data:
           title: "Update Available"
           message: >
@@ -743,14 +743,14 @@ template:
 
 automation:
   - alias: "System - Health Alert"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: sensor.system_health
         to: "critical"
         for:
           minutes: 5
-    action:
-      - service: notify.admin
+    actions:
+      - action: notify.admin
         data:
           title: "System Health Critical"
           message: "Multiple entities unavailable"
@@ -766,14 +766,14 @@ automation:
 # Test automations manually
 # Developer Tools > Services
 
-service: automation.trigger
+action: automation.trigger
 target:
   entity_id: automation.test_automation
 data:
   skip_condition: false  # or true to bypass conditions
 
 # Test scripts
-service: script.turn_on
+action: script.turn_on
 target:
   entity_id: script.test_script
 ```
@@ -816,16 +816,16 @@ input_boolean:
 # Use in automations
 automation:
   - alias: "Test - Motion Light"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: input_boolean.test_trigger
         to: "on"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_boolean.test_mode
         state: "on"
-    action:
-      - service: system_log.write
+    actions:
+      - action: system_log.write
         data:
           message: "Test automation triggered"
           level: info
@@ -865,11 +865,11 @@ automation:
   # Author: John Doe
   # Last updated: 2024-01-15
   - alias: "Living Room - Motion - Lights On"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.living_room_motion
         to: "on"
-    condition:
+    conditions:
       # Only when dark outside
       - condition: state
         entity_id: sun.sun
@@ -878,8 +878,8 @@ automation:
       - condition: state
         entity_id: media_player.living_room_tv
         state: "off"
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.living_room_main
 ```
@@ -956,17 +956,17 @@ template:
 
 automation:
   - alias: "Presence - Away - Secure Home"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.anyone_home
         to: "off"
         for:
           minutes: 10
-    action:
-      - service: lock.lock
+    actions:
+      - action: lock.lock
         target:
           entity_id: all
-      - service: climate.set_preset_mode
+      - action: climate.set_preset_mode
         target:
           entity_id: climate.thermostat
         data:
@@ -990,7 +990,7 @@ script:
         description: "Priority level"
         default: "normal"
     sequence:
-      - service: notify.mobile_app_john
+      - action: notify.mobile_app_john
         data:
           title: "{{ title }}"
           message: "{{ message }}"
@@ -998,7 +998,7 @@ script:
           - condition: template
             value_template: "{{ priority == 'high' }}"
         then:
-          - service: notify.mobile_app_jane
+          - action: notify.mobile_app_jane
             data:
               title: "{{ title }}"
               message: "{{ message }}"
@@ -1019,12 +1019,12 @@ input_select:
 
 automation:
   - alias: "Mode - Away - Set Climate"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: input_select.home_mode
         to: "Away"
-    action:
-      - service: climate.set_temperature
+    actions:
+      - action: climate.set_temperature
         target:
           entity_id: climate.thermostat
         data:
@@ -1039,8 +1039,8 @@ automation:
 
 ```yaml
 # Bad: Hardcoded values
-action:
-  - service: light.turn_on
+actions:
+  - action: light.turn_on
     data:
       brightness: 255  # Use input_number instead
 
@@ -1070,14 +1070,14 @@ sensor:
 
 ```yaml
 # Wrong: Missing "to" state
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: binary_sensor.motion
     # Triggers on ANY state change, including attributes
 
 # Correct: Specify state
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: binary_sensor.motion
     to: "on"
 
@@ -1089,11 +1089,11 @@ trigger:
 {{ states('sensor.temp') | float(0) }}
 
 # Wrong: Service call with wrong target format
-service: light.turn_on
+action: light.turn_on
 entity_id: light.living_room  # Deprecated
 
 # Correct: Use target
-service: light.turn_on
+action: light.turn_on
 target:
   entity_id: light.living_room
 ```

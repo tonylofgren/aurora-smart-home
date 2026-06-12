@@ -907,16 +907,16 @@ dark_theme:
 # Per-user default
 automation:
   - alias: "Set Theme on Login"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: user_logged_in
-    action:
-      - service: frontend.set_theme
+    actions:
+      - action: frontend.set_theme
         data:
           name: dark_theme
 
 # Service call
-service: frontend.set_theme
+action: frontend.set_theme
 data:
   name: dark_theme
   mode: dark  # light or dark
@@ -1257,13 +1257,13 @@ views:
 # Set via user profile or automation
 automation:
   - alias: "Set Dashboard for Guest"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: user_logged_in
         event_data:
           user_id: guest_user_id
-    action:
-      - service: frontend.set_theme
+    actions:
+      - action: frontend.set_theme
         data:
           name: guest_theme
 ```
@@ -1506,10 +1506,10 @@ cards:
 
 ```yaml
 # Developer Tools > Services
-service: lovelace.reload_resources
+action: lovelace.reload_resources
 
 # Check for YAML errors
-service: homeassistant.check_config
+action: homeassistant.check_config
 ```
 
 ### Browser Console
@@ -1571,7 +1571,7 @@ entities:
 
 ```yaml
 # Reload themes
-service: frontend.reload_themes
+action: frontend.reload_themes
 
 # Check theme file syntax
 # themes/my_theme.yaml

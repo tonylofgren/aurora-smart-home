@@ -75,13 +75,13 @@ blueprint:
         entity:
           domain: light
 
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: !input motion_sensor
     to: "on"
 
-action:
-  - service: light.turn_on
+actions:
+  - action: light.turn_on
     target:
       entity_id: !input light_entity
 ```
@@ -106,13 +106,13 @@ blueprint:
 mode: restart
 max_exceeded: silent
 
-trigger:
+triggers:
   # Triggers using !input
 
-condition:
+conditions:
   # Conditions using !input (optional)
 
-action:
+actions:
   # Actions using !input
 ```
 
@@ -511,8 +511,8 @@ selector:
 ### Basic !input Reference
 
 ```yaml
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: !input motion_sensor
     to: "on"
 ```
@@ -520,16 +520,16 @@ trigger:
 ### In Target
 
 ```yaml
-action:
-  - service: light.turn_on
+actions:
+  - action: light.turn_on
     target: !input target_light
 ```
 
 ### In Data
 
 ```yaml
-action:
-  - service: light.turn_on
+actions:
+  - action: light.turn_on
     target:
       entity_id: !input light_entity
     data:
@@ -539,8 +539,8 @@ action:
 ### In Templates
 
 ```yaml
-action:
-  - service: notify.mobile_app
+actions:
+  - action: notify.mobile_app
     data:
       message: >
         Motion detected by {{ states[!input motion_sensor].name }}
@@ -549,7 +549,7 @@ action:
 ### In Duration
 
 ```yaml
-action:
+actions:
   - delay:
       seconds: !input timeout
 ```
@@ -557,7 +557,7 @@ action:
 ### In Conditions
 
 ```yaml
-condition:
+conditions:
   - condition: state
     entity_id: !input enable_toggle
     state: "on"
@@ -566,11 +566,11 @@ condition:
 ### Multiple Input References
 
 ```yaml
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: !input motion_sensor
     to: "on"
-  - platform: state
+  - trigger: state
     entity_id: !input motion_sensor
     to: "off"
     for:
@@ -595,8 +595,8 @@ variables:
   sensor: !input motion_sensor
   sensor_name: "{{ state_attr(sensor, 'friendly_name') }}"
 
-action:
-  - service: notify.mobile_app
+actions:
+  - action: notify.mobile_app
     data:
       message: "Motion detected by {{ sensor_name }}"
 ```
@@ -613,8 +613,8 @@ variables:
       {{ brightness_input }}
     {% endif %}
 
-action:
-  - service: light.turn_on
+actions:
+  - action: light.turn_on
     data:
       brightness_pct: "{{ adjusted_brightness }}"
 ```
@@ -846,23 +846,23 @@ blueprint:
 mode: restart
 max_exceeded: silent
 
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: !input motion_sensor
     to: "on"
 
-action:
-  - service: light.turn_on
+actions:
+  - action: light.turn_on
     target: !input light_target
     data:
       brightness_pct: !input brightness
   - wait_for_trigger:
-      - platform: state
+      - trigger: state
         entity_id: !input motion_sensor
         to: "off"
         for:
           seconds: !input timeout
-  - service: light.turn_off
+  - action: light.turn_off
     target: !input light_target
 ```
 
@@ -894,18 +894,18 @@ blueprint:
       selector:
         text:
 
-trigger:
-  - platform: numeric_state
+triggers:
+  - trigger: numeric_state
     entity_id: !input battery_sensor
     below: !input threshold
 
-condition:
+conditions:
   - condition: template
     value_template: >
       {{ states(!input battery_sensor) not in ['unknown', 'unavailable'] }}
 
-action:
-  - service: !input notification_service
+actions:
+  - action: !input notification_service
     data:
       title: "Low Battery Alert"
       message: >
@@ -960,15 +960,15 @@ blueprint:
       selector:
         boolean:
 
-trigger:
-  - platform: time
+triggers:
+  - trigger: time
     at: !input morning_time
     id: morning
-  - platform: time
+  - trigger: time
     at: !input night_time
     id: night
 
-condition:
+conditions:
   - condition: or
     conditions:
       - condition: template
@@ -981,13 +981,13 @@ condition:
           - thu
           - fri
 
-action:
+actions:
   - choose:
       - conditions:
           - condition: trigger
             id: morning
         sequence:
-          - service: climate.set_temperature
+          - action: climate.set_temperature
             target:
               entity_id: !input climate_entity
             data:
@@ -996,7 +996,7 @@ action:
           - condition: trigger
             id: night
         sequence:
-          - service: climate.set_temperature
+          - action: climate.set_temperature
             target:
               entity_id: !input climate_entity
             data:
@@ -1032,27 +1032,27 @@ blueprint:
       selector:
         action:
 
-trigger:
-  - platform: device
+triggers:
+  - trigger: device
     device_id: !input button_device
     domain: zha
     type: remote_button_short_press
     subtype: button_1
     id: single
-  - platform: device
+  - trigger: device
     device_id: !input button_device
     domain: zha
     type: remote_button_double_press
     subtype: button_1
     id: double
-  - platform: device
+  - trigger: device
     device_id: !input button_device
     domain: zha
     type: remote_button_long_press
     subtype: button_1
     id: long
 
-action:
+actions:
   - choose:
       - conditions:
           - condition: trigger
@@ -1089,7 +1089,7 @@ input:
         min: 0
         max: 500
 
-condition:
+conditions:
   - condition: or
     conditions:
       - condition: template
@@ -1110,14 +1110,14 @@ input:
     selector:
       action:
 
-action:
+actions:
   - choose:
       - conditions:
           - condition: template
             value_template: "{{ !input on_action | length > 0 }}"
         sequence: !input on_action
     default:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: !input light_entity
 ```
@@ -1135,8 +1135,8 @@ input:
         device_class: motion
         multiple: true
 
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: !input motion_sensors
     to: "on"
 ```
@@ -1256,8 +1256,8 @@ logger:
 ### Debug Blueprint Variables
 
 ```yaml
-action:
-  - service: system_log.write
+actions:
+  - action: system_log.write
     data:
       message: >
         Motion sensor: {{ !input motion_sensor }}
@@ -1269,16 +1269,16 @@ action:
 
 ```yaml
 # Wrong: Using input directly in template
-action:
-  - service: notify.mobile_app
+actions:
+  - action: notify.mobile_app
     data:
       message: "{{ states(!input sensor) }}"  # Won't work
 
 # Correct: Use variables
 variables:
   sensor: !input sensor
-action:
-  - service: notify.mobile_app
+actions:
+  - action: notify.mobile_app
     data:
       message: "{{ states(sensor) }}"
 

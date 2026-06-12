@@ -231,13 +231,13 @@ ha network info
 ```yaml
 automation:
   - alias: "High CPU Usage Alert"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.processor_use
         above: 80
         for: "00:05:00"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "⚠️ High CPU Usage"
           message: "CPU usage at {{ states('sensor.processor_use') }}% for 5 minutes"
@@ -248,16 +248,16 @@ automation:
 ```yaml
 automation:
   - alias: "Low Disk Space Alert"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.disk_use_percent
         above: 85
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "💾 Low Disk Space"
           message: "Disk usage at {{ states('sensor.disk_use_percent') }}%"
-      - service: persistent_notification.create
+      - action: persistent_notification.create
         data:
           title: "Low Disk Space Warning"
           message: "Disk is {{ states('sensor.disk_use_percent') }}% full. Consider cleanup."
@@ -268,13 +268,13 @@ automation:
 ```yaml
 automation:
   - alias: "High Memory Alert"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.memory_use_percent
         above: 90
         for: "00:10:00"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "🧠 High Memory Usage"
           message: "Memory at {{ states('sensor.memory_use_percent') }}%"
@@ -285,14 +285,14 @@ automation:
 ```yaml
 automation:
   - alias: "System Rebooted"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: sensor.last_boot
-    condition:
+    conditions:
       - condition: template
         value_template: "{{ trigger.from_state.state != 'unknown' }}"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "🔄 System Rebooted"
           message: "Home Assistant host rebooted at {{ states('sensor.last_boot') }}"

@@ -192,7 +192,7 @@ If a device isn't working correctly:
 # light.living_room_lights
 
 # Automations work like single light:
-service: light.turn_on
+action: light.turn_on
 target:
   entity_id: light.living_room_lights
 data:
@@ -211,11 +211,11 @@ Scenes in ZHA are stored on the coordinator:
 ```yaml
 automation:
   - alias: "Evening Scene"
-    trigger:
-      - platform: sun
+    triggers:
+      - trigger: sun
         event: sunset
-    action:
-      - service: zha.recall_scene
+    actions:
+      - action: zha.recall_scene
         data:
           scene_id: 1
           group_id: 1
@@ -272,14 +272,14 @@ ZHA exposes device-specific triggers:
 ```yaml
 automation:
   - alias: "Button Press Action"
-    trigger:
-      - platform: device
+    triggers:
+      - trigger: device
         domain: zha
         device_id: abc123...
         type: remote_button_short_press
         subtype: button_1
-    action:
-      - service: light.toggle
+    actions:
+      - action: light.toggle
         target:
           entity_id: light.living_room
 ```
@@ -301,14 +301,14 @@ For advanced scenarios, listen to ZHA events:
 ```yaml
 automation:
   - alias: "ZHA Event Handler"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: zha_event
         event_data:
           device_ieee: "00:11:22:33:44:55:66:77"
           command: "on"
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.kitchen
 ```
@@ -333,38 +333,38 @@ data:
 automation:
   - alias: "IKEA Remote - All Actions"
     mode: single
-    trigger:
-      - platform: device
+    triggers:
+      - trigger: device
         domain: zha
         device_id: abc123...
         type: remote_button_short_press
         subtype: turn_on
         id: "on"
-      - platform: device
+      - trigger: device
         domain: zha
         device_id: abc123...
         type: remote_button_short_press
         subtype: turn_off
         id: "off"
-      - platform: device
+      - trigger: device
         domain: zha
         device_id: abc123...
         type: remote_button_short_press
         subtype: dim_up
         id: "bright"
-      - platform: device
+      - trigger: device
         domain: zha
         device_id: abc123...
         type: remote_button_short_press
         subtype: dim_down
         id: "dim"
-    action:
+    actions:
       - choose:
           - conditions:
               - condition: trigger
                 id: "on"
             sequence:
-              - service: light.turn_on
+              - action: light.turn_on
                 target:
                   entity_id: light.living_room
                 data:
@@ -373,14 +373,14 @@ automation:
               - condition: trigger
                 id: "off"
             sequence:
-              - service: light.turn_off
+              - action: light.turn_off
                 target:
                   entity_id: light.living_room
           - conditions:
               - condition: trigger
                 id: "bright"
             sequence:
-              - service: light.turn_on
+              - action: light.turn_on
                 target:
                   entity_id: light.living_room
                 data:
@@ -389,7 +389,7 @@ automation:
               - condition: trigger
                 id: "dim"
             sequence:
-              - service: light.turn_on
+              - action: light.turn_on
                 target:
                   entity_id: light.living_room
                 data:
@@ -404,7 +404,7 @@ automation:
 
 ```yaml
 # Issue Zigbee cluster command
-service: zha.issue_zigbee_cluster_command
+action: zha.issue_zigbee_cluster_command
 data:
   ieee: "00:11:22:33:44:55:66:77"
   endpoint_id: 1
@@ -414,7 +414,7 @@ data:
   command_type: server
 
 # Set attribute
-service: zha.set_zigbee_cluster_attribute
+action: zha.set_zigbee_cluster_attribute
 data:
   ieee: "00:11:22:33:44:55:66:77"
   endpoint_id: 1
@@ -424,13 +424,13 @@ data:
   value: 1
 
 # Permit joining
-service: zha.permit
+action: zha.permit
 data:
   duration: 60
   ieee: "00:11:22:33:44:55:66:77"  # Optional: specific router
 
 # Remove device
-service: zha.remove
+action: zha.remove
 data:
   ieee: "00:11:22:33:44:55:66:77"
 ```
@@ -655,12 +655,12 @@ logger:
 
 automation:
   - alias: "Motion Light"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.aqara_motion_occupancy
         to: "on"
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.hallway
 ```
@@ -676,12 +676,12 @@ automation:
 
 automation:
   - alias: "Temperature Alert"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.aqara_temp_temperature
         above: 30
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "Temperature is {{ states('sensor.aqara_temp_temperature') }}C"
 ```
@@ -708,20 +708,20 @@ automation:
 # Use for appliance monitoring:
 automation:
   - alias: "Washing Machine Done"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.washer_plug_power
         below: 5
         for: "00:02:00"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_boolean.washer_running
         state: "on"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "Washing machine finished!"
-      - service: input_boolean.turn_off
+      - action: input_boolean.turn_off
         target:
           entity_id: input_boolean.washer_running
 ```

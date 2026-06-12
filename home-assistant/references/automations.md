@@ -842,7 +842,7 @@ actions:
 actions:
   # Wait for trigger
   - wait_for_trigger:
-      - platform: state
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "off"
         for: "00:05:00"
@@ -1237,7 +1237,7 @@ automation:
         target:
           entity_id: light.hallway
       - wait_for_trigger:
-          - platform: state
+          - trigger: state
             entity_id: binary_sensor.motion
             to: "off"
             for: "00:03:00"

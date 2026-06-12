@@ -532,16 +532,16 @@ binary_sensor.front_door_driveway_car
 automation:
   - id: frigate_person_notification
     alias: "Frigate - Person Detection Alert"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.front_door_person
         to: "on"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_boolean.security_alerts
         state: "on"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "Person Detected"
           message: "Person detected at front door"
@@ -556,17 +556,17 @@ automation:
 automation:
   - id: frigate_person_snapshot
     alias: "Frigate - Person Snapshot Notification"
-    trigger:
-      - platform: mqtt
+    triggers:
+      - trigger: mqtt
         topic: frigate/events
-    condition:
+    conditions:
       - condition: template
         value_template: >
           {{ trigger.payload_json.type == 'end' and
              trigger.payload_json.after.label == 'person' and
              trigger.payload_json.after.has_snapshot }}
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "Person Detected - {{ trigger.payload_json.after.camera }}"
           message: >
@@ -583,12 +583,12 @@ automation:
 automation:
   - id: frigate_driveway_car
     alias: "Frigate - Car in Driveway"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.front_door_driveway_car
         to: "on"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "Car Detected"
           message: "Car detected in driveway"
@@ -597,17 +597,17 @@ automation:
 automation:
   - id: frigate_porch_person
     alias: "Frigate - Person at Porch"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.front_door_front_porch_person
         to: "on"
-    condition:
+    conditions:
       # Only when nobody home
       - condition: state
         entity_id: group.family
         state: "not_home"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "Visitor Alert"
           message: "Someone at the front porch"
@@ -622,12 +622,12 @@ automation:
 automation:
   - id: frigate_recording_away
     alias: "Frigate - Enable Recording When Away"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: group.family
         to: "not_home"
-    action:
-      - service: switch.turn_on
+    actions:
+      - action: switch.turn_on
         target:
           entity_id:
             - switch.front_door_recordings
@@ -635,12 +635,12 @@ automation:
 
   - id: frigate_recording_home
     alias: "Frigate - Disable Recording When Home"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: group.family
         to: "home"
-    action:
-      - service: switch.turn_off
+    actions:
+      - action: switch.turn_off
         target:
           entity_id:
             - switch.front_door_recordings
@@ -653,13 +653,13 @@ automation:
 automation:
   - id: frigate_doorbell_ring
     alias: "Frigate - Doorbell Person Detection"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.doorbell_person
         to: "on"
-    action:
+    actions:
       # Show camera on smart display
-      - service: media_player.play_media
+      - action: media_player.play_media
         target:
           entity_id: media_player.kitchen_display
         data:
@@ -667,7 +667,7 @@ automation:
           media_content_id: "http://frigate:5000/api/doorbell/latest.jpg"
 
       # Announce visitor
-      - service: tts.speak
+      - action: tts.speak
         target:
           entity_id: tts.piper
         data:
@@ -675,7 +675,7 @@ automation:
           message: "Someone is at the front door"
 
       # Send notification
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           title: "Doorbell"
           message: "Someone at the front door"
@@ -693,18 +693,18 @@ automation:
 automation:
   - id: frigate_save_clip
     alias: "Frigate - Save Important Clips"
-    trigger:
-      - platform: mqtt
+    triggers:
+      - trigger: mqtt
         topic: frigate/events
-    condition:
+    conditions:
       - condition: template
         value_template: >
           {{ trigger.payload_json.type == 'end' and
              trigger.payload_json.after.has_clip and
              trigger.payload_json.after.label == 'person' and
              trigger.payload_json.after.camera in ['front_door', 'back_door'] }}
-    action:
-      - service: downloader.download_file
+    actions:
+      - action: downloader.download_file
         data:
           url: >
             http://frigate:5000/api/events/{{ trigger.payload_json.after.id }}/clip.mp4
@@ -730,8 +730,8 @@ entities:
 tap_action:
   action: more-info
 hold_action:
-  action: call-service
-  service: browser_mod.popup
+  action: perform-action
+  perform_action: browser_mod.popup
   service_data:
     content:
       type: custom:frigate-card

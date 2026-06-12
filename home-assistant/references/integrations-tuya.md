@@ -219,23 +219,23 @@ Try 3.3 first, then 3.4 if it doesn't work.
 # Basic on/off automation
 automation:
   - alias: "Turn off plug at midnight"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "00:00:00"
-    action:
-      - service: switch.turn_off
+    actions:
+      - action: switch.turn_off
         target:
           entity_id: switch.tuya_smart_plug
 
 # Power monitoring automation
 automation:
   - alias: "High power alert"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.tuya_plug_power
         above: 2000  # Watts
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "High power consumption detected!"
 ```
@@ -246,11 +246,11 @@ automation:
 # Color and brightness control
 automation:
   - alias: "Evening lighting"
-    trigger:
-      - platform: sun
+    triggers:
+      - trigger: sun
         event: sunset
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.tuya_bulb
         data:
@@ -262,14 +262,14 @@ automation:
 script:
   party_mode:
     sequence:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.tuya_bulb
         data:
           rgb_color: [255, 0, 0]
           brightness_pct: 100
       - delay: "00:00:02"
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.tuya_bulb
         data:
@@ -282,12 +282,12 @@ script:
 # Position control
 automation:
   - alias: "Open blinds at sunrise"
-    trigger:
-      - platform: sun
+    triggers:
+      - trigger: sun
         event: sunrise
         offset: "00:30:00"
-    action:
-      - service: cover.set_cover_position
+    actions:
+      - action: cover.set_cover_position
         target:
           entity_id: cover.tuya_blind
         data:
@@ -296,13 +296,13 @@ automation:
 # Close based on sun elevation
 automation:
   - alias: "Close blinds when sun is strong"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sun.sun
         attribute: elevation
         above: 60
-    action:
-      - service: cover.set_cover_position
+    actions:
+      - action: cover.set_cover_position
         target:
           entity_id: cover.tuya_blind
         data:
@@ -315,10 +315,10 @@ automation:
 # Climate control
 automation:
   - alias: "Heating schedule"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "06:30:00"
-    condition:
+    conditions:
       - condition: time
         weekday:
           - mon
@@ -326,8 +326,8 @@ automation:
           - wed
           - thu
           - fri
-    action:
-      - service: climate.set_temperature
+    actions:
+      - action: climate.set_temperature
         target:
           entity_id: climate.tuya_thermostat
         data:
@@ -337,13 +337,13 @@ automation:
 # Away mode
 automation:
   - alias: "Away - reduce heating"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: group.family
         to: "not_home"
         for: "00:30:00"
-    action:
-      - service: climate.set_temperature
+    actions:
+      - action: climate.set_temperature
         target:
           entity_id: climate.tuya_thermostat
         data:
@@ -356,26 +356,26 @@ automation:
 # Temperature/humidity sensors
 automation:
   - alias: "Humidity alert"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.tuya_humidity
         above: 70
         for: "00:30:00"
-    action:
-      - service: switch.turn_on
+    actions:
+      - action: switch.turn_on
         target:
           entity_id: switch.dehumidifier
 
 # Door/window sensors
 automation:
   - alias: "Door left open"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.tuya_door
         to: "on"
         for: "00:10:00"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "Door has been open for 10 minutes"
 ```
@@ -392,11 +392,11 @@ Tuya scenes created in the app are available as buttons:
 # Trigger Tuya scene
 automation:
   - alias: "Good night via Tuya"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "23:00:00"
-    action:
-      - service: button.press
+    actions:
+      - action: button.press
         target:
           entity_id: button.tuya_goodnight_scene
 ```
@@ -407,11 +407,11 @@ automation:
 # Sync Tuya with other systems
 automation:
   - alias: "Sync Tuya light with Hue"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: light.hue_living_room
-    action:
-      - service: light.turn_{{ trigger.to_state.state }}
+    actions:
+      - action: light.turn_{{ trigger.to_state.state }}
         target:
           entity_id: light.tuya_living_room
 ```

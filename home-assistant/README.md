@@ -150,16 +150,16 @@ automation:
     alias: "Motion Light - Hallway"
     description: "Turn on hallway light when motion detected"
     mode: restart
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.hallway_motion
         to: "on"
-    condition:
+    conditions:
       - condition: numeric_state
         entity_id: sensor.hallway_illuminance
         below: 30
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.hallway
         data:
@@ -171,12 +171,12 @@ automation:
             {% endif %}
           transition: 1
       - wait_for_trigger:
-          - platform: state
+          - trigger: state
             entity_id: binary_sensor.hallway_motion
             to: "off"
             for:
               minutes: 3
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id: light.hallway
         data:
@@ -236,21 +236,21 @@ blueprint:
           max: 3600
           unit_of_measurement: seconds
 
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: !input motion_sensor
     to: "on"
 
-action:
-  - service: light.turn_on
+actions:
+  - action: light.turn_on
     target: !input target_light
   - wait_for_trigger:
-      - platform: state
+      - trigger: state
         entity_id: !input motion_sensor
         to: "off"
         for:
           seconds: !input timeout
-  - service: light.turn_off
+  - action: light.turn_off
     target: !input target_light
 ```
 

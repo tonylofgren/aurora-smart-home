@@ -161,13 +161,13 @@ Access Alarmo panel at **Configuration > Alarmo** or sidebar.
 # Arm alarm when leaving
 automation:
   - alias: "Arm Alarm When Away"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: group.family
         to: "not_home"
         for: "00:05:00"
-    action:
-      - service: alarmo.arm
+    actions:
+      - action: alarmo.arm
         data:
           entity_id: alarm_control_panel.alarmo
           mode: away
@@ -176,12 +176,12 @@ automation:
 # Disarm when arriving
 automation:
   - alias: "Disarm Alarm When Home"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: person.me
         to: "home"
-    action:
-      - service: alarmo.disarm
+    actions:
+      - action: alarmo.disarm
         data:
           entity_id: alarm_control_panel.alarmo
           code: !secret alarm_code
@@ -189,12 +189,12 @@ automation:
 # Notification on trigger
 automation:
   - alias: "Alarm Triggered Notification"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: alarm_control_panel.alarmo
         to: "triggered"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "🚨 ALARM TRIGGERED"
           message: "{{ state_attr('alarm_control_panel.alarmo', 'open_sensors') | join(', ') }}"
@@ -282,27 +282,27 @@ tap_action:
 
 ```yaml
 # Navigate to view
-service: browser_mod.navigate
+action: browser_mod.navigate
 data:
   path: /lovelace/cameras
 
 # Show popup
-service: browser_mod.popup
+action: browser_mod.popup
 data:
   content:
     type: markdown
     content: "Hello World!"
 
 # Execute JavaScript
-service: browser_mod.javascript
+action: browser_mod.javascript
 data:
   code: "alert('Hello from Home Assistant!')"
 
 # Refresh browser
-service: browser_mod.refresh
+action: browser_mod.refresh
 
 # Close popup
-service: browser_mod.close_popup
+action: browser_mod.close_popup
 ```
 
 ### Browser Sensors
@@ -479,22 +479,22 @@ switch.adaptive_lighting_sleep_mode_living_room
 # Activate sleep mode (dim warm light)
 automation:
   - alias: "Bedtime Adaptive Lighting"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "22:00:00"
-    action:
-      - service: switch.turn_on
+    actions:
+      - action: switch.turn_on
         target:
           entity_id: switch.adaptive_lighting_sleep_mode_living_room
 
 # Deactivate in morning
 automation:
   - alias: "Morning Adaptive Lighting"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "07:00:00"
-    action:
-      - service: switch.turn_off
+    actions:
+      - action: switch.turn_off
         target:
           entity_id: switch.adaptive_lighting_sleep_mode_living_room
 ```
@@ -508,7 +508,7 @@ Adaptive Lighting detects when you manually change a light and stops adapting it
 
 ```yaml
 # Reset manual override
-service: adaptive_lighting.set_manual_control
+action: adaptive_lighting.set_manual_control
 data:
   entity_id: switch.adaptive_lighting_living_room
   lights:
@@ -522,19 +522,19 @@ data:
 # Disable during movie mode
 automation:
   - alias: "Movie Mode Lighting"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: media_player.tv
         to: "playing"
         attribute: media_content_type
-    condition:
+    conditions:
       - condition: template
         value_template: "{{ state_attr('media_player.tv', 'media_content_type') == 'movie' }}"
-    action:
-      - service: switch.turn_off
+    actions:
+      - action: switch.turn_off
         target:
           entity_id: switch.adaptive_lighting_living_room
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.living_room
         data:
@@ -581,15 +581,15 @@ sensor.device_name_battery_type          # Battery type (CR2032, AA, etc.)
 ```yaml
 automation:
   - alias: "Low Battery Alert"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id:
           - sensor.front_door_battery
           - sensor.motion_sensor_battery
           - sensor.temperature_sensor_battery
         below: 20
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "🔋 Low Battery"
           message: "{{ trigger.to_state.name }} battery is at {{ trigger.to_state.state }}%"
@@ -597,15 +597,15 @@ automation:
 # Weekly battery summary
 automation:
   - alias: "Weekly Battery Report"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "09:00:00"
-    condition:
+    conditions:
       - condition: time
         weekday:
           - sun
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "🔋 Weekly Battery Report"
           message: >
@@ -674,13 +674,13 @@ Automated backup creation and management.
 # Create backup via automation
 automation:
   - alias: "Backup Before Update"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: update.home_assistant_core_update
         attribute: in_progress
         to: true
-    action:
-      - service: auto_backup.backup
+    actions:
+      - action: auto_backup.backup
         data:
           name: "Pre-Update Backup {{ now().strftime('%Y-%m-%d') }}"
 ```
@@ -704,15 +704,15 @@ automation:
 # Check for HACS updates
 automation:
   - alias: "HACS Update Notification"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: sensor.hacs
-    condition:
+    conditions:
       - condition: numeric_state
         entity_id: sensor.hacs
         above: 0
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "{{ states('sensor.hacs') }} HACS updates available"
 ```

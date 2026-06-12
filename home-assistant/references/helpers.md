@@ -97,17 +97,17 @@ input_boolean:
 
 ```yaml
 # Turn on
-service: input_boolean.turn_on
+action: input_boolean.turn_on
 target:
   entity_id: input_boolean.vacation_mode
 
 # Turn off
-service: input_boolean.turn_off
+action: input_boolean.turn_off
 target:
   entity_id: input_boolean.vacation_mode
 
 # Toggle
-service: input_boolean.toggle
+action: input_boolean.toggle
 target:
   entity_id: input_boolean.vacation_mode
 ```
@@ -116,7 +116,7 @@ target:
 
 ```yaml
 # States: "on" or "off"
-condition:
+conditions:
   - condition: state
     entity_id: input_boolean.vacation_mode
     state: "on"
@@ -188,19 +188,19 @@ input_number:
 
 ```yaml
 # Set value
-service: input_number.set_value
+action: input_number.set_value
 target:
   entity_id: input_number.target_temperature
 data:
   value: 22.5
 
 # Increment
-service: input_number.increment
+action: input_number.increment
 target:
   entity_id: input_number.target_temperature
 
 # Decrement
-service: input_number.decrement
+action: input_number.decrement
 target:
   entity_id: input_number.target_temperature
 ```
@@ -212,8 +212,8 @@ target:
 {{ states('input_number.target_temperature') | float }}
 
 # Use in automation
-action:
-  - service: climate.set_temperature
+actions:
+  - action: climate.set_temperature
     target:
       entity_id: climate.living_room
     data:
@@ -295,36 +295,36 @@ input_select:
 
 ```yaml
 # Select option
-service: input_select.select_option
+action: input_select.select_option
 target:
   entity_id: input_select.home_mode
 data:
   option: Away
 
 # Select first option
-service: input_select.select_first
+action: input_select.select_first
 target:
   entity_id: input_select.home_mode
 
 # Select last option
-service: input_select.select_last
+action: input_select.select_last
 target:
   entity_id: input_select.home_mode
 
 # Select next option (cycles)
-service: input_select.select_next
+action: input_select.select_next
 target:
   entity_id: input_select.home_mode
 data:
   cycle: true  # Wrap around at end
 
 # Select previous option
-service: input_select.select_previous
+action: input_select.select_previous
 target:
   entity_id: input_select.home_mode
 
 # Set options dynamically
-service: input_select.set_options
+action: input_select.set_options
 target:
   entity_id: input_select.playlist
 data:
@@ -340,17 +340,17 @@ data:
 automation:
   - id: home_mode_changed
     alias: Home Mode Changed
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: input_select.home_mode
-    action:
+    actions:
       - choose:
           - conditions:
               - condition: state
                 entity_id: input_select.home_mode
                 state: Away
             sequence:
-              - service: script.turn_on
+              - action: script.turn_on
                 target:
                   entity_id: script.away_mode
           - conditions:
@@ -358,7 +358,7 @@ automation:
                 entity_id: input_select.home_mode
                 state: Night
             sequence:
-              - service: script.turn_on
+              - action: script.turn_on
                 target:
                   entity_id: script.night_mode
 ```
@@ -437,7 +437,7 @@ input_text:
 
 ```yaml
 # Set value
-service: input_text.set_value
+action: input_text.set_value
 target:
   entity_id: input_text.notification_message
 data:
@@ -448,15 +448,15 @@ data:
 
 ```yaml
 # Use text in notification
-action:
-  - service: notify.mobile_app
+actions:
+  - action: notify.mobile_app
     data:
       title: "Home Assistant"
       message: "{{ states('input_text.notification_message') }}"
 
 # Dynamic message
-action:
-  - service: input_text.set_value
+actions:
+  - action: input_text.set_value
     target:
       entity_id: input_text.current_activity
     data:
@@ -552,28 +552,28 @@ input_datetime:
 
 ```yaml
 # Set datetime
-service: input_datetime.set_datetime
+action: input_datetime.set_datetime
 target:
   entity_id: input_datetime.morning_alarm
 data:
   time: "07:30:00"
 
 # Set with date
-service: input_datetime.set_datetime
+action: input_datetime.set_datetime
 target:
   entity_id: input_datetime.vacation_start
 data:
   date: "2024-06-15"
 
 # Set full datetime
-service: input_datetime.set_datetime
+action: input_datetime.set_datetime
 target:
   entity_id: input_datetime.next_appointment
 data:
   datetime: "2024-06-15 14:30:00"
 
 # Set from timestamp
-service: input_datetime.set_datetime
+action: input_datetime.set_datetime
 target:
   entity_id: input_datetime.last_event
 data:
@@ -587,16 +587,16 @@ data:
 automation:
   - id: morning_alarm
     alias: Morning Alarm
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: input_datetime.morning_alarm
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.bedroom
 
 # Check if date is today
-condition:
+conditions:
   - condition: template
     value_template: >
       {{ states('input_datetime.vacation_start') == now().strftime('%Y-%m-%d') }}
@@ -649,7 +649,7 @@ input_button:
 
 ```yaml
 # Press button
-service: input_button.press
+action: input_button.press
 target:
   entity_id: input_button.restart_router
 ```
@@ -661,15 +661,15 @@ target:
 automation:
   - id: button_restart_router
     alias: Restart Router Button
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: input_button.restart_router
-    action:
-      - service: switch.turn_off
+    actions:
+      - action: switch.turn_off
         target:
           entity_id: switch.router_power
       - delay: "00:00:10"
-      - service: switch.turn_on
+      - action: switch.turn_on
         target:
           entity_id: switch.router_power
 ```
@@ -726,22 +726,22 @@ counter:
 
 ```yaml
 # Increment
-service: counter.increment
+action: counter.increment
 target:
   entity_id: counter.coffee_count
 
 # Decrement
-service: counter.decrement
+action: counter.decrement
 target:
   entity_id: counter.coffee_count
 
 # Reset to initial
-service: counter.reset
+action: counter.reset
 target:
   entity_id: counter.coffee_count
 
 # Set specific value
-service: counter.set_value
+action: counter.set_value
 target:
   entity_id: counter.coffee_count
 data:
@@ -755,12 +755,12 @@ data:
 automation:
   - id: count_door_open
     alias: Count Door Openings
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.front_door
         to: "on"
-    action:
-      - service: counter.increment
+    actions:
+      - action: counter.increment
         target:
           entity_id: counter.door_openings
 
@@ -768,11 +768,11 @@ automation:
 automation:
   - id: reset_daily_counters
     alias: Reset Daily Counters
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "00:00:00"
-    action:
-      - service: counter.reset
+    actions:
+      - action: counter.reset
         target:
           entity_id:
             - counter.coffee_count
@@ -836,34 +836,34 @@ timer:
 
 ```yaml
 # Start timer (uses default duration)
-service: timer.start
+action: timer.start
 target:
   entity_id: timer.laundry
 
 # Start with custom duration
-service: timer.start
+action: timer.start
 target:
   entity_id: timer.cooking
 data:
   duration: "00:45:00"
 
 # Pause timer
-service: timer.pause
+action: timer.pause
 target:
   entity_id: timer.laundry
 
 # Cancel timer
-service: timer.cancel
+action: timer.cancel
 target:
   entity_id: timer.laundry
 
 # Finish timer (triggers finished event)
-service: timer.finish
+action: timer.finish
 target:
   entity_id: timer.laundry
 
 # Change duration while running
-service: timer.change
+action: timer.change
 target:
   entity_id: timer.laundry
 data:
@@ -885,27 +885,27 @@ data:
 automation:
   - id: laundry_done
     alias: Laundry Done Notification
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: timer.finished
         event_data:
           entity_id: timer.laundry
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "Laundry"
           message: "Laundry is done!"
 
 # Trigger on timer started
-trigger:
-  - platform: event
+triggers:
+  - trigger: event
     event_type: timer.started
     event_data:
       entity_id: timer.cooking
 
 # Trigger on timer cancelled
-trigger:
-  - platform: event
+triggers:
+  - trigger: event
     event_type: timer.cancelled
     event_data:
       entity_id: timer.cooking
@@ -1015,7 +1015,7 @@ schedule:
 
 ```yaml
 # State is "on" when within schedule, "off" otherwise
-condition:
+conditions:
   - condition: state
     entity_id: schedule.work_hours
     state: "on"
@@ -1028,17 +1028,17 @@ condition:
 automation:
   - id: heating_schedule
     alias: Heating Schedule
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: schedule.thermostat_schedule
-    action:
+    actions:
       - choose:
           - conditions:
               - condition: state
                 entity_id: schedule.thermostat_schedule
                 state: "on"
             sequence:
-              - service: climate.set_preset_mode
+              - action: climate.set_preset_mode
                 target:
                   entity_id: climate.living_room
                 data:
@@ -1048,7 +1048,7 @@ automation:
                 entity_id: schedule.thermostat_schedule
                 state: "off"
             sequence:
-              - service: climate.set_preset_mode
+              - action: climate.set_preset_mode
                 target:
                   entity_id: climate.living_room
                 data:
@@ -1100,38 +1100,38 @@ template:
 ### As Trigger
 
 ```yaml
-trigger:
+triggers:
   # Boolean changed
-  - platform: state
+  - trigger: state
     entity_id: input_boolean.vacation_mode
     to: "on"
 
   # Select changed to specific value
-  - platform: state
+  - trigger: state
     entity_id: input_select.home_mode
     to: "Away"
 
   # Number crossed threshold
-  - platform: numeric_state
+  - trigger: numeric_state
     entity_id: input_number.target_temperature
     above: 25
 
   # At input time
-  - platform: time
+  - trigger: time
     at: input_datetime.morning_alarm
 
   # Timer finished
-  - platform: event
+  - trigger: event
     event_type: timer.finished
     event_data:
       entity_id: timer.laundry
 
   # Button pressed
-  - platform: state
+  - trigger: state
     entity_id: input_button.run_vacuum
 
   # Schedule became active
-  - platform: state
+  - trigger: state
     entity_id: schedule.work_hours
     to: "on"
 ```
@@ -1139,7 +1139,7 @@ trigger:
 ### As Condition
 
 ```yaml
-condition:
+conditions:
   # Boolean is on
   - condition: state
     entity_id: input_boolean.notifications_enabled
@@ -1170,28 +1170,28 @@ condition:
 ### As Action Data
 
 ```yaml
-action:
+actions:
   # Use number value
-  - service: light.turn_on
+  - action: light.turn_on
     target:
       entity_id: light.living_room
     data:
       brightness_pct: "{{ states('input_number.brightness') | int }}"
 
   # Use text value
-  - service: notify.mobile_app
+  - action: notify.mobile_app
     data:
       message: "{{ states('input_text.welcome_message') }}"
 
   # Use datetime
-  - service: input_datetime.set_datetime
+  - action: input_datetime.set_datetime
     target:
       entity_id: input_datetime.last_run
     data:
       timestamp: "{{ as_timestamp(now()) }}"
 
   # Use select value
-  - service: scene.turn_on
+  - action: scene.turn_on
     target:
       entity_id: "scene.{{ states('input_select.lighting_scene') | lower | replace(' ', '_') }}"
 ```
@@ -1215,17 +1215,17 @@ input_select:
 automation:
   - id: mode_based_lights
     alias: Mode-Based Lighting
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: input_select.home_mode
-    action:
+    actions:
       - choose:
           - conditions:
               - condition: state
                 entity_id: input_select.home_mode
                 state: Away
             sequence:
-              - service: light.turn_off
+              - action: light.turn_off
                 target:
                   entity_id: all
           - conditions:
@@ -1233,10 +1233,10 @@ automation:
                 entity_id: input_select.home_mode
                 state: Night
             sequence:
-              - service: light.turn_off
+              - action: light.turn_off
                 target:
                   area_id: living_room
-              - service: light.turn_on
+              - action: light.turn_on
                 target:
                   entity_id: light.hallway_night
                 data:
@@ -1259,17 +1259,17 @@ automation:
   - id: motion_light
     alias: Motion Light
     mode: restart
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "on"
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.hallway
       - delay:
           minutes: "{{ states('input_number.motion_timeout') | int }}"
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id: light.hallway
 ```
@@ -1284,20 +1284,20 @@ timer:
 automation:
   - id: door_notification
     alias: Door Left Open
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.front_door
         to: "on"
         for: "00:10:00"
-    condition:
+    conditions:
       - condition: state
         entity_id: timer.notification_cooldown
         state: "idle"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "Front door has been open for 10 minutes"
-      - service: timer.start
+      - action: timer.start
         target:
           entity_id: timer.notification_cooldown
 ```
@@ -1313,11 +1313,11 @@ counter:
 automation:
   - id: reset_daily_counter
     alias: Reset Daily Counter
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "00:00:00"
-    action:
-      - service: counter.reset
+    actions:
+      - action: counter.reset
         target:
           entity_id: counter.daily_notifications
 ```
@@ -1338,14 +1338,14 @@ input_datetime:
 automation:
   - id: wake_up_routine
     alias: Wake Up Routine
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: input_datetime.weekday_wake
         id: weekday
-      - platform: time
+      - trigger: time
         at: input_datetime.weekend_wake
         id: weekend
-    condition:
+    conditions:
       - condition: or
         conditions:
           - condition: and
@@ -1367,8 +1367,8 @@ automation:
                 weekday:
                   - sat
                   - sun
-    action:
-      - service: script.turn_on
+    actions:
+      - action: script.turn_on
         target:
           entity_id: script.wake_up_routine
 ```
@@ -1510,13 +1510,13 @@ input_number:
 automation:
   - id: debug_helper_changes
     alias: Debug Helper Changes
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id:
           - input_boolean.test_helper
           - input_number.test_helper
-    action:
-      - service: system_log.write
+    actions:
+      - action: system_log.write
         data:
           message: >
             Helper {{ trigger.entity_id }} changed from
@@ -1528,7 +1528,7 @@ automation:
 
 ```yaml
 # Test in Developer Tools > Services
-service: input_boolean.turn_on
+action: input_boolean.turn_on
 data: {}
 target:
   entity_id: input_boolean.test

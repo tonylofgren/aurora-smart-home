@@ -92,13 +92,13 @@ shelly:
 
 automation:
   - alias: "Garage light timer"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: switch.shelly_garage_switch_0
         to: "on"
-    action:
+    actions:
       - delay: "00:15:00"
-      - service: switch.turn_off
+      - action: switch.turn_off
         target:
           entity_id: switch.shelly_garage_switch_0
 ```
@@ -111,11 +111,11 @@ automation:
 
 automation:
   - alias: "All lights off"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "23:00:00"
-    action:
-      - service: switch.turn_off
+    actions:
+      - action: switch.turn_off
         target:
           entity_id:
             - switch.shelly_switch_0
@@ -130,11 +130,11 @@ automation:
 
 automation:
   - alias: "Evening dimming"
-    trigger:
-      - platform: sun
+    triggers:
+      - trigger: sun
         event: sunset
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.shelly_dimmer_0
         data:
@@ -150,11 +150,11 @@ automation:
 
 automation:
   - alias: "Colorful evening"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "20:00:00"
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.shelly_rgbw2_0
         data:
@@ -172,12 +172,12 @@ automation:
 # Monitor solar production
 automation:
   - alias: "High solar production alert"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.shelly_em_channel_1_power
         above: 3000
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "Solar producing {{ states('sensor.shelly_em_channel_1_power') }}W"
 ```
@@ -192,12 +192,12 @@ automation:
 
 automation:
   - alias: "Temperature alert"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.shelly_ht_temperature
         above: 28
-    action:
-      - service: climate.set_hvac_mode
+    actions:
+      - action: climate.set_hvac_mode
         target:
           entity_id: climate.living_room
         data:
@@ -212,16 +212,16 @@ automation:
 
 automation:
   - alias: "Motion-activated light"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.shelly_motion_motion
         to: "on"
-    condition:
+    conditions:
       - condition: numeric_state
         entity_id: sensor.shelly_motion_lux
         below: 50
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.hallway
 ```
@@ -234,23 +234,23 @@ automation:
 
 automation:
   - alias: "Open blinds at sunrise"
-    trigger:
-      - platform: sun
+    triggers:
+      - trigger: sun
         event: sunrise
         offset: "00:30:00"
-    action:
-      - service: cover.open_cover
+    actions:
+      - action: cover.open_cover
         target:
           entity_id: cover.shelly_roller
 
 # Position control
 automation:
   - alias: "Afternoon shade"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "14:00:00"
-    action:
-      - service: cover.set_cover_position
+    actions:
+      - action: cover.set_cover_position
         target:
           entity_id: cover.shelly_roller
         data:
@@ -277,46 +277,46 @@ Shelly devices expose button/input events as device triggers.
 ```yaml
 automation:
   - alias: "Shelly button scenes"
-    trigger:
-      - platform: device
+    triggers:
+      - trigger: device
         domain: shelly
         device_id: abc123...
         type: single
         subtype: button1
         id: single
-      - platform: device
+      - trigger: device
         domain: shelly
         device_id: abc123...
         type: double
         subtype: button1
         id: double
-      - platform: device
+      - trigger: device
         domain: shelly
         device_id: abc123...
         type: long
         subtype: button1
         id: long
-    action:
+    actions:
       - choose:
           - conditions:
               - condition: trigger
                 id: single
             sequence:
-              - service: light.toggle
+              - action: light.toggle
                 target:
                   entity_id: light.living_room
           - conditions:
               - condition: trigger
                 id: double
             sequence:
-              - service: scene.turn_on
+              - action: scene.turn_on
                 target:
                   entity_id: scene.movie_mode
           - conditions:
               - condition: trigger
                 id: long
             sequence:
-              - service: light.turn_off
+              - action: light.turn_off
                 target:
                   entity_id: all
 ```
@@ -343,33 +343,33 @@ sensor.shelly_plus_1pm_current     # Current (A)
 # Appliance state detection
 automation:
   - alias: "Washing machine finished"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.shelly_washer_power
         below: 5
         for: "00:02:00"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_boolean.washer_running
         state: "on"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "Washing machine finished!"
-      - service: input_boolean.turn_off
+      - action: input_boolean.turn_off
         target:
           entity_id: input_boolean.washer_running
 
 # Power threshold alert
 automation:
   - alias: "High power consumption"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.shelly_main_power
         above: 3000
         for: "00:05:00"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "High power consumption: {{ states('sensor.shelly_main_power') }}W"
 ```
@@ -408,11 +408,11 @@ shellies/<device-id>/relay/0/command
 # Direct MQTT control
 automation:
   - alias: "MQTT switch control"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: input_boolean.garage_light
-    action:
-      - service: mqtt.publish
+    actions:
+      - action: mqtt.publish
         data:
           topic: "shellies/shelly1-123456/relay/0/command"
           payload: "{{ 'on' if trigger.to_state.state == 'on' else 'off' }}"

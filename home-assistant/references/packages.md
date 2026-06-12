@@ -69,16 +69,16 @@ input_number:
 automation:
   - id: pkg_motion_light
     alias: "[Lighting] Motion Light"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "on"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_boolean.motion_lights_enabled
         state: "on"
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.hallway
 
@@ -87,7 +87,7 @@ script:
   all_lights_off:
     alias: "[Lighting] All Lights Off"
     sequence:
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id: all
 ```
@@ -151,10 +151,10 @@ template:
 automation:
   - id: pkg_climate_morning
     alias: "[Climate] Morning Schedule"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: input_datetime.climate_morning_time
-    condition:
+    conditions:
       - condition: state
         entity_id: input_boolean.climate_schedule_enabled
         state: "on"
@@ -165,8 +165,8 @@ automation:
           - wed
           - thu
           - fri
-    action:
-      - service: climate.set_temperature
+    actions:
+      - action: climate.set_temperature
         target:
           entity_id: climate.living_room
         data:
@@ -174,15 +174,15 @@ automation:
 
   - id: pkg_climate_night
     alias: "[Climate] Night Setback"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: input_datetime.climate_night_time
-    condition:
+    conditions:
       - condition: state
         entity_id: input_boolean.climate_schedule_enabled
         state: "on"
-    action:
-      - service: climate.set_temperature
+    actions:
+      - action: climate.set_temperature
         target:
           entity_id: climate.living_room
         data:
@@ -190,11 +190,11 @@ automation:
 
   - id: pkg_climate_away
     alias: "[Climate] Away Mode Changed"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: input_boolean.climate_away_mode
-    action:
-      - service: climate.set_temperature
+    actions:
+      - action: climate.set_temperature
         target:
           entity_id: climate.living_room
         data:
@@ -210,13 +210,13 @@ script:
   climate_boost:
     alias: "[Climate] Boost Mode"
     sequence:
-      - service: climate.set_temperature
+      - action: climate.set_temperature
         target:
           entity_id: climate.living_room
         data:
           temperature: 24
       - delay: "01:00:00"
-      - service: climate.set_temperature
+      - action: climate.set_temperature
         target:
           entity_id: climate.living_room
         data:
@@ -427,50 +427,50 @@ input_datetime:
 automation:
   - id: pkg_vacation_auto_enable
     alias: "[Vacation] Auto Enable"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "00:00:00"
-    condition:
+    conditions:
       - condition: template
         value_template: >
           {{ states('input_datetime.vacation_start') == now().strftime('%Y-%m-%d') }}
-    action:
-      - service: input_boolean.turn_on
+    actions:
+      - action: input_boolean.turn_on
         target:
           entity_id: input_boolean.vacation_mode
 
   - id: pkg_vacation_auto_disable
     alias: "[Vacation] Auto Disable"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "00:00:00"
-    condition:
+    conditions:
       - condition: template
         value_template: >
           {{ states('input_datetime.vacation_end') == now().strftime('%Y-%m-%d') }}
-    action:
-      - service: input_boolean.turn_off
+    actions:
+      - action: input_boolean.turn_off
         target:
           entity_id: input_boolean.vacation_mode
 
   - id: pkg_vacation_lights_simulation
     alias: "[Vacation] Light Simulation"
-    trigger:
-      - platform: sun
+    triggers:
+      - trigger: sun
         event: sunset
-    condition:
+    conditions:
       - condition: state
         entity_id: input_boolean.vacation_mode
         state: "on"
-    action:
+    actions:
       - delay:
           minutes: "{{ range(5, 30) | random }}"
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.living_room
       - delay:
           minutes: "{{ range(60, 180) | random }}"
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id: light.living_room
 
@@ -478,15 +478,15 @@ script:
   vacation_quick_enable:
     alias: "[Vacation] Quick Enable"
     sequence:
-      - service: input_boolean.turn_on
+      - action: input_boolean.turn_on
         target:
           entity_id: input_boolean.vacation_mode
-      - service: climate.set_preset_mode
+      - action: climate.set_preset_mode
         target:
           entity_id: climate.thermostat
         data:
           preset_mode: away
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           message: "Vacation mode enabled"
 ```
@@ -510,43 +510,43 @@ input_text:
 automation:
   - id: pkg_guest_mode_on
     alias: "[Guest] Mode Activated"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: input_boolean.guest_mode
         to: "on"
-    action:
+    actions:
       # Unlock smart lock temporarily
-      - service: lock.unlock
+      - action: lock.unlock
         target:
           entity_id: lock.front_door
       # Set comfortable temperature
-      - service: climate.set_temperature
+      - action: climate.set_temperature
         target:
           entity_id: climate.living_room
         data:
           temperature: 22
       # Turn on guest room light
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.guest_room
         data:
           brightness_pct: 80
       # Disable motion-triggered alarms
-      - service: input_boolean.turn_off
+      - action: input_boolean.turn_off
         target:
           entity_id: input_boolean.motion_alarms_enabled
 
   - id: pkg_guest_mode_off
     alias: "[Guest] Mode Deactivated"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: input_boolean.guest_mode
         to: "off"
-    action:
-      - service: input_boolean.turn_on
+    actions:
+      - action: input_boolean.turn_on
         target:
           entity_id: input_boolean.motion_alarms_enabled
-      - service: lock.lock
+      - action: lock.lock
         target:
           entity_id: lock.front_door
 
@@ -554,7 +554,7 @@ script:
   guest_welcome:
     alias: "[Guest] Welcome Announcement"
     sequence:
-      - service: tts.speak
+      - action: tts.speak
         target:
           entity_id: tts.google
         data:
@@ -600,11 +600,11 @@ counter:
 automation:
   - id: pkg_notify_reset_counter
     alias: "[Notify] Reset Daily Counter"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "00:00:00"
-    action:
-      - service: counter.reset
+    actions:
+      - action: counter.reset
         target:
           entity_id: counter.daily_notifications
 
@@ -641,10 +641,10 @@ script:
                 value_template: "{{ priority != 'critical' }}"
             sequence:
               - stop: "Only critical notifications allowed"
-      - service: counter.increment
+      - action: counter.increment
         target:
           entity_id: counter.daily_notifications
-      - service: notify.mobile_app_phone
+      - action: notify.mobile_app_phone
         data:
           title: "{{ title }}"
           message: "{{ message }}"
@@ -702,17 +702,17 @@ automation: !include lighting/automations.yaml
 automation:
   - id: pkg_security_alert
     alias: "[Security] Motion Alert"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "on"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_boolean.alarm_armed
         state: "on"
-    action:
+    actions:
       # Uses script from notifications.yaml
-      - service: script.notify_family
+      - action: script.notify_family
         data:
           title: "Security Alert"
           message: "Motion detected!"
@@ -922,8 +922,8 @@ input_boolean:
 
 # Error: Entity not found
 # Automation references entity from another package not loaded
-action:
-  - service: script.other_package_script
+actions:
+  - action: script.other_package_script
     # May fail if other package has error
 
 # Fix: Check dependent packages load correctly

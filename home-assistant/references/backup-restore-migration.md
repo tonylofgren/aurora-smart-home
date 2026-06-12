@@ -82,39 +82,39 @@ automation:
   - id: daily_backup
     alias: "System - Daily Backup"
     description: "Create daily automated backup"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "03:00:00"
-    action:
-      - service: backup.create
+    actions:
+      - action: backup.create
         data:
           name: "daily_{{ now().strftime('%Y%m%d') }}"
 
   - id: weekly_full_backup
     alias: "System - Weekly Full Backup"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "03:00:00"
-    condition:
+    conditions:
       - condition: time
         weekday:
           - sun
-    action:
-      - service: backup.create
+    actions:
+      - action: backup.create
         data:
           name: "weekly_full_{{ now().strftime('%Y%m%d') }}"
 
   - id: pre_update_backup
     alias: "System - Pre-Update Backup"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: update.home_assistant_core_update
         to: "on"
-    action:
-      - service: backup.create
+    actions:
+      - action: backup.create
         data:
           name: "pre_update_{{ state_attr('update.home_assistant_core_update', 'latest_version') }}"
-      - service: notify.admin
+      - action: notify.admin
         data:
           title: "Update Available"
           message: >
@@ -130,11 +130,11 @@ script:
   managed_backup:
     alias: "Create Managed Backup"
     sequence:
-      - service: backup.create
+      - action: backup.create
         data:
           name: "auto_{{ now().strftime('%Y%m%d_%H%M') }}"
       # Note: Automatic cleanup requires shell commands or custom component
-      - service: notify.admin
+      - action: notify.admin
         data:
           message: "Backup created. Remember to periodically clean old backups."
 ```
@@ -160,12 +160,12 @@ template:
 automation:
   - id: backup_overdue_alert
     alias: "System - Backup Overdue Alert"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.last_backup_age
         above: 48
-    action:
-      - service: notify.admin
+    actions:
+      - action: notify.admin
         data:
           title: "Backup Overdue"
           message: "No backup in {{ states('sensor.last_backup_age') }} hours. Please create a backup."
@@ -195,12 +195,12 @@ automation:
 automation:
   - id: upload_backup_to_drive
     alias: "System - Upload to Google Drive"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: backup_successful
-    action:
+    actions:
       - delay: "00:05:00"  # Wait for backup to complete
-      - service: hassio.addon_stdin
+      - action: hassio.addon_stdin
         data:
           addon: cebe7a76_hassio_google_drive_backup
           input:
@@ -220,11 +220,11 @@ shell_command:
 automation:
   - id: sync_to_dropbox
     alias: "System - Sync Backups to Dropbox"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "04:00:00"
-    action:
-      - service: shell_command.backup_to_dropbox
+    actions:
+      - action: shell_command.backup_to_dropbox
 ```
 
 ### Network Share (Samba/NFS)
@@ -241,19 +241,19 @@ shell_command:
 automation:
   - id: backup_to_nas
     alias: "System - Copy Backup to NAS"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "04:00:00"
-    condition:
+    conditions:
       - condition: time
         weekday:
           - sun
-    action:
-      - service: backup.create
+    actions:
+      - action: backup.create
         data:
           name: "nas_backup_{{ now().strftime('%Y%m%d') }}"
       - delay: "00:30:00"  # Wait for backup
-      - service: shell_command.copy_backup_to_nas
+      - action: shell_command.copy_backup_to_nas
 ```
 
 ### AWS S3 Backup
@@ -503,7 +503,7 @@ recorder:
 
 ```yaml
 # Service call
-service: recorder.purge
+action: recorder.purge
 data:
   keep_days: 5
   repack: true
@@ -512,15 +512,15 @@ data:
 automation:
   - id: database_maintenance
     alias: "System - Database Maintenance"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "04:00:00"
-    condition:
+    conditions:
       - condition: time
         weekday:
           - sun
-    action:
-      - service: recorder.purge
+    actions:
+      - action: recorder.purge
         data:
           keep_days: 10
           repack: true
@@ -629,11 +629,11 @@ shell_command:
 automation:
   - id: config_snapshot_daily
     alias: "System - Daily Config Snapshot"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "23:00:00"
-    action:
-      - service: shell_command.git_commit
+    actions:
+      - action: shell_command.git_commit
 ```
 
 ### Manual Snapshots
@@ -644,8 +644,8 @@ script:
   config_snapshot:
     alias: "Create Config Snapshot"
     sequence:
-      - service: shell_command.git_commit
-      - service: notify.admin
+      - action: shell_command.git_commit
+      - action: notify.admin
         data:
           message: "Configuration snapshot created"
 ```
@@ -838,17 +838,17 @@ zwave_controller: "Aeotec Z-Stick 7 on /dev/ttyUSB1"
 automation:
   - id: backup_health_check
     alias: "System - Backup Health Check"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "09:00:00"
-    action:
+    actions:
       - choose:
           - conditions:
               - condition: numeric_state
                 entity_id: sensor.last_backup_age
                 above: 48
             sequence:
-              - service: notify.admin
+              - action: notify.admin
                 data:
                   title: "Backup Warning"
                   message: "No backup in {{ states('sensor.last_backup_age') | round }} hours"
@@ -857,7 +857,7 @@ automation:
                 entity_id: sensor.backup_count
                 below: 3
             sequence:
-              - service: notify.admin
+              - action: notify.admin
                 data:
                   title: "Backup Warning"
                   message: "Only {{ states('sensor.backup_count') }} backups stored"
@@ -914,7 +914,7 @@ recorder:
       - media_player
 
 # Force purge
-service: recorder.purge
+action: recorder.purge
 data:
   keep_days: 3
   repack: true

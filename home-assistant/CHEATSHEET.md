@@ -10,20 +10,20 @@ automation:
     id: unique_id_here
     description: "What this automation does"
     mode: single  # single, restart, queued, parallel
-    trigger:
+    triggers:
       - ...
-    condition:
+    conditions:
       - ...
-    action:
+    actions:
       - ...
 ```
 
 ## Common Triggers
 
 ```yaml
-trigger:
+triggers:
   # State change
-  - platform: state
+  - trigger: state
     entity_id: binary_sensor.motion
     to: "on"
     from: "off"
@@ -31,16 +31,16 @@ trigger:
       minutes: 5
 
   # Time
-  - platform: time
+  - trigger: time
     at: "07:00:00"
 
   # Sun
-  - platform: sun
+  - trigger: sun
     event: sunset
     offset: "-00:30:00"
 
   # Numeric threshold
-  - platform: numeric_state
+  - trigger: numeric_state
     entity_id: sensor.temperature
     above: 25
     below: 30
@@ -48,32 +48,32 @@ trigger:
       minutes: 10
 
   # Template
-  - platform: template
+  - trigger: template
     value_template: "{{ states('sensor.power') | float > 1000 }}"
     for:
       minutes: 5
 
   # Zone
-  - platform: zone
+  - trigger: zone
     entity_id: device_tracker.phone
     zone: zone.home
     event: enter  # enter or leave
 
   # Event
-  - platform: event
+  - trigger: event
     event_type: esphome.doorbell_pressed
 
   # Webhook
-  - platform: webhook
+  - trigger: webhook
     webhook_id: my_webhook_id
 
   # MQTT
-  - platform: mqtt
+  - trigger: mqtt
     topic: "home/sensor/motion"
     payload: "ON"
 
   # Device trigger
-  - platform: device
+  - trigger: device
     device_id: abc123
     domain: zha
     type: remote_button_short_press
@@ -83,7 +83,7 @@ trigger:
 ## Common Conditions
 
 ```yaml
-condition:
+conditions:
   # State
   - condition: state
     entity_id: input_boolean.enabled
@@ -148,9 +148,9 @@ condition:
 ## Common Actions
 
 ```yaml
-action:
+actions:
   # Service call
-  - service: light.turn_on
+  - action: light.turn_on
     target:
       entity_id: light.living_room
     data:
@@ -158,7 +158,7 @@ action:
       color_temp: 300
 
   # Multiple targets
-  - service: switch.turn_off
+  - action: switch.turn_off
     target:
       entity_id:
         - switch.fan
@@ -171,7 +171,7 @@ action:
 
   # Wait for trigger
   - wait_for_trigger:
-      - platform: state
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "off"
     timeout:
@@ -190,7 +190,7 @@ action:
             entity_id: input_select.mode
             state: "home"
         sequence:
-          - service: light.turn_on
+          - action: light.turn_on
             target:
               entity_id: light.all
       - conditions:
@@ -198,11 +198,11 @@ action:
             entity_id: input_select.mode
             state: "away"
         sequence:
-          - service: light.turn_off
+          - action: light.turn_off
             target:
               entity_id: light.all
     default:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.hall
 
@@ -210,7 +210,7 @@ action:
   - repeat:
       count: 3
       sequence:
-        - service: light.toggle
+        - action: light.toggle
           target:
             entity_id: light.alert
         - delay:
@@ -227,25 +227,25 @@ action:
             seconds: 1
 
   # Notification
-  - service: notify.notify
+  - action: notify.notify
     data:
       title: "Alert"
       message: "Something happened!"
 
   # Scene
-  - service: scene.turn_on
+  - action: scene.turn_on
     target:
       entity_id: scene.movie_time
 
   # Script
-  - service: script.my_script
+  - action: script.my_script
     data:
       parameter: value
 
   # Variables
   - variables:
       brightness: "{{ states('input_number.brightness') | int }}"
-  - service: light.turn_on
+  - action: light.turn_on
     data:
       brightness: "{{ brightness }}"
 ```
@@ -376,14 +376,14 @@ script:
       - repeat:
           count: 3
           sequence:
-            - service: light.turn_on
+            - action: light.turn_on
               target:
                 entity_id: "{{ light_entity }}"
               data:
                 brightness: 255
             - delay:
                 milliseconds: 500
-            - service: light.turn_off
+            - action: light.turn_off
               target:
                 entity_id: "{{ light_entity }}"
             - delay:
@@ -398,7 +398,7 @@ script:
 
 ```yaml
 # Mobile notification with action
-- service: notify.mobile_app_phone
+- action: notify.mobile_app_phone
   data:
     title: "Door Open"
     message: "Front door has been open for 5 minutes"
@@ -410,14 +410,14 @@ script:
           title: "Lock Door"
 
 # TTS announcement
-- service: tts.google_translate_say
+- action: tts.google_translate_say
   target:
     entity_id: media_player.speaker
   data:
     message: "Welcome home!"
 
 # Persistent notification
-- service: persistent_notification.create
+- action: persistent_notification.create
   data:
     title: "Reminder"
     message: "Check the garage door"
@@ -452,21 +452,21 @@ blueprint:
           max: 600
           unit_of_measurement: seconds
 
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: !input motion_sensor
     to: "on"
 
-action:
-  - service: light.turn_on
+actions:
+  - action: light.turn_on
     target: !input light_target
   - wait_for_trigger:
-      - platform: state
+      - trigger: state
         entity_id: !input motion_sensor
         to: "off"
   - delay:
       seconds: !input delay_time
-  - service: light.turn_off
+  - action: light.turn_off
     target: !input light_target
 ```
 
@@ -474,13 +474,13 @@ action:
 
 ```yaml
 # Log custom message
-- service: system_log.write
+- action: system_log.write
   data:
     message: "Debug: {{ states('sensor.test') }}"
     level: warning
 
 # Create persistent notification for debugging
-- service: persistent_notification.create
+- action: persistent_notification.create
   data:
     message: "Trigger: {{ trigger.to_state.state }}"
 ```

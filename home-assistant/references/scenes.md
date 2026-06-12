@@ -296,8 +296,8 @@ scene:
 
 ```yaml
 # Create scene dynamically
-action:
-  - service: scene.create
+actions:
+  - action: scene.create
     data:
       scene_id: snapshot_before_party
       snapshot_entities:
@@ -315,8 +315,8 @@ Snapshots capture the current state of entities to restore later.
 ### Create Snapshot
 
 ```yaml
-action:
-  - service: scene.create
+actions:
+  - action: scene.create
     data:
       scene_id: before_guest_mode
       snapshot_entities:
@@ -329,8 +329,8 @@ action:
 ### Restore Snapshot
 
 ```yaml
-action:
-  - service: scene.turn_on
+actions:
+  - action: scene.turn_on
     target:
       entity_id: scene.before_guest_mode
 ```
@@ -341,32 +341,32 @@ action:
 automation:
   - id: guest_mode_on
     alias: Guest Mode On
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: input_boolean.guest_mode
         to: "on"
-    action:
+    actions:
       # Save current state
-      - service: scene.create
+      - action: scene.create
         data:
           scene_id: before_guest
           snapshot_entities:
             - light.living_room
             - light.guest_room
       # Apply guest settings
-      - service: scene.turn_on
+      - action: scene.turn_on
         target:
           entity_id: scene.guest_mode_preset
 
   - id: guest_mode_off
     alias: Guest Mode Off
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: input_boolean.guest_mode
         to: "off"
-    action:
+    actions:
       # Restore previous state
-      - service: scene.turn_on
+      - action: scene.turn_on
         target:
           entity_id: scene.before_guest
 ```
@@ -375,8 +375,8 @@ automation:
 
 ```yaml
 # Snapshot all lights in an area
-action:
-  - service: scene.create
+actions:
+  - action: scene.create
     data:
       scene_id: living_room_snapshot
       snapshot_entities: >
@@ -410,8 +410,8 @@ scene:
 ### When Activating
 
 ```yaml
-action:
-  - service: scene.turn_on
+actions:
+  - action: scene.turn_on
     target:
       entity_id: scene.evening
     data:
@@ -422,14 +422,14 @@ action:
 
 ```yaml
 # Gradually change across multiple scenes
-action:
-  - service: scene.turn_on
+actions:
+  - action: scene.turn_on
     target:
       entity_id: scene.sunset_1
     data:
       transition: 300  # 5 minutes
   - delay: "00:05:00"
-  - service: scene.turn_on
+  - action: scene.turn_on
     target:
       entity_id: scene.sunset_2
     data:
@@ -444,8 +444,8 @@ action:
 
 ```yaml
 # Use templates to determine scene content
-action:
-  - service: scene.apply
+actions:
+  - action: scene.apply
     data:
       entities:
         light.living_room:
@@ -461,8 +461,8 @@ action:
 ### Conditional Scene Selection
 
 ```yaml
-action:
-  - service: scene.turn_on
+actions:
+  - action: scene.turn_on
     target:
       entity_id: >
         {% if is_state('sun.sun', 'below_horizon') %}
@@ -485,11 +485,11 @@ input_select:
 
 automation:
   - id: apply_scene_from_select
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: input_select.lighting_scene
-    action:
-      - service: scene.turn_on
+    actions:
+      - action: scene.turn_on
         target:
           entity_id: "scene.{{ states('input_select.lighting_scene') | lower }}"
 ```
@@ -501,8 +501,8 @@ automation:
 ### Basic Activation
 
 ```yaml
-action:
-  - service: scene.turn_on
+actions:
+  - action: scene.turn_on
     target:
       entity_id: scene.movie_mode
 ```
@@ -510,8 +510,8 @@ action:
 ### With Transition Override
 
 ```yaml
-action:
-  - service: scene.turn_on
+actions:
+  - action: scene.turn_on
     target:
       entity_id: scene.evening
     data:
@@ -522,8 +522,8 @@ action:
 
 ```yaml
 # Apply scene data without creating scene entity
-action:
-  - service: scene.apply
+actions:
+  - action: scene.apply
     data:
       entities:
         light.living_room:
@@ -536,8 +536,8 @@ action:
 ### Apply with Transition
 
 ```yaml
-action:
-  - service: scene.apply
+actions:
+  - action: scene.apply
     data:
       transition: 5
       entities:
@@ -549,16 +549,16 @@ action:
 ### Multiple Scenes in Sequence
 
 ```yaml
-action:
-  - service: scene.turn_on
+actions:
+  - action: scene.turn_on
     target:
       entity_id: scene.wake_up_1
   - delay: "00:10:00"
-  - service: scene.turn_on
+  - action: scene.turn_on
     target:
       entity_id: scene.wake_up_2
   - delay: "00:10:00"
-  - service: scene.turn_on
+  - action: scene.turn_on
     target:
       entity_id: scene.wake_up_3
 ```
@@ -587,17 +587,17 @@ scene:
 script:
   morning_routine:
     sequence:
-      - service: cover.open_cover
+      - action: cover.open_cover
         target:
           entity_id: cover.bedroom
       - delay: "00:00:05"
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.bedroom
         data:
           brightness_pct: 50
       - delay: "00:05:00"
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.bedroom
         data:
@@ -618,15 +618,15 @@ scene:
 script:
   movie_mode:
     sequence:
-      - service: scene.turn_on
+      - action: scene.turn_on
         target:
           entity_id: scene.movie_lighting
         data:
           transition: 3
-      - service: media_player.turn_on
+      - action: media_player.turn_on
         target:
           entity_id: media_player.tv
-      - service: cover.close_cover
+      - action: cover.close_cover
         target:
           entity_id: cover.living_room
 ```
@@ -665,18 +665,18 @@ scene:
 
 automation:
   - id: auto_scene_time
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "07:00:00"
         id: morning
-      - platform: time
+      - trigger: time
         at: "18:00:00"
         id: evening
-      - platform: time
+      - trigger: time
         at: "22:00:00"
         id: night
-    action:
-      - service: scene.turn_on
+    actions:
+      - action: scene.turn_on
         target:
           entity_id: "scene.{{ trigger.id }}"
         data:
@@ -723,7 +723,7 @@ script:
   temporary_alert:
     sequence:
       # Save current state
-      - service: scene.create
+      - action: scene.create
         data:
           scene_id: before_alert
           snapshot_entities:
@@ -732,19 +732,19 @@ script:
       - repeat:
           count: 3
           sequence:
-            - service: light.turn_on
+            - action: light.turn_on
               target:
                 entity_id: light.all
               data:
                 color_name: red
                 brightness: 255
             - delay: "00:00:01"
-            - service: light.turn_off
+            - action: light.turn_off
               target:
                 entity_id: light.all
             - delay: "00:00:01"
       # Restore previous state
-      - service: scene.turn_on
+      - action: scene.turn_on
         target:
           entity_id: scene.before_alert
 ```
@@ -889,13 +889,13 @@ scene:
 # Log scene activation
 automation:
   - trigger:
-      - platform: event
+      - trigger: event
         event_type: call_service
         event_data:
           domain: scene
           service: turn_on
-    action:
-      - service: system_log.write
+    actions:
+      - action: system_log.write
         data:
           message: "Scene activated: {{ trigger.event.data }}"
           level: info
@@ -940,8 +940,8 @@ entities:
 ```yaml
 # Snapshot entity doesn't exist yet
 # Create it first with any entities
-action:
-  - service: scene.create
+actions:
+  - action: scene.create
     data:
       scene_id: temp_snapshot
       snapshot_entities:
@@ -957,5 +957,5 @@ action:
 # Developer Tools > YAML > Reload Scenes
 
 # Or via service
-service: scene.reload
+action: scene.reload
 ```

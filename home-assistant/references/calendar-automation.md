@@ -40,12 +40,12 @@ Settings → Devices & Services → Add Integration → Local Calendar
 automation:
   - alias: "Add vacation"
     id: add_vacation_event
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: input_boolean.vacation_mode
         to: "on"
-    action:
-      - service: calendar.create_event
+    actions:
+      - action: calendar.create_event
         target:
           entity_id: calendar.vacation
         data:
@@ -62,15 +62,15 @@ automation:
 automation:
   - alias: "Calendar - Event starts"
     id: calendar_event_start
-    trigger:
-      - platform: calendar
+    triggers:
+      - trigger: calendar
         entity_id: calendar.arbetsschema
         event: start
-    action:
-      - service: switch.turn_on
+    actions:
+      - action: switch.turn_on
         target:
           entity_id: switch.office_lights
-      - service: climate.set_temperature
+      - action: climate.set_temperature
         target:
           entity_id: climate.office
         data:
@@ -83,15 +83,15 @@ automation:
 automation:
   - alias: "Calendar - Event ends"
     id: calendar_event_end
-    trigger:
-      - platform: calendar
+    triggers:
+      - trigger: calendar
         entity_id: calendar.arbetsschema
         event: end
-    action:
-      - service: switch.turn_off
+    actions:
+      - action: switch.turn_off
         target:
           entity_id: switch.office_lights
-      - service: climate.set_preset_mode
+      - action: climate.set_preset_mode
         target:
           entity_id: climate.office
         data:
@@ -106,16 +106,16 @@ Trigger before/after an event:
 automation:
   - alias: "Calendar - 30 min before meeting"
     id: calendar_before_meeting
-    trigger:
-      - platform: calendar
+    triggers:
+      - trigger: calendar
         entity_id: calendar.work
         event: start
         offset: "-00:30:00"  # 30 minutes before
-    condition:
+    conditions:
       - condition: template
         value_template: "{{ 'meeting' in trigger.calendar_event.summary.lower() }}"
-    action:
-      - service: notify.mobile_app_tonys_iphone
+    actions:
+      - action: notify.mobile_app_tonys_iphone
         data:
           title: "Meeting soon"
           message: "{{ trigger.calendar_event.summary }} starts in 30 minutes"
@@ -129,12 +129,12 @@ Available data in `trigger.calendar_event`:
 automation:
   - alias: "Calendar - Show event data"
     id: calendar_event_data
-    trigger:
-      - platform: calendar
+    triggers:
+      - trigger: calendar
         entity_id: calendar.home
         event: start
-    action:
-      - service: notify.mobile_app_tonys_iphone
+    actions:
+      - action: notify.mobile_app_tonys_iphone
         data:
           title: "{{ trigger.calendar_event.summary }}"
           message: >
@@ -152,17 +152,17 @@ automation:
 automation:
   - alias: "Only during work hours"
     id: only_work_hours
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "on"
-    condition:
+    conditions:
       # Check if there is an active event
       - condition: state
         entity_id: calendar.work_schedule
         state: "on"
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.office
 ```
@@ -173,16 +173,16 @@ automation:
 automation:
   - alias: "Check specific event"
     id: check_specific_event
-    trigger:
-      - platform: time_pattern
+    triggers:
+      - trigger: time_pattern
         minutes: "/30"
-    condition:
+    conditions:
       - condition: template
         value_template: >
           {% set cal = state_attr('calendar.work_schedule', 'message') %}
           {{ cal is not none and 'remote work' in cal.lower() }}
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.office
 ```
@@ -195,35 +195,35 @@ automation:
 automation:
   - alias: "Vacation - Activate"
     id: vacation_start
-    trigger:
-      - platform: calendar
+    triggers:
+      - trigger: calendar
         entity_id: calendar.vacation
         event: start
-    action:
-      - service: input_boolean.turn_on
+    actions:
+      - action: input_boolean.turn_on
         target:
           entity_id: input_boolean.vacation_mode
-      - service: climate.set_preset_mode
+      - action: climate.set_preset_mode
         target:
           entity_id: all
         data:
           preset_mode: away
-      - service: notify.all_phones
+      - action: notify.all_phones
         data:
           title: "Vacation mode activated"
           message: "The house is now in vacation mode"
 
   - alias: "Vacation - Deactivate"
     id: vacation_end
-    trigger:
-      - platform: calendar
+    triggers:
+      - trigger: calendar
         entity_id: calendar.vacation
         event: end
-    action:
-      - service: input_boolean.turn_off
+    actions:
+      - action: input_boolean.turn_off
         target:
           entity_id: input_boolean.vacation_mode
-      - service: climate.set_preset_mode
+      - action: climate.set_preset_mode
         target:
           entity_id: all
         data:
@@ -244,29 +244,29 @@ automation:
 automation:
   - alias: "Schedule - Morning routine"
     id: schedule_morning
-    trigger:
-      - platform: calendar
+    triggers:
+      - trigger: calendar
         entity_id: calendar.daily_schedule
         event: start
-    condition:
+    conditions:
       - condition: template
         value_template: "{{ trigger.calendar_event.summary == 'Morning' }}"
-    action:
-      - service: scene.turn_on
+    actions:
+      - action: scene.turn_on
         target:
           entity_id: scene.morning
 
   - alias: "Schedule - Night mode"
     id: schedule_night
-    trigger:
-      - platform: calendar
+    triggers:
+      - trigger: calendar
         entity_id: calendar.daily_schedule
         event: start
-    condition:
+    conditions:
       - condition: template
         value_template: "{{ trigger.calendar_event.summary == 'Night' }}"
-    action:
-      - service: scene.turn_on
+    actions:
+      - action: scene.turn_on
         target:
           entity_id: scene.night
 ```
@@ -281,17 +281,17 @@ automation:
 automation:
   - alias: "Waste collection - Reminder"
     id: waste_reminder
-    trigger:
-      - platform: calendar
+    triggers:
+      - trigger: calendar
         entity_id: calendar.waste_collection
         event: start
         offset: "-18:00:00"  # The evening before
-    action:
-      - service: notify.all_phones
+    actions:
+      - action: notify.all_phones
         data:
           title: "Waste collection tomorrow"
           message: "{{ trigger.calendar_event.summary }}"
-      - service: tts.speak
+      - action: tts.speak
         target:
           entity_id: tts.piper
         data:
@@ -322,18 +322,18 @@ template:
 automation:
   - alias: "Dynamic lighting per event"
     id: dynamic_lighting_by_event
-    trigger:
-      - platform: calendar
+    triggers:
+      - trigger: calendar
         entity_id: calendar.home
         event: start
-    action:
+    actions:
       - choose:
           # Movie night
           - conditions:
               - condition: template
                 value_template: "{{ 'movie' in trigger.calendar_event.summary.lower() }}"
             sequence:
-              - service: scene.turn_on
+              - action: scene.turn_on
                 target:
                   entity_id: scene.movie
 
@@ -342,7 +342,7 @@ automation:
               - condition: template
                 value_template: "{{ 'dinner' in trigger.calendar_event.summary.lower() }}"
             sequence:
-              - service: scene.turn_on
+              - action: scene.turn_on
                 target:
                   entity_id: scene.dinner
 
@@ -351,7 +351,7 @@ automation:
               - condition: template
                 value_template: "{{ 'party' in trigger.calendar_event.summary.lower() }}"
             sequence:
-              - service: scene.turn_on
+              - action: scene.turn_on
                 target:
                   entity_id: scene.party
 ```
@@ -371,18 +371,18 @@ automation:
 automation:
   - alias: "Work meetings only"
     id: work_meetings_only
-    trigger:
-      - platform: calendar
+    triggers:
+      - trigger: calendar
         entity_id: calendar.work_calendar
         event: start
-    condition:
+    conditions:
       # Filter on event properties
       - condition: template
         value_template: >
           {{ trigger.calendar_event.summary is not none and
              'meeting' in trigger.calendar_event.summary.lower() }}
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.office
 ```
@@ -404,10 +404,10 @@ binary_sensor:
 automation:
   - alias: "Workday morning"
     id: workday_morning
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "07:00:00"
-    condition:
+    conditions:
       - condition: state
         entity_id: binary_sensor.workday_sensor
         state: "on"
@@ -415,8 +415,8 @@ automation:
       - condition: state
         entity_id: calendar.vacation
         state: "off"
-    action:
-      - service: scene.turn_on
+    actions:
+      - action: scene.turn_on
         target:
           entity_id: scene.workday_morning
 ```
@@ -436,10 +436,10 @@ automation:
 automation:
   - alias: "Holiday - Sleep in"
     id: holiday_sleep_in
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "09:00:00"  # Later than usual
-    condition:
+    conditions:
       - condition: or
         conditions:
           # Saturday or Sunday
@@ -451,8 +451,8 @@ automation:
           - condition: state
             entity_id: binary_sensor.workday_sensor
             state: "off"
-    action:
-      - service: scene.turn_on
+    actions:
+      - action: scene.turn_on
         target:
           entity_id: scene.weekend_morning
 ```
@@ -463,39 +463,39 @@ automation:
 automation:
   - alias: "Meeting room - Prepare"
     id: meeting_room_prepare
-    trigger:
-      - platform: calendar
+    triggers:
+      - trigger: calendar
         entity_id: calendar.meeting_room
         event: start
         offset: "-00:05:00"
-    action:
+    actions:
       - parallel:
-          - service: light.turn_on
+          - action: light.turn_on
             target:
               entity_id: light.meeting_room
             data:
               brightness_pct: 100
-          - service: climate.set_temperature
+          - action: climate.set_temperature
             target:
               entity_id: climate.meeting_room
             data:
               temperature: 22
-          - service: media_player.turn_on
+          - action: media_player.turn_on
             target:
               entity_id: media_player.meeting_room_display
 
   - alias: "Meeting room - Clean up"
     id: meeting_room_cleanup
-    trigger:
-      - platform: calendar
+    triggers:
+      - trigger: calendar
         entity_id: calendar.meeting_room
         event: end
         offset: "00:05:00"  # 5 min after
-    action:
-      - service: light.turn_off
+    actions:
+      - action: light.turn_off
         target:
           entity_id: light.meeting_room
-      - service: climate.set_preset_mode
+      - action: climate.set_preset_mode
         target:
           entity_id: climate.meeting_room
         data:

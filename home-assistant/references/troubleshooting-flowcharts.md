@@ -48,7 +48,7 @@ digraph automation_debug {
 {{ states.automation.your_automation.attributes.last_triggered }}
 
 # Force manual trigger for testing
-service: automation.trigger
+action: automation.trigger
 target:
   entity_id: automation.your_automation
 ```
@@ -203,24 +203,24 @@ digraph service_debug {
 
 ```yaml
 # BAD - Wrong domain
-service: switch.turn_on
+action: switch.turn_on
 target:
   entity_id: light.living_room  # This is a light, not switch!
 
 # GOOD - Correct domain
-service: light.turn_on
+action: light.turn_on
 target:
   entity_id: light.living_room
 
 # BAD - Missing required data
-service: light.turn_on
+action: light.turn_on
 target:
   entity_id: light.living_room
 data:
   brightness: 255  # Missing brightness_pct OR brightness
 
 # GOOD - Use homeassistant.turn_on for mixed domains
-service: homeassistant.turn_on
+action: homeassistant.turn_on
 target:
   entity_id:
     - light.living_room
@@ -266,7 +266,7 @@ digraph hanging_debug {
 ```yaml
 # Wait with timeout
 - wait_for_trigger:
-    - platform: state
+    - trigger: state
       entity_id: binary_sensor.door
       to: "off"
   timeout:
@@ -278,7 +278,7 @@ digraph hanging_debug {
     - condition: template
       value_template: "{{ wait.trigger == none }}"
   then:
-    - service: notify.mobile
+    - action: notify.mobile
       data:
         message: "Door still open after 5 minutes!"
 ```

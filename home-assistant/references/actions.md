@@ -40,7 +40,7 @@ Actions are the things that happen when an automation runs. They execute in sequ
 ### Action Structure
 
 ```yaml
-action:
+actions:
   # Actions run in sequence
   - action: light.turn_on
     target:
@@ -60,7 +60,7 @@ Call Home Assistant services to control entities.
 ### Basic Service Call
 
 ```yaml
-action:
+actions:
   - action: light.turn_on
     target:
       entity_id: light.living_room
@@ -69,7 +69,7 @@ action:
 ### With Data
 
 ```yaml
-action:
+actions:
   - action: light.turn_on
     target:
       entity_id: light.living_room
@@ -108,13 +108,13 @@ target:
 ### Dynamic Entity (Template)
 
 ```yaml
-action:
+actions:
   - action: light.turn_on
     target:
       entity_id: "{{ trigger.entity_id }}"
 
 # Multiple dynamic entities
-action:
+actions:
   - action: light.turn_off
     target:
       entity_id: >
@@ -127,7 +127,7 @@ action:
 ### Dynamic Service
 
 ```yaml
-action:
+actions:
   - action: "light.turn_{{ 'on' if is_state('sun.sun', 'below_horizon') else 'off' }}"
     target:
       entity_id: light.porch
@@ -136,7 +136,7 @@ action:
 ### Template Data
 
 ```yaml
-action:
+actions:
   - action: light.turn_on
     target:
       entity_id: light.bedroom
@@ -211,7 +211,7 @@ action:
 
 ```yaml
 # Capture service response
-action:
+actions:
   - action: weather.get_forecasts
     target:
       entity_id: weather.home
@@ -294,7 +294,7 @@ Pause execution for a duration.
 ### Fixed Delay
 
 ```yaml
-action:
+actions:
   - delay: "00:00:30"  # 30 seconds
 
   - delay: "00:05:00"  # 5 minutes
@@ -305,7 +305,7 @@ action:
 ### Structured Delay
 
 ```yaml
-action:
+actions:
   - delay:
       hours: 1
       minutes: 30
@@ -316,7 +316,7 @@ action:
 ### Template Delay
 
 ```yaml
-action:
+actions:
   - delay:
       minutes: "{{ states('input_number.delay_minutes') | int }}"
 
@@ -326,7 +326,7 @@ action:
 ### Dynamic Duration
 
 ```yaml
-action:
+actions:
   - delay:
       seconds: >
         {% if is_state('input_boolean.quick_mode', 'on') %}
@@ -345,14 +345,14 @@ Wait until a condition becomes true.
 ### Basic Wait Template
 
 ```yaml
-action:
+actions:
   - wait_template: "{{ is_state('binary_sensor.door', 'off') }}"
 ```
 
 ### With Timeout
 
 ```yaml
-action:
+actions:
   - wait_template: "{{ is_state('binary_sensor.motion', 'off') }}"
     timeout: "00:10:00"
     continue_on_timeout: true  # Continue if timeout reached
@@ -361,7 +361,7 @@ action:
 ### Check If Timed Out
 
 ```yaml
-action:
+actions:
   - wait_template: "{{ is_state('lock.door', 'locked') }}"
     timeout: "00:01:00"
     continue_on_timeout: true
@@ -381,7 +381,7 @@ action:
 ### Complex Wait Condition
 
 ```yaml
-action:
+actions:
   - wait_template: >
       {{ is_state('binary_sensor.motion', 'off') and
          is_state('binary_sensor.door', 'off') }}
@@ -397,9 +397,9 @@ Wait for a specific event to occur.
 ### Basic Wait for Trigger
 
 ```yaml
-action:
+actions:
   - wait_for_trigger:
-      - platform: state
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "off"
 ```
@@ -407,9 +407,9 @@ action:
 ### With Timeout
 
 ```yaml
-action:
+actions:
   - wait_for_trigger:
-      - platform: state
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "off"
         for: "00:05:00"
@@ -420,13 +420,13 @@ action:
 ### Multiple Triggers
 
 ```yaml
-action:
+actions:
   - wait_for_trigger:
-      - platform: state
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "off"
         id: motion_off
-      - platform: state
+      - trigger: state
         entity_id: input_boolean.override
         to: "on"
         id: override
@@ -445,9 +445,9 @@ action:
 ### Access Wait Trigger Data
 
 ```yaml
-action:
+actions:
   - wait_for_trigger:
-      - platform: state
+      - trigger: state
         entity_id: sensor.temperature
     timeout: "01:00:00"
   - action: notify.mobile_app
@@ -465,7 +465,7 @@ Execute different actions based on conditions.
 ### Basic Choose
 
 ```yaml
-action:
+actions:
   - choose:
       - conditions:
           - condition: state
@@ -488,7 +488,7 @@ action:
 ### With Default
 
 ```yaml
-action:
+actions:
   - choose:
       - conditions:
           - condition: numeric_state
@@ -515,7 +515,7 @@ action:
 ### Shorthand Conditions
 
 ```yaml
-action:
+actions:
   - choose:
       - conditions: "{{ trigger.to_state.state == 'on' }}"
         sequence:
@@ -528,16 +528,16 @@ action:
 ### Based on Trigger ID
 
 ```yaml
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: binary_sensor.motion_living
     to: "on"
     id: living
-  - platform: state
+  - trigger: state
     entity_id: binary_sensor.motion_kitchen
     to: "on"
     id: kitchen
-action:
+actions:
   - choose:
       - conditions:
           - condition: trigger
@@ -564,7 +564,7 @@ Conditional execution with clearer syntax.
 ### Basic If
 
 ```yaml
-action:
+actions:
   - if:
       - condition: state
         entity_id: input_boolean.notifications_enabled
@@ -578,7 +578,7 @@ action:
 ### If Then Else
 
 ```yaml
-action:
+actions:
   - if:
       - condition: sun
         after: sunset
@@ -599,7 +599,7 @@ action:
 ### Nested If
 
 ```yaml
-action:
+actions:
   - if:
       - condition: state
         entity_id: binary_sensor.motion
@@ -621,7 +621,7 @@ action:
 ### Shorthand Condition
 
 ```yaml
-action:
+actions:
   - if: "{{ is_state('binary_sensor.motion', 'on') }}"
     then:
       - action: light.turn_on
@@ -636,7 +636,7 @@ Loop actions multiple times.
 ### Repeat Count
 
 ```yaml
-action:
+actions:
   - repeat:
       count: 3
       sequence:
@@ -649,7 +649,7 @@ action:
 ### Repeat While
 
 ```yaml
-action:
+actions:
   - repeat:
       while:
         - condition: state
@@ -667,7 +667,7 @@ action:
 ### Repeat Until
 
 ```yaml
-action:
+actions:
   - repeat:
       until:
         - condition: state
@@ -685,7 +685,7 @@ action:
 ### Repeat For Each
 
 ```yaml
-action:
+actions:
   - repeat:
       for_each:
         - light.living_room
@@ -701,7 +701,7 @@ action:
 ### For Each with Templates
 
 ```yaml
-action:
+actions:
   - repeat:
       for_each: >
         {{ states.light
@@ -724,7 +724,7 @@ action:
 # repeat.last - True on last iteration (for_each only)
 # repeat.item - Current item (for_each only)
 
-action:
+actions:
   - repeat:
       count: 5
       sequence:
@@ -742,7 +742,7 @@ Run actions simultaneously.
 ### Basic Parallel
 
 ```yaml
-action:
+actions:
   - parallel:
       - action: light.turn_on
         target:
@@ -758,7 +758,7 @@ action:
 ### Parallel Sequences
 
 ```yaml
-action:
+actions:
   - parallel:
       - sequence:
           - action: light.turn_on
@@ -777,7 +777,7 @@ action:
 ### Mixed Parallel
 
 ```yaml
-action:
+actions:
   - parallel:
       # Service call
       - action: light.turn_on
@@ -806,7 +806,7 @@ Stop automation execution.
 ### Basic Stop
 
 ```yaml
-action:
+actions:
   - if:
       - condition: state
         entity_id: input_boolean.disabled
@@ -819,7 +819,7 @@ action:
 ### Stop with Error
 
 ```yaml
-action:
+actions:
   - if:
       - condition: template
         value_template: "{{ states('sensor.battery') | float < 10 }}"
@@ -831,7 +831,7 @@ action:
 ### Stop in Choose
 
 ```yaml
-action:
+actions:
   - choose:
       - conditions:
           - condition: state
@@ -862,7 +862,7 @@ Define and use local variables.
 ### Set Variables
 
 ```yaml
-action:
+actions:
   - variables:
       light_entity: light.living_room
       brightness: 80
@@ -876,7 +876,7 @@ action:
 ### Dynamic Variables
 
 ```yaml
-action:
+actions:
   - variables:
       target_temp: >
         {% if now().hour < 7 %}
@@ -896,7 +896,7 @@ action:
 ### Variables from Trigger
 
 ```yaml
-action:
+actions:
   - variables:
       entity: "{{ trigger.entity_id }}"
       old_state: "{{ trigger.from_state.state }}"
@@ -909,7 +909,7 @@ action:
 ### Computed Variables
 
 ```yaml
-action:
+actions:
   - variables:
       lights_on: >
         {{ states.light
@@ -931,7 +931,7 @@ Trigger custom events.
 ### Basic Event
 
 ```yaml
-action:
+actions:
   - event: custom_event
     event_data:
       message: "Something happened"
@@ -940,7 +940,7 @@ action:
 ### With Data
 
 ```yaml
-action:
+actions:
   - event: motion_detected
     event_data:
       location: living_room
@@ -952,12 +952,12 @@ action:
 
 ```yaml
 # In another automation
-trigger:
-  - platform: event
+triggers:
+  - trigger: event
     event_type: motion_detected
     event_data:
       location: living_room
-action:
+actions:
   - action: notify.mobile_app
     data:
       message: "Motion in {{ trigger.event.data.location }}"
@@ -972,7 +972,7 @@ Device-specific actions from the UI.
 ### Basic Device Action
 
 ```yaml
-action:
+actions:
   - device_id: abc123def456
     domain: light
     type: turn_on
@@ -981,7 +981,7 @@ action:
 ### With Options
 
 ```yaml
-action:
+actions:
   - device_id: abc123def456
     domain: light
     type: turn_on
@@ -991,7 +991,7 @@ action:
 ### Multiple Devices
 
 ```yaml
-action:
+actions:
   - device_id: abc123
     domain: cover
     type: close
@@ -1009,7 +1009,7 @@ Activate scenes.
 ### Activate Scene
 
 ```yaml
-action:
+actions:
   - action: scene.turn_on
     target:
       entity_id: scene.movie_mode
@@ -1018,7 +1018,7 @@ action:
 ### With Transition
 
 ```yaml
-action:
+actions:
   - action: scene.turn_on
     target:
       entity_id: scene.evening
@@ -1029,7 +1029,7 @@ action:
 ### Create Scene on the Fly
 
 ```yaml
-action:
+actions:
   - action: scene.create
     data:
       scene_id: before_change
@@ -1161,7 +1161,7 @@ Treat restart, stop, alarm disarm, lock/unlock, and valve controls as high-impac
 ### Notification with Timeout
 
 ```yaml
-action:
+actions:
   - action: notify.mobile_app
     data:
       title: "Door Open"
@@ -1171,11 +1171,11 @@ action:
           - action: "ACKNOWLEDGE"
             title: "OK"
   - wait_for_trigger:
-      - platform: event
+      - trigger: event
         event_type: mobile_app_notification_action
         event_data:
           action: ACKNOWLEDGE
-      - platform: state
+      - trigger: state
         entity_id: binary_sensor.front_door
         to: "off"
     timeout: "00:05:00"
@@ -1191,7 +1191,7 @@ action:
 ### Retry Logic
 
 ```yaml
-action:
+actions:
   - repeat:
       until:
         - condition: state
@@ -1215,7 +1215,7 @@ action:
 ### Fade Light
 
 ```yaml
-action:
+actions:
   - variables:
       start: 100
       end: 0
@@ -1235,7 +1235,7 @@ action:
 ### Sequential Device Control
 
 ```yaml
-action:
+actions:
   - repeat:
       for_each:
         - entity_id: light.light_1
@@ -1256,7 +1256,7 @@ action:
 ### Conditional Notification
 
 ```yaml
-action:
+actions:
   - if:
       - condition: state
         entity_id: input_boolean.notifications_enabled
@@ -1287,7 +1287,7 @@ action:
 ### Save and Restore State
 
 ```yaml
-action:
+actions:
   # Save current state
   - action: scene.create
     data:
@@ -1317,13 +1317,13 @@ action:
 
 ```yaml
 # Good
-action:
+actions:
   - variables:
       target_brightness: 80
       notification_message: "Motion detected in {{ area }}"
 
 # Avoid
-action:
+actions:
   - variables:
       x: 80
       msg: "Motion"
@@ -1332,7 +1332,7 @@ action:
 ### Handle Errors Gracefully
 
 ```yaml
-action:
+actions:
   - if:
       - condition: template
         value_template: >
@@ -1352,14 +1352,14 @@ action:
 
 ```yaml
 # Avoid: Long blocking delay
-action:
+actions:
   - delay: "01:00:00"  # Blocks for 1 hour
   - action: light.turn_off
 
 # Better: Use wait_for_trigger with timeout
-action:
+actions:
   - wait_for_trigger:
-      - platform: state
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "off"
     timeout: "01:00:00"
@@ -1370,7 +1370,7 @@ action:
 
 ```yaml
 # Slow: Sequential
-action:
+actions:
   - action: light.turn_on
     target:
       entity_id: light.1
@@ -1382,7 +1382,7 @@ action:
       entity_id: light.3
 
 # Fast: Parallel
-action:
+actions:
   - parallel:
       - action: light.turn_on
         target:
@@ -1395,7 +1395,7 @@ action:
           entity_id: light.3
 
 # Best: Single call with multiple targets
-action:
+actions:
   - action: light.turn_on
     target:
       entity_id:
@@ -1421,7 +1421,7 @@ action:
 
 ```yaml
 # Add logging
-action:
+actions:
   - action: system_log.write
     data:
       message: "Starting action sequence"
@@ -1453,13 +1453,13 @@ data:
 
 ```yaml
 # Wrong: target inside data
-action:
+actions:
   - action: light.turn_on
     data:
       entity_id: light.lamp  # Wrong location
 
 # Correct: target separate from data
-action:
+actions:
   - action: light.turn_on
     target:
       entity_id: light.lamp
@@ -1467,12 +1467,12 @@ action:
       brightness_pct: 80
 
 # Wrong: Missing quotes on template
-action:
+actions:
   - delay:
       minutes: {{ states('input_number.delay') }}  # Missing quotes
 
 # Correct
-action:
+actions:
   - delay:
       minutes: "{{ states('input_number.delay') | int }}"
 ```

@@ -57,31 +57,31 @@ Samsung TVs (2016+) are discovered automatically. Manual setup:
 # Turn off TV at night
 automation:
   - alias: "TV Auto-Off"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "01:00:00"
-    condition:
+    conditions:
       - condition: state
         entity_id: media_player.samsung_tv
         state: "on"
-    action:
-      - service: media_player.turn_off
+    actions:
+      - action: media_player.turn_off
         target:
           entity_id: media_player.samsung_tv
 
 # Wake TV with Wake-on-LAN
 automation:
   - alias: "Turn on TV"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: input_boolean.watch_tv
         to: "on"
-    action:
-      - service: wake_on_lan.send_magic_packet
+    actions:
+      - action: wake_on_lan.send_magic_packet
         data:
           mac: "AA:BB:CC:DD:EE:FF"
       - delay: "00:00:10"
-      - service: media_player.select_source
+      - action: media_player.select_source
         target:
           entity_id: media_player.samsung_tv
         data:
@@ -92,14 +92,14 @@ automation:
 
 ```yaml
 # Change input source
-service: media_player.select_source
+action: media_player.select_source
 target:
   entity_id: media_player.samsung_tv
 data:
   source: "HDMI1"  # HDMI1, HDMI2, TV, USB, etc.
 
 # Launch app (Samsung TV Plus, Netflix, etc.)
-service: media_player.select_source
+action: media_player.select_source
 target:
   entity_id: media_player.samsung_tv
 data:
@@ -110,7 +110,7 @@ data:
 
 ```yaml
 # Send remote key
-service: remote.send_command
+action: remote.send_command
 target:
   entity_id: remote.samsung_tv
 data:
@@ -164,14 +164,14 @@ wake_on_lan:
 # LG TVs send button events
 automation:
   - alias: "Magic Remote Button"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: webostv.button
         event_data:
           entity_id: media_player.lg_tv
           button: BACK
-    action:
-      - service: light.toggle
+    actions:
+      - action: light.toggle
         target:
           entity_id: light.living_room
 ```
@@ -180,7 +180,7 @@ automation:
 
 ```yaml
 # Launch specific app
-service: media_player.select_source
+action: media_player.select_source
 target:
   entity_id: media_player.lg_tv
 data:
@@ -194,14 +194,14 @@ data:
 
 ```yaml
 # Change channel (for TV input)
-service: webostv.select_channel
+action: webostv.select_channel
 target:
   entity_id: media_player.lg_tv
 data:
   channel: "5.1"  # Channel number
 
 # Or by channel name (if available)
-service: webostv.select_channel
+action: webostv.select_channel
 target:
   entity_id: media_player.lg_tv
 data:
@@ -212,7 +212,7 @@ data:
 
 ```yaml
 # Send command
-service: webostv.command
+action: webostv.command
 target:
   entity_id: media_player.lg_tv
 data:
@@ -221,7 +221,7 @@ data:
     id: "netflix"
 
 # Turn on with Wake-on-LAN
-service: wake_on_lan.send_magic_packet
+action: wake_on_lan.send_magic_packet
 data:
   mac: "AA:BB:CC:DD:EE:FF"
 ```
@@ -265,7 +265,7 @@ media_player:
 
 ```yaml
 # Launch app by package name
-service: media_player.select_source
+action: media_player.select_source
 target:
   entity_id: media_player.android_tv
 data:
@@ -284,7 +284,7 @@ data:
 
 ```yaml
 # Send ADB command
-service: androidtv.adb_command
+action: androidtv.adb_command
 target:
   entity_id: media_player.android_tv
 data:
@@ -301,14 +301,14 @@ data:
 
 ```yaml
 # Using Android TV Remote integration
-service: remote.send_command
+action: remote.send_command
 target:
   entity_id: remote.android_tv
 data:
   command: HOME  # BACK, MENU, SELECT, etc.
 
 # Navigation
-service: remote.send_command
+action: remote.send_command
 target:
   entity_id: remote.android_tv
 data:
@@ -338,7 +338,7 @@ data:
 
 ```yaml
 # Standard media player controls
-service: media_player.play_media
+action: media_player.play_media
 target:
   entity_id: media_player.apple_tv
 data:
@@ -350,7 +350,7 @@ data:
 
 ```yaml
 # Send remote command
-service: remote.send_command
+action: remote.send_command
 target:
   entity_id: remote.apple_tv
 data:
@@ -361,7 +361,7 @@ data:
 
 ```yaml
 # Launch app by bundle ID
-service: remote.send_command
+action: remote.send_command
 target:
   entity_id: remote.apple_tv
 data:
@@ -398,27 +398,27 @@ data:
 # Dim lights when Plex starts playing
 automation:
   - alias: "Plex Movie Mode"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: media_player.plex_living_room_tv
         to: "playing"
         attribute: media_content_type
-    condition:
+    conditions:
       - condition: template
         value_template: "{{ state_attr('media_player.plex_living_room_tv', 'media_content_type') == 'movie' }}"
-    action:
-      - service: scene.turn_on
+    actions:
+      - action: scene.turn_on
         target:
           entity_id: scene.movie_mode
 
 # Recently added notification
 automation:
   - alias: "New Plex Content"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: plex_new_media
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "New on Plex: {{ trigger.event.data.title }}"
 ```
@@ -434,16 +434,16 @@ For more responsive automations, use Plex webhooks:
 ```yaml
 automation:
   - alias: "Plex Webhook Handler"
-    trigger:
-      - platform: webhook
+    triggers:
+      - trigger: webhook
         webhook_id: plex
-    action:
+    actions:
       - choose:
           - conditions:
               - condition: template
                 value_template: "{{ trigger.json.event == 'media.play' }}"
             sequence:
-              - service: light.turn_off
+              - action: light.turn_off
                 target:
                   entity_id: light.living_room
 ```
@@ -457,24 +457,24 @@ automation:
 ```yaml
 automation:
   - alias: "Movie Night"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: media_player.living_room_tv
         to: "playing"
-    condition:
+    conditions:
       - condition: time
         after: "18:00:00"
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.bias_lighting
         data:
           brightness_pct: 20
           color_temp_kelvin: 2700
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id: light.ceiling_light
-      - service: cover.close_cover
+      - action: cover.close_cover
         target:
           entity_id: cover.living_room_blinds
 ```
@@ -484,19 +484,19 @@ automation:
 ```yaml
 automation:
   - alias: "Pause TV on Motion"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.front_door
         to: "on"
-    condition:
+    conditions:
       - condition: state
         entity_id: media_player.living_room_tv
         state: "playing"
-    action:
-      - service: media_player.media_pause
+    actions:
+      - action: media_player.media_pause
         target:
           entity_id: media_player.living_room_tv
-      - service: notify.tv_notification
+      - action: notify.tv_notification
         data:
           message: "Someone at the door!"
 ```
@@ -507,17 +507,17 @@ automation:
 # Sync lights with media
 automation:
   - alias: "TV Ambient Sync"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: media_player.living_room_tv
-    action:
+    actions:
       - choose:
           - conditions:
               - condition: state
                 entity_id: media_player.living_room_tv
                 state: "playing"
             sequence:
-              - service: light.turn_on
+              - action: light.turn_on
                 target:
                   entity_id: light.tv_backlight
                 data:
@@ -528,7 +528,7 @@ automation:
                 entity_id: media_player.living_room_tv
                 state: "paused"
             sequence:
-              - service: light.turn_on
+              - action: light.turn_on
                 target:
                   entity_id: light.tv_backlight
                 data:
@@ -538,7 +538,7 @@ automation:
                 entity_id: media_player.living_room_tv
                 state: "off"
             sequence:
-              - service: light.turn_off
+              - action: light.turn_off
                 target:
                   entity_id: light.tv_backlight
 ```
@@ -549,22 +549,22 @@ automation:
 # Limit volume after certain time
 automation:
   - alias: "Night Volume Limit"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: media_player.living_room_tv
         attribute: volume_level
         above: 0.3
-    condition:
+    conditions:
       - condition: time
         after: "22:00:00"
         before: "08:00:00"
-    action:
-      - service: media_player.volume_set
+    actions:
+      - action: media_player.volume_set
         target:
           entity_id: media_player.living_room_tv
         data:
           volume_level: 0.3
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           message: "Volume limited to 30% (night mode)"
 ```
@@ -588,7 +588,7 @@ automation:
 # TV may need to be in specific standby mode
 
 # Test manually:
-service: wake_on_lan.send_magic_packet
+action: wake_on_lan.send_magic_packet
 data:
   mac: "AA:BB:CC:DD:EE:FF"
   broadcast_address: "192.168.1.255"
@@ -600,7 +600,7 @@ data:
 # Ensure ADB debugging is enabled on device
 # Check if ADB server is running (if using external)
 # Try reconnecting:
-service: androidtv.adb_command
+action: androidtv.adb_command
 target:
   entity_id: media_player.android_tv
 data:

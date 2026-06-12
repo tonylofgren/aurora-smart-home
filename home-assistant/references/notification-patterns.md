@@ -32,12 +32,12 @@ Good notifications are:
 automation:
   - alias: "Notification - Simple"
     id: notification_simple
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.front_door
         to: "on"
-    action:
-      - service: notify.mobile_app_tonys_iphone
+    actions:
+      - action: notify.mobile_app_tonys_iphone
         data:
           title: "Door opened"
           message: "The front door was just opened"
@@ -49,16 +49,16 @@ automation:
 automation:
   - alias: "Notification - With actions"
     id: notification_with_actions
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion_garage
         to: "on"
-    condition:
+    conditions:
       - condition: state
         entity_id: person.tony
         state: "not_home"
-    action:
-      - service: notify.mobile_app_tonys_iphone
+    actions:
+      - action: notify.mobile_app_tonys_iphone
         data:
           title: "Motion in the garage"
           message: "Motion detected while you are away"
@@ -81,13 +81,13 @@ automation:
 automation:
   - alias: "Handle - View camera"
     id: handle_view_camera
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: mobile_app_notification_action
         event_data:
           action: "VIEW_CAMERA"
-    action:
-      - service: notify.mobile_app_tonys_iphone
+    actions:
+      - action: notify.mobile_app_tonys_iphone
         data:
           title: "Garage Camera"
           message: "Current snapshot"
@@ -96,13 +96,13 @@ automation:
 
   - alias: "Handle - Arm alarm"
     id: handle_alarm_on
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: mobile_app_notification_action
         event_data:
           action: "ALARM_ON"
-    action:
-      - service: alarm_control_panel.alarm_arm_away
+    actions:
+      - action: alarm_control_panel.alarm_arm_away
         target:
           entity_id: alarm_control_panel.home
 ```
@@ -113,12 +113,12 @@ automation:
 automation:
   - alias: "Notification - With image"
     id: notification_with_image
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.doorbell
         to: "on"
-    action:
-      - service: notify.mobile_app_tonys_iphone
+    actions:
+      - action: notify.mobile_app_tonys_iphone
         data:
           title: "Someone at the door"
           message: "The doorbell rang"
@@ -140,12 +140,12 @@ automation:
 automation:
   - alias: "Notification - Critical"
     id: notification_critical
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.smoke_detector
         to: "on"
-    action:
-      - service: notify.mobile_app_tonys_iphone
+    actions:
+      - action: notify.mobile_app_tonys_iphone
         data:
           title: "⚠️ FIRE ALARM"
           message: "Smoke detector activated!"
@@ -165,12 +165,12 @@ automation:
 automation:
   - alias: "Notification - Grouped"
     id: notification_grouped
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.window_open
         to: "on"
-    action:
-      - service: notify.mobile_app_tonys_iphone
+    actions:
+      - action: notify.mobile_app_tonys_iphone
         data:
           title: "Window open"
           message: "{{ trigger.to_state.attributes.friendly_name }}"
@@ -187,11 +187,11 @@ automation:
 automation:
   - alias: "Smart notification - Home status"
     id: smart_notification_home_status
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion_backyard
         to: "on"
-    action:
+    actions:
       - choose:
           # Home - No message
           - conditions:
@@ -206,7 +206,7 @@ automation:
                 entity_id: binary_sensor.anyone_home
                 state: "off"
             sequence:
-              - service: notify.mobile_app_tonys_iphone
+              - action: notify.mobile_app_tonys_iphone
                 data:
                   title: "Motion outdoors"
                   message: "Motion in the backyard while you are away"
@@ -222,11 +222,11 @@ automation:
 automation:
   - alias: "Smart notification - Time"
     id: smart_notification_time
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: lock.front_door
         to: "unlocked"
-    action:
+    actions:
       - choose:
           # Night - Critical
           - conditions:
@@ -234,7 +234,7 @@ automation:
                 after: "23:00:00"
                 before: "06:00:00"
             sequence:
-              - service: notify.mobile_app_tonys_iphone
+              - action: notify.mobile_app_tonys_iphone
                 data:
                   title: "⚠️ Door unlocked"
                   message: "The front door was unlocked in the middle of the night!"
@@ -249,7 +249,7 @@ automation:
                 after: "06:00:00"
                 before: "23:00:00"
             sequence:
-              - service: notify.mobile_app_tonys_iphone
+              - action: notify.mobile_app_tonys_iphone
                 data:
                   title: "Door unlocked"
                   message: "The front door was unlocked"
@@ -261,19 +261,19 @@ automation:
 automation:
   - alias: "Respect focus mode"
     id: respect_focus_mode
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: sensor.motion_living_room
         to: "on"
-    condition:
+    conditions:
       # Only send if not in Do Not Disturb
       - condition: not
         conditions:
           - condition: state
             entity_id: sensor.tonys_iphone_focus_mode
             state: "Do Not Disturb"
-    action:
-      - service: notify.mobile_app_tonys_iphone
+    actions:
+      - action: notify.mobile_app_tonys_iphone
         data:
           message: "Motion in the living room"
 ```
@@ -288,29 +288,29 @@ notify:
   - platform: group
     name: all_phones
     services:
-      - service: mobile_app_tonys_iphone
-      - service: mobile_app_annas_iphone
+      - action: mobile_app_tonys_iphone
+      - action: mobile_app_annas_iphone
 
   - platform: group
     name: adults
     services:
-      - service: mobile_app_tonys_iphone
-      - service: mobile_app_annas_iphone
+      - action: mobile_app_tonys_iphone
+      - action: mobile_app_annas_iphone
 
   - platform: group
     name: parents
     services:
-      - service: mobile_app_tonys_iphone
-      - service: mobile_app_annas_iphone
+      - action: mobile_app_tonys_iphone
+      - action: mobile_app_annas_iphone
 ```
 
 ```yaml
 automation:
   - alias: "Notify everyone"
-    trigger:
+    triggers:
       # ...
-    action:
-      - service: notify.all_phones
+    actions:
+      - action: notify.all_phones
         data:
           title: "Message to everyone"
           message: "This goes to all phones"
@@ -324,12 +324,12 @@ Dashboard messages:
 automation:
   - alias: "Persistent - Update available"
     id: persistent_update_available
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: update.home_assistant_core_update
         to: "on"
-    action:
-      - service: persistent_notification.create
+    actions:
+      - action: persistent_notification.create
         data:
           title: "Update available"
           message: >
@@ -340,12 +340,12 @@ automation:
   # Remove once updated
   - alias: "Persistent - Remove update notice"
     id: persistent_remove_update
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: update.home_assistant_core_update
         to: "off"
-    action:
-      - service: persistent_notification.dismiss
+    actions:
+      - action: persistent_notification.dismiss
         data:
           notification_id: "ha_update"
 ```
@@ -358,16 +358,16 @@ Voice announcements:
 automation:
   - alias: "TTS - Welcome home"
     id: tts_welcome_home
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: person.tony
         to: "home"
-    condition:
+    conditions:
       - condition: time
         after: "08:00:00"
         before: "22:00:00"
-    action:
-      - service: tts.speak
+    actions:
+      - action: tts.speak
         target:
           entity_id: tts.piper
         data:
@@ -387,15 +387,15 @@ Daily summary:
 automation:
   - alias: "Daily summary"
     id: daily_summary
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "08:00:00"
-    condition:
+    conditions:
       - condition: state
         entity_id: binary_sensor.workday_sensor
         state: "on"
-    action:
-      - service: notify.mobile_app_tonys_iphone
+    actions:
+      - action: notify.mobile_app_tonys_iphone
         data:
           title: "☀️ Good morning"
           message: >
@@ -429,19 +429,19 @@ Avoid notification spam:
 automation:
   - alias: "Rate limited notification"
     id: rate_limited_notification
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "on"
-    condition:
+    conditions:
       # Max one notification per 5 minutes
       - condition: template
         value_template: >
           {{ (as_timestamp(now()) - as_timestamp(
               state_attr('automation.rate_limited_notification', 'last_triggered') or 0
           )) > 300 }}
-    action:
-      - service: notify.mobile_app_tonys_iphone
+    actions:
+      - action: notify.mobile_app_tonys_iphone
         data:
           message: "Motion detected"
 ```
@@ -458,21 +458,21 @@ input_datetime:
 automation:
   - alias: "Rate limited with helper"
     id: rate_limited_helper
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "on"
-    condition:
+    conditions:
       - condition: template
         value_template: >
           {{ (now() - states('input_datetime.last_motion_notification') | as_datetime).total_seconds() > 300 }}
-    action:
-      - service: input_datetime.set_datetime
+    actions:
+      - action: input_datetime.set_datetime
         target:
           entity_id: input_datetime.last_motion_notification
         data:
           datetime: "{{ now().isoformat() }}"
-      - service: notify.mobile_app_tonys_iphone
+      - action: notify.mobile_app_tonys_iphone
         data:
           message: "Motion detected"
 ```
@@ -485,13 +485,13 @@ Escalate if nobody responds:
 automation:
   - alias: "Escalating notification"
     id: escalating_notification
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.water_leak
         to: "on"
-    action:
+    actions:
       # Step 1: Normal notification
-      - service: notify.mobile_app_tonys_iphone
+      - action: notify.mobile_app_tonys_iphone
         data:
           title: "Water leak"
           message: "Leak detected!"
@@ -503,7 +503,7 @@ automation:
 
       # Wait 5 minutes
       - wait_for_trigger:
-          - platform: event
+          - trigger: event
             event_type: mobile_app_notification_action
             event_data:
               action: "LEAK_HANDLED"
@@ -515,7 +515,7 @@ automation:
           - condition: template
             value_template: "{{ wait.trigger is none }}"
         then:
-          - service: notify.all_phones
+          - action: notify.all_phones
             data:
               title: "⚠️ WATER LEAK - NOT ACKNOWLEDGED"
               message: "Leak still active!"
@@ -529,7 +529,7 @@ automation:
 
       # Step 3: Automatic shutoff
       - wait_for_trigger:
-          - platform: event
+          - trigger: event
             event_type: mobile_app_notification_action
             event_data:
               action: "LEAK_HANDLED"
@@ -540,10 +540,10 @@ automation:
           - condition: template
             value_template: "{{ wait.trigger is none }}"
         then:
-          - service: switch.turn_off
+          - action: switch.turn_off
             target:
               entity_id: switch.water_main
-          - service: notify.all_phones
+          - action: notify.all_phones
             data:
               title: "Water shut off"
               message: "The water supply was shut off automatically"

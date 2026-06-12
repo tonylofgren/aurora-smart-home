@@ -396,14 +396,14 @@ binary_sensor:
 # Home Assistant automation
 automation:
   - id: esphome_button
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: esphome.button_pressed
         event_data:
           device: "living-room-sensor"
           button: "main"
-    action:
-      - service: light.toggle
+    actions:
+      - action: light.toggle
         target:
           entity_id: light.living_room
 ```
@@ -439,12 +439,12 @@ binary_sensor:
     pin: GPIO0
     on_press:
       - homeassistant.service:
-          service: light.toggle
+          action: light.toggle
           data:
             entity_id: light.living_room
 
       - homeassistant.service:
-          service: notify.mobile_app
+          action: notify.mobile_app
           data:
             message: "Button pressed!"
 ```
@@ -458,7 +458,7 @@ binary_sensor:
     pin: GPIO0
     on_press:
       - homeassistant.service:
-          service: notify.mobile_app
+          action: notify.mobile_app
           data:
             title: "ESPHome Alert"
             message: !lambda |-
@@ -471,12 +471,12 @@ binary_sensor:
 # Home Assistant automation
 automation:
   - trigger:
-      - platform: state
+      - trigger: state
         entity_id: input_boolean.party_mode
         to: "on"
-    action:
+    actions:
       # Call ESPHome service
-      - service: esphome.living_room_sensor_set_led_color
+      - action: esphome.living_room_sensor_set_led_color
         data:
           red: 255
           green: 0
@@ -489,7 +489,7 @@ automation:
 # ESPHome config
 api:
   services:
-    - service: set_led_color
+    - action: set_led_color
       variables:
         red: int
         green: int
@@ -501,7 +501,7 @@ api:
             green: !lambda 'return green / 255.0;'
             blue: !lambda 'return blue / 255.0;'
 
-    - service: play_rtttl
+    - action: play_rtttl
       variables:
         song: string
       then:
@@ -627,7 +627,7 @@ light:
     output: porch_relay
     on_turn_on:
       - if:
-          condition:
+          conditions:
             lambda: 'return id(home_mode).state == "Away";'
           then:
             - delay: 5min
@@ -657,7 +657,7 @@ binary_sensor:
       max_length: 500ms
       then:
         - homeassistant.service:
-            service: light.toggle
+            action: light.toggle
             data:
               entity_id: light.main
 
@@ -666,7 +666,7 @@ binary_sensor:
       max_length: 500ms
       then:
         - homeassistant.service:
-            service: scene.turn_on
+            action: scene.turn_on
             data:
               entity_id: scene.movie_mode
 
@@ -679,7 +679,7 @@ binary_sensor:
         then:
           - logger.log: "Triple click!"
           - homeassistant.service:
-              service: script.turn_on
+              action: script.turn_on
               data:
                 entity_id: script.all_off
 ```
@@ -696,7 +696,7 @@ binary_sensor:
       then:
         - delay: 3s
         - if:
-            condition:
+            conditions:
               binary_sensor.is_on: button
             then:
               - logger.log: "Long press detected"
@@ -716,7 +716,7 @@ sensor:
     max_value: 100
     on_value:
       - homeassistant.service:
-          service: light.turn_on
+          action: light.turn_on
           data:
             entity_id: light.lamp
             brightness_pct: !lambda 'return x;'
@@ -943,7 +943,7 @@ interval:
   - interval: 60s
     then:
       - if:
-          condition:
+          conditions:
             wifi.connected:
           then:
             - logger.log: "WiFi connected"

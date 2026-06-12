@@ -128,15 +128,15 @@ sensor.openweathermap_forecast_condition
 
 ```yaml
 # Use weather.get_forecasts service (action in automations)
-action:
-  - service: weather.get_forecasts
+actions:
+  - action: weather.get_forecasts
     target:
       entity_id: weather.home
     data:
       type: daily  # or "hourly" or "twice_daily"
     response_variable: forecast
 
-  - service: notify.mobile_app
+  - action: notify.mobile_app
     data:
       message: >
         Tomorrow: {{ forecast['weather.home'].forecast[0].condition }}
@@ -148,10 +148,10 @@ action:
 ```yaml
 template:
   - trigger:
-      - platform: time_pattern
+      - trigger: time_pattern
         hours: /1  # Update every hour
-    action:
-      - service: weather.get_forecasts
+    actions:
+      - action: weather.get_forecasts
         target:
           entity_id: weather.home
         data:
@@ -189,11 +189,11 @@ template:
 ```yaml
 automation:
   - alias: "Close Windows Before Rain"
-    trigger:
-      - platform: time_pattern
+    triggers:
+      - trigger: time_pattern
         minutes: /30
-    action:
-      - service: weather.get_forecasts
+    actions:
+      - action: weather.get_forecasts
         target:
           entity_id: weather.home
         data:
@@ -205,27 +205,27 @@ automation:
               {% set next_hours = forecast['weather.home'].forecast[:6] %}
               {{ next_hours | selectattr('precipitation', 'gt', 0) | list | count > 0 }}
         then:
-          - service: cover.close_cover
+          - action: cover.close_cover
             target:
               entity_id: cover.awning
-          - service: notify.mobile_app
+          - action: notify.mobile_app
             data:
               message: "Rain expected in next 6 hours - closing awning"
 
 automation:
   - alias: "Alert if Windows Open and Rain Coming"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: weather.home
         to:
           - rainy
           - pouring
-    condition:
+    conditions:
       - condition: state
         entity_id: group.windows
         state: "on"  # Windows open
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "🌧️ Close Windows!"
           message: "Rain starting and windows are open"
@@ -238,11 +238,11 @@ automation:
 ```yaml
 automation:
   - alias: "Pre-Heat Before Cold Weather"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "05:00:00"
-    action:
-      - service: weather.get_forecasts
+    actions:
+      - action: weather.get_forecasts
         target:
           entity_id: weather.home
         data:
@@ -253,7 +253,7 @@ automation:
             value_template: >
               {{ forecast['weather.home'].forecast[0].temperature < 5 }}
         then:
-          - service: climate.set_temperature
+          - action: climate.set_temperature
             target:
               entity_id: climate.living_room
             data:
@@ -266,11 +266,11 @@ automation:
 ```yaml
 automation:
   - alias: "Frost Warning"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "18:00:00"
-    action:
-      - service: weather.get_forecasts
+    actions:
+      - action: weather.get_forecasts
         target:
           entity_id: weather.home
         data:
@@ -282,7 +282,7 @@ automation:
               {% set overnight = forecast['weather.home'].forecast[:12] %}
               {{ overnight | selectattr('temperature', 'lt', 2) | list | count > 0 }}
         then:
-          - service: notify.mobile_app
+          - action: notify.mobile_app
             data:
               title: "❄️ Frost Warning"
               message: "Freezing temperatures expected tonight"
@@ -293,11 +293,11 @@ automation:
 ```yaml
 automation:
   - alias: "Close Blinds on Hot Sunny Day"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.outdoor_temperature
         above: 25
-    condition:
+    conditions:
       - condition: state
         entity_id: weather.home
         state: "sunny"
@@ -306,8 +306,8 @@ automation:
         after_offset: "02:00:00"
         before: sunset
         before_offset: "-02:00:00"
-    action:
-      - service: cover.set_cover_position
+    actions:
+      - action: cover.set_cover_position
         target:
           entity_id:
             - cover.south_windows
@@ -321,15 +321,15 @@ automation:
 ```yaml
 automation:
   - alias: "Retract Awning on High Wind"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.wind_speed
         above: 30  # km/h
-    action:
-      - service: cover.close_cover
+    actions:
+      - action: cover.close_cover
         target:
           entity_id: cover.awning
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           message: "Awning retracted due to high wind ({{ states('sensor.wind_speed') }} km/h)"
 ```
@@ -410,10 +410,10 @@ template:
 ```yaml
 template:
   - trigger:
-      - platform: time_pattern
+      - trigger: time_pattern
         hours: /1
-    action:
-      - service: weather.get_forecasts
+    actions:
+      - action: weather.get_forecasts
         target:
           entity_id: weather.home
         data:
@@ -559,11 +559,11 @@ template:
 
 automation:
   - alias: "Seasonal Temperature Adjustment"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.heating_season
-    action:
-      - service: climate.set_preset_mode
+    actions:
+      - action: climate.set_preset_mode
         target:
           entity_id: climate.living_room
         data:

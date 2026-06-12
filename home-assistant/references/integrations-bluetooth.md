@@ -27,7 +27,7 @@ Most Home Assistant installations detect built-in Bluetooth automatically:
 # Settings → Devices & Services → Bluetooth
 
 # View adapter info via Developer Tools → Services
-service: bluetooth.async_scanner_diagnostics
+action: bluetooth.async_scanner_diagnostics
 ```
 
 ### USB Bluetooth Adapters
@@ -113,12 +113,12 @@ template:
 automation:
   - id: switchbot_temp_alert
     alias: "SwitchBot Temperature Alert"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.switchbot_meter_temperature
         above: 30
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "Room temperature is {{ states('sensor.switchbot_meter_temperature') }}°C"
 ```
@@ -179,15 +179,15 @@ template:
 automation:
   - id: phone_room_presence
     alias: "Phone Room Detection"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: sensor.pixel_phone_ble_rssi
-    condition:
+    conditions:
       - condition: numeric_state
         entity_id: sensor.pixel_phone_ble_rssi
         above: -70
-    action:
-      - service: input_select.select_option
+    actions:
+      - action: input_select.select_option
         target:
           entity_id: input_select.current_room
         data:
@@ -207,18 +207,18 @@ automation:
 automation:
   - id: auto_lock_door
     alias: "Auto Lock Front Door"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.switchbot_lock_door
         to: "off"  # Door closed
         for:
           minutes: 5
-    condition:
+    conditions:
       - condition: state
         entity_id: lock.switchbot_lock
         state: "unlocked"
-    action:
-      - service: lock.lock
+    actions:
+      - action: lock.lock
         target:
           entity_id: lock.switchbot_lock
 ```
@@ -234,7 +234,7 @@ script:
   lock_all_doors:
     alias: "Lock All Doors"
     sequence:
-      - service: lock.lock
+      - action: lock.lock
         target:
           entity_id:
             - lock.front_door
@@ -245,7 +245,7 @@ script:
         value_template: >
           {{ is_state('lock.front_door', 'locked') and
              is_state('lock.back_door', 'locked') }}
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           message: "All doors locked"
 ```
@@ -267,14 +267,14 @@ script:
 automation:
   - id: plant_needs_water
     alias: "Plant Needs Water Alert"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.mi_flora_living_room_moisture
         below: 15
         for:
           hours: 2
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "Plant Care"
           message: "Living room plant needs water ({{ states('sensor.mi_flora_living_room_moisture') }}%)"
@@ -315,17 +315,17 @@ template:
 automation:
   - id: brushing_reminder
     alias: "Brushing Time Reminder"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: sensor.oral_b_toothbrush_state
         from: "running"
         to: "idle"
-    condition:
+    conditions:
       - condition: numeric_state
         entity_id: sensor.oral_b_toothbrush_time
         below: 120  # Less than 2 minutes
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "Brush longer! Only {{ states('sensor.oral_b_toothbrush_time') }} seconds"
 ```
@@ -339,12 +339,12 @@ automation:
 automation:
   - id: meat_temp_alert
     alias: "Meat Temperature Alert"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.inkbird_probe_1
         above: 63  # Safe internal temp for beef
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "BBQ Alert"
           message: "Meat reached {{ states('sensor.inkbird_probe_1') }}°C - Ready!"
@@ -581,17 +581,17 @@ template:
 automation:
   - id: room_based_lights
     alias: "Room-Based Lighting"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: sensor.phone_current_room
-    action:
+    actions:
       - choose:
           - conditions:
               - condition: state
                 entity_id: sensor.phone_current_room
                 state: "Living Room"
             sequence:
-              - service: light.turn_on
+              - action: light.turn_on
                 target:
                   entity_id: light.living_room
           - conditions:
@@ -599,7 +599,7 @@ automation:
                 entity_id: sensor.phone_current_room
                 state: "Bedroom"
             sequence:
-              - service: light.turn_on
+              - action: light.turn_on
                 target:
                   entity_id: light.bedroom
 ```
@@ -694,7 +694,7 @@ Common sources of Bluetooth interference:
 
 # Restart Bluetooth integration
 # Developer Tools → Services
-service: homeassistant.reload_config_entry
+action: homeassistant.reload_config_entry
 data:
   entry_id: <bluetooth_config_entry_id>
 
@@ -718,7 +718,7 @@ data:
 
 # Force discovery scan
 # Developer Tools → Services
-service: bluetooth.start_scan
+action: bluetooth.start_scan
 data:
   timeout: 60
 
@@ -768,11 +768,11 @@ esp32_ble_tracker:
 automation:
   - id: ble_scan_schedule
     alias: "BLE Scan Schedule"
-    trigger:
-      - platform: time_pattern
+    triggers:
+      - trigger: time_pattern
         hours: "/1"  # Every hour
-    action:
-      - service: bluetooth.start_scan
+    actions:
+      - action: bluetooth.start_scan
         data:
           timeout: 30
 ```
@@ -856,14 +856,14 @@ binary_sensor.*_ble_presence:
 automation:
   - id: ble_presence_light
     alias: "BLE Presence Light Control"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.phone_ble_present
         to: "on"
         for:
           seconds: 30  # Debounce
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.living_room
 
@@ -871,14 +871,14 @@ automation:
 automation:
   - id: ble_fallback
     alias: "BLE Unavailable Fallback"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: sensor.phone_ble_rssi
         to: "unavailable"
         for:
           minutes: 5
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "BLE tracking unavailable - check proxy status"
 ```

@@ -122,10 +122,10 @@ select.monthly_energy
 ```yaml
 automation:
   - alias: "Energy Tariff - Peak Hours"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "07:00:00"
-    condition:
+    conditions:
       - condition: time
         weekday:
           - mon
@@ -133,8 +133,8 @@ automation:
           - wed
           - thu
           - fri
-    action:
-      - service: select.select_option
+    actions:
+      - action: select.select_option
         target:
           entity_id:
             - select.daily_energy
@@ -143,11 +143,11 @@ automation:
           option: peak
 
   - alias: "Energy Tariff - Off-Peak Hours"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "23:00:00"
-    action:
-      - service: select.select_option
+    actions:
+      - action: select.select_option
         target:
           entity_id:
             - select.daily_energy
@@ -156,16 +156,16 @@ automation:
           option: offpeak
 
   - alias: "Energy Tariff - Weekend Off-Peak"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "00:00:00"
-    condition:
+    conditions:
       - condition: time
         weekday:
           - sat
           - sun
-    action:
-      - service: select.select_option
+    actions:
+      - action: select.select_option
         target:
           entity_id:
             - select.daily_energy
@@ -189,41 +189,41 @@ utility_meter:
 # Automation for three tiers
 automation:
   - alias: "TOU - Peak"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "14:00:00"  # 2 PM - 8 PM
-    condition:
+    conditions:
       - condition: time
         weekday: [mon, tue, wed, thu, fri]
-    action:
-      - service: select.select_option
+    actions:
+      - action: select.select_option
         target:
           entity_id: select.energy_tou
         data:
           option: peak
 
   - alias: "TOU - Shoulder"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at:
           - "07:00:00"  # 7 AM - 2 PM
           - "20:00:00"  # 8 PM - 10 PM
-    condition:
+    conditions:
       - condition: time
         weekday: [mon, tue, wed, thu, fri]
-    action:
-      - service: select.select_option
+    actions:
+      - action: select.select_option
         target:
           entity_id: select.energy_tou
         data:
           option: shoulder
 
   - alias: "TOU - Off-Peak"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "22:00:00"  # 10 PM - 7 AM
-    action:
-      - service: select.select_option
+    actions:
+      - action: select.select_option
         target:
           entity_id: select.energy_tou
         data:
@@ -412,18 +412,18 @@ template:
 
 ```yaml
 # Reset specific utility meter
-service: utility_meter.reset
+action: utility_meter.reset
 target:
   entity_id: sensor.daily_energy
 
 # Reset with automation
 automation:
   - alias: "Reset Energy Meter Manually"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: input_button.reset_energy
-    action:
-      - service: utility_meter.reset
+    actions:
+      - action: utility_meter.reset
         target:
           entity_id: sensor.daily_energy
 ```
@@ -432,7 +432,7 @@ automation:
 
 ```yaml
 # Adjust meter value (e.g., after replacing source sensor)
-service: utility_meter.calibrate
+action: utility_meter.calibrate
 target:
   entity_id: sensor.monthly_energy
 data:
@@ -448,11 +448,11 @@ data:
 ```yaml
 automation:
   - alias: "Daily Energy Report"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "23:55:00"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "📊 Daily Energy Report"
           message: >
@@ -467,14 +467,14 @@ automation:
 ```yaml
 automation:
   - alias: "Monthly Energy Summary"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "08:00:00"
-    condition:
+    conditions:
       - condition: template
         value_template: "{{ now().day == 1 }}"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "📊 Monthly Energy Summary"
           message: >
@@ -487,12 +487,12 @@ automation:
 ```yaml
 automation:
   - alias: "High Daily Consumption Alert"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.daily_energy
         above: 30  # kWh threshold
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "⚠️ High Energy Consumption"
           message: "Daily consumption exceeded 30 kWh ({{ states('sensor.daily_energy') }} kWh)"

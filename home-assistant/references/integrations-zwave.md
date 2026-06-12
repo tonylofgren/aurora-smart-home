@@ -263,7 +263,7 @@ Primary Controller (your USB stick)
 # Run after adding/moving devices
 
 # Via Home Assistant
-service: zwave_js.refresh_node_info
+action: zwave_js.refresh_node_info
 data:
   entity_id: sensor.any_zwave_entity
 
@@ -316,12 +316,12 @@ data:
 automation:
   - id: zwave_motion_light
     alias: "Z-Wave Motion Light"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.zwave_motion_sensor
         to: "on"
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.zwave_dimmer
         data:
@@ -329,13 +329,13 @@ automation:
 
   - id: zwave_motion_off
     alias: "Z-Wave Motion Light Off"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.zwave_motion_sensor
         to: "off"
         for: "00:05:00"
-    action:
-      - service: light.turn_off
+    actions:
+      - action: light.turn_off
         target:
           entity_id: light.zwave_dimmer
 ```
@@ -349,15 +349,15 @@ automation:
 automation:
   - id: scene_controller_button
     alias: "Scene Controller Button Press"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: zwave_js_value_notification
         event_data:
           device_id: "abc123"  # Your device ID
           property: "scene"
           value: 1  # Button number
-    action:
-      - service: light.toggle
+    actions:
+      - action: light.toggle
         target:
           entity_id: light.living_room
 ```
@@ -375,19 +375,19 @@ automation:
 automation:
   - id: dimmer_scene_control
     alias: "Dimmer Scene Control"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: zwave_js_value_notification
         event_data:
           device_id: "your_device_id"
           command_class_name: "Central Scene"
-    action:
+    actions:
       - choose:
           - conditions:
               - condition: template
                 value_template: "{{ trigger.event.data.value == 'KeyPressed' }}"
             sequence:
-              - service: light.toggle
+              - action: light.toggle
                 target:
                   entity_id: light.overhead
 
@@ -395,7 +395,7 @@ automation:
               - condition: template
                 value_template: "{{ trigger.event.data.value == 'KeyPressed2x' }}"
             sequence:
-              - service: scene.turn_on
+              - action: scene.turn_on
                 target:
                   entity_id: scene.movie_mode
 
@@ -403,7 +403,7 @@ automation:
               - condition: template
                 value_template: "{{ trigger.event.data.value == 'KeyHeldDown' }}"
             sequence:
-              - service: light.turn_on
+              - action: light.turn_on
                 target:
                   entity_id: all
                 data:
@@ -437,7 +437,7 @@ automation:
 
 ```yaml
 # Set device parameters via service
-service: zwave_js.set_config_parameter
+action: zwave_js.set_config_parameter
 data:
   entity_id: light.zwave_dimmer
   parameter: 3  # LED indicator mode
@@ -460,21 +460,21 @@ script:
   configure_multisensor:
     sequence:
       # Motion sensitivity (1-5, 1=highest)
-      - service: zwave_js.set_config_parameter
+      - action: zwave_js.set_config_parameter
         data:
           entity_id: binary_sensor.multisensor_motion
           parameter: 4
           value: 3
 
       # Motion timeout (seconds)
-      - service: zwave_js.set_config_parameter
+      - action: zwave_js.set_config_parameter
         data:
           entity_id: binary_sensor.multisensor_motion
           parameter: 3
           value: 240
 
       # Report temperature changes (0.1°C units)
-      - service: zwave_js.set_config_parameter
+      - action: zwave_js.set_config_parameter
         data:
           entity_id: sensor.multisensor_temperature
           parameter: 41
@@ -485,21 +485,21 @@ script:
 
 ```yaml
 # Set minimum brightness
-service: zwave_js.set_config_parameter
+action: zwave_js.set_config_parameter
 data:
   entity_id: light.fibaro_dimmer
   parameter: 1
   value: 5  # 5% minimum
 
 # Set maximum brightness
-service: zwave_js.set_config_parameter
+action: zwave_js.set_config_parameter
 data:
   entity_id: light.fibaro_dimmer
   parameter: 2
   value: 99  # 99% maximum
 
 # Dimming step (1-99%)
-service: zwave_js.set_config_parameter
+action: zwave_js.set_config_parameter
 data:
   entity_id: light.fibaro_dimmer
   parameter: 5
@@ -510,21 +510,21 @@ data:
 
 ```yaml
 # LED color when on (0-255, color wheel)
-service: zwave_js.set_config_parameter
+action: zwave_js.set_config_parameter
 data:
   entity_id: light.inovelli_switch
   parameter: 13
   value: 170  # Blue
 
 # LED color when off
-service: zwave_js.set_config_parameter
+action: zwave_js.set_config_parameter
 data:
   entity_id: light.inovelli_switch
   parameter: 14
   value: 0  # Red
 
 # LED brightness
-service: zwave_js.set_config_parameter
+action: zwave_js.set_config_parameter
 data:
   entity_id: light.inovelli_switch
   parameter: 14
@@ -707,15 +707,15 @@ logger:
 automation:
   - id: zwave_monthly_maintenance
     alias: "Z-Wave Monthly Maintenance"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "03:00:00"
-    condition:
+    conditions:
       - condition: template
         value_template: "{{ now().day == 1 }}"  # First of month
-    action:
-      - service: zwave_js.heal_network
-      - service: notify.admin
+    actions:
+      - action: zwave_js.heal_network
+      - action: notify.admin
         data:
           message: "Z-Wave network heal started"
 ```

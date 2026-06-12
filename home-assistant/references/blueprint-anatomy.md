@@ -17,11 +17,11 @@ blueprint:
     # Input definitions go here
 
 # Trigger/action/condition sections follow
-trigger:
+triggers:
   # ...
-condition:
+conditions:
   # ...
-action:
+actions:
   # ...
 ```
 
@@ -367,13 +367,13 @@ input:
 ### Basic !input Usage
 
 ```yaml
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: !input motion_sensor
     to: "on"
 
-action:
-  - service: light.turn_on
+actions:
+  - action: light.turn_on
     target: !input target_lights
     data:
       brightness_pct: !input brightness
@@ -382,8 +382,8 @@ action:
 ### Input in Templates
 
 ```yaml
-action:
-  - service: notify.mobile_app
+actions:
+  - action: notify.mobile_app
     data:
       message: >
         Motion detected in {{ area_name(trigger.entity_id) }}
@@ -393,12 +393,12 @@ action:
 ### Conditional Input Usage
 
 ```yaml
-action:
+actions:
   - if:
       - condition: template
         value_template: "{{ !input enable_notifications }}"
     then:
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           message: !input notification_message
 ```
@@ -410,38 +410,38 @@ action:
 ### Basic Trigger Variables
 
 ```yaml
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: !input motion_sensor
     to: "on"
     id: motion_on
-  - platform: state
+  - trigger: state
     entity_id: !input motion_sensor
     to: "off"
     for: !input no_motion_wait
     id: motion_off
 
-action:
+actions:
   - choose:
       - conditions:
           - condition: trigger
             id: motion_on
         sequence:
-          - service: light.turn_on
+          - action: light.turn_on
             target: !input target_lights
       - conditions:
           - condition: trigger
             id: motion_off
         sequence:
-          - service: light.turn_off
+          - action: light.turn_off
             target: !input target_lights
 ```
 
 ### Trigger Variables
 
 ```yaml
-trigger:
-  - platform: device
+triggers:
+  - trigger: device
     device_id: !input controller_device
     domain: zha
     type: remote_button_short_press
@@ -450,7 +450,7 @@ trigger:
 trigger_variables:
   motion_sensor: !input motion_sensor
 
-condition:
+conditions:
   - condition: state
     entity_id: !input motion_sensor
     state: "off"
@@ -471,7 +471,7 @@ input:
       entity:
         domain: sensor
 
-condition:
+conditions:
   - condition: template
     value_template: >
       {{ !input optional_sensor == [] or
@@ -617,12 +617,12 @@ blueprint:
 
 mode: restart
 
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: !input motion_sensor
     to: "on"
     id: motion_on
-  - platform: state
+  - trigger: state
     entity_id: !input motion_sensor
     to: "off"
     for: !input no_motion_wait
@@ -635,13 +635,13 @@ variables:
     {% set current = now().strftime('%H:%M:%S') %}
     {{ current >= night_start_time or current < night_end_time }}
 
-action:
+actions:
   - choose:
       - conditions:
           - condition: trigger
             id: motion_on
         sequence:
-          - service: light.turn_on
+          - action: light.turn_on
             target: !input target_light
             data:
               brightness_pct: >
@@ -656,7 +656,7 @@ action:
           - condition: trigger
             id: motion_off
         sequence:
-          - service: light.turn_off
+          - action: light.turn_off
             target: !input target_light
             data:
               transition: 5

@@ -394,12 +394,12 @@ mqtt:
 ```yaml
 automation:
   - id: mqtt_motion
-    trigger:
-      - platform: mqtt
+    triggers:
+      - trigger: mqtt
         topic: "sensors/motion"
         payload: "ON"
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.hallway
 ```
@@ -409,13 +409,13 @@ automation:
 ```yaml
 automation:
   - id: mqtt_temperature_alert
-    trigger:
-      - platform: mqtt
+    triggers:
+      - trigger: mqtt
         topic: "sensors/data"
         value_template: "{{ value_json.temperature }}"
         payload: "25"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "Temperature reached 25°C"
 ```
@@ -425,11 +425,11 @@ automation:
 ```yaml
 automation:
   - id: mqtt_any_sensor
-    trigger:
-      - platform: mqtt
+    triggers:
+      - trigger: mqtt
         topic: "sensors/+/state"  # Single-level wildcard
-    action:
-      - service: system_log.write
+    actions:
+      - action: system_log.write
         data:
           message: "Received: {{ trigger.topic }} = {{ trigger.payload }}"
 ```
@@ -439,11 +439,11 @@ automation:
 ```yaml
 automation:
   - id: mqtt_with_variables
-    trigger:
-      - platform: mqtt
+    triggers:
+      - trigger: mqtt
         topic: "device/status"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: >
             Topic: {{ trigger.topic }}
@@ -458,8 +458,8 @@ automation:
 ### Publish Message
 
 ```yaml
-action:
-  - service: mqtt.publish
+actions:
+  - action: mqtt.publish
     data:
       topic: "device/command"
       payload: "ON"
@@ -468,8 +468,8 @@ action:
 ### With QoS and Retain
 
 ```yaml
-action:
-  - service: mqtt.publish
+actions:
+  - action: mqtt.publish
     data:
       topic: "device/command"
       payload: "ON"
@@ -480,8 +480,8 @@ action:
 ### JSON Payload
 
 ```yaml
-action:
-  - service: mqtt.publish
+actions:
+  - action: mqtt.publish
     data:
       topic: "device/settings"
       payload: >
@@ -491,8 +491,8 @@ action:
 ### Template Payload
 
 ```yaml
-action:
-  - service: mqtt.publish
+actions:
+  - action: mqtt.publish
     data:
       topic: "device/brightness"
       payload: "{{ states('input_number.brightness') | int }}"
@@ -501,8 +501,8 @@ action:
 ### Complex JSON Template
 
 ```yaml
-action:
-  - service: mqtt.publish
+actions:
+  - action: mqtt.publish
     data:
       topic: "device/config"
       payload: >
@@ -641,10 +641,10 @@ mqtt:
 
 automation:
   - trigger:
-      - platform: mqtt
+      - trigger: mqtt
         topic: "sensors/#"
-    action:
-      - service: system_log.write
+    actions:
+      - action: system_log.write
         data:
           message: "{{ trigger.topic }}: {{ trigger.payload }}"
 ```
@@ -654,11 +654,11 @@ automation:
 ```yaml
 automation:
   - id: log_all_tasmota
-    trigger:
-      - platform: mqtt
+    triggers:
+      - trigger: mqtt
         topic: "tele/+/STATE"
-    action:
-      - service: system_log.write
+    actions:
+      - action: system_log.write
         data:
           message: >
             Device: {{ trigger.topic.split('/')[1] }}
@@ -719,13 +719,13 @@ mqtt:
 ```yaml
 automation:
   - id: rf_motion
-    trigger:
-      - platform: mqtt
+    triggers:
+      - trigger: mqtt
         topic: "tele/rf_bridge/RESULT"
         value_template: "{{ value_json.RfReceived.Data }}"
         payload: "ABC123"  # RF code
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.hallway
 ```
@@ -866,14 +866,14 @@ mqtt:
 
 ```yaml
 # Developer Tools > Services
-service: mqtt.publish
+action: mqtt.publish
 data:
   topic: "test/homeassistant"
   payload: "Hello from HA"
 
 # Check broker received message
 # Then test subscription
-service: mqtt.dump
+action: mqtt.dump
 data:
   topic: "test/#"
   duration: 10

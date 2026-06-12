@@ -176,7 +176,7 @@ Control browsers as devices.
 # Settings > Devices & Services > Add > Browser Mod
 
 # Service examples
-service: browser_mod.popup
+action: browser_mod.popup
 data:
   browser_id: main_browser
   title: Settings
@@ -186,13 +186,13 @@ data:
       - light.living_room
 
 # Navigate browser
-service: browser_mod.navigate
+action: browser_mod.navigate
 data:
   browser_id: main_browser
   path: /lovelace/home
 
 # JavaScript execution
-service: browser_mod.javascript
+action: browser_mod.javascript
 data:
   browser_id: main_browser
   code: alert('Hello!')
@@ -209,7 +209,7 @@ Full Alexa integration.
 # Login with Amazon credentials (2FA supported)
 
 # Example services
-service: notify.alexa_media
+action: notify.alexa_media
 data:
   message: "The laundry is done"
   target:
@@ -218,7 +218,7 @@ data:
     type: announce
 
 # Play music
-service: media_player.play_media
+action: media_player.play_media
 target:
   entity_id: media_player.echo_living_room
 data:
@@ -265,16 +265,16 @@ Automatic circadian lighting.
 # Example: Manual override
 automation:
   - alias: "Disable adaptive lighting on manual change"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: call_service
         event_data:
           domain: light
-    condition:
+    conditions:
       - condition: template
         value_template: "{{ trigger.event.data.service_data.entity_id is defined }}"
-    action:
-      - service: switch.turn_off
+    actions:
+      - action: switch.turn_off
         target:
           entity_id: switch.adaptive_lighting_living_room
 ```
@@ -290,15 +290,15 @@ Garbage/recycling reminders.
 # Example automation
 automation:
   - alias: "Trash Reminder"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "19:00:00"
-    condition:
+    conditions:
       - condition: state
         entity_id: sensor.trash_collection
         state: "1"  # Tomorrow
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "Put out the trash tonight!"
 ```

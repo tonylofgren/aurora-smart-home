@@ -24,19 +24,19 @@ Reference for Zigbee button controllers and remotes in Home Assistant.
 
 ```yaml
 automation:
-  trigger:
-    - platform: event
+  triggers:
+    - trigger: event
       event_type: zha_event
       event_data:
         device_id: "abc123"
         command: "toggle"  # Center button
-    - platform: event
+    - trigger: event
       event_type: zha_event
       event_data:
         device_id: "abc123"
         command: "step_with_on_off"
         args: [0, 43, 5]  # Brightness up
-    - platform: event
+    - trigger: event
       event_type: zha_event
       event_data:
         device_id: "abc123"
@@ -57,8 +57,8 @@ automation:
 
 ```yaml
 automation:
-  trigger:
-    - platform: mqtt
+  triggers:
+    - trigger: mqtt
       topic: "zigbee2mqtt/ikea_remote/action"
       payload: "toggle"
 ```
@@ -78,13 +78,13 @@ automation:
 #### ZHA Events
 
 ```yaml
-trigger:
-  - platform: event
+triggers:
+  - trigger: event
     event_type: zha_event
     event_data:
       device_id: "abc123"
       command: "on"  # Top button
-  - platform: event
+  - trigger: event
     event_type: zha_event
     event_data:
       device_id: "abc123"
@@ -111,13 +111,13 @@ Single button.
 #### ZHA Events
 
 ```yaml
-trigger:
-  - platform: event
+triggers:
+  - trigger: event
     event_type: zha_event
     event_data:
       device_id: "abc123"
       command: "on"  # Short press
-  - platform: event
+  - trigger: event
     event_type: zha_event
     event_data:
       device_id: "abc123"
@@ -174,8 +174,8 @@ trigger:
 #### ZHA Events
 
 ```yaml
-trigger:
-  - platform: event
+triggers:
+  - trigger: event
     event_type: zha_event
     event_data:
       device_id: "abc123"
@@ -217,8 +217,8 @@ Single button with gesture support.
 #### ZHA Events
 
 ```yaml
-trigger:
-  - platform: event
+triggers:
+  - trigger: event
     event_type: zha_event
     event_data:
       device_id: "abc123"
@@ -317,13 +317,13 @@ blueprint:
 mode: single
 max_exceeded: silent
 
-trigger:
-  - platform: event
+triggers:
+  - trigger: event
     event_type: zha_event
     event_data:
       device_id: !input controller
 
-action:
+actions:
   - variables:
       command: "{{ trigger.event.data.command }}"
       args: "{{ trigger.event.data.args }}"

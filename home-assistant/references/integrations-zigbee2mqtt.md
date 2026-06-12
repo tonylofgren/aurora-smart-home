@@ -126,13 +126,13 @@ device_options:
 
 ```yaml
 # Via HA service
-service: mqtt.publish
+action: mqtt.publish
 data:
   topic: zigbee2mqtt/bridge/request/permit_join
   payload: '{"value": true}'
 
 # With timeout
-service: mqtt.publish
+action: mqtt.publish
 data:
   topic: zigbee2mqtt/bridge/request/permit_join
   payload: '{"value": true, "time": 120}'
@@ -144,17 +144,17 @@ data:
 automation:
   - id: z2m_permit_join
     alias: "Z2M Permit Join"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: input_boolean.zigbee_permit_join
         to: "on"
-    action:
-      - service: mqtt.publish
+    actions:
+      - action: mqtt.publish
         data:
           topic: zigbee2mqtt/bridge/request/permit_join
           payload: '{"value": true, "time": 120}'
       - delay: "00:02:00"
-      - service: input_boolean.turn_off
+      - action: input_boolean.turn_off
         target:
           entity_id: input_boolean.zigbee_permit_join
 ```
@@ -162,7 +162,7 @@ automation:
 ### Disable Pairing
 
 ```yaml
-service: mqtt.publish
+action: mqtt.publish
 data:
   topic: zigbee2mqtt/bridge/request/permit_join
   payload: '{"value": false}'
@@ -172,7 +172,7 @@ data:
 
 ```yaml
 # Force re-interview
-service: mqtt.publish
+action: mqtt.publish
 data:
   topic: zigbee2mqtt/bridge/request/device/interview
   payload: '{"id": "0x00158d0001234567"}'
@@ -186,7 +186,7 @@ data:
 
 ```yaml
 # Via MQTT
-service: mqtt.publish
+action: mqtt.publish
 data:
   topic: zigbee2mqtt/bridge/request/device/rename
   payload: '{"from": "0x00158d0001234567", "to": "living_room_motion"}'
@@ -272,25 +272,25 @@ zigbee2mqtt/
 
 ```yaml
 # Turn on light
-service: mqtt.publish
+action: mqtt.publish
 data:
   topic: zigbee2mqtt/living_room_bulb/set
   payload: '{"state": "ON"}'
 
 # Set brightness
-service: mqtt.publish
+action: mqtt.publish
 data:
   topic: zigbee2mqtt/living_room_bulb/set
   payload: '{"state": "ON", "brightness": 200}'
 
 # Set color temperature
-service: mqtt.publish
+action: mqtt.publish
 data:
   topic: zigbee2mqtt/living_room_bulb/set
   payload: '{"color_temp": 350}'
 
 # Set RGB color
-service: mqtt.publish
+action: mqtt.publish
 data:
   topic: zigbee2mqtt/living_room_bulb/set
   payload: '{"color": {"r": 255, "g": 100, "b": 50}}'
@@ -306,14 +306,14 @@ data:
 automation:
   - id: ikea_button_single
     alias: "IKEA Button Single Press"
-    trigger:
-      - platform: device
+    triggers:
+      - trigger: device
         domain: mqtt
         device_id: abc123def456
         type: action
         subtype: "on"
-    action:
-      - service: light.toggle
+    actions:
+      - action: light.toggle
         target:
           entity_id: light.living_room
 ```
@@ -324,26 +324,26 @@ automation:
 automation:
   - id: aqara_button
     alias: "Aqara Button"
-    trigger:
-      - platform: mqtt
+    triggers:
+      - trigger: mqtt
         topic: "zigbee2mqtt/aqara_button"
-    condition:
+    conditions:
       - condition: template
         value_template: "{{ trigger.payload_json.action is defined }}"
-    action:
+    actions:
       - choose:
           - conditions:
               - condition: template
                 value_template: "{{ trigger.payload_json.action == 'single' }}"
             sequence:
-              - service: light.toggle
+              - action: light.toggle
                 target:
                   entity_id: light.living_room
           - conditions:
               - condition: template
                 value_template: "{{ trigger.payload_json.action == 'double' }}"
             sequence:
-              - service: light.turn_on
+              - action: light.turn_on
                 target:
                   entity_id: light.living_room
                 data:
@@ -365,14 +365,14 @@ automation:
 automation:
   - id: z2m_button_handler
     alias: "Z2M Button Handler"
-    trigger:
-      - platform: mqtt
+    triggers:
+      - trigger: mqtt
         topic: "zigbee2mqtt/+/action"
     variables:
       device_name: "{{ trigger.topic.split('/')[1] }}"
       action: "{{ trigger.payload }}"
-    action:
-      - service: logbook.log
+    actions:
+      - action: logbook.log
         data:
           name: "Z2M Button"
           message: "{{ device_name }}: {{ action }}"
@@ -386,7 +386,7 @@ automation:
 
 ```yaml
 # Via MQTT
-service: mqtt.publish
+action: mqtt.publish
 data:
   topic: zigbee2mqtt/bridge/request/group/add
   payload: '{"friendly_name": "living_room_lights", "id": 1}'
@@ -395,13 +395,13 @@ data:
 ### Add Device to Group
 
 ```yaml
-service: mqtt.publish
+action: mqtt.publish
 data:
   topic: zigbee2mqtt/bridge/request/group/members/add
   payload: '{"group": "living_room_lights", "device": "bulb_1"}'
 
 # Add specific endpoint
-service: mqtt.publish
+action: mqtt.publish
 data:
   topic: zigbee2mqtt/bridge/request/group/members/add
   payload: '{"group": "living_room_lights", "device": "bulb_1", "endpoint": 1}'
@@ -425,13 +425,13 @@ groups:
 
 ```yaml
 # Control all lights in group
-service: mqtt.publish
+action: mqtt.publish
 data:
   topic: zigbee2mqtt/living_room_lights/set
   payload: '{"state": "ON", "brightness": 200}'
 
 # Via HA light entity
-service: light.turn_on
+action: light.turn_on
 target:
   entity_id: light.living_room_lights
 data:
@@ -441,7 +441,7 @@ data:
 ### Remove from Group
 
 ```yaml
-service: mqtt.publish
+action: mqtt.publish
 data:
   topic: zigbee2mqtt/bridge/request/group/members/remove
   payload: '{"group": "living_room_lights", "device": "bulb_1"}'
@@ -457,13 +457,13 @@ Direct device-to-device control without going through the coordinator.
 
 ```yaml
 # Bind button to light
-service: mqtt.publish
+action: mqtt.publish
 data:
   topic: zigbee2mqtt/bridge/request/device/bind
   payload: '{"from": "remote_1", "to": "bulb_1", "clusters": ["genOnOff", "genLevelCtrl"]}'
 
 # Bind to group
-service: mqtt.publish
+action: mqtt.publish
 data:
   topic: zigbee2mqtt/bridge/request/device/bind
   payload: '{"from": "remote_1", "to": "living_room_lights", "clusters": ["genOnOff"]}'
@@ -481,7 +481,7 @@ data:
 ### Unbind
 
 ```yaml
-service: mqtt.publish
+action: mqtt.publish
 data:
   topic: zigbee2mqtt/bridge/request/device/unbind
   payload: '{"from": "remote_1", "to": "bulb_1"}'
@@ -519,7 +519,7 @@ devices:
 ### Runtime Configuration
 
 ```yaml
-service: mqtt.publish
+action: mqtt.publish
 data:
   topic: zigbee2mqtt/bridge/request/device/configure
   payload: '{"id": "living_room_motion"}'
@@ -529,7 +529,7 @@ data:
 
 ```yaml
 # Set specific options
-service: mqtt.publish
+action: mqtt.publish
 data:
   topic: zigbee2mqtt/bridge/request/device/options
   payload: >
@@ -575,12 +575,12 @@ advanced:
 automation:
   - id: device_offline_alert
     alias: "Device Offline Alert"
-    trigger:
-      - platform: mqtt
+    triggers:
+      - trigger: mqtt
         topic: "zigbee2mqtt/+/availability"
         payload: "offline"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "Zigbee Device Offline"
           message: >
@@ -605,7 +605,7 @@ automation:
 
 ```yaml
 # Control
-service: mqtt.publish
+action: mqtt.publish
 data:
   topic: zigbee2mqtt/ikea_bulb/set
   payload: >
@@ -622,12 +622,12 @@ data:
 ```yaml
 automation:
   - id: aqara_motion
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.aqara_motion_occupancy
         to: "on"
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.hallway
 ```
@@ -637,12 +637,12 @@ automation:
 ```yaml
 automation:
   - id: door_opened
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.front_door_contact
         to: "on"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "Front door opened"
 ```
@@ -659,12 +659,12 @@ automation:
 # Use in automation
 automation:
   - id: temp_alert
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.aqara_temp_temperature
         above: 28
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "Temperature is {{ states('sensor.aqara_temp_temperature') }}°C"
 ```
@@ -674,17 +674,17 @@ automation:
 ```yaml
 automation:
   - id: sonoff_button
-    trigger:
-      - platform: mqtt
+    triggers:
+      - trigger: mqtt
         topic: "zigbee2mqtt/sonoff_button"
-    condition:
+    conditions:
       - condition: template
         value_template: "{{ trigger.payload_json.action in ['single', 'double', 'long'] }}"
-    action:
+    actions:
       - choose:
           - conditions: "{{ trigger.payload_json.action == 'single' }}"
             sequence:
-              - service: light.toggle
+              - action: light.toggle
                 target:
                   entity_id: light.lamp
 ```
@@ -702,12 +702,12 @@ automation:
 # Monitor power
 automation:
   - id: high_power_alert
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.tuya_plug_power
         above: 1000
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "High power usage: {{ states('sensor.tuya_plug_power') }}W"
 ```
@@ -722,14 +722,14 @@ automation:
 automation:
   - id: z2m_button_universal
     alias: "Z2M Universal Button Handler"
-    trigger:
-      - platform: mqtt
+    triggers:
+      - trigger: mqtt
         topic: "zigbee2mqtt/+/action"
     mode: queued
     variables:
       device: "{{ trigger.topic.split('/')[1] }}"
       action: "{{ trigger.payload }}"
-    action:
+    actions:
       - choose:
           # Living room remote
           - conditions:
@@ -739,12 +739,12 @@ automation:
               - choose:
                   - conditions: "{{ action == 'on' }}"
                     sequence:
-                      - service: light.turn_on
+                      - action: light.turn_on
                         target:
                           entity_id: light.living_room
                   - conditions: "{{ action == 'off' }}"
                     sequence:
-                      - service: light.turn_off
+                      - action: light.turn_off
                         target:
                           entity_id: light.living_room
 ```
@@ -773,12 +773,12 @@ template:
 
 automation:
   - id: battery_alert
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.low_battery_devices
         above: 0
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "Low Battery Alert"
           message: >
@@ -843,7 +843,7 @@ ota:
   disable_automatic_update_check: false
 
 # Trigger update
-service: mqtt.publish
+action: mqtt.publish
 data:
   topic: zigbee2mqtt/bridge/request/device/ota_update/update
   payload: '{"id": "bulb_1"}'
@@ -886,7 +886,7 @@ advanced:
 
 ```yaml
 # Request network map
-service: mqtt.publish
+action: mqtt.publish
 data:
   topic: zigbee2mqtt/bridge/request/networkmap
   payload: '{"type": "raw", "routes": true}'
@@ -897,7 +897,7 @@ data:
 ### Re-Interview Device
 
 ```yaml
-service: mqtt.publish
+action: mqtt.publish
 data:
   topic: zigbee2mqtt/bridge/request/device/interview
   payload: '{"id": "problematic_device"}'
@@ -907,13 +907,13 @@ data:
 
 ```yaml
 # Remove from network
-service: mqtt.publish
+action: mqtt.publish
 data:
   topic: zigbee2mqtt/bridge/request/device/remove
   payload: '{"id": "device_name"}'
 
 # Force remove (if device unresponsive)
-service: mqtt.publish
+action: mqtt.publish
 data:
   topic: zigbee2mqtt/bridge/request/device/remove
   payload: '{"id": "device_name", "force": true}'

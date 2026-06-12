@@ -44,8 +44,8 @@ Triggers define WHEN an automation should run. When a trigger fires, conditions 
 ```yaml
 automation:
   - id: example
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "on"
     condition: []
@@ -55,8 +55,8 @@ automation:
 ### Trigger ID
 
 ```yaml
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: binary_sensor.motion
     to: "on"
     id: motion_detected  # Use in conditions/actions
@@ -71,16 +71,16 @@ Fire when an entity's state changes.
 ### Basic State Change
 
 ```yaml
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: light.living_room
 ```
 
 ### To Specific State
 
 ```yaml
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: binary_sensor.motion
     to: "on"
 ```
@@ -88,8 +88,8 @@ trigger:
 ### From Specific State
 
 ```yaml
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: binary_sensor.motion
     from: "off"
     to: "on"
@@ -98,8 +98,8 @@ trigger:
 ### Multiple States (OR)
 
 ```yaml
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: vacuum.robot
     to:
       - cleaning
@@ -109,8 +109,8 @@ trigger:
 ### Multiple Entities
 
 ```yaml
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id:
       - binary_sensor.motion_living
       - binary_sensor.motion_kitchen
@@ -121,15 +121,15 @@ trigger:
 
 ```yaml
 # Trigger only after entity has been in state for duration
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: binary_sensor.door
     to: "on"
     for: "00:10:00"
 
 # Dynamic duration
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: binary_sensor.motion
     to: "off"
     for:
@@ -139,14 +139,14 @@ trigger:
 ### Attribute Change
 
 ```yaml
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: light.living_room
     attribute: brightness
 
 # Specific attribute value
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: media_player.tv
     attribute: source
     to: "HDMI 1"
@@ -156,8 +156,8 @@ trigger:
 
 ```yaml
 # Any state change except to/from unavailable
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: sensor.temperature
     not_from:
       - unknown
@@ -189,8 +189,8 @@ Fire when a numeric value crosses a threshold.
 ### Above Threshold
 
 ```yaml
-trigger:
-  - platform: numeric_state
+triggers:
+  - trigger: numeric_state
     entity_id: sensor.temperature
     above: 25
 ```
@@ -198,8 +198,8 @@ trigger:
 ### Below Threshold
 
 ```yaml
-trigger:
-  - platform: numeric_state
+triggers:
+  - trigger: numeric_state
     entity_id: sensor.battery
     below: 20
 ```
@@ -208,8 +208,8 @@ trigger:
 
 ```yaml
 # Fires when value enters the range
-trigger:
-  - platform: numeric_state
+triggers:
+  - trigger: numeric_state
     entity_id: sensor.humidity
     above: 30
     below: 70
@@ -218,8 +218,8 @@ trigger:
 ### With Duration
 
 ```yaml
-trigger:
-  - platform: numeric_state
+triggers:
+  - trigger: numeric_state
     entity_id: sensor.power
     above: 1000
     for: "00:05:00"
@@ -228,8 +228,8 @@ trigger:
 ### Attribute Value
 
 ```yaml
-trigger:
-  - platform: numeric_state
+triggers:
+  - trigger: numeric_state
     entity_id: light.living_room
     attribute: brightness
     above: 200
@@ -238,8 +238,8 @@ trigger:
 ### Template Threshold
 
 ```yaml
-trigger:
-  - platform: numeric_state
+triggers:
+  - trigger: numeric_state
     entity_id: sensor.outdoor_temp
     above: "{{ states('input_number.temp_threshold') | float }}"
 ```
@@ -248,8 +248,8 @@ trigger:
 
 ```yaml
 # Transform value before comparison
-trigger:
-  - platform: numeric_state
+triggers:
+  - trigger: numeric_state
     entity_id: sensor.power
     value_template: "{{ state.state | float * 0.001 }}"  # Convert W to kW
     above: 5
@@ -276,16 +276,16 @@ Fire at a specific time.
 ### Fixed Time
 
 ```yaml
-trigger:
-  - platform: time
+triggers:
+  - trigger: time
     at: "07:00:00"
 ```
 
 ### Multiple Times
 
 ```yaml
-trigger:
-  - platform: time
+triggers:
+  - trigger: time
     at:
       - "08:00:00"
       - "12:00:00"
@@ -295,16 +295,16 @@ trigger:
 ### Using Input Datetime
 
 ```yaml
-trigger:
-  - platform: time
+triggers:
+  - trigger: time
     at: input_datetime.alarm_time
 ```
 
 ### Multiple Input Datetimes
 
 ```yaml
-trigger:
-  - platform: time
+triggers:
+  - trigger: time
     at:
       - input_datetime.morning_alarm
       - input_datetime.evening_alarm
@@ -326,24 +326,24 @@ Fire on a recurring pattern.
 ### Every Minute
 
 ```yaml
-trigger:
-  - platform: time_pattern
+triggers:
+  - trigger: time_pattern
     minutes: "*"
 ```
 
 ### Every 5 Minutes
 
 ```yaml
-trigger:
-  - platform: time_pattern
+triggers:
+  - trigger: time_pattern
     minutes: "/5"
 ```
 
 ### Every Hour
 
 ```yaml
-trigger:
-  - platform: time_pattern
+triggers:
+  - trigger: time_pattern
     hours: "*"
     minutes: "0"
 ```
@@ -351,16 +351,16 @@ trigger:
 ### Specific Minutes
 
 ```yaml
-trigger:
-  - platform: time_pattern
+triggers:
+  - trigger: time_pattern
     minutes: "15"  # At :15 every hour
 ```
 
 ### Every 30 Seconds
 
 ```yaml
-trigger:
-  - platform: time_pattern
+triggers:
+  - trigger: time_pattern
     seconds: "/30"
 ```
 
@@ -368,8 +368,8 @@ trigger:
 
 ```yaml
 # At minute 0 and 30 of every hour
-trigger:
-  - platform: time_pattern
+triggers:
+  - trigger: time_pattern
     minutes: "0,30"
 ```
 
@@ -391,16 +391,16 @@ Fire at sunrise or sunset.
 ### At Sunset
 
 ```yaml
-trigger:
-  - platform: sun
+triggers:
+  - trigger: sun
     event: sunset
 ```
 
 ### At Sunrise
 
 ```yaml
-trigger:
-  - platform: sun
+triggers:
+  - trigger: sun
     event: sunrise
 ```
 
@@ -408,14 +408,14 @@ trigger:
 
 ```yaml
 # 30 minutes before sunset
-trigger:
-  - platform: sun
+triggers:
+  - trigger: sun
     event: sunset
     offset: "-00:30:00"
 
 # 1 hour after sunrise
-trigger:
-  - platform: sun
+triggers:
+  - trigger: sun
     event: sunrise
     offset: "01:00:00"
 ```
@@ -437,8 +437,8 @@ Fire when entity enters or leaves a zone.
 ### Enter Zone
 
 ```yaml
-trigger:
-  - platform: zone
+triggers:
+  - trigger: zone
     entity_id: person.john
     zone: zone.home
     event: enter
@@ -447,8 +447,8 @@ trigger:
 ### Leave Zone
 
 ```yaml
-trigger:
-  - platform: zone
+triggers:
+  - trigger: zone
     entity_id: person.john
     zone: zone.home
     event: leave
@@ -457,8 +457,8 @@ trigger:
 ### Multiple Entities
 
 ```yaml
-trigger:
-  - platform: zone
+triggers:
+  - trigger: zone
     entity_id:
       - person.john
       - person.jane
@@ -484,16 +484,16 @@ Fire when a specific event occurs.
 ### Basic Event
 
 ```yaml
-trigger:
-  - platform: event
+triggers:
+  - trigger: event
     event_type: my_custom_event
 ```
 
 ### With Event Data
 
 ```yaml
-trigger:
-  - platform: event
+triggers:
+  - trigger: event
     event_type: call_service
     event_data:
       domain: light
@@ -503,8 +503,8 @@ trigger:
 ### Mobile App Notification Action
 
 ```yaml
-trigger:
-  - platform: event
+triggers:
+  - trigger: event
     event_type: mobile_app_notification_action
     event_data:
       action: OPEN_DOOR
@@ -514,20 +514,20 @@ trigger:
 
 ```yaml
 # Home Assistant started
-trigger:
-  - platform: event
+triggers:
+  - trigger: event
     event_type: homeassistant_started
 
 # Script started
-trigger:
-  - platform: event
+triggers:
+  - trigger: event
     event_type: script_started
     event_data:
       entity_id: script.morning_routine
 
 # Automation triggered
-trigger:
-  - platform: event
+triggers:
+  - trigger: event
     event_type: automation_triggered
 ```
 
@@ -535,15 +535,15 @@ trigger:
 
 ```yaml
 # Timer finished
-trigger:
-  - platform: event
+triggers:
+  - trigger: event
     event_type: timer.finished
     event_data:
       entity_id: timer.laundry
 
 # Timer started
-trigger:
-  - platform: event
+triggers:
+  - trigger: event
     event_type: timer.started
     event_data:
       entity_id: timer.cooking
@@ -566,16 +566,16 @@ Fire when an MQTT message is received.
 ### Basic MQTT
 
 ```yaml
-trigger:
-  - platform: mqtt
+triggers:
+  - trigger: mqtt
     topic: "home/doorbell"
 ```
 
 ### With Payload
 
 ```yaml
-trigger:
-  - platform: mqtt
+triggers:
+  - trigger: mqtt
     topic: "home/doorbell"
     payload: "pressed"
 ```
@@ -583,8 +583,8 @@ trigger:
 ### JSON Payload Template
 
 ```yaml
-trigger:
-  - platform: mqtt
+triggers:
+  - trigger: mqtt
     topic: "sensors/temperature"
     value_template: "{{ value_json.temperature }}"
 ```
@@ -592,12 +592,12 @@ trigger:
 ### Wildcard Topics
 
 ```yaml
-trigger:
-  - platform: mqtt
+triggers:
+  - trigger: mqtt
     topic: "home/+/status"  # Single-level wildcard
 
-trigger:
-  - platform: mqtt
+triggers:
+  - trigger: mqtt
     topic: "home/#"  # Multi-level wildcard
 ```
 
@@ -621,16 +621,16 @@ Fire when an HTTP request is received.
 ### Basic Webhook
 
 ```yaml
-trigger:
-  - platform: webhook
+triggers:
+  - trigger: webhook
     webhook_id: my_unique_webhook_id
 ```
 
 ### With Allowed Methods
 
 ```yaml
-trigger:
-  - platform: webhook
+triggers:
+  - trigger: webhook
     webhook_id: my_webhook
     allowed_methods:
       - POST
@@ -640,8 +640,8 @@ trigger:
 ### Local Only
 
 ```yaml
-trigger:
-  - platform: webhook
+triggers:
+  - trigger: webhook
     webhook_id: my_webhook
     local_only: true
 ```
@@ -676,8 +676,8 @@ Fire on device-specific events.
 ### Button Press
 
 ```yaml
-trigger:
-  - platform: device
+triggers:
+  - trigger: device
     device_id: abc123def456
     domain: zha
     type: remote_button_short_press
@@ -687,8 +687,8 @@ trigger:
 ### Motion Detected
 
 ```yaml
-trigger:
-  - platform: device
+triggers:
+  - trigger: device
     device_id: abc123def456
     domain: binary_sensor
     type: motion
@@ -697,8 +697,8 @@ trigger:
 ### Battery Low
 
 ```yaml
-trigger:
-  - platform: device
+triggers:
+  - trigger: device
     device_id: abc123def456
     domain: sensor
     type: battery_level
@@ -724,8 +724,8 @@ Fire on calendar events.
 ### Event Starts
 
 ```yaml
-trigger:
-  - platform: calendar
+triggers:
+  - trigger: calendar
     entity_id: calendar.family
     event: start
 ```
@@ -733,8 +733,8 @@ trigger:
 ### Event Ends
 
 ```yaml
-trigger:
-  - platform: calendar
+triggers:
+  - trigger: calendar
     entity_id: calendar.family
     event: end
 ```
@@ -743,8 +743,8 @@ trigger:
 
 ```yaml
 # 15 minutes before event starts
-trigger:
-  - platform: calendar
+triggers:
+  - trigger: calendar
     entity_id: calendar.work
     event: start
     offset: "-00:15:00"
@@ -768,16 +768,16 @@ Fire when a template evaluates to true.
 ### Basic Template
 
 ```yaml
-trigger:
-  - platform: template
+triggers:
+  - trigger: template
     value_template: "{{ states('sensor.temperature') | float > 25 }}"
 ```
 
 ### Complex Condition
 
 ```yaml
-trigger:
-  - platform: template
+triggers:
+  - trigger: template
     value_template: >
       {{ is_state('binary_sensor.motion', 'on') and
          states('sensor.illuminance') | float < 50 and
@@ -787,8 +787,8 @@ trigger:
 ### With Duration
 
 ```yaml
-trigger:
-  - platform: template
+triggers:
+  - trigger: template
     value_template: "{{ states('sensor.power') | float > 1000 }}"
     for: "00:05:00"
 ```
@@ -796,8 +796,8 @@ trigger:
 ### Time-Based
 
 ```yaml
-trigger:
-  - platform: template
+triggers:
+  - trigger: template
     value_template: "{{ now().hour == 7 and now().minute == 0 }}"
 ```
 
@@ -818,16 +818,16 @@ Fire when an NFC tag is scanned.
 ### Basic Tag
 
 ```yaml
-trigger:
-  - platform: tag
+triggers:
+  - trigger: tag
     tag_id: my_tag_id
 ```
 
 ### Specific Device
 
 ```yaml
-trigger:
-  - platform: tag
+triggers:
+  - trigger: tag
     tag_id: my_tag_id
     device_id: abc123def456
 ```
@@ -849,16 +849,16 @@ Fire on voice commands.
 ### Basic Sentence
 
 ```yaml
-trigger:
-  - platform: conversation
+triggers:
+  - trigger: conversation
     command: "turn on the lights"
 ```
 
 ### With Wildcards
 
 ```yaml
-trigger:
-  - platform: conversation
+triggers:
+  - trigger: conversation
     command:
       - "turn on [the] {area} lights"
       - "lights on [in] {area}"
@@ -867,8 +867,8 @@ trigger:
 ### Multiple Commands
 
 ```yaml
-trigger:
-  - platform: conversation
+triggers:
+  - trigger: conversation
     command:
       - "goodnight"
       - "good night"
@@ -891,16 +891,16 @@ Fire on persistent notification events.
 ### Notification Created
 
 ```yaml
-trigger:
-  - platform: persistent_notification
+triggers:
+  - trigger: persistent_notification
     update_type: added
 ```
 
 ### Specific Notification
 
 ```yaml
-trigger:
-  - platform: persistent_notification
+triggers:
+  - trigger: persistent_notification
     notification_id: my_notification
     update_type: added
 ```
@@ -922,8 +922,8 @@ Fire when geo location source enters/leaves zone.
 ### Enter Zone
 
 ```yaml
-trigger:
-  - platform: geo_location
+triggers:
+  - trigger: geo_location
     source: usgs_earthquakes_feed
     zone: zone.home
     event: enter
@@ -932,8 +932,8 @@ trigger:
 ### Leave Zone
 
 ```yaml
-trigger:
-  - platform: geo_location
+triggers:
+  - trigger: geo_location
     source: usgs_earthquakes_feed
     zone: zone.home
     event: leave
@@ -958,11 +958,11 @@ Combine multiple triggers in one automation.
 
 ```yaml
 # Any trigger fires the automation
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: binary_sensor.motion
     to: "on"
-  - platform: state
+  - trigger: state
     entity_id: binary_sensor.door
     to: "on"
 ```
@@ -970,47 +970,47 @@ trigger:
 ### With Trigger IDs
 
 ```yaml
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: binary_sensor.motion
     to: "on"
     id: motion
-  - platform: state
+  - trigger: state
     entity_id: binary_sensor.door
     to: "on"
     id: door
-condition:
+conditions:
   - condition: trigger
     id: motion
-action:
+actions:
   # Only runs for motion trigger
 ```
 
 ### Different Actions per Trigger
 
 ```yaml
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: binary_sensor.motion
     to: "on"
     id: motion_on
-  - platform: state
+  - trigger: state
     entity_id: binary_sensor.motion
     to: "off"
     for: "00:05:00"
     id: motion_off
-action:
+actions:
   - choose:
       - conditions:
           - condition: trigger
             id: motion_on
         sequence:
-          - service: light.turn_on
+          - action: light.turn_on
       - conditions:
           - condition: trigger
             id: motion_off
         sequence:
-          - service: light.turn_off
+          - action: light.turn_off
 ```
 
 ---
@@ -1116,11 +1116,11 @@ Access trigger data in conditions and actions.
 ```yaml
 automation:
   - id: state_change_notification
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.door
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "State Change"
           message: >
@@ -1136,30 +1136,30 @@ automation:
 ### Motion Light with Off Timer
 
 ```yaml
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: binary_sensor.motion
     to: "on"
     id: motion_on
-  - platform: state
+  - trigger: state
     entity_id: binary_sensor.motion
     to: "off"
     for: "00:05:00"
     id: motion_off
-action:
+actions:
   - choose:
       - conditions:
           - condition: trigger
             id: motion_on
         sequence:
-          - service: light.turn_on
+          - action: light.turn_on
             target:
               entity_id: light.hallway
       - conditions:
           - condition: trigger
             id: motion_off
         sequence:
-          - service: light.turn_off
+          - action: light.turn_off
             target:
               entity_id: light.hallway
 ```
@@ -1167,29 +1167,29 @@ action:
 ### Sunrise/Sunset Blinds
 
 ```yaml
-trigger:
-  - platform: sun
+triggers:
+  - trigger: sun
     event: sunrise
     offset: "00:30:00"
     id: morning
-  - platform: sun
+  - trigger: sun
     event: sunset
     offset: "-00:30:00"
     id: evening
-action:
+actions:
   - choose:
       - conditions:
           - condition: trigger
             id: morning
         sequence:
-          - service: cover.open_cover
+          - action: cover.open_cover
             target:
               entity_id: cover.living_room
       - conditions:
           - condition: trigger
             id: evening
         sequence:
-          - service: cover.close_cover
+          - action: cover.close_cover
             target:
               entity_id: cover.living_room
 ```
@@ -1197,33 +1197,33 @@ action:
 ### Button Press Handler
 
 ```yaml
-trigger:
-  - platform: event
+triggers:
+  - trigger: event
     event_type: zha_event
     event_data:
       device_id: abc123
       command: "on"
     id: single
-  - platform: event
+  - trigger: event
     event_type: zha_event
     event_data:
       device_id: abc123
       command: "off"
     id: double
-action:
+actions:
   - choose:
       - conditions:
           - condition: trigger
             id: single
         sequence:
-          - service: light.toggle
+          - action: light.toggle
             target:
               entity_id: light.desk
       - conditions:
           - condition: trigger
             id: double
         sequence:
-          - service: scene.turn_on
+          - action: scene.turn_on
             target:
               entity_id: scene.work_mode
 ```
@@ -1232,8 +1232,8 @@ action:
 
 ```yaml
 # Only trigger if value stable for 1 minute
-trigger:
-  - platform: numeric_state
+triggers:
+  - trigger: numeric_state
     entity_id: sensor.temperature
     above: 25
     for: "00:01:00"
@@ -1242,20 +1242,20 @@ trigger:
 ### Presence-Based Welcome
 
 ```yaml
-trigger:
-  - platform: zone
+triggers:
+  - trigger: zone
     entity_id: person.john
     zone: zone.home
     event: enter
-condition:
+conditions:
   - condition: state
     entity_id: input_boolean.welcome_enabled
     state: "on"
   - condition: template
     value_template: >
       {{ (now() - state_attr('automation.welcome_home', 'last_triggered')).total_seconds() > 3600 }}
-action:
-  - service: tts.speak
+actions:
+  - action: tts.speak
     target:
       entity_id: tts.google
     data:
@@ -1271,8 +1271,8 @@ action:
 
 ```yaml
 # Always use IDs when you have multiple triggers
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: binary_sensor.motion
     to: "on"
     id: motion  # Descriptive ID
@@ -1282,13 +1282,13 @@ trigger:
 
 ```yaml
 # Bad: Triggers on ANY state change
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: sensor.temperature
 
 # Good: Specific threshold
-trigger:
-  - platform: numeric_state
+triggers:
+  - trigger: numeric_state
     entity_id: sensor.temperature
     above: 25
 ```
@@ -1297,8 +1297,8 @@ trigger:
 
 ```yaml
 # Avoid false triggers from sensor noise
-trigger:
-  - platform: numeric_state
+triggers:
+  - trigger: numeric_state
     entity_id: sensor.power
     above: 1000
     for: "00:00:30"  # Must be above for 30 seconds
@@ -1307,8 +1307,8 @@ trigger:
 ### Filter Unavailable States
 
 ```yaml
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: sensor.temperature
     not_from:
       - unknown
@@ -1321,10 +1321,10 @@ trigger:
 ### Document Complex Triggers
 
 ```yaml
-trigger:
+triggers:
   # Motion detected in living room
   # Only triggers if motion was previously off
-  - platform: state
+  - trigger: state
     entity_id: binary_sensor.living_room_motion
     from: "off"
     to: "on"
@@ -1350,11 +1350,11 @@ trigger:
 # Log all trigger data
 automation:
   - id: debug_trigger
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.test
-    action:
-      - service: system_log.write
+    actions:
+      - action: system_log.write
         data:
           message: >
             Trigger fired!
@@ -1379,35 +1379,35 @@ automation:
 
 ```yaml
 # Wrong: Boolean values not quoted
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: switch.test
     to: on  # YAML boolean, not string "on"
 
 # Correct
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: switch.test
     to: "on"
 
 # Wrong: Time without leading zero
-trigger:
-  - platform: time
+triggers:
+  - trigger: time
     at: "7:00"  # May not work
 
 # Correct
-trigger:
-  - platform: time
+triggers:
+  - trigger: time
     at: "07:00:00"
 
 # Wrong: Missing quotes in template
-trigger:
-  - platform: template
+triggers:
+  - trigger: template
     value_template: {{ is_state('light.test', 'on') }}  # Missing quotes
 
 # Correct
-trigger:
-  - platform: template
+triggers:
+  - trigger: template
     value_template: "{{ is_state('light.test', 'on') }}"
 ```
 
@@ -1416,7 +1416,7 @@ trigger:
 ```yaml
 # Developer Tools > Services
 # automation.trigger
-service: automation.trigger
+action: automation.trigger
 target:
   entity_id: automation.test_automation
 data:

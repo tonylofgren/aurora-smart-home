@@ -41,7 +41,7 @@ script:
     alias: "Turn On Morning Lights"
     description: "Gradually turn on lights for morning routine"
     sequence:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.bedroom
         data:
@@ -83,7 +83,7 @@ script:
 
     # Actions to perform
     sequence:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: "{{ target_light }}"
         data:
@@ -127,7 +127,7 @@ script:
     mode: single
     sequence:
       - delay: "00:01:00"
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           message: "Script completed"
 
@@ -135,11 +135,11 @@ script:
   restart_script:
     mode: restart
     sequence:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.indicator
       - delay: "00:00:30"
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id: light.indicator
 
@@ -148,7 +148,7 @@ script:
     mode: queued
     max: 5
     sequence:
-      - service: tts.speak
+      - action: tts.speak
         data:
           message: "{{ message }}"
       - delay: "00:00:05"
@@ -158,7 +158,7 @@ script:
     mode: parallel
     max: 10
     sequence:
-      - service: logbook.log
+      - action: logbook.log
         data:
           name: "Script"
           message: "Called with: {{ data }}"
@@ -188,7 +188,7 @@ script:
         required: false
         default: "normal"
     sequence:
-      - service: notify.mobile_app_{{ person | lower }}_phone
+      - action: notify.mobile_app_{{ person | lower }}_phone
         data:
           message: "{{ message }}"
           data:
@@ -353,7 +353,7 @@ script:
           - conditions:
               - "{{ scene == 'relax' }}"
             sequence:
-              - service: light.turn_on
+              - action: light.turn_on
                 target:
                   entity_id: "{{ light }}"
                 data:
@@ -362,7 +362,7 @@ script:
           - conditions:
               - "{{ scene == 'concentrate' }}"
             sequence:
-              - service: light.turn_on
+              - action: light.turn_on
                 target:
                   entity_id: "{{ light }}"
                 data:
@@ -371,7 +371,7 @@ script:
           - conditions:
               - "{{ scene == 'energize' }}"
             sequence:
-              - service: light.turn_on
+              - action: light.turn_on
                 target:
                   entity_id: "{{ light }}"
                 data:
@@ -407,13 +407,13 @@ script:
 automation:
   - id: weather_announcement
     alias: "Weather Announcement"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "08:00:00"
-    action:
-      - service: script.get_weather_summary
+    actions:
+      - action: script.get_weather_summary
         response_variable: weather
-      - service: tts.speak
+      - action: tts.speak
         target:
           entity_id: media_player.speaker
         data:
@@ -448,7 +448,7 @@ script:
   check_calendar:
     alias: "Check Calendar Events"
     sequence:
-      - service: calendar.get_events
+      - action: calendar.get_events
         target:
           entity_id: calendar.work
         data:
@@ -469,7 +469,7 @@ Scripts use the same actions as automations. Here's a quick reference:
 
 ```yaml
 sequence:
-  - service: light.turn_on
+  - action: light.turn_on
     target:
       entity_id: light.bedroom
     data:
@@ -501,7 +501,7 @@ sequence:
 ```yaml
 sequence:
   - wait_for_trigger:
-      - platform: state
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "off"
     timeout: "00:05:00"
@@ -515,7 +515,7 @@ sequence:
     entity_id: input_boolean.enabled
     state: "on"
   # Actions below only run if condition passes
-  - service: light.turn_on
+  - action: light.turn_on
     target:
       entity_id: light.bedroom
 ```
@@ -528,17 +528,17 @@ sequence:
       - conditions:
           - "{{ mode == 'morning' }}"
         sequence:
-          - service: scene.turn_on
+          - action: scene.turn_on
             target:
               entity_id: scene.morning
       - conditions:
           - "{{ mode == 'evening' }}"
         sequence:
-          - service: scene.turn_on
+          - action: scene.turn_on
             target:
               entity_id: scene.evening
     default:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.default
 ```
@@ -550,11 +550,11 @@ sequence:
   - if:
       - "{{ brightness > 50 }}"
     then:
-      - service: light.turn_on
+      - action: light.turn_on
         data:
           brightness_pct: "{{ brightness }}"
     else:
-      - service: light.turn_on
+      - action: light.turn_on
         data:
           brightness_pct: 50
 ```
@@ -567,7 +567,7 @@ sequence:
   - repeat:
       count: 3
       sequence:
-        - service: light.toggle
+        - action: light.toggle
           target:
             entity_id: light.indicator
         - delay: "00:00:01"
@@ -577,7 +577,7 @@ sequence:
       while:
         - "{{ repeat.index <= 5 }}"
       sequence:
-        - service: notify.mobile_app
+        - action: notify.mobile_app
           data:
             message: "Attempt {{ repeat.index }}"
         - delay: "00:00:10"
@@ -587,7 +587,7 @@ sequence:
       until:
         - "{{ is_state('lock.door', 'locked') }}"
       sequence:
-        - service: lock.lock
+        - action: lock.lock
           target:
             entity_id: lock.door
         - delay: "00:00:05"
@@ -596,7 +596,7 @@ sequence:
   - repeat:
       for_each: "{{ lights }}"
       sequence:
-        - service: light.turn_off
+        - action: light.turn_off
           target:
             entity_id: "{{ repeat.item }}"
 ```
@@ -606,13 +606,13 @@ sequence:
 ```yaml
 sequence:
   - parallel:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.bedroom
-      - service: cover.open_cover
+      - action: cover.open_cover
         target:
           entity_id: cover.bedroom_blinds
-      - service: media_player.volume_set
+      - action: media_player.volume_set
         target:
           entity_id: media_player.bedroom
         data:
@@ -626,7 +626,7 @@ sequence:
   - variables:
       calculated_brightness: >
         {{ (states('sensor.light_level') | float / 100 * 255) | int }}
-  - service: light.turn_on
+  - action: light.turn_on
     target:
       entity_id: light.adaptive
     data:
@@ -643,7 +643,7 @@ sequence:
       - stop: "Alarm is armed, cannot proceed"
 
   # Continue with rest of script...
-  - service: lock.unlock
+  - action: lock.unlock
     target:
       entity_id: lock.front_door
 ```
@@ -681,13 +681,13 @@ sequence:
 ```yaml
 automation:
   - id: call_script_example
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "on"
-    action:
+    actions:
       # Method 1: script.turn_on
-      - service: script.turn_on
+      - action: script.turn_on
         target:
           entity_id: script.morning_lights
         data:
@@ -695,7 +695,7 @@ automation:
             brightness: 80
 
       # Method 2: Direct call (preferred)
-      - service: script.morning_lights
+      - action: script.morning_lights
         data:
           brightness: 80
 ```
@@ -706,10 +706,10 @@ automation:
 script:
   main_routine:
     sequence:
-      - service: script.sub_routine_1
+      - action: script.sub_routine_1
         data:
           param: "value"
-      - service: script.sub_routine_2
+      - action: script.sub_routine_2
 ```
 
 ### With Response Variable
@@ -717,13 +717,13 @@ script:
 ```yaml
 automation:
   - id: use_script_response
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "08:00:00"
-    action:
-      - service: script.get_weather
+    actions:
+      - action: script.get_weather
         response_variable: weather
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           message: "Today: {{ weather.summary }}"
 ```
@@ -731,24 +731,24 @@ automation:
 ### Controlling Script Execution
 
 ```yaml
-action:
+actions:
   # Start script
-  - service: script.turn_on
+  - action: script.turn_on
     target:
       entity_id: script.long_running
 
   # Stop script
-  - service: script.turn_off
+  - action: script.turn_off
     target:
       entity_id: script.long_running
 
   # Toggle script
-  - service: script.toggle
+  - action: script.toggle
     target:
       entity_id: script.toggle_lights
 
   # Reload all scripts
-  - service: script.reload
+  - action: script.reload
 ```
 
 ---
@@ -764,7 +764,7 @@ script:
     icon: mdi:weather-sunny
     sequence:
       # Gradually turn on bedroom light
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.bedroom
         data:
@@ -774,7 +774,7 @@ script:
       - delay: "00:01:00"
 
       # Increase brightness
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.bedroom
         data:
@@ -782,18 +782,18 @@ script:
           transition: 120
 
       # Open blinds
-      - service: cover.open_cover
+      - action: cover.open_cover
         target:
           entity_id: cover.bedroom_blinds
 
       # Start coffee maker
-      - service: switch.turn_on
+      - action: switch.turn_on
         target:
           entity_id: switch.coffee_maker
 
       # Weather announcement
       - delay: "00:00:30"
-      - service: tts.speak
+      - action: tts.speak
         target:
           entity_id: media_player.bedroom_speaker
         data:
@@ -811,29 +811,29 @@ script:
     icon: mdi:weather-night
     sequence:
       # Turn off all lights
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id: all
 
       # Lock all doors
-      - service: lock.lock
+      - action: lock.lock
         target:
           entity_id: all
 
       # Arm alarm
-      - service: alarm_control_panel.alarm_arm_night
+      - action: alarm_control_panel.alarm_arm_night
         target:
           entity_id: alarm_control_panel.home
 
       # Set thermostat to sleep mode
-      - service: climate.set_preset_mode
+      - action: climate.set_preset_mode
         target:
           entity_id: climate.home
         data:
           preset_mode: "sleep"
 
       # Turn on night lights (low brightness)
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id:
             - light.hallway_night
@@ -842,7 +842,7 @@ script:
           brightness_pct: 5
 
       # Confirm via TTS
-      - service: tts.speak
+      - action: tts.speak
         target:
           entity_id: media_player.bedroom
         data:
@@ -882,19 +882,19 @@ script:
               - "{{ severity == 'critical' }}"
             sequence:
               - parallel:
-                  - service: notify.mobile_app_all
+                  - action: notify.mobile_app_all
                     data:
                       title: "{{ title }}"
                       message: "{{ message }}"
                       data:
                         priority: high
                         ttl: 0
-                  - service: tts.speak
+                  - action: tts.speak
                     target:
                       entity_id: media_player.all_speakers
                     data:
                       message: "Critical alert: {{ message }}"
-                  - service: persistent_notification.create
+                  - action: persistent_notification.create
                     data:
                       title: "{{ title }}"
                       message: "{{ message }}"
@@ -903,18 +903,18 @@ script:
           - conditions:
               - "{{ severity == 'important' }}"
             sequence:
-              - service: notify.mobile_app_all
+              - action: notify.mobile_app_all
                 data:
                   title: "{{ title }}"
                   message: "{{ message }}"
-              - service: persistent_notification.create
+              - action: persistent_notification.create
                 data:
                   title: "{{ title }}"
                   message: "{{ message }}"
 
         # Normal - Mobile only
         default:
-          - service: notify.mobile_app_all
+          - action: notify.mobile_app_all
             data:
               title: "{{ title }}"
               message: "{{ message }}"
@@ -947,7 +947,7 @@ script:
               - movie
               - off
     sequence:
-      - service: scene.turn_on
+      - action: scene.turn_on
         target:
           entity_id: "scene.{{ room }}_{{ scene }}"
 ```
@@ -973,7 +973,7 @@ script:
           - conditions:
               - "{{ device == 'phone' }}"
             sequence:
-              - service: notify.mobile_app_phone
+              - action: notify.mobile_app_phone
                 data:
                   message: "TTS"
                   data:
@@ -983,7 +983,7 @@ script:
           - conditions:
               - "{{ device == 'tablet' }}"
             sequence:
-              - service: notify.mobile_app_tablet
+              - action: notify.mobile_app_tablet
                 data:
                   message: "TTS"
                   data:
@@ -993,7 +993,7 @@ script:
           - conditions:
               - "{{ device == 'keys' }}"
             sequence:
-              - service: button.press
+              - action: button.press
                 target:
                   entity_id: button.tile_keys_ring
 ```
@@ -1008,7 +1008,7 @@ script:
       - repeat:
           count: 5
           sequence:
-            - service: lock.lock
+            - action: lock.lock
               target:
                 entity_id: lock.front_door
             - delay:
@@ -1019,7 +1019,7 @@ script:
                   state: "locked"
               then:
                 - stop: "Door locked successfully"
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           title: "Lock Failed"
           message: "Could not lock front door after 5 attempts"
@@ -1091,13 +1091,13 @@ script:
       - if:
           - "{{ states(target_entity) in ['unavailable', 'unknown'] }}"
         then:
-          - service: script.notify
+          - action: script.notify
             data:
               message: "{{ target_entity }} is unavailable"
           - stop: "Entity unavailable"
 
       # Proceed with action
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: "{{ target_entity }}"
 ```
@@ -1127,7 +1127,7 @@ script:
             min: 1
             max: 60
     sequence:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: "{{ light }}"
         data:
@@ -1137,19 +1137,19 @@ script:
   # Composed script using base
   sunrise_simulation:
     sequence:
-      - service: script.light_fade
+      - action: script.light_fade
         data:
           light: light.bedroom
           target_brightness: 10
           duration: 60
       - delay: "00:01:00"
-      - service: script.light_fade
+      - action: script.light_fade
         data:
           light: light.bedroom
           target_brightness: 50
           duration: 120
       - delay: "00:02:00"
-      - service: script.light_fade
+      - action: script.light_fade
         data:
           light: light.bedroom
           target_brightness: 100
@@ -1164,13 +1164,13 @@ script:
     sequence:
       # Use parallel for independent actions
       - parallel:
-          - service: light.turn_on
+          - action: light.turn_on
             target:
               entity_id: light.living_room
-          - service: light.turn_on
+          - action: light.turn_on
             target:
               entity_id: light.kitchen
-          - service: light.turn_on
+          - action: light.turn_on
             target:
               entity_id: light.bedroom
 
@@ -1203,14 +1203,14 @@ script:
 
 ```yaml
 # Wrong - fields not in data
-- service: script.my_script
+- action: script.my_script
   target:
     entity_id: script.my_script
   data:
     my_field: value  # Ignored!
 
 # Correct - use service directly
-- service: script.my_script
+- action: script.my_script
   data:
     my_field: value
 ```
@@ -1241,13 +1241,13 @@ script:
 ```yaml
 sequence:
   # Add logging
-  - service: system_log.write
+  - action: system_log.write
     data:
       message: "Script started with: {{ field_value }}"
       level: info
 
   # Add persistent notification
-  - service: persistent_notification.create
+  - action: persistent_notification.create
     data:
       title: "Debug"
       message: "Step 1 complete"

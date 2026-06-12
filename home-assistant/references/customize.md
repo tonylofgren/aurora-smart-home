@@ -685,7 +685,7 @@ logger:
 # Developer Tools > YAML > Reload Core Config
 
 # Or service call
-service: homeassistant.reload_core_config
+action: homeassistant.reload_core_config
 ```
 
 ### Priority Order

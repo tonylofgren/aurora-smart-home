@@ -364,14 +364,14 @@ Fire custom events in Home Assistant.
 # Home Assistant automation
 automation:
   - alias: "Handle Node-RED Event"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: custom_event
-    condition:
+    conditions:
       - condition: template
         value_template: "{{ trigger.event.data.source == 'node_red' }}"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "Event received: {{ trigger.event.data.value }}"
 ```
@@ -513,12 +513,12 @@ Listen to device-specific triggers.
 # Home Assistant automation calling Node-RED webhook
 automation:
   - alias: "Trigger Node-RED Flow"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "on"
-    action:
-      - service: rest_command.node_red_webhook
+    actions:
+      - action: rest_command.node_red_webhook
         data:
           action: motion_detected
           location: living_room
@@ -817,22 +817,22 @@ return null;
 # Home Assistant handles triggers, Node-RED handles logic
 automation:
   - alias: "Motion Detected - Forward to Node-RED"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion_living
         to: "on"
-    action:
-      - service: rest_command.node_red
+    actions:
+      - action: rest_command.node_red
         data:
           endpoint: motion
           entity: "{{ trigger.entity_id }}"
 
   - alias: "Complex Automation via Node-RED"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: node_red_action
-    action:
-      - service: "{{ trigger.event.data.service }}"
+    actions:
+      - action: "{{ trigger.event.data.service }}"
         target:
           entity_id: "{{ trigger.event.data.entity_id }}"
         data: "{{ trigger.event.data.service_data }}"

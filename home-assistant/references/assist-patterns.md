@@ -156,11 +156,11 @@ intent_script:
   GoodMorning:
     speech:
       text: "Good morning! I am preparing the house."
-    action:
-      - service: scene.turn_on
+    actions:
+      - action: scene.turn_on
         target:
           entity_id: scene.morning
-      - service: media_player.play_media
+      - action: media_player.play_media
         target:
           entity_id: media_player.kitchen
         data:
@@ -170,8 +170,8 @@ intent_script:
   LeaveHome:
     speech:
       text: "Have a great day! I am turning everything off."
-    action:
-      - service: script.leave_home
+    actions:
+      - action: script.leave_home
 ```
 
 Register in `configuration.yaml`:
@@ -354,8 +354,8 @@ intent_script:
   ConfirmVacuum:
     speech:
       text: "The vacuum is starting now."
-    action:
-      - service: vacuum.start
+    actions:
+      - action: vacuum.start
         target:
           entity_id: vacuum.roborock
 ```

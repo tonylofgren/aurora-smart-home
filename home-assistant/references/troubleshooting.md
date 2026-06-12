@@ -231,7 +231,7 @@ api_key: !secret api_key
 # Settings > Devices & Services > [Integration]
 
 # Force update
-service: homeassistant.update_entity
+action: homeassistant.update_entity
 target:
   entity_id: sensor.problematic_sensor
 ```
@@ -260,7 +260,7 @@ target:
 # Check in Developer Tools > States
 
 # Force state (for testing)
-service: homeassistant.set_state
+action: homeassistant.set_state
 target:
   entity_id: sensor.test
 data:
@@ -315,7 +315,7 @@ automation:
 
 ```yaml
 # Test automation manually
-service: automation.trigger
+action: automation.trigger
 target:
   entity_id: automation.test_automation
 data:
@@ -327,12 +327,12 @@ data:
 ```yaml
 automation:
   - alias: "Debug Automation"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
-    action:
+    actions:
       # Debug: Log trigger data
-      - service: system_log.write
+      - action: system_log.write
         data:
           message: >
             Motion triggered:
@@ -342,12 +342,12 @@ automation:
           level: info
 
       # Debug: Send notification
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           message: "Debug: Motion detected at {{ now() }}"
 
       # Actual actions...
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.living_room
 ```
@@ -384,11 +384,11 @@ script:
     trace:
       stored_traces: 5
     sequence:
-      - service: system_log.write
+      - action: system_log.write
         data:
           message: "Script started"
       # ... actions
-      - service: system_log.write
+      - action: system_log.write
         data:
           message: "Script completed"
 ```
@@ -484,13 +484,13 @@ automation:
   - alias: "Debug Variables"
     variables:
       room: "living_room"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
-    action:
+    actions:
       - variables:
           brightness: "{{ 100 if is_state('sun.sun', 'above_horizon') else 30 }}"
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: "light.{{ room }}"
         data:
@@ -857,7 +857,7 @@ recorder:
       - homeassistant_stop
 
 # Purge database manually
-service: recorder.purge
+action: recorder.purge
 data:
   keep_days: 3
   repack: true
@@ -967,7 +967,7 @@ mv home-assistant_v2.db home-assistant_v2.db.corrupt
 # ls -lh home-assistant_v2.db
 
 # Reduce with purge
-service: recorder.purge
+action: recorder.purge
 data:
   keep_days: 3
   repack: true
@@ -1241,15 +1241,15 @@ traceroute host
 # Automated backups
 automation:
   - alias: "Weekly Backup"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "03:00:00"
-    condition:
+    conditions:
       - condition: time
         weekday:
           - sun
-    action:
-      - service: backup.create
+    actions:
+      - action: backup.create
 ```
 
 ### Update Strategy

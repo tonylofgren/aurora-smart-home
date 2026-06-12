@@ -607,16 +607,16 @@ input_number:
 automation:
   - id: pkg_motion_light
     alias: "[Lighting] Motion Light"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "on"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_boolean.motion_lights_enabled
         state: "on"
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.hallway
 ```

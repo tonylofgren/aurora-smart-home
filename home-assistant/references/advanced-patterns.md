@@ -40,17 +40,17 @@ automation:
   # Transition: Home -> Away
   - id: state_home_to_away
     alias: "State: Home to Away"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: group.family
         to: "not_home"
         for: "00:15:00"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_select.home_state
         state: "Home"
-    action:
-      - service: input_select.select_option
+    actions:
+      - action: input_select.select_option
         target:
           entity_id: input_select.home_state
         data:
@@ -59,16 +59,16 @@ automation:
   # Transition: Away -> Home
   - id: state_away_to_home
     alias: "State: Away to Home"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: group.family
         to: "home"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_select.home_state
         state: "Away"
-    action:
-      - service: input_select.select_option
+    actions:
+      - action: input_select.select_option
         target:
           entity_id: input_select.home_state
         data:
@@ -77,15 +77,15 @@ automation:
   # Transition: Home -> Night
   - id: state_home_to_night
     alias: "State: Home to Night"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "23:00:00"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_select.home_state
         state: "Home"
-    action:
-      - service: input_select.select_option
+    actions:
+      - action: input_select.select_option
         target:
           entity_id: input_select.home_state
         data:
@@ -94,15 +94,15 @@ automation:
   # Transition: Night -> Home
   - id: state_night_to_home
     alias: "State: Night to Home"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "07:00:00"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_select.home_state
         state: "Night"
-    action:
-      - service: input_select.select_option
+    actions:
+      - action: input_select.select_option
         target:
           entity_id: input_select.home_state
         data:
@@ -116,46 +116,46 @@ automation:
 automation:
   - id: state_entered_away
     alias: "State Entry: Away Mode"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: input_select.home_state
         to: "Away"
-    action:
+    actions:
       - parallel:
-          - service: climate.set_temperature
+          - action: climate.set_temperature
             target:
               entity_id: all
             data:
               temperature: 16
-          - service: light.turn_off
+          - action: light.turn_off
             target:
               entity_id: all
-          - service: media_player.turn_off
+          - action: media_player.turn_off
             target:
               entity_id: all
           - delay: "00:05:00"
-          - service: alarm_control_panel.alarm_arm_away
+          - action: alarm_control_panel.alarm_arm_away
             target:
               entity_id: alarm_control_panel.home
 
   - id: state_entered_night
     alias: "State Entry: Night Mode"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: input_select.home_state
         to: "Night"
-    action:
-      - service: light.turn_off
+    actions:
+      - action: light.turn_off
         target:
           area_id:
             - living_room
             - kitchen
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.hallway_night_light
         data:
           brightness_pct: 5
-      - service: alarm_control_panel.alarm_arm_night
+      - action: alarm_control_panel.alarm_arm_night
         target:
           entity_id: alarm_control_panel.home
 ```
@@ -195,40 +195,40 @@ automation:
   # Present -> Recently_Left
   - id: presence_to_recently_left
     alias: "Presence: To Recently Left"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.anyone_home
         to: "off"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_select.presence_state
         state: "Present"
-    action:
-      - service: input_select.select_option
+    actions:
+      - action: input_select.select_option
         target:
           entity_id: input_select.presence_state
         data:
           option: "Recently_Left"
-      - service: timer.start
+      - action: timer.start
         target:
           entity_id: timer.recently_left_timeout
 
   # Recently_Left -> Present (quick return)
   - id: presence_quick_return
     alias: "Presence: Quick Return"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.anyone_home
         to: "on"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_select.presence_state
         state: "Recently_Left"
-    action:
-      - service: timer.cancel
+    actions:
+      - action: timer.cancel
         target:
           entity_id: timer.recently_left_timeout
-      - service: input_select.select_option
+      - action: input_select.select_option
         target:
           entity_id: input_select.presence_state
         data:
@@ -237,31 +237,31 @@ automation:
   # Recently_Left -> Away (timeout)
   - id: presence_to_away
     alias: "Presence: To Away"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: timer.finished
         event_data:
           entity_id: timer.recently_left_timeout
-    action:
-      - service: input_select.select_option
+    actions:
+      - action: input_select.select_option
         target:
           entity_id: input_select.presence_state
         data:
           option: "Away"
-      - service: timer.start
+      - action: timer.start
         target:
           entity_id: timer.extended_away_timeout
 
   # Away -> Extended_Away
   - id: presence_to_extended_away
     alias: "Presence: To Extended Away"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: timer.finished
         event_data:
           entity_id: timer.extended_away_timeout
-    action:
-      - service: input_select.select_option
+    actions:
+      - action: input_select.select_option
         target:
           entity_id: input_select.presence_state
         data:
@@ -270,23 +270,23 @@ automation:
   # Any Away State -> Arriving
   - id: presence_arriving
     alias: "Presence: Arriving"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.phone_distance_home
         below: 1000  # 1km
-    condition:
+    conditions:
       - condition: state
         entity_id: input_select.presence_state
         state:
           - "Away"
           - "Extended_Away"
-    action:
-      - service: input_select.select_option
+    actions:
+      - action: input_select.select_option
         target:
           entity_id: input_select.presence_state
         data:
           option: "Arriving"
-      - service: climate.set_temperature
+      - action: climate.set_temperature
         target:
           entity_id: climate.home
         data:
@@ -304,18 +304,18 @@ automation:
 automation:
   - id: area_based_lights_off
     alias: "Area: Turn Off Empty Area Lights"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id:
           - binary_sensor.living_room_occupied
           - binary_sensor.kitchen_occupied
           - binary_sensor.bedroom_occupied
         to: "off"
         for: "00:10:00"
-    action:
+    actions:
       - variables:
           area: "{{ trigger.entity_id.split('.')[1].replace('_occupied', '') }}"
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           area_id: "{{ area }}"
 ```
@@ -327,18 +327,18 @@ automation:
 automation:
   - id: follow_me_lights
     alias: "Follow Me: Lighting"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id:
           - binary_sensor.hallway_motion
           - binary_sensor.living_room_motion
           - binary_sensor.kitchen_motion
           - binary_sensor.bedroom_motion
         to: "on"
-    condition:
+    conditions:
       - condition: sun
         after: sunset
-    action:
+    actions:
       - variables:
           current_area: "{{ trigger.entity_id.split('.')[1].replace('_motion', '') }}"
           all_areas:
@@ -347,14 +347,14 @@ automation:
             - kitchen
             - bedroom
       # Turn on current area
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           area_id: "{{ current_area }}"
         data:
           brightness_pct: 80
           transition: 1
       # Dim other areas (except bedrooms if night)
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           area_id: >
             {{ all_areas | reject('eq', current_area)
@@ -371,26 +371,26 @@ automation:
 automation:
   - id: movie_mode_coordination
     alias: "Coordination: Movie Mode"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: input_boolean.movie_mode
         to: "on"
-    action:
+    actions:
       # Living room - movie lighting
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           area_id: living_room
         data:
           brightness_pct: 10
           color_temp: 500
       # Kitchen - dim but functional
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           area_id: kitchen
         data:
           brightness_pct: 30
       # Hallway - night light mode
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.hallway
         data:
@@ -415,7 +415,7 @@ script:
             - condition: state
               entity_id: "binary_sensor.{{ repeat.item }}_occupied"
               state: "off"
-            - service: light.turn_off
+            - action: light.turn_off
               target:
                 area_id: "{{ repeat.item }}"
 ```
@@ -432,10 +432,10 @@ automation:
   # Master: Goodnight trigger
   - id: cascade_goodnight_master
     alias: "Cascade Master: Goodnight"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: input_button.goodnight
-    action:
+    actions:
       - event: cascade_goodnight
         event_data:
           source: button
@@ -444,11 +444,11 @@ automation:
   # Child: Lights
   - id: cascade_goodnight_lights
     alias: "Cascade Child: Goodnight Lights"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: cascade_goodnight
-    action:
-      - service: light.turn_off
+    actions:
+      - action: light.turn_off
         target:
           entity_id: all
         data:
@@ -457,11 +457,11 @@ automation:
   # Child: Climate
   - id: cascade_goodnight_climate
     alias: "Cascade Child: Goodnight Climate"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: cascade_goodnight
-    action:
-      - service: climate.set_temperature
+    actions:
+      - action: climate.set_temperature
         target:
           entity_id: climate.bedroom
         data:
@@ -470,12 +470,12 @@ automation:
   # Child: Security
   - id: cascade_goodnight_security
     alias: "Cascade Child: Goodnight Security"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: cascade_goodnight
-    action:
+    actions:
       - delay: "00:05:00"
-      - service: alarm_control_panel.alarm_arm_night
+      - action: alarm_control_panel.alarm_arm_night
         target:
           entity_id: alarm_control_panel.home
 ```
@@ -487,13 +487,13 @@ automation:
 automation:
   - id: sequential_startup
     alias: "Sequential Startup Chain"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: input_boolean.morning_routine
         to: "on"
-    action:
+    actions:
       # Step 1: Climate
-      - service: climate.set_hvac_mode
+      - action: climate.set_hvac_mode
         target:
           entity_id: climate.living_room
         data:
@@ -507,7 +507,7 @@ automation:
           - condition: template
             value_template: "{{ wait.completed }}"
         then:
-          - service: light.turn_on
+          - action: light.turn_on
             target:
               area_id: living_room
             data:
@@ -515,12 +515,12 @@ automation:
 
       # Step 3: Coffee machine (only after lights)
       - delay: "00:00:30"
-      - service: switch.turn_on
+      - action: switch.turn_on
         target:
           entity_id: switch.coffee_machine
 
       # Step 4: Notification
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           message: "Morning routine complete!"
 ```
@@ -536,19 +536,19 @@ automation:
 automation:
   - id: debounced_motion
     alias: "Debounced Motion Light"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "on"
-    condition:
+    conditions:
       # Only trigger if last activation was > 30 seconds ago
       - condition: template
         value_template: >
           {{ (as_timestamp(now()) - as_timestamp(
               states.automation.debounced_motion.attributes.last_triggered
               | default(0))) > 30 }}
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.hallway
 ```
@@ -560,18 +560,18 @@ automation:
 automation:
   - id: holddown_occupancy
     alias: "Hold-Down: Room Unoccupied"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "off"
         for: "00:10:00"  # Must be off for 10 minutes
-    condition:
+    conditions:
       # Double-check still off
       - condition: state
         entity_id: binary_sensor.motion
         state: "off"
-    action:
-      - service: light.turn_off
+    actions:
+      - action: light.turn_off
         target:
           entity_id: light.room
 ```
@@ -596,50 +596,50 @@ automation:
   # Motion detected - start/restart timer
   - id: timer_motion_detected
     alias: "Timer: Motion Detected"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "on"
-    action:
-      - service: timer.start
+    actions:
+      - action: timer.start
         target:
           entity_id: timer.motion_timeout
-      - service: input_boolean.turn_on
+      - action: input_boolean.turn_on
         target:
           entity_id: input_boolean.light_auto_controlled
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.room
 
   # Motion continues - restart timer
   - id: timer_motion_continues
     alias: "Timer: Motion Continues"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "on"
-    condition:
+    conditions:
       - condition: state
         entity_id: timer.motion_timeout
         state: "active"
-    action:
-      - service: timer.start
+    actions:
+      - action: timer.start
         target:
           entity_id: timer.motion_timeout
 
   # Timer finished - turn off
   - id: timer_finished
     alias: "Timer: Motion Timeout"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: timer.finished
         event_data:
           entity_id: timer.motion_timeout
-    action:
-      - service: light.turn_off
+    actions:
+      - action: light.turn_off
         target:
           entity_id: light.room
-      - service: input_boolean.turn_off
+      - action: input_boolean.turn_off
         target:
           entity_id: input_boolean.light_auto_controlled
 ```
@@ -651,11 +651,11 @@ automation:
 automation:
   - id: adaptive_timeout
     alias: "Adaptive Motion Timeout"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "on"
-    action:
+    actions:
       - variables:
           timeout_minutes: >
             {% set hour = now().hour %}
@@ -666,7 +666,7 @@ automation:
             {% else %}
               10
             {% endif %}
-      - service: timer.start
+      - action: timer.start
         target:
           entity_id: timer.motion_timeout
         data:
@@ -702,7 +702,7 @@ script:
           sequence:
             - variables:
                 attempt: "{{ attempt + 1 }}"
-            - service: "{{ service_name }}"
+            - action: "{{ service_name }}"
               target:
                 entity_id: "{{ target_entity }}"
               continue_on_error: true
@@ -722,7 +722,7 @@ script:
                 - variables:
                     success: true
               else:
-                - service: system_log.write
+                - action: system_log.write
                   data:
                     message: "Retry {{ attempt }}/{{ max_retries }} for {{ target_entity }}"
                     level: warning
@@ -731,7 +731,7 @@ script:
           - condition: template
             value_template: "{{ not success }}"
         then:
-          - service: notify.admin
+          - action: notify.admin
             data:
               title: "Automation Failed"
               message: "Failed to {{ service_name }} {{ target_entity }} after {{ max_retries }} attempts"
@@ -743,13 +743,13 @@ script:
 automation:
   - id: light_with_fallback
     alias: "Light Control with Fallback"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "on"
-    action:
+    actions:
       # Try primary light
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.primary
         continue_on_error: true
@@ -760,10 +760,10 @@ automation:
             entity_id: light.primary
             state: "unavailable"
         then:
-          - service: light.turn_on
+          - action: light.turn_on
             target:
               entity_id: light.fallback
-          - service: notify.admin
+          - action: notify.admin
             data:
               message: "Primary light unavailable, using fallback"
 ```
@@ -774,18 +774,18 @@ automation:
 automation:
   - id: error_handler
     alias: "Global Error Handler"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: system_log_event
         event_data:
           level: ERROR
-    condition:
+    conditions:
       - condition: template
         value_template: >
           {{ 'automation' in trigger.event.data.message | lower
              or 'script' in trigger.event.data.message | lower }}
-    action:
-      - service: notify.admin
+    actions:
+      - action: notify.admin
         data:
           title: "Home Assistant Error"
           message: "{{ trigger.event.data.message[:200] }}"
@@ -801,15 +801,15 @@ automation:
 automation:
   - id: smart_light_control
     alias: "Smart Light: Full Context"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "on"
-    condition:
+    conditions:
       - condition: numeric_state
         entity_id: sensor.illuminance
         below: 100
-    action:
+    actions:
       - variables:
           hour: "{{ now().hour }}"
           anyone_home: "{{ is_state('group.family', 'home') }}"
@@ -834,7 +834,7 @@ automation:
             {% else %}
               250
             {% endif %}
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.living_room
         data:
@@ -855,35 +855,35 @@ automation:
   # Detect manual changes
   - id: detect_manual_light_change
     alias: "Detect Manual Light Change"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: light.living_room
-    condition:
+    conditions:
       - condition: template
         value_template: "{{ trigger.to_state.context.user_id is not none }}"
-    action:
-      - service: input_boolean.turn_on
+    actions:
+      - action: input_boolean.turn_on
         target:
           entity_id: input_boolean.lights_manual_override
       # Reset after 2 hours
       - delay: "02:00:00"
-      - service: input_boolean.turn_off
+      - action: input_boolean.turn_off
         target:
           entity_id: input_boolean.lights_manual_override
 
   # Skip automation if manual override active
   - id: auto_lights_with_override
     alias: "Auto Lights (With Override Check)"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "on"
-    condition:
+    conditions:
       - condition: state
         entity_id: input_boolean.lights_manual_override
         state: "off"
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.living_room
 ```
@@ -932,16 +932,16 @@ template:
 automation:
   - id: guest_mode_auto_enable
     alias: "Guest Mode: Auto Enable"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.only_guest_home
         to: "on"
-    action:
-      - service: input_boolean.turn_on
+    actions:
+      - action: input_boolean.turn_on
         target:
           entity_id: input_boolean.guest_mode
       # Simplified automation mode for guests
-      - service: automation.turn_off
+      - action: automation.turn_off
         target:
           entity_id:
             - automation.advanced_lighting
@@ -949,15 +949,15 @@ automation:
 
   - id: guest_mode_auto_disable
     alias: "Guest Mode: Auto Disable"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.only_guest_home
         to: "off"
-    action:
-      - service: input_boolean.turn_off
+    actions:
+      - action: input_boolean.turn_off
         target:
           entity_id: input_boolean.guest_mode
-      - service: automation.turn_on
+      - action: automation.turn_on
         target:
           entity_id:
             - automation.advanced_lighting
@@ -974,13 +974,13 @@ automation:
 automation:
   - id: climate_zone_coordination
     alias: "Climate: Zone Coordination"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id:
           - binary_sensor.living_room_occupied
           - binary_sensor.bedroom_occupied
           - binary_sensor.office_occupied
-    action:
+    actions:
       - variables:
           occupied_zones: >
             {% set zones = [] %}
@@ -998,13 +998,13 @@ automation:
             {% set all = ['climate.living_room', 'climate.bedroom', 'climate.office'] %}
             {{ all | reject('in', occupied_zones) | list }}
       # Heat occupied zones
-      - service: climate.set_temperature
+      - action: climate.set_temperature
         target:
           entity_id: "{{ occupied_zones }}"
         data:
           temperature: "{{ states('input_number.comfort_temp') | float }}"
       # Reduce unoccupied zones
-      - service: climate.set_temperature
+      - action: climate.set_temperature
         target:
           entity_id: "{{ unoccupied_zones }}"
         data:
@@ -1017,10 +1017,10 @@ automation:
 automation:
   - id: climate_weather_adjustment
     alias: "Climate: Weather Adjustment"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: weather.home
-    action:
+    actions:
       - variables:
           adjustment: >
             {% set condition = states('weather.home') %}
@@ -1033,7 +1033,7 @@ automation:
             {% else %}
               0
             {% endif %}
-      - service: climate.set_temperature
+      - action: climate.set_temperature
         target:
           entity_id: climate.living_room
         data:
@@ -1065,12 +1065,12 @@ script:
 automation:
   - id: dispatch_arrival
     alias: "Dispatch: Person Arrived"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: person.john
         to: "home"
-    action:
-      - service: script.dispatch_event
+    actions:
+      - action: script.dispatch_event
         data:
           event_name: "person_arrived"
           event_data:
@@ -1080,14 +1080,14 @@ automation:
   # Listener automation
   - id: handle_arrival
     alias: "Handle: Person Arrival"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: ha_custom_person_arrived
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.hallway
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           message: "{{ trigger.event.data.person }} arrived home"
 ```
@@ -1105,27 +1105,27 @@ automation:
 automation:
   - id: optimized_motion_handler
     alias: "Optimized Motion Handler"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id:
           - binary_sensor.living_room_motion
           - binary_sensor.kitchen_motion
           - binary_sensor.bedroom_motion
         to: "on"
-    action:
+    actions:
       - choose:
           - conditions:
               - condition: trigger
                 id: living_room
             sequence:
-              - service: light.turn_on
+              - action: light.turn_on
                 target:
                   entity_id: light.living_room
           - conditions:
               - condition: trigger
                 id: kitchen
             sequence:
-              - service: light.turn_on
+              - action: light.turn_on
                 target:
                   entity_id: light.kitchen
           - conditions:
@@ -1134,7 +1134,7 @@ automation:
             sequence:
               - condition: sun
                 after: sunset
-              - service: light.turn_on
+              - action: light.turn_on
                 target:
                   entity_id: light.bedroom
                 data:
@@ -1161,11 +1161,11 @@ template:
 # Simple trigger
 automation:
   - id: climate_action
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.climate_action_needed
         to: "on"
-    action:
+    actions:
       # ...
 ```
 
@@ -1175,18 +1175,18 @@ automation:
 automation:
   - id: rate_limited_notification
     alias: "Rate Limited Notification"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.door
         to: "on"
-    condition:
+    conditions:
       # Only notify once per hour
       - condition: template
         value_template: >
           {% set last = state_attr('automation.rate_limited_notification', 'last_triggered') %}
           {{ last is none or (now() - last).total_seconds() > 3600 }}
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "Door opened"
 ```

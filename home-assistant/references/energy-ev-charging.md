@@ -34,12 +34,12 @@ Home Assistant enables intelligent EV charging through integration with popular 
 # - number.easee_max_charger_limit (amperage)
 
 # Service calls
-service: easee.set_charger_dynamic_limit
+action: easee.set_charger_dynamic_limit
 data:
   charger_id: "EH000000"
   current: 16  # Amperes
 
-service: easee.action_command
+action: easee.action_command
 data:
   charger_id: "EH000000"
   action_command: pause  # or resume, stop, start
@@ -59,12 +59,12 @@ data:
 # - number.wallbox_max_charging_current
 
 # Service calls
-service: wallbox.set_max_charging_current
+action: wallbox.set_max_charging_current
 data:
   charging_current: 32
   station: 12345
 
-service: wallbox.pause_charging
+action: wallbox.pause_charging
 data:
   station: 12345
 ```
@@ -98,11 +98,11 @@ tesla_wall_connector:
 # - switch.zaptec_charger
 
 # Service calls
-service: zaptec.authorize_charging
+action: zaptec.authorize_charging
 data:
   charger_id: "ZAP000000"
 
-service: zaptec.set_available_current
+action: zaptec.set_available_current
 data:
   charger_id: "ZAP000000"
   available_current: 16
@@ -126,7 +126,7 @@ openevse:
 # - number.openevse_max_current
 
 # Set charging current via service
-service: openevse.set_current
+action: openevse.set_current
 data:
   current: 24
 ```
@@ -178,18 +178,18 @@ rest:
 automation:
   - id: ev_start_charging_scheduled
     alias: "EV - Start Scheduled Charging"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "23:00:00"
-    condition:
+    conditions:
       - condition: state
         entity_id: binary_sensor.ev_connected
         state: "on"
       - condition: numeric_state
         entity_id: sensor.ev_battery_level
         below: 80
-    action:
-      - service: switch.turn_on
+    actions:
+      - action: switch.turn_on
         target:
           entity_id: switch.ev_charger
 
@@ -197,19 +197,19 @@ automation:
 automation:
   - id: ev_stop_at_target
     alias: "EV - Stop at Target SoC"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.ev_battery_level
         above: 80
-    condition:
+    conditions:
       - condition: state
         entity_id: switch.ev_charger
         state: "on"
-    action:
-      - service: switch.turn_off
+    actions:
+      - action: switch.turn_off
         target:
           entity_id: switch.ev_charger
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           title: "EV Charging"
           message: "Charging complete! Battery at {{ states('sensor.ev_battery_level') }}%"
@@ -226,20 +226,20 @@ script:
       - condition: state
         entity_id: binary_sensor.ev_connected
         state: "on"
-      - service: switch.turn_on
+      - action: switch.turn_on
         target:
           entity_id: switch.ev_charger
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           message: "EV charging started"
 
   ev_stop_charging:
     alias: "Stop EV Charging"
     sequence:
-      - service: switch.turn_off
+      - action: switch.turn_off
         target:
           entity_id: switch.ev_charger
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           message: >
             EV charging stopped.
@@ -252,12 +252,12 @@ script:
 automation:
   - id: ev_connected_notification
     alias: "EV - Connected Notification"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.ev_connected
         to: "on"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "EV Connected"
           message: >
@@ -307,10 +307,10 @@ input_number:
 automation:
   - id: ev_cheap_price_charging
     alias: "EV - Charge at Cheap Price"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: sensor.nordpool_kwh_se3_sek_3_10_025
-    condition:
+    conditions:
       - condition: state
         entity_id: binary_sensor.ev_connected
         state: "on"
@@ -320,7 +320,7 @@ automation:
       - condition: numeric_state
         entity_id: sensor.ev_battery_level
         below: input_number.ev_target_soc
-    action:
+    actions:
       - choose:
           # Start charging if cheap
           - conditions:
@@ -329,7 +329,7 @@ automation:
                   {{ states('sensor.nordpool_kwh_se3_sek_3_10_025') | float <
                      states('input_number.ev_price_threshold') | float }}
             sequence:
-              - service: switch.turn_on
+              - action: switch.turn_on
                 target:
                   entity_id: switch.ev_charger
           # Stop if expensive
@@ -339,7 +339,7 @@ automation:
                   {{ states('sensor.nordpool_kwh_se3_sek_3_10_025') | float >
                      states('input_number.ev_price_threshold') | float * 1.5 }}
             sequence:
-              - service: switch.turn_off
+              - action: switch.turn_off
                 target:
                   entity_id: switch.ev_charger
 
@@ -400,10 +400,10 @@ automation:
   - id: ev_solar_surplus_charging
     alias: "EV - Solar Surplus Charging"
     mode: restart
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: sensor.solar_surplus
-    condition:
+    conditions:
       - condition: state
         entity_id: binary_sensor.ev_connected
         state: "on"
@@ -413,7 +413,7 @@ automation:
       - condition: sun
         after: sunrise
         before: sunset
-    action:
+    actions:
       - choose:
           # Enough surplus - charge
           - conditions:
@@ -421,11 +421,11 @@ automation:
                 entity_id: sensor.solar_surplus
                 above: input_number.ev_min_solar_surplus
             sequence:
-              - service: switch.turn_on
+              - action: switch.turn_on
                 target:
                   entity_id: switch.ev_charger
               # Adjust charging current based on surplus
-              - service: number.set_value
+              - action: number.set_value
                 target:
                   entity_id: number.ev_charger_current
                 data:
@@ -446,7 +446,7 @@ automation:
               - condition: numeric_state
                 entity_id: sensor.solar_surplus
                 below: 2
-              - service: switch.turn_off
+              - action: switch.turn_off
                 target:
                   entity_id: switch.ev_charger
 ```
@@ -491,10 +491,10 @@ template:
 automation:
   - id: ev_departure_schedule
     alias: "EV - Departure Time Charging"
-    trigger:
-      - platform: time_pattern
+    triggers:
+      - trigger: time_pattern
         minutes: "/5"
-    condition:
+    conditions:
       - condition: state
         entity_id: binary_sensor.ev_connected
         state: "on"
@@ -510,8 +510,8 @@ automation:
       - condition: numeric_state
         entity_id: sensor.ev_battery_level
         below: input_number.ev_target_soc
-    action:
-      - service: switch.turn_on
+    actions:
+      - action: switch.turn_on
         target:
           entity_id: switch.ev_charger
 ```
@@ -542,14 +542,14 @@ automation:
   - id: ev_load_balancing
     alias: "EV - Load Balancing"
     mode: restart
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: sensor.available_charging_power
-    condition:
+    conditions:
       - condition: state
         entity_id: switch.ev_charger
         state: "on"
-    action:
+    actions:
       - variables:
           available_kw: "{{ states('sensor.available_charging_power') | float(0) }}"
           available_amps: "{{ (available_kw * 1000 / (230 * 3)) | int }}"
@@ -560,17 +560,17 @@ automation:
               - condition: template
                 value_template: "{{ available_amps >= 6 }}"
             sequence:
-              - service: number.set_value
+              - action: number.set_value
                 target:
                   entity_id: number.ev_charger_current
                 data:
                   value: "{{ target_amps }}"
           # Not enough power - pause charging
         default:
-          - service: switch.turn_off
+          - action: switch.turn_off
             target:
               entity_id: switch.ev_charger
-          - service: notify.mobile_app
+          - action: notify.mobile_app
             data:
               title: "EV Charging Paused"
               message: "High home consumption - charging paused"
@@ -608,11 +608,11 @@ template:
 automation:
   - id: ev_rfid_identification
     alias: "EV - RFID Vehicle ID"
-    trigger:
-      - platform: tag
+    triggers:
+      - trigger: tag
         tag_id: "vehicle_1_tag_id"
-    action:
-      - service: input_select.select_option
+    actions:
+      - action: input_select.select_option
         target:
           entity_id: input_select.connected_vehicle
         data:
@@ -676,22 +676,22 @@ input_select:
 automation:
   - id: ev_user_john_preferences
     alias: "EV - John's Charging Preferences"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: input_select.ev_active_user
         to: "John"
-    condition:
+    conditions:
       - condition: state
         entity_id: binary_sensor.ev_connected
         state: "on"
-    action:
+    actions:
       # John wants 80% by 7:00 AM
-      - service: input_number.set_value
+      - action: input_number.set_value
         target:
           entity_id: input_number.ev_target_soc
         data:
           value: 80
-      - service: input_datetime.set_datetime
+      - action: input_datetime.set_datetime
         target:
           entity_id: input_datetime.ev_departure_time
         data:
@@ -699,22 +699,22 @@ automation:
 
   - id: ev_user_jane_preferences
     alias: "EV - Jane's Charging Preferences"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: input_select.ev_active_user
         to: "Jane"
-    condition:
+    conditions:
       - condition: state
         entity_id: binary_sensor.ev_connected
         state: "on"
-    action:
+    actions:
       # Jane only wants solar charging to 100%
-      - service: input_number.set_value
+      - action: input_number.set_value
         target:
           entity_id: input_number.ev_target_soc
         data:
           value: 100
-      - service: input_boolean.turn_on
+      - action: input_boolean.turn_on
         target:
           entity_id: input_boolean.ev_solar_only_charging
 ```
@@ -734,12 +734,12 @@ input_select:
 automation:
   - id: ev_queue_management
     alias: "EV - Queue Management"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id:
           - binary_sensor.charger_1_connected
           - binary_sensor.charger_2_connected
-    action:
+    actions:
       - choose:
           # Both connected - alternate or priority
           - conditions:
@@ -757,17 +757,17 @@ automation:
                       {{ states('sensor.charger_1_soc') | float <
                          states('sensor.charger_2_soc') | float }}
                 then:
-                  - service: switch.turn_on
+                  - action: switch.turn_on
                     target:
                       entity_id: switch.charger_1
-                  - service: switch.turn_off
+                  - action: switch.turn_off
                     target:
                       entity_id: switch.charger_2
                 else:
-                  - service: switch.turn_on
+                  - action: switch.turn_on
                     target:
                       entity_id: switch.charger_2
-                  - service: switch.turn_off
+                  - action: switch.turn_off
                     target:
                       entity_id: switch.charger_1
 ```
@@ -799,11 +799,11 @@ template:
 automation:
   - id: v2g_discharge_to_home
     alias: "V2G - Discharge to Home"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.v2g_profitable
         to: "on"
-    condition:
+    conditions:
       - condition: state
         entity_id: binary_sensor.ev_connected
         state: "on"
@@ -813,9 +813,9 @@ automation:
       - condition: state
         entity_id: input_boolean.v2g_enabled
         state: "on"
-    action:
+    actions:
       # Set charger to discharge mode (future API)
-      - service: ev_charger.set_mode
+      - action: ev_charger.set_mode
         data:
           mode: discharge
           power: 5000  # 5kW discharge rate
@@ -979,17 +979,17 @@ cards:
 automation:
   - id: ev_charger_watchdog
     alias: "EV - Charger Watchdog"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: switch.ev_charger
         to: "unavailable"
         for:
           minutes: 5
-    action:
-      - service: homeassistant.reload_config_entry
+    actions:
+      - action: homeassistant.reload_config_entry
         data:
           entry_id: "charger_config_entry_id"
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           title: "EV Charger"
           message: "Charger went unavailable - attempting reconnection"
@@ -1061,10 +1061,10 @@ input_number:
 automation:
   - id: ev_important_notifications
     alias: "EV - Important Notifications"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: sensor.ev_battery_level
-    action:
+    actions:
       - choose:
           # Target reached
           - conditions:
@@ -1073,7 +1073,7 @@ automation:
                   {{ trigger.to_state.state | float >=
                      states('input_number.ev_target_soc') | float }}
             sequence:
-              - service: notify.mobile_app
+              - action: notify.mobile_app
                 data:
                   title: "EV Ready"
                   message: "Battery at {{ states('sensor.ev_battery_level') }}%"

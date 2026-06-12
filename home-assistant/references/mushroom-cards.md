@@ -560,8 +560,8 @@ tap_action:
   action: navigate
   navigation_path: /lovelace/living-room
 hold_action:
-  action: call-service
-  service: light.toggle
+  action: perform-action
+  perform_action: light.toggle
   target:
     entity_id: light.living_room_all
 ```
@@ -586,8 +586,8 @@ chips:
     content: "{{ states('sensor.lights_on') }}"
     icon_color: "{{ 'amber' if states('sensor.lights_on') | int > 0 else 'grey' }}"
     tap_action:
-      action: call-service
-      service: light.turn_off
+      action: perform-action
+      perform_action: light.turn_off
       target:
         entity_id: light.all_lights
 
@@ -622,32 +622,32 @@ cards:
     primary: Home
     icon: mdi:home
     tap_action:
-      action: call-service
-      service: script.home_mode
+      action: perform-action
+      perform_action: script.home_mode
     layout: vertical
 
   - type: custom:mushroom-template-card
     primary: Away
     icon: mdi:home-export-outline
     tap_action:
-      action: call-service
-      service: script.away_mode
+      action: perform-action
+      perform_action: script.away_mode
     layout: vertical
 
   - type: custom:mushroom-template-card
     primary: Night
     icon: mdi:weather-night
     tap_action:
-      action: call-service
-      service: script.night_mode
+      action: perform-action
+      perform_action: script.night_mode
     layout: vertical
 
   - type: custom:mushroom-template-card
     primary: Guest
     icon: mdi:account-multiple
     tap_action:
-      action: call-service
-      service: script.guest_mode
+      action: perform-action
+      perform_action: script.guest_mode
     layout: vertical
 ```
 
@@ -695,8 +695,8 @@ hold_action:
   action: more-info
 
 double_tap_action:
-  action: call-service
-  service: light.turn_on
+  action: perform-action
+  perform_action: light.turn_on
   data:
     brightness_pct: 100
 
@@ -721,8 +721,8 @@ tap_action:
 
 # Service call
 tap_action:
-  action: call-service
-  service: script.movie_mode
+  action: perform-action
+  perform_action: script.movie_mode
   target:
     entity_id: script.movie_mode
   data:

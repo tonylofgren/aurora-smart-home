@@ -578,17 +578,17 @@ input_boolean:
     icon: mdi:test-tube
 
 # In automations, wrap actions:
-action:
+actions:
   - if:
       - condition: state
         entity_id: input_boolean.test_mode
         state: "on"
     then:
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           message: "TEST: Would turn on {{ trigger.entity_id }}"
     else:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.living_room
 ```
@@ -806,14 +806,14 @@ How do I use the new weather.get_forecasts service?"
 {{ state_attr('weather.home', 'forecast')[0].temperature }}
 
 # New (2024.x+):
-action:
-  - service: weather.get_forecasts
+actions:
+  - action: weather.get_forecasts
     target:
       entity_id: weather.home
     data:
       type: daily
     response_variable: forecast
-  - service: notify.mobile_app
+  - action: notify.mobile_app
     data:
       message: "Tomorrow: {{ forecast['weather.home'].forecast[0].temperature }}°"
 ```

@@ -45,7 +45,7 @@ hue:
 
 ```yaml
 # Turn on with color
-service: light.turn_on
+action: light.turn_on
 target:
   entity_id: light.hue_living_room
 data:
@@ -53,13 +53,13 @@ data:
   rgb_color: [255, 100, 50]
 
 # Use Hue scene
-service: hue.activate_scene
+action: hue.activate_scene
 data:
   group_name: "Living Room"
   scene_name: "Relax"
 
 # Color transition
-service: light.turn_on
+action: light.turn_on
 target:
   entity_id: light.hue_bulb_1
 data:
@@ -67,7 +67,7 @@ data:
   transition: 5
 
 # Color temperature
-service: light.turn_on
+action: light.turn_on
 target:
   entity_id: light.hue_bedroom
 data:
@@ -79,14 +79,14 @@ data:
 
 ```yaml
 # Activate all lights in Hue group
-service: light.turn_on
+action: light.turn_on
 target:
   entity_id: light.hue_room_living_room
 data:
   brightness_pct: 100
 
 # Entertainment areas
-service: hue.hue_activate_scene
+action: hue.hue_activate_scene
 data:
   group_name: "Entertainment Area"
   scene_name: "Movie"
@@ -97,16 +97,16 @@ data:
 ```yaml
 automation:
   - alias: "Hue Motion Light"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.hue_motion_sensor_motion
         to: "on"
-    condition:
+    conditions:
       - condition: numeric_state
         entity_id: sensor.hue_motion_sensor_light_level
         below: 100
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.hue_hallway
         data:
@@ -118,12 +118,12 @@ automation:
 ```yaml
 automation:
   - alias: "Hue Dimmer Button Press"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: hue_event
         event_data:
           device_id: abc123  # Get from event logs
-    action:
+    actions:
       - choose:
           - conditions:
               - condition: template
@@ -131,14 +131,14 @@ automation:
               - condition: template
                 value_template: "{{ trigger.event.data.subtype == 1 }}"  # Button 1
             sequence:
-              - service: light.toggle
+              - action: light.toggle
                 target:
                   entity_id: light.hue_living_room
           - conditions:
               - condition: template
                 value_template: "{{ trigger.event.data.subtype == 4 }}"  # Button 4
             sequence:
-              - service: light.turn_off
+              - action: light.turn_off
                 target:
                   entity_id: all
 ```
@@ -172,7 +172,7 @@ sonos:
 
 ```yaml
 # Play media
-service: media_player.play_media
+action: media_player.play_media
 target:
   entity_id: media_player.sonos_living_room
 data:
@@ -180,14 +180,14 @@ data:
   media_content_id: "spotify:playlist:37i9dQZF1DXcBWIGoYBM5M"
 
 # Set volume
-service: media_player.volume_set
+action: media_player.volume_set
 target:
   entity_id: media_player.sonos_kitchen
 data:
   volume_level: 0.3
 
 # Text-to-speech
-service: tts.speak
+action: tts.speak
 target:
   entity_id: media_player.sonos_living_room
 data:
@@ -199,7 +199,7 @@ data:
 
 ```yaml
 # Join speakers
-service: media_player.join
+action: media_player.join
 target:
   entity_id: media_player.sonos_living_room
 data:
@@ -208,7 +208,7 @@ data:
     - media_player.sonos_bedroom
 
 # Unjoin speaker
-service: media_player.unjoin
+action: media_player.unjoin
 target:
   entity_id: media_player.sonos_kitchen
 ```
@@ -218,26 +218,26 @@ target:
 ```yaml
 automation:
   - alias: "Doorbell Announcement"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.doorbell
         to: "on"
-    action:
+    actions:
       # Snapshot current state
-      - service: sonos.snapshot
+      - action: sonos.snapshot
         target:
           entity_id: media_player.sonos_living_room
         data:
           with_group: true
       # Play announcement
-      - service: tts.speak
+      - action: tts.speak
         target:
           entity_id: media_player.sonos_living_room
         data:
           message: "Someone is at the front door"
       - delay: "00:00:03"
       # Restore previous state
-      - service: sonos.restore
+      - action: sonos.restore
         target:
           entity_id: media_player.sonos_living_room
         data:
@@ -249,26 +249,26 @@ automation:
 ```yaml
 automation:
   - alias: "Morning Music"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "07:00:00"
-    condition:
+    conditions:
       - condition: state
         entity_id: person.john
         state: "home"
-    action:
-      - service: media_player.select_source
+    actions:
+      - action: media_player.select_source
         target:
           entity_id: media_player.sonos_bedroom
         data:
           source: "Spotify"
-      - service: media_player.play_media
+      - action: media_player.play_media
         target:
           entity_id: media_player.sonos_bedroom
         data:
           media_content_type: playlist
           media_content_id: "spotify:playlist:your_playlist_id"
-      - service: media_player.volume_set
+      - action: media_player.volume_set
         target:
           entity_id: media_player.sonos_bedroom
         data:
@@ -335,16 +335,16 @@ script:
   goodnight:
     alias: "Good Night"
     sequence:
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id: all
-      - service: lock.lock
+      - action: lock.lock
         target:
           entity_id: lock.front_door
-      - service: cover.close_cover
+      - action: cover.close_cover
         target:
           entity_id: cover.garage
-      - service: climate.set_temperature
+      - action: climate.set_temperature
         target:
           entity_id: climate.thermostat
         data:
@@ -361,16 +361,16 @@ script:
   movie_mode:
     alias: "Movie Mode"
     sequence:
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id: light.living_room
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id: light.tv_backlight
         data:
           brightness: 50
           rgb_color: [100, 100, 255]
-      - service: media_player.turn_on
+      - action: media_player.turn_on
         target:
           entity_id: media_player.tv
 ```
@@ -438,7 +438,7 @@ cloud:
 # - View last Alexa command
 
 # Example: TTS announcement
-service: notify.alexa_media
+action: notify.alexa_media
 data:
   message: "Laundry is done"
   target:
@@ -447,7 +447,7 @@ data:
     type: announce  # or tts
 
 # Play music
-service: media_player.play_media
+action: media_player.play_media
 target:
   entity_id: media_player.echo_living_room
 data:
@@ -460,12 +460,12 @@ data:
 ```yaml
 automation:
   - alias: "Alexa Motion Detected Announcement"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.front_door_motion
         to: "on"
-    action:
-      - service: notify.alexa_media
+    actions:
+      - action: notify.alexa_media
         data:
           message: "Motion detected at the front door"
           target: media_player.echo_hallway
@@ -594,17 +594,17 @@ homekit:
 ```yaml
 automation:
   - alias: "SmartThings Button Press"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: sensor.smartthings_button_action
-    action:
+    actions:
       - choose:
           - conditions:
               - condition: state
                 entity_id: sensor.smartthings_button_action
                 state: "pushed"
             sequence:
-              - service: light.toggle
+              - action: light.toggle
                 target:
                   entity_id: light.living_room
           - conditions:
@@ -612,7 +612,7 @@ automation:
                 entity_id: sensor.smartthings_button_action
                 state: "held"
             sequence:
-              - service: scene.turn_on
+              - action: scene.turn_on
                 target:
                   entity_id: scene.movie_mode
 ```
@@ -622,14 +622,14 @@ automation:
 ```yaml
 automation:
   - alias: "SmartThings Device Offline Alert"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.smartthings_hub_status
         to: "off"
         for:
           minutes: 5
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "SmartThings Alert"
           message: "SmartThings Hub appears to be offline"
@@ -683,12 +683,12 @@ localtuya:
 ```yaml
 automation:
   - alias: "Tuya Smart Plug Power Monitor"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.smart_plug_power
         above: 500
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "High power consumption detected on smart plug"
 ```
@@ -726,12 +726,12 @@ automation:
 
 ```yaml
 # OTA update
-service: update.install
+action: update.install
 target:
   entity_id: update.shelly_1_firmware
 
 # Reboot device
-service: button.press
+action: button.press
 target:
   entity_id: button.shelly_1_reboot
 ```
@@ -741,17 +741,17 @@ target:
 ```yaml
 automation:
   - alias: "Close Blinds at Sunset"
-    trigger:
-      - platform: sun
+    triggers:
+      - trigger: sun
         event: sunset
         offset: "+00:30:00"
-    action:
-      - service: cover.close_cover
+    actions:
+      - action: cover.close_cover
         target:
           entity_id: cover.shelly_25_blinds
 
 # Set position
-service: cover.set_cover_position
+action: cover.set_cover_position
 target:
   entity_id: cover.shelly_25_blinds
 data:
@@ -811,18 +811,18 @@ tplink:
 ```yaml
 automation:
   - alias: "Washing Machine Done"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.washing_machine_current_consumption
         below: 5
         for:
           minutes: 2
-    condition:
+    conditions:
       - condition: numeric_state
         entity_id: sensor.washing_machine_current_consumption
         above: 0.1
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "Washing machine cycle complete!"
 ```
@@ -859,25 +859,25 @@ calendar.holidays
 # Trigger when event starts
 automation:
   - alias: "Work Hours Started"
-    trigger:
-      - platform: calendar
+    triggers:
+      - trigger: calendar
         entity_id: calendar.work
         event: start
         offset: "-00:05:00"  # 5 minutes before
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.office
 
 # Trigger when event ends
 automation:
   - alias: "Meeting Ended"
-    trigger:
-      - platform: calendar
+    triggers:
+      - trigger: calendar
         entity_id: calendar.work
         event: end
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "Meeting '{{ trigger.calendar_event.summary }}' ended"
 ```
@@ -888,17 +888,17 @@ automation:
 # Trigger only for specific events
 automation:
   - alias: "Vacation Mode"
-    trigger:
-      - platform: calendar
+    triggers:
+      - trigger: calendar
         entity_id: calendar.personal
         event: start
-    condition:
+    conditions:
       - condition: template
         value_template: >
           {{ 'vacation' in trigger.calendar_event.summary | lower
              or 'holiday' in trigger.calendar_event.summary | lower }}
-    action:
-      - service: input_boolean.turn_on
+    actions:
+      - action: input_boolean.turn_on
         target:
           entity_id: input_boolean.vacation_mode
 ```
@@ -909,12 +909,12 @@ automation:
 # Current event details
 automation:
   - alias: "Event Notification"
-    trigger:
-      - platform: calendar
+    triggers:
+      - trigger: calendar
         entity_id: calendar.work
         event: start
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "Event Starting"
           message: >
@@ -931,10 +931,10 @@ automation:
 ```yaml
 template:
   - trigger:
-      - platform: time_pattern
+      - trigger: time_pattern
         minutes: /15
-    action:
-      - service: calendar.get_events
+    actions:
+      - action: calendar.get_events
         target:
           entity_id: calendar.work
         data:
@@ -963,42 +963,42 @@ template:
 # Use calendar for complex schedules
 automation:
   - alias: "Office Hours Lighting"
-    trigger:
-      - platform: calendar
+    triggers:
+      - trigger: calendar
         entity_id: calendar.work_schedule
         event: start
-      - platform: calendar
+      - trigger: calendar
         entity_id: calendar.work_schedule
         event: end
-    action:
+    actions:
       - choose:
           - conditions:
               - condition: template
                 value_template: "{{ trigger.event == 'start' }}"
             sequence:
-              - service: scene.turn_on
+              - action: scene.turn_on
                 target:
                   entity_id: scene.office_daytime
         default:
-          - service: light.turn_off
+          - action: light.turn_off
             target:
               entity_id: light.office
 
 # Garbage collection reminder from calendar
 automation:
   - alias: "Garbage Day Reminder"
-    trigger:
-      - platform: calendar
+    triggers:
+      - trigger: calendar
         entity_id: calendar.home
         event: start
         offset: "-12:00:00"  # 12 hours before
-    condition:
+    conditions:
       - condition: template
         value_template: >
           {{ 'garbage' in trigger.calendar_event.summary | lower
              or 'trash' in trigger.calendar_event.summary | lower }}
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           title: "🗑️ Garbage Day Tomorrow"
           message: "Don't forget to take out the bins!"
@@ -1008,7 +1008,7 @@ automation:
 
 ```yaml
 # Create event from automation
-service: calendar.create_event
+action: calendar.create_event
 target:
   entity_id: calendar.home
 data:
@@ -1019,7 +1019,7 @@ data:
   location: "123 Main St"
 
 # All-day event
-service: calendar.create_event
+action: calendar.create_event
 target:
   entity_id: calendar.home
 data:
@@ -1064,11 +1064,11 @@ template:
 # Get events from multiple calendars
 automation:
   - alias: "Morning Briefing"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "07:30:00"
-    action:
-      - service: calendar.get_events
+    actions:
+      - action: calendar.get_events
         target:
           entity_id:
             - calendar.work
@@ -1077,7 +1077,7 @@ automation:
           duration:
             hours: 12
         response_variable: all_events
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           title: "📅 Today's Schedule"
           message: >
@@ -1106,11 +1106,11 @@ script:
               - condition: template
                 value_template: "{{ is_state(target, 'playing') }}"
             sequence:
-              - service: media_player.media_pause
+              - action: media_player.media_pause
                 target:
                   entity_id: "{{ target }}"
         default:
-          - service: media_player.media_play
+          - action: media_player.media_play
             target:
               entity_id: "{{ target }}"
 ```
@@ -1143,7 +1143,7 @@ script:
       brightness:
         description: "Brightness percentage"
     sequence:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           area_id: "{{ room }}"
         data:
@@ -1179,10 +1179,10 @@ scene:
 automation:
   - alias: "Announcement Fallback"
     mode: single
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: announcement_request
-    action:
+    actions:
       - choose:
           # Try Alexa first
           - conditions:
@@ -1190,7 +1190,7 @@ automation:
                 entity_id: media_player.echo_kitchen
                 state: "on"
             sequence:
-              - service: notify.alexa_media
+              - action: notify.alexa_media
                 data:
                   target: media_player.echo_kitchen
                   message: "{{ trigger.event.data.message }}"
@@ -1202,14 +1202,14 @@ automation:
                 entity_id: media_player.sonos_kitchen
                 state: "idle"
             sequence:
-              - service: tts.speak
+              - action: tts.speak
                 target:
                   entity_id: media_player.sonos_kitchen
                 data:
                   message: "{{ trigger.event.data.message }}"
         # Final fallback to phone notification
         default:
-          - service: notify.mobile_app
+          - action: notify.mobile_app
             data:
               message: "{{ trigger.event.data.message }}"
 ```
@@ -1255,11 +1255,11 @@ binary_sensor.living_room_motion_hue
 ```yaml
 automation:
   - alias: "Light Control with Fallback"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.motion
         to: "on"
-    action:
+    actions:
       - choose:
           # Primary: Hue
           - conditions:
@@ -1268,7 +1268,7 @@ automation:
                 attribute: available
                 state: true
             sequence:
-              - service: light.turn_on
+              - action: light.turn_on
                 target:
                   entity_id: light.hue_living
           # Fallback: Generic Zigbee
@@ -1278,7 +1278,7 @@ automation:
                 attribute: available
                 state: true
             sequence:
-              - service: light.turn_on
+              - action: light.turn_on
                 target:
                   entity_id: light.zigbee_living
 ```
@@ -1294,8 +1294,8 @@ sensor:
 # Group related automations
 automation:
   - alias: "Multi-Motion Handler"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id:
           - binary_sensor.motion_1
           - binary_sensor.motion_2
@@ -1355,17 +1355,17 @@ template:
 ```yaml
 automation:
   - alias: "Restart Integration on Failure"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.hue_bridge_status
         to: "off"
         for:
           minutes: 5
-    action:
-      - service: homeassistant.reload_config_entry
+    actions:
+      - action: homeassistant.reload_config_entry
         data:
           entry_id: "abc123"  # Get from .storage/core.config_entries
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           message: "Hue integration restarted due to connectivity issues"
 ```
@@ -1384,12 +1384,12 @@ automation:
 
 ```yaml
 # Force state refresh
-service: homeassistant.update_entity
+action: homeassistant.update_entity
 target:
   entity_id: sensor.problematic_sensor
 
 # For specific integrations
-service: hue.hue_refresh
+action: hue.hue_refresh
 data:
   bridge_id: "001788fffe123456"
 ```

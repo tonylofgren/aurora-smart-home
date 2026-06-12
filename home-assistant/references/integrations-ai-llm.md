@@ -289,11 +289,11 @@ template:
 automation:
   - id: ai_suggestions
     alias: "AI: Daily Suggestions"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "08:00:00"
-    action:
-      - service: conversation.process
+    actions:
+      - action: conversation.process
         data:
           agent_id: conversation.openai
           text: >
@@ -302,7 +302,7 @@ automation:
             and calendar ({{ states('calendar.family') }}),
             what should I consider for home automation today?
         response_variable: ai_response
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           title: "AI Home Suggestions"
           message: "{{ ai_response.speech.plain.speech }}"
@@ -314,15 +314,15 @@ automation:
 automation:
   - id: voice_command_handler
     alias: "Handle Voice Commands via LLM"
-    trigger:
-      - platform: conversation
+    triggers:
+      - trigger: conversation
         command:
           - "I'm going to bed"
           - "Goodnight"
           - "Time to sleep"
-    action:
-      - service: script.bedtime_routine
-      - service: conversation.process
+    actions:
+      - action: script.bedtime_routine
+      - action: conversation.process
         data:
           agent_id: conversation.ollama
           text: "Confirm bedtime routine started and wish goodnight"
@@ -338,10 +338,10 @@ automation:
 automation:
   - id: conversation_with_fallback
     alias: "Conversation with Fallback"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: conversation_started
-    action:
+    actions:
       - choose:
           # Try local first
           - conditions:
@@ -349,7 +349,7 @@ automation:
                 entity_id: binary_sensor.ollama_available
                 state: "on"
             sequence:
-              - service: conversation.process
+              - action: conversation.process
                 data:
                   agent_id: conversation.ollama
                   text: "{{ trigger.event.data.text }}"
@@ -359,7 +359,7 @@ automation:
                 entity_id: binary_sensor.ollama_available
                 state: "off"
             sequence:
-              - service: conversation.process
+              - action: conversation.process
                 data:
                   agent_id: conversation.openai
                   text: "{{ trigger.event.data.text }}"
@@ -389,16 +389,16 @@ input_text:
 automation:
   - id: cache_weather_response
     alias: "Cache Weather Response"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: weather.home
-    action:
-      - service: conversation.process
+    actions:
+      - action: conversation.process
         data:
           agent_id: conversation.ollama
           text: "Describe current weather: {{ states('weather.home') }}, {{ state_attr('weather.home', 'temperature') }}°C"
         response_variable: response
-      - service: input_text.set_value
+      - action: input_text.set_value
         target:
           entity_id: input_text.cached_weather_response
         data:
@@ -454,7 +454,7 @@ script:
         description: "Question for AI"
         example: "Should I turn on heating?"
     sequence:
-      - service: conversation.process
+      - action: conversation.process
         data:
           agent_id: conversation.ollama
           text: >
@@ -471,7 +471,7 @@ script:
       - choose:
           - conditions: "{{ decision == 'YES' }}"
             sequence:
-              - service: climate.turn_on
+              - action: climate.turn_on
                 target:
                   entity_id: climate.living_room
 ```

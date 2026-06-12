@@ -155,11 +155,11 @@ Use [Tasmota Devices Repository](https://templates.blakadder.com/) to find templ
 
 automation:
   - alias: "Turn on kitchen light"
-    trigger:
-      - platform: sun
+    triggers:
+      - trigger: sun
         event: sunset
-    action:
-      - service: switch.turn_on
+    actions:
+      - action: switch.turn_on
         target:
           entity_id: switch.kitchen_light
 ```
@@ -171,11 +171,11 @@ automation:
 
 automation:
   - alias: "Set warm white at night"
-    trigger:
-      - platform: time
+    triggers:
+      - trigger: time
         at: "22:00:00"
-    action:
-      - service: light.turn_on
+    actions:
+      - action: light.turn_on
         target:
           entity_id: light.tasmota_bulb
         data:
@@ -195,13 +195,13 @@ automation:
 
 automation:
   - alias: "Appliance finished"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.washing_machine_power
         below: 5
         for: "00:02:00"
-    action:
-      - service: notify.mobile_app
+    actions:
+      - action: notify.mobile_app
         data:
           message: "Washing machine finished!"
 ```
@@ -214,12 +214,12 @@ automation:
 
 automation:
   - alias: "High humidity alert"
-    trigger:
-      - platform: numeric_state
+    triggers:
+      - trigger: numeric_state
         entity_id: sensor.tasmota_humidity
         above: 70
-    action:
-      - service: switch.turn_on
+    actions:
+      - action: switch.turn_on
         target:
           entity_id: switch.dehumidifier
 ```
@@ -320,11 +320,11 @@ Payload: {"Time":"...","Uptime":"...","POWER":"ON",...}
 # Manual MQTT control
 automation:
   - alias: "Toggle via MQTT"
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: input_boolean.toggle_light
-    action:
-      - service: mqtt.publish
+    actions:
+      - action: mqtt.publish
         data:
           topic: "cmnd/kitchen_light/POWER"
           payload: "TOGGLE"
@@ -332,12 +332,12 @@ automation:
 # Listen to button events
 automation:
   - alias: "Tasmota button press"
-    trigger:
-      - platform: mqtt
+    triggers:
+      - trigger: mqtt
         topic: "stat/tasmota_switch/BUTTON1"
         payload: "SINGLE"
-    action:
-      - service: light.toggle
+    actions:
+      - action: light.toggle
         target:
           entity_id: light.living_room
 ```

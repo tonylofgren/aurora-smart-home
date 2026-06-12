@@ -933,7 +933,7 @@ template:
 ```yaml
 template:
   - trigger:
-      - platform: state
+      - trigger: state
         entity_id: sensor.power
     sensor:
       - name: "Power Average (5min)"

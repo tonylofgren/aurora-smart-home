@@ -39,7 +39,7 @@ Conditions determine whether an automation's actions should run. If any conditio
 ```yaml
 # Conditions are evaluated in order
 # All must pass for actions to run (implicit AND)
-condition:
+conditions:
   - condition: state
     entity_id: input_boolean.enabled
     state: "on"
@@ -77,7 +77,7 @@ Check if an entity is in a specific state.
 ### Basic State Condition
 
 ```yaml
-condition:
+conditions:
   - condition: state
     entity_id: light.living_room
     state: "on"
@@ -87,7 +87,7 @@ condition:
 
 ```yaml
 # Entity can be in any of these states
-condition:
+conditions:
   - condition: state
     entity_id: vacuum.robot
     state:
@@ -99,7 +99,7 @@ condition:
 
 ```yaml
 # All entities must be in specified state
-condition:
+conditions:
   - condition: state
     entity_id:
       - light.living_room
@@ -111,14 +111,14 @@ condition:
 
 ```yaml
 # Entity must have been in state for duration
-condition:
+conditions:
   - condition: state
     entity_id: binary_sensor.motion
     state: "off"
     for: "00:10:00"
 
 # With dynamic duration
-condition:
+conditions:
   - condition: state
     entity_id: binary_sensor.motion
     state: "off"
@@ -130,14 +130,14 @@ condition:
 
 ```yaml
 # Check entity attribute instead of state
-condition:
+conditions:
   - condition: state
     entity_id: light.living_room
     attribute: brightness
     state: 255
 
 # Multiple attribute values
-condition:
+conditions:
   - condition: state
     entity_id: climate.thermostat
     attribute: hvac_action
@@ -150,7 +150,7 @@ condition:
 
 ```yaml
 # Wrap a state condition in 'not' to express "must not be in this state"
-condition:
+conditions:
   - condition: not
     conditions:
       - condition: state
@@ -178,19 +178,19 @@ Check if a numeric value is above or below thresholds.
 
 ```yaml
 # Value above threshold
-condition:
+conditions:
   - condition: numeric_state
     entity_id: sensor.temperature
     above: 25
 
 # Value below threshold
-condition:
+conditions:
   - condition: numeric_state
     entity_id: sensor.temperature
     below: 18
 
 # Value in range
-condition:
+conditions:
   - condition: numeric_state
     entity_id: sensor.humidity
     above: 30
@@ -201,7 +201,7 @@ condition:
 
 ```yaml
 # Check attribute value
-condition:
+conditions:
   - condition: numeric_state
     entity_id: light.living_room
     attribute: brightness
@@ -212,7 +212,7 @@ condition:
 
 ```yaml
 # Dynamic threshold from helper
-condition:
+conditions:
   - condition: numeric_state
     entity_id: sensor.battery
     below: "{{ states('input_number.low_battery_threshold') | int }}"
@@ -222,7 +222,7 @@ condition:
 
 ```yaml
 # Apply template to entity value before comparison
-condition:
+conditions:
   - condition: numeric_state
     entity_id: sensor.data
     value_template: "{{ state.state | float * 1.8 + 32 }}"
@@ -249,7 +249,7 @@ Check if current time is within a range.
 
 ```yaml
 # Between 8 AM and 10 PM
-condition:
+conditions:
   - condition: time
     after: "08:00:00"
     before: "22:00:00"
@@ -259,7 +259,7 @@ condition:
 
 ```yaml
 # Only on weekdays
-condition:
+conditions:
   - condition: time
     weekday:
       - mon
@@ -269,7 +269,7 @@ condition:
       - fri
 
 # Only on weekends
-condition:
+conditions:
   - condition: time
     weekday:
       - sat
@@ -280,7 +280,7 @@ condition:
 
 ```yaml
 # Weekdays between 7 AM and 9 AM
-condition:
+conditions:
   - condition: time
     after: "07:00:00"
     before: "09:00:00"
@@ -296,7 +296,7 @@ condition:
 
 ```yaml
 # Use input_datetime helper
-condition:
+conditions:
   - condition: time
     after: input_datetime.quiet_hours_start
     before: input_datetime.quiet_hours_end
@@ -306,14 +306,14 @@ condition:
 
 ```yaml
 # For times crossing midnight, use template
-condition:
+conditions:
   - condition: template
     value_template: >
       {% set now_time = now().strftime('%H:%M:%S') %}
       {{ now_time >= '22:00:00' or now_time < '06:00:00' }}
 
 # Or use two conditions with OR
-condition:
+conditions:
   - condition: or
     conditions:
       - condition: time
@@ -340,17 +340,17 @@ Check position relative to sunrise/sunset.
 
 ```yaml
 # After sunset
-condition:
+conditions:
   - condition: sun
     after: sunset
 
 # Before sunrise
-condition:
+conditions:
   - condition: sun
     before: sunrise
 
 # Between sunset and sunrise (nighttime)
-condition:
+conditions:
   - condition: sun
     after: sunset
     before: sunrise
@@ -360,19 +360,19 @@ condition:
 
 ```yaml
 # 30 minutes after sunset
-condition:
+conditions:
   - condition: sun
     after: sunset
     after_offset: "00:30:00"
 
 # 1 hour before sunset
-condition:
+conditions:
   - condition: sun
     before: sunset
     before_offset: "-01:00:00"
 
 # Golden hour (1 hour before sunset)
-condition:
+conditions:
   - condition: sun
     after: sunset
     after_offset: "-01:00:00"
@@ -383,7 +383,7 @@ condition:
 
 ```yaml
 # Evening: after sunset but before midnight
-condition:
+conditions:
   - condition: and
     conditions:
       - condition: sun
@@ -411,13 +411,13 @@ Check if a person/device tracker is in a zone.
 
 ```yaml
 # Person is home
-condition:
+conditions:
   - condition: zone
     entity_id: person.john
     zone: zone.home
 
 # Device tracker in zone
-condition:
+conditions:
   - condition: zone
     entity_id: device_tracker.phone
     zone: zone.work
@@ -427,7 +427,7 @@ condition:
 
 ```yaml
 # All family members home
-condition:
+conditions:
   - condition: zone
     entity_id:
       - person.john
@@ -439,7 +439,7 @@ condition:
 
 ```yaml
 # At least one person in zone
-condition:
+conditions:
   - condition: or
     conditions:
       - condition: zone
@@ -454,7 +454,7 @@ condition:
 
 ```yaml
 # Person is not home
-condition:
+conditions:
   - condition: not
     conditions:
       - condition: zone
@@ -479,7 +479,7 @@ Use Jinja2 templates for complex conditions.
 
 ```yaml
 # Simple comparison
-condition:
+conditions:
   - condition: template
     value_template: "{{ states('sensor.temperature') | float > 25 }}"
 ```
@@ -488,7 +488,7 @@ condition:
 
 ```yaml
 # Multiple conditions in template
-condition:
+conditions:
   - condition: template
     value_template: >
       {{ is_state('binary_sensor.motion', 'on') and
@@ -500,7 +500,7 @@ condition:
 
 ```yaml
 # Access trigger data in condition
-condition:
+conditions:
   - condition: template
     value_template: >
       {{ trigger.to_state.state != trigger.from_state.state }}
@@ -510,7 +510,7 @@ condition:
 
 ```yaml
 # Compare attributes
-condition:
+conditions:
   - condition: template
     value_template: >
       {{ state_attr('climate.thermostat', 'current_temperature') | float >
@@ -521,7 +521,7 @@ condition:
 
 ```yaml
 # Complex time conditions
-condition:
+conditions:
   - condition: template
     value_template: >
       {% set hour = now().hour %}
@@ -534,7 +534,7 @@ condition:
 
 ```yaml
 # Check entity is available
-condition:
+conditions:
   - condition: template
     value_template: >
       {{ states('sensor.temperature') not in ['unknown', 'unavailable'] }}
@@ -544,7 +544,7 @@ condition:
 
 ```yaml
 # Entity changed recently
-condition:
+conditions:
   - condition: template
     value_template: >
       {{ (now() - states.binary_sensor.motion.last_changed).total_seconds() < 300 }}
@@ -554,7 +554,7 @@ condition:
 
 ```yaml
 # At least 2 lights on
-condition:
+conditions:
   - condition: template
     value_template: >
       {{ states.light | selectattr('state', 'eq', 'on') | list | count >= 2 }}
@@ -570,7 +570,7 @@ Check device-specific conditions.
 
 ```yaml
 # Device is on
-condition:
+conditions:
   - condition: device
     device_id: abc123def456
     domain: light
@@ -581,7 +581,7 @@ condition:
 
 ```yaml
 # Battery above threshold
-condition:
+conditions:
   - condition: device
     device_id: abc123def456
     domain: sensor
@@ -593,21 +593,21 @@ condition:
 
 ```yaml
 # Light is on
-condition:
+conditions:
   - condition: device
     device_id: abc123def456
     domain: light
     type: is_on
 
 # Switch is off
-condition:
+conditions:
   - condition: device
     device_id: abc123def456
     domain: switch
     type: is_off
 
 # Binary sensor is on
-condition:
+conditions:
   - condition: device
     device_id: abc123def456
     domain: binary_sensor
@@ -839,7 +839,7 @@ automation:
 ### Multiple Trigger IDs
 
 ```yaml
-condition:
+conditions:
   - condition: trigger
     id:
       - morning_trigger
@@ -849,7 +849,7 @@ condition:
 ### In Choose Block
 
 ```yaml
-action:
+actions:
   - choose:
       - conditions:
           - condition: trigger
@@ -873,7 +873,7 @@ Combine conditions with AND, OR, NOT logic.
 
 ```yaml
 # All conditions must be true (explicit)
-condition:
+conditions:
   - condition: and
     conditions:
       - condition: state
@@ -891,7 +891,7 @@ condition:
 
 ```yaml
 # At least one condition must be true
-condition:
+conditions:
   - condition: or
     conditions:
       - condition: state
@@ -906,7 +906,7 @@ condition:
 
 ```yaml
 # Inverts the condition result
-condition:
+conditions:
   - condition: not
     conditions:
       - condition: state
@@ -918,7 +918,7 @@ condition:
 
 ```yaml
 # Complex nested conditions
-condition:
+conditions:
   - condition: and
     conditions:
       # Must be enabled
@@ -940,7 +940,7 @@ condition:
 
 ```yaml
 # Multiple conditions at root level are implicitly ANDed
-condition:
+conditions:
   - condition: state
     entity_id: input_boolean.enabled
     state: "on"
@@ -959,13 +959,13 @@ Simplified syntax for common conditions.
 
 ```yaml
 # Full syntax
-condition:
+conditions:
   - condition: state
     entity_id: light.living_room
     state: "on"
 
 # Shorthand
-condition:
+conditions:
   - "{{ is_state('light.living_room', 'on') }}"
 ```
 
@@ -973,13 +973,13 @@ condition:
 
 ```yaml
 # Full syntax
-condition:
+conditions:
   - condition: numeric_state
     entity_id: sensor.temperature
     above: 25
 
 # Shorthand
-condition:
+conditions:
   - "{{ states('sensor.temperature') | float > 25 }}"
 ```
 
@@ -987,7 +987,7 @@ condition:
 
 ```yaml
 # Full syntax
-condition:
+conditions:
   - condition: or
     conditions:
       - condition: state
@@ -998,7 +998,7 @@ condition:
         state: "on"
 
 # Shorthand
-condition:
+conditions:
   - "{{ is_state('light.a', 'on') or is_state('light.b', 'on') }}"
 ```
 
@@ -1006,7 +1006,7 @@ condition:
 
 ```yaml
 # Can mix full and shorthand
-condition:
+conditions:
   - condition: state
     entity_id: input_boolean.enabled
     state: "on"
@@ -1021,7 +1021,7 @@ condition:
 
 ```yaml
 # At least one person home
-condition:
+conditions:
   - condition: not
     conditions:
       - condition: state
@@ -1029,7 +1029,7 @@ condition:
         state: not_home
 
 # Or using zone
-condition:
+conditions:
   - condition: or
     conditions:
       - condition: zone
@@ -1043,7 +1043,7 @@ condition:
 ### Nobody Home
 
 ```yaml
-condition:
+conditions:
   - condition: state
     entity_id: group.family
     state: not_home
@@ -1053,13 +1053,13 @@ condition:
 
 ```yaml
 # After sunset
-condition:
+conditions:
   - condition: sun
     after: sunset
     before: sunrise
 
 # Or low illuminance
-condition:
+conditions:
   - condition: numeric_state
     entity_id: sensor.outdoor_illuminance
     below: 50
@@ -1069,19 +1069,19 @@ condition:
 
 ```yaml
 # Using time condition
-condition:
+conditions:
   - condition: time
     after: "22:00:00"
     before: "07:00:00"
 
 # Using input_datetime
-condition:
+conditions:
   - condition: time
     after: input_datetime.quiet_start
     before: input_datetime.quiet_end
 
 # Using schedule helper
-condition:
+conditions:
   - condition: state
     entity_id: schedule.quiet_hours
     state: "on"
@@ -1090,7 +1090,7 @@ condition:
 ### Automation Not Recently Run
 
 ```yaml
-condition:
+conditions:
   - condition: template
     value_template: >
       {{ (now() - state_attr('automation.door_notification', 'last_triggered')).total_seconds() > 1800 }}
@@ -1099,7 +1099,7 @@ condition:
 ### Entity Available
 
 ```yaml
-condition:
+conditions:
   - condition: template
     value_template: >
       {{ states('sensor.temperature') not in ['unknown', 'unavailable', 'none'] }}
@@ -1109,7 +1109,7 @@ condition:
 
 ```yaml
 # Using workday integration
-condition:
+conditions:
   - condition: state
     entity_id: binary_sensor.workday
     state: "on"
@@ -1119,13 +1119,13 @@ condition:
 
 ```yaml
 # With counter
-condition:
+conditions:
   - condition: numeric_state
     entity_id: counter.daily_notifications
     below: 10
 
 # With timer cooldown
-condition:
+conditions:
   - condition: state
     entity_id: timer.notification_cooldown
     state: "idle"
@@ -1135,7 +1135,7 @@ condition:
 
 ```yaml
 # Check input_select mode
-condition:
+conditions:
   - condition: state
     entity_id: input_select.home_mode
     state:
@@ -1143,7 +1143,7 @@ condition:
       - Guest
 
 # Not in certain modes
-condition:
+conditions:
   - condition: not
     conditions:
       - condition: state
@@ -1191,7 +1191,7 @@ Use this table to pick the right condition type for the job.
 
 ```yaml
 # Put fast/cheap conditions first
-condition:
+conditions:
   # Boolean check is fast
   - condition: state
     entity_id: input_boolean.enabled
@@ -1208,13 +1208,13 @@ condition:
 
 ```yaml
 # Use state for simple state checks
-condition:
+conditions:
   - condition: state
     entity_id: light.lamp
     state: "on"  # Good
 
 # Don't use template for simple checks
-condition:
+conditions:
   - condition: template
     value_template: "{{ is_state('light.lamp', 'on') }}"  # Unnecessary
 ```
@@ -1223,7 +1223,7 @@ condition:
 
 ```yaml
 # Always handle unavailable states
-condition:
+conditions:
   - condition: template
     value_template: >
       {{ states('sensor.temperature') not in ['unknown', 'unavailable'] and
@@ -1233,7 +1233,7 @@ condition:
 ### Document Complex Conditions
 
 ```yaml
-condition:
+conditions:
   # Only proceed if:
   # - Automation is enabled by user
   # - It's during active hours
@@ -1311,31 +1311,31 @@ all conditions: {{ enabled and motion and dark }}
 
 ```yaml
 # Wrong: state without quotes for "on"/"off"
-condition:
+conditions:
   - condition: state
     entity_id: switch.test
     state: on  # YAML interprets as boolean True
 
 # Correct: quoted string
-condition:
+conditions:
   - condition: state
     entity_id: switch.test
     state: "on"
 
 # Wrong: above/below are exclusive
-condition:
+conditions:
   - condition: numeric_state
     entity_id: sensor.temp
     above: 25  # Means > 25, not >= 25
 
 # Wrong: time crossing midnight
-condition:
+conditions:
   - condition: time
     after: "22:00:00"
     before: "06:00:00"  # This NEVER matches!
 
 # Correct: use OR for midnight crossing
-condition:
+conditions:
   - condition: or
     conditions:
       - condition: time
