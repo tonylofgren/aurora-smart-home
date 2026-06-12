@@ -6,6 +6,7 @@
 - [Configuration Errors](#configuration-errors)
 - [Entity Issues](#entity-issues)
 - [Automation Debugging](#automation-debugging)
+- [Automation Debugging with Traces](#automation-debugging-with-traces)
 - [Integration Problems](#integration-problems)
 - [Performance Issues](#performance-issues)
 - [Network Problems](#network-problems)
@@ -588,6 +589,84 @@ automation:
 | Error at action | Service call failed |
 | Empty response_variable | Service returned no data |
 | Timeout at action | External service slow/down |
+
+---
+
+## Automation Debugging with Traces
+
+Traces are the primary tool when an automation misbehaves. Every run of an automation or script is recorded as a trace you can replay step by step.
+
+### Opening Traces
+
+Settings > Automations & Scenes > open the automation > Traces (top-right). The trace viewer offers two complementary views:
+
+- **Timeline tab:** chronological list of every step with timestamps; fastest way to see how far a run got and where time was spent.
+- **Graph (Step Details) tab:** the automation drawn as a flowchart. Executed nodes are highlighted; the path stops at the first false condition or failed action. Click any node to inspect its inputs, rendered templates, and result.
+
+### Common Findings
+
+| What you see | Diagnosis |
+|--------------|-----------|
+| No trace for the time in question | The trigger never fired; the automation never started |
+| Trace exists, path ends at a condition node | Condition evaluated false; click the node for the actual values |
+| Trace reaches an action marked with an error | Action failed; the node shows the error message |
+| Trace stuck at a `wait_for_trigger` or `delay` | Run is still waiting, or timed out without `continue_on_timeout` |
+| Trace shows "stopped because of unknown reason" mid-run | Automation was reloaded or restarted while running |
+
+### Storing More Traces
+
+Only the last 5 runs are kept per automation by default. Raise the limit on the ones you are actively debugging:
+
+```yaml
+automation:
+  - alias: "Flaky morning routine"
+    trace:
+      stored_traces: 25
+    triggers:
+      - trigger: time
+        at: "06:45:00"
+    actions:
+      - action: light.turn_on
+        target:
+          area_id: bedroom
+```
+
+Traces are kept in memory and lost on restart, so capture or download interesting traces before restarting.
+
+### Combining Logbook and Traces
+
+The trace tells you what the automation did; the logbook tells you what the house did. Use them together:
+
+1. In the trace viewer, check the trigger timestamp.
+2. Open the logbook (or the related entity's history) around that timestamp.
+3. Compare: did the entity actually change the way the trigger expects? A `state` trigger with `from: "off"` will not fire on `unavailable` to `on`, and the logbook is where that surprise becomes visible.
+
+The trace viewer also has a Related logbook entries link for the run, and each automation's entity page shows logbook entries of when it was triggered and by what context (user, automation, or physical device).
+
+### "My Automation Did Not Run" Flowchart
+
+```text
+Automation did not run
+│
+├─ Is the automation enabled? (toggle in the list, state != "off")
+│   └─ No → enable it, check nothing turns it off via automation.turn_off
+│
+├─ Does a trace exist for the expected time?
+│   ├─ No → trigger never fired:
+│   │       • Check entity_id spelling in the trigger
+│   │       • Check the entity's history: did the state change at all?
+│   │       • state triggers: attribute-only changes need `attribute:`
+│   │       • `for:` durations reset if the state flaps
+│   └─ Yes → open the trace:
+│           ├─ Path ends at a condition → click it, compare actual vs expected
+│           ├─ Action shows an error → fix entity/data, retest with
+│           │   `action: automation.trigger` (set skip_condition as needed)
+│           └─ All steps green → the automation ran; the device or
+│               integration ignored the command. Check the device logbook.
+│
+└─ Still nothing? Reload automations (Developer tools > YAML) and
+   check home-assistant.log for errors mentioning the automation id.
+```
 
 ---
 

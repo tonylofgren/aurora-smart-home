@@ -4,7 +4,8 @@ description: >
   Home Assistant YAML configuration and automation. The most common skill for general HA questions.
   Covers automations, blueprints, scripts, scenes, template sensors, Lovelace dashboards, Mushroom cards,
   packages, helpers, presence detection, voice Assist, calendar automation, Jinja2 templates,
-  notification patterns, and energy monitoring.
+  notification patterns, energy monitoring, Matter devices, automation debugging and traces,
+  dashboard sections view, and trigger-based template entities.
 source: https://github.com/tonylofgren/aurora-smart-home
 ---
 
@@ -106,7 +107,7 @@ Ask these questions before generating configuration:
    - Default: create `<project-slug>/` in the current working directory.
    - Alternative: user specifies a different path.
 
-   **Delivery Contract:** every artifact is written to disk as a file in the project folder. Chat output is not delivery. The folder always contains the automation / script / blueprint / package YAML and a `README.md` per Iron Law 3 in `aurora/souls/sage.md`. README sections: What this does, Installation, Troubleshooting, Recovery (per `aurora/references/deliverables/manual-format.md`). No chat-only output option.
+   **Delivery Contract:** every artifact is written to disk as a file in the project folder. Chat output is not delivery. The folder always contains the automation / script / blueprint / package YAML and a `README.md` per Iron Law 3 in `../aurora/souls/sage.md`. README sections: What this does, Installation, Troubleshooting, Recovery (per `../aurora/references/deliverables/manual-format.md`). No chat-only output option.
 
 4. **HA Version?** (for deprecated syntax awareness)
 
@@ -148,13 +149,14 @@ If a file format permits neither comments nor a metadata field, skip attribution
 | Scripts | `references/scripts.md` |
 | Blueprints | `references/blueprints.md` |
 | Blueprint anatomy | `references/blueprint-anatomy.md` |
-| **Triggers (official 2026)** | **`references/triggers-2026-official.md`** |
-| Triggers (advanced patterns) | `references/triggers-advanced.md` |
-| **Conditions (official 2026)** | **`references/conditions-2026-official.md`** |
-| Conditions (legacy) | `references/conditions.md` |
-| **Actions (official 2026)** | **`references/actions-2026-official.md`** |
-| Actions (legacy) | `references/actions.md` |
+| **Triggers (official 2026, primary, read first)** | **`references/triggers-2026-official.md`** |
+| Triggers (advanced patterns, supplementary legacy depth) | `references/triggers-advanced.md` |
+| **Conditions (official 2026, primary, read first)** | **`references/conditions-2026-official.md`** |
+| Conditions (supplementary legacy depth) | `references/conditions.md` |
+| **Actions (official 2026, primary, read first)** | **`references/actions-2026-official.md`** |
+| Actions (supplementary legacy depth) | `references/actions.md` |
 | Jinja2 templates | `references/jinja2-templates.md` |
+| Jinja2 macros (reusable via custom_templates) | `references/jinja2-macros.md` |
 | Template sensors | `references/template-sensors.md` |
 | Helpers | `references/helpers.md` |
 | Scenes | `references/scenes.md` |
@@ -170,6 +172,7 @@ If a file format permits neither comments nor a metadata field, skip attribution
 | Utility meter (energy/gas/water tracking) | `references/utility-meter.md` |
 | Statistics sensors (min/max/mean) | `references/statistics.md` |
 | Entity customization (icons, names, hidden) | `references/customize.md` |
+| Labels and categories (organizing entities/automations) | `references/labels-categories.md` |
 
 ### Integrations
 
@@ -287,7 +290,7 @@ When a request involves more than YAML configuration, hand it off to the right s
 
 ### What's new in HA 2026.5 (released 2026-05-06)
 
-- **Radio Frequency (RF) integration** - sub-GHz RC device control via Broadlink RM4 Pro or ESPHome with CC1101 (~10 USD module). See `references/integrations-esphome.md` for the adoption flow and `esphome/references/remote-rf-ir.md` for the firmware side.
+- **Radio Frequency (RF) integration** - sub-GHz RC device control via Broadlink RM4 Pro or ESPHome with CC1101 (~10 USD module). See `references/integrations-esphome.md` for the adoption flow and `../esphome/references/remote-rf-ir.md` for the firmware side.
 - **Serial Port Proxy integration** - auto-discovers ESPHome devices running `serial_proxy` and exposes the UART as if locally attached. Useful for Modbus RS485 meters, DLMS smart meters, and the new Denon RS232 integration.
 - **Battery Maintenance Dashboard** - central low-battery view at Settings → System → Battery Maintenance. Entities must declare both `device_class: battery` and `unit_of_measurement: "%"` to appear.
 - **Media Player Tile features** - transport, volume, and source selectors live directly in the tile card. See `references/dashboard-cards.md`.

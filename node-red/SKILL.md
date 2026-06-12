@@ -364,6 +364,14 @@ OpenAI, Spotify, Telegram, GitHub), see:
 - `references/popular-apis.md` - Node-RED function node snippets for all popular APIs
 - `api-catalog` skill - deep documentation, auth setup, and HA YAML sensors per API
 
+## Dashboards (UI Built in Node-RED)
+
+For web panels served by Node-RED itself (kiosk displays, ops panels), see:
+
+- `references/dashboard-2.md` - Dashboard 2.0 (@flowfuse/node-red-dashboard): install, core ui nodes, page/group layout, HA sensor panel example, migration from the deprecated Dashboard 1
+
+For primary household dashboards, prefer Lovelace via the `ha-dashboard-design` skill.
+
 ## Integration
 
 **Pairs with:**

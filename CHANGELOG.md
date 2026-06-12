@@ -8,6 +8,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Four new reference files, each wired into its skill's Quick Reference:
+  - `esphome/references/packages-modular-config.md` - `packages:` component, local/remote packages, `vars`, `!extend`/`!remove`, fleet pattern for short per-device files.
+  - `home-assistant/references/jinja2-macros.md` - reusable Jinja2 macros via `custom_templates/`, imports, reload, limitations, recipes.
+  - `home-assistant/references/labels-categories.md` - labels and categories for organizing entities and automations, label targeting in actions, label template functions.
+  - `node-red/references/dashboard-2.md` - Dashboard 2.0 (@flowfuse/node-red-dashboard): core ui nodes, layout, HA sensor panel example, migration from Dashboard 1.
+
+### Changed
+
+- All starter templates in `home-assistant/assets/templates/` (including the `dashboards/` set) and `home-assistant/templates/` modernized to current syntax: plural automation keys (`triggers:`, `conditions:`, `actions:`), `trigger:` instead of `platform:`, `action:` instead of `service:`, and Lovelace `perform-action` instead of the deprecated `call-service` tap action.
+- Remaining Swedish comments and example strings translated to English in the M5Stack Atom Echo configs and the HA usage guide.
+- HA skill Quick Reference now marks the official 2026 trigger/condition/action files as primary and the older curated files as supplementary legacy depth.
+
 ## [1.9.2] - 2026-05-30
 
 ### Changed

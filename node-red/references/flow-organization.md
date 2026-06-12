@@ -341,6 +341,79 @@ JSON diffs are hard to read. Consider:
 
 ---
 
+## Node-RED Projects (Git-Based Version Control)
+
+Manual exports work, but Node-RED has a built-in alternative: Projects.
+A project wraps your flows in a real git repository managed from the editor.
+
+### Enabling Projects
+
+Projects are off by default. Enable in `settings.js`, then restart Node-RED:
+
+```javascript
+editorTheme: {
+    projects: {
+        enabled: true
+    }
+}
+```
+
+On next start the editor walks you through creating or cloning a project.
+Git must be installed on the host running Node-RED.
+
+### What a Project Contains
+
+Each project is its own directory under `~/.node-red/projects/<name>` with:
+
+- `flow.json` - the flows for this project
+- `flow_cred.json` - credentials, encrypted with a key you choose at setup
+- `package.json` - project metadata and node dependencies
+- `README.md` - shown on the project info panel
+
+Switching projects switches the active flow file. The credentials encryption
+key is stored outside the repo; without it the credentials file is useless to
+anyone who clones the repo.
+
+### Git Operations in the Editor
+
+The history sidebar (Ctrl+Shift+H) exposes day-to-day git work:
+
+- Stage and commit changed files with a message
+- View local commit history and diffs between versions
+- Create and switch branches
+- Push/pull against a remote (GitHub, Gitea, GitLab) over HTTPS or SSH;
+  SSH keys can be generated from the editor settings
+
+Merge conflicts in flows are resolved through a visual diff tool rather than
+raw JSON editing.
+
+### Recommended Workflow for HA Users
+
+1. One project per Node-RED instance (e.g. `ha-automations`); avoid juggling
+   multiple projects on a production instance
+2. Set a credentials encryption key at project creation and store it in your
+   password manager; never disable encryption, since HA access tokens live in
+   `flow_cred.json`
+3. Commit after every working change: deploy, verify the flow behaves, then
+   commit with a message like `Add hallway motion timeout`
+4. Push to a private remote for off-host backup; the encrypted credentials
+   file is safe to push, the key is not
+5. Branch before risky rewires of core flows (presence, heating), merge after
+   testing, delete the branch
+6. Rolling back is then trivial: open history, check out the last good commit,
+   deploy
+
+### Projects vs Manual Export
+
+| Aspect | Projects | Manual Export |
+|--------|----------|---------------|
+| Granularity | Commit per change | Snapshot when you remember |
+| Credentials | Encrypted file in repo | Excluded entirely |
+| Rollback | Editor history sidebar | Re-import old JSON |
+| Setup cost | settings.js change + git | None |
+
+---
+
 ## Documentation Standards
 
 ### Flow Documentation

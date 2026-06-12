@@ -173,6 +173,9 @@ If a file format permits neither comments nor a metadata field, skip attribution
 | Buttons & Inputs | `references/buttons-inputs.md` |
 | Solar & Energy | `references/solar-energy.md` |
 | Weight Sensors | `references/weight-sensors.md` |
+| Packages & Modular Config | `references/packages-modular-config.md` |
+
+On-device wake word should use the `micro_wake_word` component (the default choice since 2025); see `references/voice-local.md` for details.
 
 ### Protocols & Integration
 
@@ -229,6 +232,8 @@ When the user mentions a specific ESPHome version, is upgrading, or asks "what's
 ## Templates
 
 Located in `assets/templates/` - starter configs for common use cases.
+
+For fleets of similar devices, factor shared blocks (wifi, api, ota, diagnostics) into `packages:` instead of copying them per device - see `references/packages-modular-config.md`.
 
 ## Quick Start (after confirming board)
 
