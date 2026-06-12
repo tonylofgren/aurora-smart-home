@@ -499,20 +499,20 @@ Show me:
 - Available attributes"
 ```
 
-### 3. Service Call Testing
+### 3. Action Call Testing
 
 ```
-"Before using a service in automation, how do I:
-- Test it in Developer Tools > Services
+"Before using an action in automation, how do I:
+- Test it in Developer Tools > Actions
 - See what parameters are available
 - Check the response/result
 - Identify entity_id vs target format"
 ```
 
-**Testing complex services:**
+**Testing complex actions:**
 ```
-"Test this service call step by step:
-service: light.turn_on
+"Test this action call step by step:
+action: light.turn_on
 target:
   entity_id: light.living_room
 data:

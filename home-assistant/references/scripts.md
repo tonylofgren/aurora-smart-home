@@ -671,7 +671,7 @@ sequence:
 
 ### From Developer Tools
 
-1. Go to **Developer Tools → Services**
+1. Go to **Developer Tools → Actions**
 2. Select `script.turn_on` or `script.<script_name>`
 3. Fill in service data (fields)
 4. Click **Call Service**

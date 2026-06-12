@@ -1527,7 +1527,7 @@ automation:
 ### Check Helper Services
 
 ```yaml
-# Test in Developer Tools > Services
+# Test in Developer Tools > Actions
 action: input_boolean.turn_on
 data: {}
 target:

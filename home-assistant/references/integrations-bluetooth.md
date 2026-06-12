@@ -26,7 +26,7 @@ Most Home Assistant installations detect built-in Bluetooth automatically:
 # Check Bluetooth status
 # Settings → Devices & Services → Bluetooth
 
-# View adapter info via Developer Tools → Services
+# View adapter info via Developer Tools → Actions
 action: bluetooth.async_scanner_diagnostics
 ```
 
@@ -693,7 +693,7 @@ Common sources of Bluetooth interference:
 # Settings → Devices & Services → Bluetooth → Configure
 
 # Restart Bluetooth integration
-# Developer Tools → Services
+# Developer Tools → Actions
 action: homeassistant.reload_config_entry
 data:
   entry_id: <bluetooth_config_entry_id>
@@ -717,7 +717,7 @@ data:
 #    - Govee → Govee BLE
 
 # Force discovery scan
-# Developer Tools → Services
+# Developer Tools → Actions
 action: bluetooth.start_scan
 data:
   timeout: 60

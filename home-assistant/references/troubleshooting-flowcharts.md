@@ -299,11 +299,11 @@ Developer Tools → States → Filter by entity_id
 # - 'None': Template error or missing attribute
 ```
 
-### Developer Tools - Services
+### Developer Tools - Actions
 
 ```yaml
 # Test any service call
-Developer Tools → Services → Select service → Fill data → Call Service
+Developer Tools → Actions → Select action → Fill data → Perform Action
 
 # Example test:
 Service: light.turn_on

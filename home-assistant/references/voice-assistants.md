@@ -1243,15 +1243,15 @@ logger:
 ### Test Pipeline
 
 ```markdown
-## Via Developer Tools > Services
+## Via Developer Tools > Actions
 
 # Test STT
-service: stt.process
+action: stt.process
 data:
   audio_input: base64_audio_data
 
 # Test TTS
-service: tts.speak
+action: tts.speak
 target:
   entity_id: tts.piper
 data:
@@ -1259,7 +1259,7 @@ data:
   message: "This is a test"
 
 # Test Intent
-service: conversation.process
+action: conversation.process
 data:
   text: "Turn on the living room lights"
 ```

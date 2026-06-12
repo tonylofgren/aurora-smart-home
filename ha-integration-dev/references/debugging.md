@@ -280,7 +280,7 @@ Check entity states at: Developer Tools → States
 
 ### Services Panel
 
-Test services at: Developer Tools → Services
+Test actions at: Developer Tools → Actions
 
 ### Template Editor
 

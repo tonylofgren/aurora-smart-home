@@ -832,7 +832,7 @@ config/.storage/hacs*
 
 ```yaml
 # Find unused custom components
-# Developer Tools > Services > homeassistant.check_config
+# Developer Tools > Actions > homeassistant.check_config
 
 # Manual check:
 # 1. List custom_components

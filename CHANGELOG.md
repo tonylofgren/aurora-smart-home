@@ -20,6 +20,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - **Repo-wide modernization to current HA automation syntax.** All starter templates, all 56 markdown files in `home-assistant/`, all `examples/*/automations.yaml` and dashboards, plus HA YAML snippets in `api-catalog`, `aurora`, `ha-dashboard-design`, `ha-integration-dev`, `node-red`, and the root TROUBLESHOOTING guide now use plural automation keys (`triggers:`, `conditions:`, `actions:`), `trigger:` instead of `platform:` in trigger lists, `action:` instead of `service:` in steps, and Lovelace `perform-action` instead of the deprecated `call-service` tap action. Intentional exceptions kept as-is: blueprint selector keys, sensor/device_tracker `platform:` keys, browser_mod fire-dom-event blocks, ESPHome `homeassistant.service:` and `api: services:` schema, and the legacy sides of before/after examples in `migration-guide.md` and the official 2026 snapshots.
 - `migration-guide.md` now documents the HA 2024.8 action rename and the HA 2024.10 trigger/plural-key rename, and its "NEW" examples were brought up to current syntax.
+- UI references updated across 16 files: "Developer Tools > Services" is now "Developer Tools > Actions", matching the renamed HA panel.
 - Remaining Swedish comments and example strings translated to English in the M5Stack Atom Echo configs and the HA usage guide.
 - HA skill Quick Reference now marks the official 2026 trigger/condition/action files as primary and the older curated files as supplementary legacy depth.
 

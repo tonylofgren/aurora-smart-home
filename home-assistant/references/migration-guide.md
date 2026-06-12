@@ -372,7 +372,7 @@ template:
 
 ```markdown
 ## Step 1: Export from YAML
-1. Open Developer Tools > Services
+1. Open Developer Tools > Actions
 2. Run: automation.reload or script.reload
 3. Note current automation IDs
 

@@ -1414,7 +1414,7 @@ triggers:
 ### Test Triggers Manually
 
 ```yaml
-# Developer Tools > Services
+# Developer Tools > Actions
 # automation.trigger
 action: automation.trigger
 target:

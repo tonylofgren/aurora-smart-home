@@ -99,7 +99,7 @@ return msg;
 - Node shows "done" status
 
 **Diagnosis:**
-1. Check Developer Tools → Services
+1. Check Developer Tools → Actions
 2. Try calling service manually
 3. Check service parameters
 
@@ -119,7 +119,7 @@ return msg;
 - Typo in service name
 - Service renamed in HA update
 
-**Fix:** Check available services in Developer Tools → Services
+**Fix:** Check available actions in Developer Tools → Actions
 
 ### Dynamic service calls not working
 

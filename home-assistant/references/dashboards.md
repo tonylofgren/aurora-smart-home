@@ -1505,7 +1505,7 @@ cards:
 ### Debug Mode
 
 ```yaml
-# Developer Tools > Services
+# Developer Tools > Actions
 action: lovelace.reload_resources
 
 # Check for YAML errors

@@ -764,7 +764,7 @@ automation:
 
 ```yaml
 # Test automations manually
-# Developer Tools > Services
+# Developer Tools > Actions
 
 action: automation.trigger
 target:

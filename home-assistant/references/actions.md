@@ -1438,7 +1438,7 @@ actions:
 ### Check Service in Developer Tools
 
 ```yaml
-# Go to Developer Tools > Services
+# Go to Developer Tools > Actions
 # Enter service name and parameters
 # Click "Call Service" to test
 

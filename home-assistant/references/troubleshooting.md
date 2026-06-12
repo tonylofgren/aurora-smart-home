@@ -874,7 +874,7 @@ data:
 # For integrations requiring local access
 
 # Verify port open
-# Developer Tools > Services > homeassistant.check_config
+# Developer Tools > Actions > homeassistant.check_config
 
 # Common causes:
 # - Firewall blocking

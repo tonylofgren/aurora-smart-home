@@ -865,7 +865,7 @@ mqtt:
 ### Verify Connection
 
 ```yaml
-# Developer Tools > Services
+# Developer Tools > Actions
 action: mqtt.publish
 data:
   topic: "test/homeassistant"
