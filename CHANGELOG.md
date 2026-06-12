@@ -10,10 +10,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **JLCPCB parts-status sync.** Component profiles gain an optional `sourcing` block (LCSC number, library type, MOQ, check date; schema minor-bumped to 1.1). `aurora/scripts/sync_jlcpcb_status.py` fills status from the public CDFER jlcpcb-parts-database CSV (format verified live), and the monthly `jlcpcb-sync.yaml` GitHub Action keeps it current. All 10 profiles stubbed with `lcsc: TBD`; a contract test rejects C-numbers without a verification date so numbers cannot be invented.
+- **Support agents wired into DEEP mode.** Glitch, Probe, Lens, and Manual gain the Snapshot-Aware Coordination Iron Law: they reconstruct state from `aurora-project.json` instead of chat history, write only `validation_results.<name>` and `conflict_log` entries, and are now covered by the same 9 contract tests as the core specialists (108 snapshot tests total). The handoff protocol documents their read-only pattern.
 - `aurora/scripts/validate_schematic.py` - executable netlist validator for `hardware/schematic.json`: schema validation plus refdes uniqueness, pin-in-two-nets (short) detection, undeclared component references, duplicate nets, ground-net presence, and TBD part reporting. Required to pass with zero errors before custom-PCB/production delivery (Volt Iron Law 8).
 - The pin, I2C address, voltage-level, and conflict validator procedures now accept `schematic.json` as a machine-readable input when the project has one.
 - OpenSCAD render test for the enclosure template (skips when OpenSCAD is not installed); template verified to produce a manifold STL with all four standoffs, vents, cable opening, and lid.
 - Eval design table in `aurora/evals/README.md` now documents routing evals 4-9.
+
+### Changed
+
+- **ESPHome actions terminology adopted** after live verification against esphome.io: `api: actions:` with `- action:` items and `homeassistant.action` with `action:` replace the old service spellings across all ESPHome references, assets, and examples (60 renames). Old spellings remain supported upstream aliases; the skill never flags user configs that still use them.
 
 ## [1.10.0] - 2026-06-12
 

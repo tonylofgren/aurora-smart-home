@@ -88,6 +88,13 @@ Each field has exactly **one owner agent** that writes it. Other agents read but
 
 Vera is the cross-agent reviewer. Vera **only reads**, never writes outside `validation_results.vera` and `conflict_log`.
 
+The mid-workflow support agents follow the same read-only pattern (wired in 2026-06-12; Iron Laws in their souls):
+
+- **Glitch** (debugging) reconstructs project state from the snapshot instead of chat history and writes only `validation_results.glitch` plus `conflict_log` entries pointing at the specialist whose deliverable holds the root cause.
+- **Probe** (QA) reads `validation_results` to verify the gaps rather than repeating green checks, and writes `validation_results.probe`.
+- **Lens** (review) reads `entity_ids_generated`, `ha_yaml_files`, and `esphome_filename` as the review surface and writes `validation_results.lens`; blocking security findings are `conflict_log` entries, never edits of peer deliverables.
+- **Manual** (docs) pulls the real values its Specificity law demands (`selected_board`, `esphome_filename`, `entity_ids_generated`) from the snapshot and writes `validation_results.manual`.
+
 ## Reading the Snapshot
 
 When an agent receives control:

@@ -16,9 +16,12 @@ SOULS_DIR = AURORA_ROOT / "souls"
 
 # Specialists that participate in DEEP mode and therefore need the Iron Law.
 # Each entry: soul name (matches souls/<name>.md and the agents_completed value
-# the agent must append to). Support agents (Glitch, Probe, Lens, Manual,
-# Scout, Lore, Forge, Grid, Canvas, Echo, Nano, Watt) intentionally omitted —
-# they either run transverse to DEEP flows or have not been wired in yet.
+# the agent must append to). Since 2026-06-12 this includes the mid-workflow
+# support agents (glitch, probe, lens, manual), which read the snapshot to
+# reconstruct state and write only validation_results.<name> plus
+# conflict_log entries. Remaining omissions (Scout, Lore, Forge, Grid,
+# Canvas, Echo, Nano, Watt) run transverse to DEEP flows or have not been
+# wired in yet.
 DEEP_MODE_SOULS = [
     "volt",
     "ada",
@@ -28,6 +31,10 @@ DEEP_MODE_SOULS = [
     "atlas",
     "mira",
     "river",
+    "glitch",
+    "probe",
+    "lens",
+    "manual",
 ]
 
 
