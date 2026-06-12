@@ -8,6 +8,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- **Orchestrator working method hardened** after a full souls/routing audit:
+  - New Routing Precedence rules break ties when keywords match several agents (Volt vs Nano, Echo sequences, Watt as pre-check, Glitch only for existing breakage).
+  - New Step 2.6 Safety Gate: battery, mains, >5V, actuators, water, and outdoor projects must start with Vera hazard analysis; QUICK requests that trip the gate are promoted to DEEP mode.
+  - Model recommendations audited: tier table now maps to concrete current models (Fable 5, Opus 4.8, Sonnet 4.6, Haiku 4.5), fable added as escalation tier, Probe downgraded to haiku.
+  - Language Rule gains DEEP-mode consistency: language is detected once and recorded in the routing output; specialists never re-detect.
+  - 14 contract tests in `aurora/tests/test_orchestrator_routing_rules.py` guard all of the above.
+
 ## [1.9.3] - 2026-06-12
 
 ### Added

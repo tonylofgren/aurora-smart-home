@@ -188,7 +188,7 @@ Read the user's request and identify:
 | Agent | Skill | Model | Fallback | Domain | Trigger Keywords |
 |-------|-------|-------|----------|--------|-----------------|
 | **Glitch** | *all* | opus | sonnet | Cross-skill debugging | not working, error, fails, broken, logs show, exception, debug, troubleshoot |
-| **Probe** | *all* | sonnet | haiku | QA, testing, validation | test, validate, verify, check if, does this work, QA, review config |
+| **Probe** | *all* | haiku | haiku | QA, testing, validation | test, validate, verify, check if, does this work, QA, review config |
 | **Vera** | *all* | sonnet | haiku | WAF + hardware safety review | WAF, wife approval, family friendly, reliable, manual fallback, too complicated, annoying, lights keep turning on, non-technical, hardware safety, batteri säkerhet |
 | **Lens** | *all* | opus | sonnet | Code review, security audit | review, security, audit, credentials, safe, vulnerable, code quality |
 | **Manual** | `esphome` | haiku | haiku | Installation docs, INSTALL.md, TROUBLESHOOTING.md | INSTALL.md, TROUBLESHOOTING.md, installationsguide, driftsättning, montering, installera, felsökningsguide |
@@ -212,6 +212,29 @@ Read the user's request and identify:
 | Agent | Skill | Model | Fallback | Domain | Trigger Keywords |
 |-------|-------|-------|----------|--------|-----------------|
 | **Canvas** | *all* | sonnet | haiku | Graphic design, UI beyond dashboards | logo, icon, image, graphic, color palette, UI design, visual identity, illustration |
+
+### Routing Precedence (when keywords match multiple agents)
+
+Keyword tables alone cannot break ties. When two or more agents match, apply these rules in order and state the chosen rule in the Agent Routing output:
+
+1. **Safety gate wins over everything.** If the project involves battery charging, mains power, voltages above 5V, motors/actuators/relays driving loads, water/pumps, or outdoor mounting, Vera reviews BEFORE the build agent starts. See Step 2.6.
+2. **Deliverable beats transport.** Volt vs Nano: route to Nano only when the protocol itself is the deliverable (Matter bridge, Thread network, BLE proxy, Zigbee firmware). When Matter/BLE is just the transport for a sensor or actuator project, Volt owns it.
+3. **Voice hardware is a sequence, not a tie.** A voice device on custom hardware is DEEP mode [Volt → Echo]: Volt does the board/GPIO/I2S wiring, Echo does the wake word and Assist pipeline. A pure pipeline question (no new hardware) is Echo alone.
+4. **Watt is a pre-check, not a builder.** Battery/solar keywords inside a build request add Watt as a sizing step before the build agent; they never make Watt the primary. Standalone power questions go to Watt alone.
+5. **Glitch needs something broken.** Debug keywords route to Glitch only when something already exists and misbehaves. "Build X so it doesn't break" is a build request, not a debug request.
+6. **Deliverable type is the final tiebreaker.** Firmware → Volt, automation → Sage, dashboard → Iris, integration → Ada, flow → River.
+
+## Step 2.6: Safety Gate (Vera before the build agent)
+
+Before delegating any hardware build, check the request against these triggers:
+
+- Battery charging or Li-ion/LiPo cells
+- Mains power or any voltage above 5V
+- Motors, actuators, relays switching real loads
+- Water, pumps, or humid placement
+- Outdoor mounting
+
+If ANY trigger matches: the workflow MUST start with Vera (hazard analysis per `hardware/HAZARD-ANALYSIS.md`), even if the request otherwise looks like QUICK mode. A QUICK request that trips the safety gate becomes DEEP mode [Vera → specialist]. Vera's findings are recorded in the snapshot before Volt generates any firmware or wiring.
 
 ## Current Platform Versions
 
@@ -248,18 +271,31 @@ For DEEP mode (multiple specialists): load every involved soul before the first 
 Each agent has a primary model and a fallback. Use the primary when available;
 fall back gracefully based on the user's subscription tier.
 
+### Model Names (audited 2026-06-12)
+
+The registry uses tier names, not pinned versions. As of this audit the tiers map to:
+
+| Tier name | Current model | Typical use |
+|-----------|---------------|-------------|
+| fable | Claude Fable 5 | Escalation tier above opus: 3+ specialist DEEP workflows, release-gating security audits |
+| opus | Claude Opus 4.8 | Ada, Mira, Glitch, Lens, Grid primaries |
+| sonnet | Claude Sonnet 4.6 | Default workhorse for most specialists |
+| haiku | Claude Haiku 4.5 | Watt, Manual, Probe, and simple QUICK tasks |
+
+Re-audit this mapping at every release; model names age quickly. If a newer model family exists than the one listed here, prefer it and update this table.
+
 ### Subscription Tiers
 
 | Tier | Available Models | Strategy |
 |------|-----------------|----------|
 | **Free** | haiku + limited sonnet | Use haiku-capable agents only; avoid opus agents |
 | **Pro** | sonnet + limited opus | Use sonnet for most; save opus for Ada, Glitch, Lens, Grid |
-| **Team / Max** | Full opus access | Follow primary model per agent in the registry |
+| **Team / Max** | Full opus access, fable where offered | Follow primary model per agent in the registry; escalate to fable per the rules below |
 
 ### Fallback Chain
 
 ```
-opus  →  sonnet  →  haiku
+fable  →  opus  →  sonnet  →  haiku
 ```
 
 Always fall back one tier, never skip. If the user is on Free and an opus
@@ -270,6 +306,10 @@ agent is needed, use the sonnet fallback and note the limitation.
 - The task involves credentials, security, or network access
 - Output must be consistent across 3+ files simultaneously
 - The request is cross-skill (two or more agents needed in sequence)
+
+### Escalate to fable when:
+- A DEEP workflow spans three or more specialists with one shared snapshot
+- A security audit (Lens) gates a public release or touches credentials storage
 
 ## Step 5: Deliver Routing Output
 
@@ -462,6 +502,8 @@ Apply consistently across every specialist that ships project folders (Volt, Sag
 **Explicit per-file enforcement (no English defaults for the Big Five):** `README.md`, `INSTALL.md`, `TROUBLESHOOTING.md`, `BOM.md`, and `WIRING.md` are human-readable docs and MUST be written in the user's detected language. The default-to-English fallback only fires when the user explicitly wrote their request in English. A Swedish, German, Spanish, or any other non-English conversation never produces an English `INSTALL.md` "because it is technical". The headings, step descriptions, prerequisites, and verification text are all translated. Only quoted commands, paths, identifiers, and code snippets stay English.
 
 **Language detection trigger:** Detect language from the user's last 2–3 project-describing messages, not from a single short reply like "yes" or "ok". If the user opened in Swedish and the last reply is "kör", the language is still Swedish.
+
+**DEEP mode language consistency:** Aurora detects the language ONCE, states it in the routing output (Step 5), and every specialist in the workflow follows that single decision. Specialists never re-detect per turn. A Swedish project must not end up with Volt writing a Swedish INSTALL.md while Sage writes English automation comments; if a specialist is unsure, the language stated in the routing output wins.
 
 The rule for files committed to **the aurora-smart-home repo itself** is separate: those stay English regardless of conversation language, because the repo serves a global audience.
 
