@@ -8,6 +8,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.13.0] - 2026-06-13
+
+### Added
+
+- **DEEP-mode snapshot demo + replay test.** `examples/deep-mode-co2-demo` ships a complete, valid `aurora-project.json` showing three specialists (Volt then Sage then Iris) building through one shared snapshot, plus the artifacts it references. `test_deep_mode_snapshot_replay.py` replays the lifecycle on every `examples/**/aurora-project.json`: schema validity, clean pipeline drain, a result per completed agent with no orphans, field provenance, resolved conflicts, referential integrity, profile-matched board/components, and ordered timestamps.
+- **Eval regression gate.** `aurora/evals/run_evals.py` grades a saved iteration and compares with-skill scores to `aurora/evals/golden-baseline.json`, failing on any regression (`--update` re-baselines). The harness does not spawn subagents (live, non-deterministic); it gates the manually produced runs. Golden baseline seeded from iteration-2 and kept in lockstep with `evals.json`.
+- **Conformance levels in `check-delivery.py`** (minimal / standard / strict): every check is tagged, `--level` gates the exit code, and the report names the highest level reached. New CI template `aurora/references/templates/aurora-check-workflow.yml` lets users gate their own project repos.
+
+### Changed
+
+- **Definitive language check** in `check-delivery.py`: every human-readable doc in a project must share one language (Swedish-letter detection plus stop-word fallback, code fences stripped), replacing the old README-vs-INSTALL heuristic.
+- `check-delivery.py` CLI output switched to ASCII (no em dash or box-drawing characters) so it no longer crashes on Windows cp1252 stdout.
+
 ## [1.12.0] - 2026-06-13
 
 ### Added

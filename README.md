@@ -11,7 +11,7 @@ against schema-checked profiles, and refuses to ship code that does not pass.
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skills-7c3aed.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Home Assistant](https://img.shields.io/badge/Home_Assistant-2024.x--2026.x-41BDF5.svg)](https://www.home-assistant.io/)
 [![ESPHome](https://img.shields.io/badge/ESPHome-2026.5.0-000000.svg)](https://esphome.io/)
-[![Version](https://img.shields.io/badge/Version-v1.12.0-success.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-v1.13.0-success.svg)](CHANGELOG.md)
 [![Validated](https://img.shields.io/badge/Validated-against_datasheets-success.svg)](aurora/references/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Support Nabu Casa](https://img.shields.io/badge/Support_HA-Nabu_Casa-3b8cd3.svg)](https://www.nabucasa.com)
@@ -26,6 +26,14 @@ against schema-checked profiles, and refuses to ship code that does not pass.
 > See [DISCLAIMER.md](DISCLAIMER.md) for full terms.
 
 ---
+
+## What's new: stronger delivery and protocol checks (v1.13.0, June 2026)
+
+Three additive upgrades that make Aurora's output more trustworthy.
+
+- **Conformance levels in the delivery check:** `check-delivery.py` now reports whether a project reaches minimal, standard, or strict, and you can gate at the level you want. The language check is now definitive (every doc in a project must share one language) instead of a heuristic, and there is a drop-in CI workflow template so you can gate your own project repos.
+- **A worked DEEP-mode demo:** a complete CO2 project shows three specialists (firmware, automation, dashboard) building through one shared snapshot, with a replay test that proves the hand-off protocol end to end.
+- **An eval regression gate:** the routing and delivery eval scores are pinned to a golden baseline, so a future change cannot quietly weaken how Aurora routes requests or what it delivers.
 
 ## What's new: recipe library (v1.12.0, June 2026)
 

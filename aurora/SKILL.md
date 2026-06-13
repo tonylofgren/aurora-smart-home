@@ -33,7 +33,7 @@ Look at the **user messages** in conversation history (not the skill file conten
 - Do not run any `gh` calls.
 - Respond with a single short line, e.g.:
 
-  > *Aurora v1.12.0 is already loaded.*
+  > *Aurora v1.13.0 is already loaded.*
 
 - Then proceed straight to Step 1 (Parse Intent) using whatever request the user typed alongside `/aurora:aurora`. If the user typed nothing alongside it, ask the opening question once:
 
@@ -55,7 +55,7 @@ Command:
 gh release view --json tagName -R tonylofgren/aurora-smart-home --jq '.tagName'
 ```
 
-- If gh returns a valid version tag (like `v1.7.12`), strip the leading `v` and compare to the installed version `1.12.0`. If the fetched version is semver-greater, output the update notice (see below) BEFORE the banner.
+- If gh returns a valid version tag (like `v1.7.12`), strip the leading `v` and compare to the installed version `1.13.0`. If the fetched version is semver-greater, output the update notice (see below) BEFORE the banner.
 - If gh is missing, fails, returns nothing, or returns something that does not parse as a semver tag, proceed directly to the banner with no output. Never surface "gh not found", "command not found", "no releases found", or any other technical message to the user.
 
 **Semver comparison rule (avoid lexicographic mistakes):** Both versions must be matched against `^\d+\.\d+\.\d+$`, then split on `.` and each segment compared as **integer**, not as string. Lexicographic comparison reports `2.0.10 < 2.0.2` (because `'1' < '2'` at the start of the third segment), which is wrong. Concretely:
@@ -77,28 +77,27 @@ The fallback chain is intentionally one tier. Earlier versions tried WebFetch as
 Update notice (only when gh succeeded and a newer version exists):
 
 ```
-🔔 A newer Aurora is available: v<latest> (you have v1.12.0).
+🔔 A newer Aurora is available: v<latest> (you have v1.13.0).
    Update: claude plugin update aurora@aurora-smart-home
    Then /reload-plugins or restart Claude Code.
 ```
 
-What's new notice (only when gh succeeded AND fetched version == installed version `1.12.0`):
+What's new notice (only when gh succeeded AND fetched version == installed version `1.13.0`):
 
 ```
-✨ Aurora v1.12.0 — what's new:
-   • Recipe library: 12 curated starting points (CO2 monitor, motion
-     light, presence routine, energy dashboard, and more). Describe a
-     broad goal and Aurora suggests the closest recipes.
-   • Pick one and Aurora builds the whole project from it: hardware
-     with verified part numbers, automation, and dashboard, then you
-     customise the few parameters that matter.
-   • Recipes span the specialists, from sensor builds to pure Home
-     Assistant automations with no new hardware.
+✨ Aurora v1.13.0 — what's new:
+   • Delivery checks now report a conformance level (minimal /
+     standard / strict) and verify that every project doc is in one
+     language, not a heuristic guess.
+   • A worked DEEP-mode demo project shows three specialists building
+     through one shared snapshot, proven end to end by a replay test.
+   • An eval regression gate locks in the routing and delivery scores
+     so a future change cannot quietly weaken them.
 ```
 
 **Update this block at every version bump.** Content must be user-facing (no schema fields, test counts, or CI changes). 3 bullets max.
 
-Then output `v1.12.0 (released 2026-06-13)` on its own line, then output the banner:
+Then output `v1.13.0 (released 2026-06-13)` on its own line, then output the banner:
 
 ```
   ┌─────────────────────────────────────────────────────────┐
