@@ -11,7 +11,7 @@ against schema-checked profiles, and refuses to ship code that does not pass.
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skills-7c3aed.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Home Assistant](https://img.shields.io/badge/Home_Assistant-2024.x--2026.x-41BDF5.svg)](https://www.home-assistant.io/)
 [![ESPHome](https://img.shields.io/badge/ESPHome-2026.5.0-000000.svg)](https://esphome.io/)
-[![Version](https://img.shields.io/badge/Version-v1.11.0-success.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-v1.12.0-success.svg)](CHANGELOG.md)
 [![Validated](https://img.shields.io/badge/Validated-against_datasheets-success.svg)](aurora/references/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Support Nabu Casa](https://img.shields.io/badge/Support_HA-Nabu_Casa-3b8cd3.svg)](https://www.nabucasa.com)
@@ -26,6 +26,15 @@ against schema-checked profiles, and refuses to ship code that does not pass.
 > See [DISCLAIMER.md](DISCLAIMER.md) for full terms.
 
 ---
+
+## What's new: recipe library (v1.12.0, June 2026)
+
+Aurora can now start you from a curated recipe instead of a blank page.
+
+- **12 ready-made starting points:** CO2 monitor, motion light, weather station, fridge/freezer monitor, room presence, home/away routine, energy dashboard, notification hub, vacation mode, greenhouse, smart thermostat, and a button scene controller.
+- **Describe a goal, get suggestions:** say something broad like "I want to do something about air quality" and Aurora offers the closest recipes, always with "start from scratch" as an option.
+- **Pick one and Aurora builds it:** the full project folder is generated from the recipe (hardware with verified part numbers where applicable, automation pattern, and dashboard), then you customise the handful of parameters that matter (thresholds, rooms, schedules).
+- **Across the board:** recipes span sensor builds and pure Home Assistant automations that need no new hardware, and each links the full worked example when one exists.
 
 ## What's new: verified part numbers + validated netlists (v1.11.0, June 2026)
 

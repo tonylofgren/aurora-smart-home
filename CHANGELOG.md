@@ -8,7 +8,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-## [1.11.0] - 2026-06-12
+## [1.12.0] - 2026-06-13
+
+### Added
+
+- **Recipe library** at `aurora/recipes/`: 12 curated starting points that Aurora suggests and then generates into a full project. Covers CO2 monitor, motion light, weather station, fridge/freezer monitor, room presence (mmWave), home/away routine, energy dashboard, notification hub, vacation mode, greenhouse, smart thermostat, and button scene controller. Each recipe has a metadata header (intent, specialists, hardware flag, match keywords), a BOM skeleton citing verified LCSC numbers for hardware recipes, an automation-pattern sketch, a dashboard skeleton, and a Customise section.
+- `aurora/recipes/_recipe-format.md` (format spec) and `aurora/recipes/_index.md` (the keyword-matched suggestion table).
+- `aurora/SKILL.md` wiring: **Step 1.5 Offer a Recipe** suggests the 3-5 closest recipes when intent is broad (and skips for already-specified requests), and **Step 7.6 Recipe-to-project flow** turns a chosen recipe into a generated project with the user customising afterward.
+- 78 contract tests in `aurora/tests/test_recipe_library.py`: required header keys and sections, slug/name agreement, index/file agreement, no invented LCSC numbers, no em dashes, and the SKILL.md wiring. Suite: 836 passed.
 
 ### Added
 

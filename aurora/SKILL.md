@@ -33,7 +33,7 @@ Look at the **user messages** in conversation history (not the skill file conten
 - Do not run any `gh` calls.
 - Respond with a single short line, e.g.:
 
-  > *Aurora v1.11.0 is already loaded.*
+  > *Aurora v1.12.0 is already loaded.*
 
 - Then proceed straight to Step 1 (Parse Intent) using whatever request the user typed alongside `/aurora:aurora`. If the user typed nothing alongside it, ask the opening question once:
 
@@ -55,7 +55,7 @@ Command:
 gh release view --json tagName -R tonylofgren/aurora-smart-home --jq '.tagName'
 ```
 
-- If gh returns a valid version tag (like `v1.7.12`), strip the leading `v` and compare to the installed version `1.11.0`. If the fetched version is semver-greater, output the update notice (see below) BEFORE the banner.
+- If gh returns a valid version tag (like `v1.7.12`), strip the leading `v` and compare to the installed version `1.12.0`. If the fetched version is semver-greater, output the update notice (see below) BEFORE the banner.
 - If gh is missing, fails, returns nothing, or returns something that does not parse as a semver tag, proceed directly to the banner with no output. Never surface "gh not found", "command not found", "no releases found", or any other technical message to the user.
 
 **Semver comparison rule (avoid lexicographic mistakes):** Both versions must be matched against `^\d+\.\d+\.\d+$`, then split on `.` and each segment compared as **integer**, not as string. Lexicographic comparison reports `2.0.10 < 2.0.2` (because `'1' < '2'` at the start of the third segment), which is wrong. Concretely:
@@ -77,29 +77,28 @@ The fallback chain is intentionally one tier. Earlier versions tried WebFetch as
 Update notice (only when gh succeeded and a newer version exists):
 
 ```
-🔔 A newer Aurora is available: v<latest> (you have v1.11.0).
+🔔 A newer Aurora is available: v<latest> (you have v1.12.0).
    Update: claude plugin update aurora@aurora-smart-home
    Then /reload-plugins or restart Claude Code.
 ```
 
-What's new notice (only when gh succeeded AND fetched version == installed version `1.11.0`):
+What's new notice (only when gh succeeded AND fetched version == installed version `1.12.0`):
 
 ```
-✨ Aurora v1.11.0 — what's new:
-   • Verified JLCPCB part numbers in the component catalog: 9 of 10
-     sensors checked live against the JLCPCB parts API, with library
-     status auto-synced monthly.
-   • Machine-validated hardware: schematic.json netlist checks (shorts,
-     refdes, ground) gate custom-PCB delivery, and ESPHome examples use
-     the current actions syntax (api: actions:, homeassistant.action).
-   • Smarter multi-agent builds: debugging, QA, review, and docs
-     specialists now coordinate through the project snapshot instead of
-     reconstructing state from chat history.
+✨ Aurora v1.12.0 — what's new:
+   • Recipe library: 12 curated starting points (CO2 monitor, motion
+     light, presence routine, energy dashboard, and more). Describe a
+     broad goal and Aurora suggests the closest recipes.
+   • Pick one and Aurora builds the whole project from it: hardware
+     with verified part numbers, automation, and dashboard, then you
+     customise the few parameters that matter.
+   • Recipes span the specialists, from sensor builds to pure Home
+     Assistant automations with no new hardware.
 ```
 
 **Update this block at every version bump.** Content must be user-facing (no schema fields, test counts, or CI changes). 3 bullets max.
 
-Then output `v1.11.0 (released 2026-06-12)` on its own line, then output the banner:
+Then output `v1.12.0 (released 2026-06-13)` on its own line, then output the banner:
 
 ```
   ┌─────────────────────────────────────────────────────────┐
@@ -156,6 +155,16 @@ Read the user's request and identify:
 - **What hardware** is involved (if any)
 - **How many domains** are touched (single vs multi-skill)
 - **Complexity** — quick task or multi-step project
+
+## Step 1.5: Offer a Recipe (broad intent only)
+
+When the user's intent is **broad** ("I want to do something about air quality", "make my heating smarter", "the lights should just work") rather than already-specified ("build an SCD40 on a XIAO C3"), check `aurora/recipes/_index.md` before routing.
+
+- Rank recipes by keyword overlap with the user's description and offer the **3-5 closest** following the clarifying-question rule in Communication Rules below (all options listed, one recommended), always including "or start from scratch" as the final option.
+- If the user already specified hardware, sensor, and outcome, skip this step and route directly: they do not need a starting point.
+- If the user picks a recipe, follow the recipe-to-project flow (Step 7.6); if they pick "from scratch", continue to Step 2 normally.
+
+This step lowers onboarding friction; it never blocks an experienced user who already knows what they want.
 
 ## Step 2: Route to the Agent Registry
 
@@ -427,6 +436,18 @@ DEEP mode does NOT complete with unresolved conflict entries.
 
 If only one specialist is involved, do not create a snapshot file.
 Carrying a snapshot for a single-agent task is overhead with no payoff.
+
+### 7.6 Recipe-to-project flow
+
+When the user picked a recipe in Step 1.5:
+
+1. Read the recipe file (`aurora/recipes/<slug>.md`) and treat its header `specialists`, Hardware, Automation pattern, and Dashboard skeleton as the project brief.
+2. Confirm the recipe's Customise parameters with the user in one clustered Question-Rule prompt (thresholds, room names, entity IDs), defaulting to the recipe's stated defaults so "run with defaults" works.
+3. Route to the recipe's `specialists` and generate the full project folder exactly as if the user had described it from scratch. A multi-specialist recipe is DEEP mode and gets a snapshot; a single-specialist recipe is QUICK mode.
+4. Hardware recipes inherit the verified LCSC numbers from `aurora/references/components/`; never downgrade a verified part to a guess.
+5. Point the user at the recipe's `related_example` for the complete reference build when one exists.
+
+The recipe is the starting point, not a constraint: the user customises after generation exactly as with any project.
 
 ## Communication Rules
 
