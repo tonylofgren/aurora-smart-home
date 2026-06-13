@@ -16,7 +16,26 @@ prompt.
 - `evals.json` - nine test prompts plus assertions per prompt: three delivery-contract evals (1-3) and six routing/triggering evals (4-9) that exercise the routing precedence rules and the Vera safety gate.
 - `grade.py` - runs assertions against eval outputs and writes
   `grading.json` per run and a `grading-summary.json` per iteration.
+- `run_evals.py` - the regression gate: grades an iteration, then compares
+  the with-skill scores to `golden-baseline.json` and exits non-zero on any
+  regression. Run `--update` to re-baseline after assertions legitimately
+  change.
+- `golden-baseline.json` - the with-skill scores the suite must not drop
+  below, seeded from iteration-2 (every eval at full marks).
 - `README.md` - this file.
+
+## Regression gate
+
+```
+python aurora/evals/run_evals.py aurora-workspace/iteration-N
+```
+
+The harness does not spawn the subagents (real Aurora flows need a live
+model and are non-deterministic, so they cannot run in CI). Produce the
+runs manually as below, then this gate grades them and fails if any eval
+scores below its golden `with_skill_min`. `golden-baseline.json` stays in
+lockstep with `evals.json` (a test asserts the eval IDs and assertion
+counts match), so adding an eval without baselining it is caught.
 
 ## How to run
 

@@ -1,0 +1,15 @@
+{
+  "_comment": "Golden with_skill scores the eval suite must not regress below. Seeded from iteration-2 (2026-06-13, commit after the recipe library), where every eval scored full marks. Update deliberately with run_evals.py --update when an eval's assertions legitimately change. with_skill_min is the minimum acceptable pass_count for the with-skill run; a fresh iteration that scores below it is a regression.",
+  "baseline_iteration": "iteration-2",
+  "evals": {
+    "eval-1-vague-board-triggers-question": {"with_skill_min": 3, "total": 3},
+    "eval-2-swedish-prompt-swedish-deliverables": {"with_skill_min": 4, "total": 4},
+    "eval-3-complete-context-no-extra-questions": {"with_skill_min": 4, "total": 4},
+    "eval-4-routing-sage-automation": {"with_skill_min": 2, "total": 2},
+    "eval-5-routing-iris-dashboard": {"with_skill_min": 1, "total": 1},
+    "eval-6-routing-atlas-external-api": {"with_skill_min": 1, "total": 1},
+    "eval-7-safety-gate-vera-before-volt": {"with_skill_min": 3, "total": 3},
+    "eval-8-precedence-volt-owns-matter-transport": {"with_skill_min": 1, "total": 1},
+    "eval-9-precedence-watt-standalone-power": {"with_skill_min": 1, "total": 1}
+  }
+}
