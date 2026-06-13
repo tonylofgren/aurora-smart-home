@@ -64,6 +64,7 @@ Always at least one note per row, even if it is short. Useful note categories:
 - **Voltage range** when the component is not a default-safe 3.3V-only device.
 - **Calibration requirement** so buyers know if a sensor needs prep before use.
 - **Lifecycle warning** when the part is end-of-lifed or has a recommended successor.
+- **Stock warning** when the component profile's `sourcing.jlcpcb_stock_status` is `out_of_stock` or `low_stock`. Flag it in the Notes column (e.g. "JLCPCB: out of stock as of 2026-06, pick an alternative or hand-solder") so the buyer is not surprised at order time. An `out_of_stock` part should be called out in the README too, not buried in a table row.
 
 ## CSV export (custom-PCB and production tiers)
 

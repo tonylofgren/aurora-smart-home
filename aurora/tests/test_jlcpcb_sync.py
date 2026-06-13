@@ -147,3 +147,18 @@ class TestStockTracking:
                 seen += 1
                 assert s["jlcpcb_stock_status"] in ("in_stock", "low_stock", "out_of_stock")
         assert seen >= 9, "expected the 9 verified parts to carry a stock status"
+
+
+class TestStockWarningIsConsumed:
+    """The stock signal is only useful if delivery actually reads it. These
+    pin the consumption rule in the BOM format spec and Volt's Iron Law 8."""
+
+    def test_bom_format_documents_stock_warning(self):
+        text = (REPO_ROOT / "aurora" / "references" / "deliverables" / "bom-format.md").read_text(encoding="utf-8")
+        assert "jlcpcb_stock_status" in text
+        assert "out_of_stock" in text and "Stock warning" in text
+
+    def test_volt_soul_flags_out_of_stock_parts(self):
+        text = (REPO_ROOT / "aurora" / "souls" / "volt.md").read_text(encoding="utf-8")
+        assert "jlcpcb_stock_status" in text
+        assert "out_of_stock" in text

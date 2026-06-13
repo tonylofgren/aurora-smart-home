@@ -11,7 +11,7 @@ against schema-checked profiles, and refuses to ship code that does not pass.
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skills-7c3aed.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Home Assistant](https://img.shields.io/badge/Home_Assistant-2024.x--2026.x-41BDF5.svg)](https://www.home-assistant.io/)
 [![ESPHome](https://img.shields.io/badge/ESPHome-2026.5.0-000000.svg)](https://esphome.io/)
-[![Version](https://img.shields.io/badge/Version-v1.13.0-success.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-v1.13.1-success.svg)](CHANGELOG.md)
 [![Validated](https://img.shields.io/badge/Validated-against_datasheets-success.svg)](aurora/references/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Support Nabu Casa](https://img.shields.io/badge/Support_HA-Nabu_Casa-3b8cd3.svg)](https://www.nabucasa.com)
@@ -26,6 +26,11 @@ against schema-checked profiles, and refuses to ship code that does not pass.
 > See [DISCLAIMER.md](DISCLAIMER.md) for full terms.
 
 ---
+
+## What's new: out-of-stock warnings (v1.13.1, June 2026)
+
+- **No more checkout surprises:** when a part you picked is out of stock or running low at JLCPCB, Aurora now flags it in the BOM and calls it out in the README, so you can swap to an alternative before you order instead of finding out at checkout.
+- **Live stock in the component catalog:** the verified-parts catalog tracks JLCPCB stock status (in stock / low / out of stock), refreshed automatically each month.
 
 ## What's new: stronger delivery and protocol checks (v1.13.0, June 2026)
 

@@ -8,9 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.13.1] - 2026-06-13
+
 ### Added
 
-- **JLCPCB stock tracking.** Component profiles gain an optional `sourcing.jlcpcb_stock_status` (`in_stock` / `low_stock` / `out_of_stock`), refreshed from the live JLCPCB parts API via `sync_jlcpcb_status.py --stock` (also wired into the monthly sync Action). Coarse on purpose so the catalog does not churn on hourly count changes. All 9 verified parts populated; a live check found MH-Z19B (C242514) and PIR AM312 (C114881) currently out of stock, NTC 10K and LD2410 low. Recipes and BOMs should flag non-in-stock parts before ordering.
+- **JLCPCB stock tracking.** Component profiles gain an optional `sourcing.jlcpcb_stock_status` (`in_stock` / `low_stock` / `out_of_stock`), refreshed from the live JLCPCB parts API via `sync_jlcpcb_status.py --stock` (also wired into the monthly sync Action). Coarse on purpose so the catalog does not churn on hourly count changes. All 9 verified parts populated; a live check found MH-Z19B (C242514) and PIR AM312 (C114881) currently out of stock, NTC 10K and LD2410 low.
+- **Out-of-stock warnings in delivery.** Volt's Iron Law 8 and the BOM format now require flagging any selected part whose `jlcpcb_stock_status` is `out_of_stock` or `low_stock` in the BOM Notes (and calling out out-of-stock parts in the README), so a build does not send the user to checkout for a part JLCPCB cannot supply.
 
 ## [1.13.0] - 2026-06-13
 
