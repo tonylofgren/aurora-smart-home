@@ -1,0 +1,75 @@
+{
+  "schema_version": "1.0",
+  "project_id": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "project_name": "co2-air-quality-demo",
+  "created_at": "2026-06-13T10:00:00Z",
+  "updated_at": "2026-06-13T10:42:00Z",
+  "snapshot_file_path": "aurora-project.json",
+  "current_agent": "iris",
+  "agents_completed": ["volt", "sage", "iris"],
+  "agents_pending": [],
+  "user_requirements": [
+    "Monitor CO2 in the home office",
+    "Warn me when the air gets stuffy",
+    "Show it on a dashboard"
+  ],
+  "selected_board": "esp32-c3-mini",
+  "selected_components": ["scd40"],
+  "gpio_allocation": {
+    "scd40": {"sda": 6, "scl": 7}
+  },
+  "entity_ids_generated": [
+    "sensor.co2_monitor_co2",
+    "sensor.co2_monitor_temperature",
+    "sensor.co2_monitor_humidity"
+  ],
+  "esphome_filename": "co2-monitor.yaml",
+  "ha_yaml_files": [
+    "packages/co2_monitor.yaml",
+    "dashboards/air-quality.yaml"
+  ],
+  "validation_results": {
+    "volt": {
+      "status": "passed",
+      "validators_run": [
+        "pin-validator", "conflict-validator", "i2c-address-validator",
+        "voltage-level-validator", "version-validator", "entity-id-validator",
+        "secrets-validator", "ota-safety-validator"
+      ],
+      "failures": [],
+      "warnings": [],
+      "completed_at": "2026-06-13T10:18:00Z"
+    },
+    "sage": {
+      "status": "passed",
+      "validators_run": ["entity-id-validator", "secrets-validator"],
+      "failures": [],
+      "warnings": ["CO2 threshold left at the 1000 ppm default; user may want to tune"],
+      "completed_at": "2026-06-13T10:33:00Z"
+    },
+    "iris": {
+      "status": "passed",
+      "validators_run": ["entity-id-validator"],
+      "failures": [],
+      "warnings": [],
+      "completed_at": "2026-06-13T10:42:00Z"
+    }
+  },
+  "conflict_log": [
+    {
+      "raised_by": "iris",
+      "blocks_agent": "iris",
+      "message": "Dashboard needs sensor.co2_monitor_humidity but it was not in entity_ids_generated yet.",
+      "raised_at": "2026-06-13T10:36:00Z",
+      "resolution": "Sage confirmed the SCD40 humidity entity and appended it to entity_ids_generated; Iris proceeded.",
+      "resolved_at": "2026-06-13T10:38:00Z"
+    }
+  ],
+  "notes": [
+    {
+      "author": "orchestrator",
+      "text": "DEEP mode: Volt builds firmware, Sage the CO2 automation, Iris the dashboard. Snapshot is the source of truth across the three turns.",
+      "added_at": "2026-06-13T10:00:00Z"
+    }
+  ]
+}
