@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- **Four new verified component profiles**, expanding the catalog from 10 to 14, each with an LCSC part number checked live against the JLCPCB parts API and a stock status: SHT31 (C80862, temp/humidity), AHT20 (C2757850, temp/humidity), BH1750 (C78960, ambient light, new `light/` category), and INA219 (C2155799, current/power monitor, new `power/` category). All four are in stock and extended-library.
+
 ## [1.13.1] - 2026-06-13
 
 ### Added

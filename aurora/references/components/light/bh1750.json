@@ -1,0 +1,79 @@
+{
+  "$schema": "../../schemas/component-profile.schema.json",
+  "schema_version": "1.1",
+  "component_id": "bh1750",
+  "display_name": "BH1750 Ambient Light Sensor",
+  "type": "ambient_light",
+  "category": "light",
+  "protocol": "i2c",
+  "variants": {
+    "primary": "bh1750",
+    "easily_confused_with": [
+      {
+        "component_id": "max44009",
+        "difference": "MAX44009 is a lower-power lux sensor with a wider dynamic range; BH1750 is the cheaper, more common choice for basic lux readings."
+      }
+    ],
+    "knockoffs_known": false,
+    "verification_method": "ROHM marking BH1750FVI; the common breakout is the GY-302 board."
+  },
+  "i2c": {
+    "default_addresses": [
+      "0x23",
+      "0x5C"
+    ],
+    "address_strap_pin": "ADDR (LOW=0x23, HIGH=0x5C)",
+    "max_speed_khz": 400
+  },
+  "pin_requirements": {
+    "count": 2,
+    "type": "i2c",
+    "must_use_default_i2c_pins": false,
+    "adc_required": false,
+    "input_only_ok": false,
+    "strapping_pin_ok": false,
+    "5v_tolerant_required": false,
+    "interrupt_capable_required": false
+  },
+  "external_components": {
+    "pullup_resistor": {
+      "value_ohm": 4700,
+      "required": true,
+      "note": "External I2C pull-ups if the board does not provide them"
+    },
+    "decoupling_cap": {
+      "value_uf": 0.1,
+      "required": true
+    }
+  },
+  "power": {
+    "voltage_min": 2.4,
+    "voltage_max": 3.6,
+    "tolerates_5v": false,
+    "level_shifter_required_on_5v_board": true,
+    "current_ma_active": 0.12,
+    "current_sleep_ua": 0.01
+  },
+  "limitations": {
+    "min_read_interval_s": 0.2,
+    "operating_temp_c": "-40 to +85",
+    "measurement_range_lux": "1-65535",
+    "accuracy": "+/- 20%",
+    "note": "Bare IC is 2.4-3.6V; the bare die is not 5V tolerant. GY-302 breakouts add a regulator but the IC I2C lines still expect 3.3V logic."
+  },
+  "calibration": {
+    "required": false,
+    "type": null
+  },
+  "esphome": {
+    "platform": "bh1750",
+    "min_version": "2022.1.0"
+  },
+  "datasheet_url": "https://www.rohm.com/products/sensors-mems/ambient-light-sensor-ics/bh1750fvi-product",
+  "sourcing": {
+    "lcsc": "C78960",
+    "jlcpcb_library_type": "expand",
+    "jlcpcb_checked": "2026-06-13",
+    "jlcpcb_stock_status": "in_stock"
+  }
+}

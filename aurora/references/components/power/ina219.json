@@ -1,0 +1,78 @@
+{
+  "$schema": "../../schemas/component-profile.schema.json",
+  "schema_version": "1.1",
+  "component_id": "ina219",
+  "display_name": "INA219 Current & Power Monitor",
+  "type": "current_power_monitor",
+  "category": "power",
+  "protocol": "i2c",
+  "variants": {
+    "primary": "ina219",
+    "easily_confused_with": [
+      {
+        "component_id": "ina226",
+        "difference": "INA226 is the higher-resolution successor (16-bit, lower offset) and measures bus voltage to 36V; INA219 reaches 26V. Different I2C register map, different ESPHome platform."
+      }
+    ],
+    "knockoffs_known": false,
+    "verification_method": "TI marking; the B grade (INA219BIDR) has tighter gain error than the A grade. Common breakout is the GY-219 board with a 0.1 ohm shunt."
+  },
+  "i2c": {
+    "default_addresses": [
+      "0x40"
+    ],
+    "address_strap_pin": "A0/A1 select 0x40-0x4F (16 addresses)",
+    "max_speed_khz": 400
+  },
+  "pin_requirements": {
+    "count": 2,
+    "type": "i2c",
+    "must_use_default_i2c_pins": false,
+    "adc_required": false,
+    "input_only_ok": false,
+    "strapping_pin_ok": false,
+    "5v_tolerant_required": false,
+    "interrupt_capable_required": false
+  },
+  "external_components": {
+    "pullup_resistor": {
+      "value_ohm": 4700,
+      "required": true,
+      "note": "External I2C pull-ups if the board does not provide them"
+    },
+    "shunt_resistor": {
+      "value_ohm": 0.1,
+      "required": true,
+      "note": "Default 0.1 ohm shunt on common breakouts; set the matching shunt_resistance in ESPHome"
+    }
+  },
+  "power": {
+    "voltage_min": 3.0,
+    "voltage_max": 5.5,
+    "tolerates_5v": true,
+    "level_shifter_required_on_5v_board": false,
+    "current_ma_active": 1.0,
+    "current_sleep_ua": 6.0
+  },
+  "limitations": {
+    "min_read_interval_s": 0.5,
+    "operating_temp_c": "-40 to +125",
+    "bus_voltage_max_v": 26,
+    "note": "Measures bus voltage up to 26V and current via the shunt; the IC supply (VS) is separate and stays 3.0-5.5V. Match shunt_resistance and max_current in the ESPHome config to the board's shunt."
+  },
+  "calibration": {
+    "required": false,
+    "type": null
+  },
+  "esphome": {
+    "platform": "ina219",
+    "min_version": "2022.1.0"
+  },
+  "datasheet_url": "https://www.ti.com/product/INA219",
+  "sourcing": {
+    "lcsc": "C2155799",
+    "jlcpcb_library_type": "expand",
+    "jlcpcb_checked": "2026-06-13",
+    "jlcpcb_stock_status": "in_stock"
+  }
+}

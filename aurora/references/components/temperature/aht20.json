@@ -1,0 +1,78 @@
+{
+  "$schema": "../../schemas/component-profile.schema.json",
+  "schema_version": "1.1",
+  "component_id": "aht20",
+  "display_name": "AHT20 Temperature & Humidity",
+  "type": "temperature_humidity",
+  "category": "environment",
+  "protocol": "i2c",
+  "variants": {
+    "primary": "aht20",
+    "easily_confused_with": [
+      {
+        "component_id": "aht10",
+        "difference": "AHT10 is the older generation with worse long-term humidity stability; AHT20 is the recommended successor. DHT20 is an AHT20 die in a 4-pin DHT-style housing."
+      }
+    ],
+    "knockoffs_known": false,
+    "verification_method": "AHT20 uses fixed I2C address 0x38; the marking on the Aosong package reads AHT20."
+  },
+  "i2c": {
+    "default_addresses": [
+      "0x38"
+    ],
+    "address_strap_pin": null,
+    "max_speed_khz": 400
+  },
+  "pin_requirements": {
+    "count": 2,
+    "type": "i2c",
+    "must_use_default_i2c_pins": false,
+    "adc_required": false,
+    "input_only_ok": false,
+    "strapping_pin_ok": false,
+    "5v_tolerant_required": false,
+    "interrupt_capable_required": false
+  },
+  "external_components": {
+    "pullup_resistor": {
+      "value_ohm": 4700,
+      "required": true,
+      "note": "External I2C pull-ups if the board does not provide them"
+    },
+    "decoupling_cap": {
+      "value_uf": 0.1,
+      "required": true
+    }
+  },
+  "power": {
+    "voltage_min": 2.2,
+    "voltage_max": 5.5,
+    "tolerates_5v": true,
+    "level_shifter_required_on_5v_board": false,
+    "current_ma_active": 0.5,
+    "current_sleep_ua": 0.25
+  },
+  "limitations": {
+    "min_read_interval_s": 1.0,
+    "operating_temp_c": "-40 to +85",
+    "humidity_range": "0-100%",
+    "accuracy_temp_c": "+/- 0.3",
+    "accuracy_humidity": "+/- 2%"
+  },
+  "calibration": {
+    "required": false,
+    "type": null
+  },
+  "esphome": {
+    "platform": "aht10",
+    "min_version": "2022.1.0"
+  },
+  "datasheet_url": "http://www.aosong.com/en/products-32.html",
+  "sourcing": {
+    "lcsc": "C2757850",
+    "jlcpcb_library_type": "expand",
+    "jlcpcb_checked": "2026-06-13",
+    "jlcpcb_stock_status": "in_stock"
+  }
+}
