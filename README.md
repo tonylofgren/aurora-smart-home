@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner.png" alt="Aurora Smart Home - Claude Skills" width="100%">
+  <img src="assets/banner-aurora.png" alt="Aurora Smart Home - Claude Skills" width="100%">
 </p>
 
 # Aurora Smart Home
