@@ -51,6 +51,7 @@ SCL  ------- GPIO22
 - **Humidity threshold:** 65% default for the comfort alert.
 - **Display:** add an e-paper panel (see related example) or stay HA-only.
 - **Altitude offset:** set your elevation so pressure reads as sea-level equivalent.
+- **Sensor swap:** if you do not need barometric pressure, SHT31 (C80862) or AHT20 (C2757850) give temperature and humidity at higher accuracy and lower cost, and run on 2.2-5.5V. Keep BME280 only when the pressure-trend forecast matters.
 
 ## Build it
 

@@ -18,6 +18,8 @@ Hardware recipes cite verified components from `aurora/references/components/`; 
 | [greenhouse](greenhouse.md) | Soil, temperature, and humidity automation for plants | yes (soil + BME280) | Volt, Sage | greenhouse, plant, soil moisture, watering, vent |
 | [smart-thermostat](smart-thermostat.md) | Turn a dumb heater into a scheduled thermostat | yes (DS18B20 + relay) | Volt, Sage | thermostat, heating, heater, climate, schedule |
 | [button-scenes](button-scenes.md) | Trigger scenes from a button (single/double/hold) | no | Sage | button, scene, remote, zigbee button, double press |
+| [daylight-lights](daylight-lights.md) | Dim or switch lights to match the daylight in the room | yes (BH1750) | Volt, Sage | light, lux, ambient light, daylight, dim, brightness |
+| [dc-power-monitor](dc-power-monitor.md) | Measure current and power a DC device draws | yes (INA219) | Volt, Sage | power, current, dc, ina219, amps, watts, battery draw |
 
 ## How Aurora uses this
 

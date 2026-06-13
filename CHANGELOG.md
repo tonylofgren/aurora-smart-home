@@ -8,9 +8,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.14.0] - 2026-06-13
+
 ### Added
 
 - **Four new verified component profiles**, expanding the catalog from 10 to 14, each with an LCSC part number checked live against the JLCPCB parts API and a stock status: SHT31 (C80862, temp/humidity), AHT20 (C2757850, temp/humidity), BH1750 (C78960, ambient light, new `light/` category), and INA219 (C2155799, current/power monitor, new `power/` category). All four are in stock and extended-library.
+- **Two new recipes that use the expanded catalog**, growing the library from 12 to 14: `daylight-lights` (BH1750, dim/switch lights by measured lux) and `dc-power-monitor` (INA219, measure DC current and power). Both cite verified LCSC numbers.
+
+### Changed
+
+- `weather-station` recipe now offers SHT31/AHT20 as higher-accuracy temperature/humidity swaps for the BME280, and `motion-light` points at the BH1750 (and the new `daylight-lights` recipe) as the real source for its lux threshold, which previously had no sensor behind it.
 
 ## [1.13.1] - 2026-06-13
 

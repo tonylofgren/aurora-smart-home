@@ -49,7 +49,7 @@ GND  ------- GND
 ## Customise
 
 - **Off delay:** 3 minutes is typical; 1 for a hallway, 10 for a desk.
-- **Lux threshold:** below which the rule fires (default 40 lux); set high to always fire.
+- **Lux threshold:** below which the rule fires (default 40 lux); set high to always fire. The reading needs a real light sensor: add a BH1750 (C78960) for `sensor.<room>_illuminance`, or see the `daylight-lights` recipe to drive lights off lux directly.
 - **Brightness:** 100% day, 20% night via a time condition.
 - **Override:** an `input_boolean` that pauses the automation.
 
