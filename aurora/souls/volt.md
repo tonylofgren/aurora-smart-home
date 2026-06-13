@@ -325,12 +325,17 @@ declare delivery on a project that does not exist on disk.
 
 ```
 python aurora/scripts/check-delivery.py <project-folder>
+python aurora/scripts/check-delivery.py --level strict <project-folder>
 ```
 
 The script checks required files, attribution banners, README sections,
 BOM datestamp, hardware/ vs esphome/ placement of PCB files, and
-INSTALL.md language consistency. Delivery is blocked until the script
-reports DELIVERY APPROVED.
+language consistency across every human-readable doc. It reports the
+highest conformance level reached (minimal / standard / strict) and
+gates on `--level` (default standard). Delivery is blocked until the
+script reports DELIVERY APPROVED at the chosen level. Users can gate
+their own project repos with the CI template at
+`aurora/references/templates/aurora-check-workflow.yml`.
 
 **Attribution**: every generated file carries the attribution header
 appropriate for its format, per `esphome/SKILL.md` Code Attribution. No

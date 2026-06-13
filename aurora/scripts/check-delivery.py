@@ -15,9 +15,17 @@ Usage:
     # Show all checks including passing ones:
     python aurora/scripts/check-delivery.py --verbose co2-air-quality/
 
+    # Gate at a conformance level (minimal | standard | strict):
+    python aurora/scripts/check-delivery.py --level strict co2-air-quality/
+
+Conformance levels:
+    minimal   it is a real deliverable on disk (README, attribution, device YAML)
+    standard  the full delivery contract (sections, secrets, BOM datestamp, structure)
+    strict    additionally consistent and safety-complete (one language, hazard attribution)
+
 Exit codes:
-    0  all checks passed
-    1  one or more checks failed
+    0  all checks at the chosen level passed
+    1  one or more checks at the chosen level failed
 """
 
 import argparse
@@ -84,6 +92,19 @@ class CheckResult(NamedTuple):
     name: str
     passed: bool
     message: str
+    level: str = "standard"
+
+
+# Conformance levels, lowest to highest. A project "passes" a level when
+# every check at that level and below passes.
+#   minimal  - it is a real deliverable on disk (README, attribution, device YAML)
+#   standard - the full delivery contract (sections, secrets, BOM datestamp, structure)
+#   strict   - additionally consistent and safety-complete (language, hazard attribution)
+LEVEL_ORDER = {"minimal": 0, "standard": 1, "strict": 2}
+
+
+def at_or_below(level: str, ceiling: str) -> bool:
+    return LEVEL_ORDER[level] <= LEVEL_ORDER[ceiling]
 
 
 def check_root_readme(project: Path) -> list[CheckResult]:
@@ -95,6 +116,7 @@ def check_root_readme(project: Path) -> list[CheckResult]:
         "README.md exists",
         exists,
         "OK" if exists else f"MISSING: {readme}",
+        level="minimal",
     ))
 
     if not exists:
@@ -107,6 +129,7 @@ def check_root_readme(project: Path) -> list[CheckResult]:
         "README.md attribution banner",
         has_attribution,
         "OK" if has_attribution else "MISSING: aurora attribution banner under H1",
+        level="minimal",
     ))
 
     for section in README_REQUIRED_SECTIONS:
@@ -153,6 +176,7 @@ def check_esphome(project: Path) -> list[CheckResult]:
         "esphome/ device YAML",
         has_yaml,
         "OK" if has_yaml else "MISSING: no device .yaml file in esphome/",
+        level="minimal",
     ))
 
     secrets_example = esphome / "secrets.yaml.example"
@@ -179,7 +203,7 @@ def check_hardware(project: Path) -> list[CheckResult]:
                 results.append(CheckResult(
                     f"PCB file location: {fname}",
                     False,
-                    f"WRONG LOCATION: {fname} is in esphome/ — move to hardware/ (v1.8.0+)",
+                    f"WRONG LOCATION: {fname} is in esphome/ - move to hardware/ (v1.8.0+)",
                 ))
 
     if not hardware.exists():
@@ -193,6 +217,7 @@ def check_hardware(project: Path) -> list[CheckResult]:
             "hardware/HAZARD-ANALYSIS.md attribution",
             has_attr,
             "OK" if has_attr else "MISSING: attribution banner in HAZARD-ANALYSIS.md",
+            level="strict",
         ))
 
     return results
@@ -242,7 +267,7 @@ def check_subdir_structure(project: Path) -> list[CheckResult]:
             results.append(CheckResult(
                 f"Unexpected root file: {name}",
                 False,
-                f"WRONG LOCATION: {name} at project root — move to canonical subdirectory",
+                f"WRONG LOCATION: {name} at project root - move to canonical subdirectory",
             ))
         elif item.is_dir() and name not in CANONICAL_SUBDIRS and name not in ALLOWED_ROOT_FILES:
             results.append(CheckResult(
@@ -254,31 +279,48 @@ def check_subdir_structure(project: Path) -> list[CheckResult]:
     return results
 
 
-def check_install_language(project: Path) -> list[CheckResult]:
-    """
-    Heuristic: if README.md reads as Swedish, INSTALL.md should too.
-    Flags obvious language mismatches — not a definitive check.
+# Human-readable docs that must all share one language (the Big Five plus
+# the README). Paths are searched anywhere under the project so hardware/
+# and esphome/ copies are all covered.
+HUMAN_DOC_NAMES = ["README.md", "INSTALL.md", "TROUBLESHOOTING.md", "BOM.md", "WIRING.md"]
+
+
+def _looks_swedish(text: str) -> bool:
+    # Swedish-specific letters are the strongest signal; the stop-word list
+    # is the fallback. Strip fenced code so YAML/commands do not skew it.
+    prose = re.sub(r"```.*?```", "", text, flags=re.DOTALL)
+    if re.search(r"[åäöÅÄÖ]", prose):
+        return True
+    return len(SWEDISH_MARKERS.findall(prose)) >= 5
+
+
+def check_language_consistency(project: Path) -> list[CheckResult]:
+    """Definitive consistency check: every human-readable doc in the project
+    must be in the same language. Absolute correctness needs the conversation,
+    but internal agreement is checkable - a Swedish README with an English
+    INSTALL.md is a Language Rule violation regardless of intent.
     """
     results: list[CheckResult] = []
 
-    readme = project / "README.md"
-    install = project / "esphome" / "INSTALL.md"
+    docs: dict[str, bool] = {}
+    for name in HUMAN_DOC_NAMES:
+        for path in project.rglob(name):
+            content = path.read_text(encoding="utf-8", errors="replace")
+            docs[str(path.relative_to(project))] = _looks_swedish(content)
 
-    if not readme.exists() or not install.exists():
-        return results
+    if len(docs) < 2:
+        return results  # nothing to compare
 
-    readme_content = readme.read_text(encoding="utf-8", errors="replace")
-    install_content = install.read_text(encoding="utf-8", errors="replace")
-
-    readme_sv = len(SWEDISH_MARKERS.findall(readme_content)) >= 5
-    install_sv = len(SWEDISH_MARKERS.findall(install_content)) >= 3
-
-    if readme_sv and not install_sv:
-        results.append(CheckResult(
-            "INSTALL.md language vs README.md",
-            False,
-            "MISMATCH: README.md appears Swedish but INSTALL.md appears English — Language Rule violation",
-        ))
+    sv = [d for d, is_sv in docs.items() if is_sv]
+    en = [d for d, is_sv in docs.items() if not is_sv]
+    consistent = not sv or not en
+    results.append(CheckResult(
+        "human docs share one language",
+        consistent,
+        "OK" if consistent
+        else f"MISMATCH: Swedish ({', '.join(sv)}) vs English ({', '.join(en)}) - Language Rule violation",
+        level="strict",
+    ))
 
     return results
 
@@ -300,10 +342,23 @@ def run_checks(project_path: str) -> tuple[list[CheckResult], bool]:
     all_results.extend(check_hardware(project))
     all_results.extend(check_bom(project))
     all_results.extend(check_subdir_structure(project))
-    all_results.extend(check_install_language(project))
+    all_results.extend(check_language_consistency(project))
 
     overall_pass = all(r.passed for r in all_results)
     return all_results, overall_pass
+
+
+def highest_level_passed(results: list[CheckResult]) -> str | None:
+    """The strongest conformance level at which every check passes, or None
+    if even minimal fails."""
+    best = None
+    for level in ("minimal", "standard", "strict"):
+        tier = [r for r in results if at_or_below(r.level, level)]
+        if tier and all(r.passed for r in tier):
+            best = level
+        else:
+            break
+    return best
 
 
 def main() -> None:
@@ -316,32 +371,43 @@ def main() -> None:
         action="store_true",
         help="Show all checks including passing ones",
     )
+    parser.add_argument(
+        "--level",
+        choices=["minimal", "standard", "strict"],
+        default="standard",
+        help="Conformance level to gate on (default: standard). The exit code "
+             "reflects this level; the report still lists every check.",
+    )
     args = parser.parse_args()
 
-    results, passed = run_checks(args.project)
+    results, _ = run_checks(args.project)
 
-    failures = [r for r in results if not r.passed]
-    successes = [r for r in results if r.passed]
+    gated = [r for r in results if at_or_below(r.level, args.level)]
+    failures = [r for r in gated if not r.passed]
+    successes = [r for r in gated if r.passed]
+    passed = not failures
 
     project_label = Path(args.project).resolve()
-    print(f"\nauora check-delivery — {project_label}\n{'─' * 62}")
+    print(f"\naurora check-delivery [{args.level}] - {project_label}\n{'-' * 62}")
 
     if args.verbose:
         for r in successes:
-            print(f"  PASS  {r.name}")
+            print(f"  PASS  [{r.level}] {r.name}")
 
     for r in failures:
-        print(f"  FAIL  {r.name}")
+        print(f"  FAIL  [{r.level}] {r.name}")
         print(f"        {r.message}")
 
-    total = len(results)
+    total = len(gated)
     failed_count = len(failures)
-    print(f"{'─' * 62}\n  {total - failed_count}/{total} checks passed")
+    best = highest_level_passed(results)
+    print(f"{'-' * 62}\n  {total - failed_count}/{total} checks passed at level '{args.level}'")
+    print(f"  Highest conformance level reached: {best or 'none (minimal fails)'}")
 
     if passed:
-        print("\n  DELIVERY APPROVED — all checks passed\n")
+        print(f"\n  DELIVERY APPROVED - passes '{args.level}'\n")
     else:
-        print(f"\n  DELIVERY BLOCKED — {failed_count} check(s) failed")
+        print(f"\n  DELIVERY BLOCKED - {failed_count} check(s) failed at '{args.level}'")
         print("  Fix the issues above, then re-run check-delivery.py.\n")
 
     sys.exit(0 if passed else 1)

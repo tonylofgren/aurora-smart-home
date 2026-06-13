@@ -1,0 +1,37 @@
+# Aurora delivery-conformance gate (TEMPLATE)
+#
+# Copy this file into YOUR generated project's repository at
+# .github/workflows/aurora-check.yaml to gate every push and PR on the
+# Aurora delivery contract. It is a template: it does NOT run inside the
+# aurora-smart-home repo itself (which is why it lives under
+# references/templates/ rather than .github/workflows/).
+#
+# It assumes you vendored aurora/scripts/check-delivery.py, or installed
+# the Aurora plugin, somewhere on PATH. Adjust SCRIPT and PROJECT below.
+
+name: Aurora Delivery Check
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check-delivery:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Run Aurora delivery check
+        env:
+          # Path to check-delivery.py (vendored copy or plugin install).
+          SCRIPT: scripts/check-delivery.py
+          # The project folder to validate (repo root by default).
+          PROJECT: .
+          # minimal | standard | strict
+          LEVEL: standard
+        run: python "$SCRIPT" --level "$LEVEL" "$PROJECT"
