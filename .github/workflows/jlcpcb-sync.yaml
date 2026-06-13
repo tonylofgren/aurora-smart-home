@@ -25,7 +25,7 @@ jobs:
           python-version: '3.13'
 
       - name: Sync part status from CDFER database
-        run: python aurora/scripts/sync_jlcpcb_status.py --download
+        run: python aurora/scripts/sync_jlcpcb_status.py --download --stock
 
       - name: Commit changes if any
         run: |

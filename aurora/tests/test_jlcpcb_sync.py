@@ -103,3 +103,47 @@ class TestSyncScript:
         p = make_profile(tmp_path, {"lcsc": "C99999"})
         sync.sync_profile(p, status, "2026-06-12")
         assert sync.sync_profile(p, status, "2026-06-12") == "unchanged"
+
+
+class TestStockTracking:
+    def test_stock_status_buckets(self):
+        assert sync.stock_status(0) == "out_of_stock"
+        assert sync.stock_status(1) == "low_stock"
+        assert sync.stock_status(99) == "low_stock"
+        assert sync.stock_status(100) == "in_stock"
+        assert sync.stock_status(3870) == "in_stock"
+
+    def test_schema_accepts_stock_status(self):
+        profile = {"lcsc": "C92489", "jlcpcb_stock_status": "in_stock",
+                   "jlcpcb_checked": "2026-06-13"}
+        jsonschema.validate(profile, SCHEMA["properties"]["sourcing"])
+
+    def test_sync_stock_profile_writes_status(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(sync, "fetch_stock", lambda lcsc: 9)  # low
+        p = make_profile(tmp_path, {"lcsc": "C5183133"})
+        result = sync.sync_stock_profile(p, "2026-06-13")
+        assert "updated" in result
+        s = json.loads(p.read_text(encoding="utf-8"))["sourcing"]
+        assert s["jlcpcb_stock_status"] == "low_stock"
+        assert s["jlcpcb_checked"] == "2026-06-13"
+
+    def test_sync_stock_profile_part_not_found_is_out_of_stock(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(sync, "fetch_stock", lambda lcsc: None)
+        p = make_profile(tmp_path, {"lcsc": "C00000"})
+        sync.sync_stock_profile(p, "2026-06-13")
+        s = json.loads(p.read_text(encoding="utf-8"))["sourcing"]
+        assert s["jlcpcb_stock_status"] == "out_of_stock"
+
+    def test_tbd_profile_skips_stock(self, tmp_path):
+        p = make_profile(tmp_path, {"lcsc": "TBD"})
+        assert "skipped" in sync.sync_stock_profile(p, "2026-06-13")
+
+    def test_shipped_profiles_have_valid_stock_status(self):
+        comp_dir = REPO_ROOT / "aurora" / "references" / "components"
+        seen = 0
+        for path in comp_dir.rglob("*.json"):
+            s = json.loads(path.read_text(encoding="utf-8")).get("sourcing", {})
+            if "jlcpcb_stock_status" in s:
+                seen += 1
+                assert s["jlcpcb_stock_status"] in ("in_stock", "low_stock", "out_of_stock")
+        assert seen >= 9, "expected the 9 verified parts to carry a stock status"

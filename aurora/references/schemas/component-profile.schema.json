@@ -102,6 +102,7 @@
         "lcsc": {"type": "string", "pattern": "^(C[0-9]+|TBD)$", "description": "LCSC part number for JLCPCB assembly, or TBD until verified at jlcpcb.com/parts. Never guessed."},
         "jlcpcb_library_type": {"enum": ["base", "expand", "not_listed", "unknown"], "description": "From CDFER jlcpcb-parts-database assembly-details.csv; not_listed means absent from the basic/preferred subset (extended or out of stock)."},
         "jlcpcb_moq": {"type": "integer", "minimum": 1, "description": "Min Order Qty from the same CSV."},
+        "jlcpcb_stock_status": {"enum": ["in_stock", "low_stock", "out_of_stock"], "description": "Coarse JLCPCB stock signal from the parts API (out_of_stock=0, low_stock<100, else in_stock). Coarse on purpose: exact counts change hourly and would churn the catalog. Query the API for live numbers."},
         "jlcpcb_checked": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$", "description": "Date the status was last synced."}
       },
       "additionalProperties": false

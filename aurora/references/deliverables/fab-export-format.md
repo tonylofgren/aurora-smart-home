@@ -115,9 +115,12 @@ Component profiles in `aurora/references/components/` carry a `sourcing` block:
   "lcsc": "TBD",
   "jlcpcb_library_type": "base",
   "jlcpcb_moq": 20,
+  "jlcpcb_stock_status": "in_stock",
   "jlcpcb_checked": "2026-06-12"
 }
 ```
+
+`jlcpcb_stock_status` is a coarse signal (`in_stock` / `low_stock` / `out_of_stock`) from the live JLCPCB parts API via `sync_jlcpcb_status.py --stock`. It is coarse on purpose: exact counts change hourly and would churn the catalog on every sync, while the in/low/out bucket changes rarely and is what a recipe or BOM should act on. When a part is `out_of_stock` or `low_stock`, recipes and BOMs should note it so the user can pick an alternative before ordering. For exact live numbers, query the parts API directly.
 
 Population procedure: search the part at jlcpcb.com/parts (browser), copy the exact C-number into `lcsc`, then run `python aurora/scripts/sync_jlcpcb_status.py --download` to fill in library type, MOQ, and check date from the CDFER jlcpcb-parts-database CSV. The monthly `jlcpcb-sync.yaml` GitHub Action keeps the status current after that. `lcsc` stays `TBD` until a human has verified the number; the no-invented-numbers rule applies here exactly as in schematic.json. `not_listed` means the part is outside JLCPCB's basic/preferred subset (extended library or out of stock), which usually adds a per-part fee at assembly.
 
