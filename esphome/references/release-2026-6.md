@@ -79,14 +79,20 @@ PR #16682.
 
 `enable_on_boot: false` previously skipped only the `start()` call, leaving the full driver resident in DMA-capable internal SRAM. The heavy allocation work is now lazy: a dormant interface costs zero internal RAM until it is actually enabled.
 
+> Important: WiFi and ethernet still cannot be enabled at the same time in one configuration. ESPHome rejects a config that defines both. Use one interface per device. The two snippets below are alternatives, not a combined config.
+
+WiFi brought up on demand instead of at boot:
+
 ```yaml
-# WiFi brought up on demand instead of at boot
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
   enable_on_boot: false   # frees ~15-30 KB internal SRAM until wifi.enable runs
+```
 
-# Ethernet with the new lifecycle automation surface
+Ethernet, with the new lifecycle automation surface:
+
+```yaml
 ethernet:
   type: W5500
   clk_pin: GPIO18
@@ -96,17 +102,15 @@ ethernet:
   interrupt_pin: GPIO4
   enable_on_boot: false   # frees ~3-8 KB internal SRAM until ethernet.enable runs
 
-# New ethernet actions and conditions mirror the wifi ones
 button:
   - platform: template
     name: "Bring up Ethernet"
     on_press:
       - ethernet.enable
-      # - ethernet.disable
-      # conditions available: ethernet.connected, ethernet.enabled
+      # also: ethernet.disable; new conditions: ethernet.connected, ethernet.enabled
 ```
 
-Field test on an ESP32-S3 with W5500 ethernet, I2S audio, and a bluetooth_proxy: free internal SRAM under peak load went from about 14 KB to about 32 KB. This is also groundwork for running WiFi and ethernet side by side, each brought up only when used. The W5500 SPI driver additionally moved bulk transfers to an interrupt-driven DMA path, cutting ethernet-task CPU on a 48 kHz 24-bit FLAC stream from about 5% to about 3.8%. PRs #16606, #16607, #16596.
+Field test on an ESP32-S3 with W5500 ethernet, I2S audio, and a bluetooth_proxy: free internal SRAM under peak load went from about 14 KB to about 32 KB. ESPHome describes this as groundwork toward eventually supporting both interfaces in one configuration, but that is not possible yet (see the exclusivity note above). The W5500 SPI driver additionally moved bulk transfers to an interrupt-driven DMA path, cutting ethernet-task CPU on a 48 kHz 24-bit FLAC stream from about 5% to about 3.8%. PRs #16606, #16607, #16596.
 
 ---
 
@@ -578,6 +582,19 @@ speaker:
     i2s_dout_pin: GPIO14
     dac_type: external
     audio_dac: dac
+  # Mixer combines the media and announcement streams into the single DAC output
+  - platform: mixer
+    id: mixer_out
+    output_speaker: line_out
+    source_speakers:
+      - id: media_input
+      - id: announce_input
+  - platform: resampler
+    id: media_resampler
+    output_speaker: media_input
+  - platform: resampler
+    id: announce_resampler
+    output_speaker: announce_input
 
 switch:
   - platform: gpio
@@ -591,8 +608,13 @@ switch:
 media_player:
   - platform: speaker
     name: "HiFi Player"
-    speaker: line_out
-    task_stack_in_psram: true
+    task_stack_in_psram: true   # 2026.6.0: task stack in PSRAM
+    media_pipeline:
+      speaker: media_resampler
+      num_channels: 2
+    announcement_pipeline:
+      speaker: announce_resampler
+      num_channels: 1
 ```
 
 ### Recipe 3: Live SPDIF / analog output switcher (router speaker)
@@ -653,6 +675,20 @@ speaker:
     num_channels: 2
     sample_rate: 48000
 
+  # Media player pipelines feed the router, which then routes to one output
+  - platform: mixer
+    id: mixer_out
+    output_speaker: out_router
+    source_speakers:
+      - id: media_input
+      - id: announce_input
+  - platform: resampler
+    id: media_resampler
+    output_speaker: media_input
+  - platform: resampler
+    id: announce_resampler
+    output_speaker: announce_input
+
 select:
   - platform: template
     name: "Audio Output"
@@ -669,34 +705,33 @@ select:
 media_player:
   - platform: speaker
     name: "Routed Player"
-    speaker: out_router
+    media_pipeline:
+      speaker: media_resampler
+      num_channels: 2
+    announcement_pipeline:
+      speaker: announce_resampler
+      num_channels: 1
 ```
 
-### Recipe 4: Low-RAM ethernet node with on-demand WiFi fallback
+### Recipe 4: Low-RAM node that keeps WiFi off until needed
 
-**Goal:** a wired sensor node that runs on ethernet but keeps WiFi compiled in as an on-demand fallback, paying no internal RAM for WiFi while ethernet is up. Uses YAML frontmatter to tag the file for the Device Builder.
+**Goal:** keep WiFi compiled in but disabled at boot so the device reclaims 15 to 30 KB of internal SRAM for other work (large LVGL UI, audio buffers, BLE), then bring the radio up on demand. Uses YAML frontmatter to tag the file for the Device Builder.
+
+(WiFi and ethernet cannot coexist in one config, so this is a single-interface WiFi example. For a wired device, use `ethernet:` with its own `enable_on_boot` and the `ethernet.enable` / `ethernet.disable` actions instead.)
 
 ```yaml
 author: Ops Team
 version: 1.0.0
-labels: [wired, sensors]
+labels: [low-ram]
 ---
 esphome:
-  name: wired-node
-  friendly_name: Wired Node
+  name: lowram-node
+  friendly_name: Low RAM Node
 
 esp32:
-  board: esp32-s3-devkitc-1
+  board: esp32-c3-devkitm-1
   framework:
     type: esp-idf
-
-ethernet:
-  type: W5500
-  clk_pin: GPIO18
-  mosi_pin: GPIO23
-  miso_pin: GPIO19
-  cs_pin: GPIO5
-  interrupt_pin: GPIO4
 
 # WiFi stays compiled in but costs no internal RAM until enabled
 wifi:
@@ -714,19 +749,18 @@ ota:
 
 logger:
 
-# Bring WiFi up only if the ethernet link drops
-interval:
-  - interval: 30s
-    then:
-      - if:
-          condition:
-            not:
-              ethernet.connected:
-          then:
-            - wifi.enable
+# Bring WiFi up (or down) on demand: a button here, but a schedule or a
+# sensor threshold works the same way
+button:
+  - platform: template
+    name: "Connect WiFi"
+    on_press:
+      - wifi.enable
+  - platform: template
+    name: "Disconnect WiFi"
+    on_press:
+      - wifi.disable
 ```
-
-> Note: `wifi.enable` here is the standard WiFi action. Verify the exact fallback semantics against your network before relying on automatic failover; the RAM reclaim is the guaranteed part, the failover policy is yours to tune.
 
 ---
 
