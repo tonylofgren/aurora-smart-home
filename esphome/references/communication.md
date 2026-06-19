@@ -807,6 +807,26 @@ uart:
 
 ---
 
+## USB UART Host
+
+*Since ESPHome 2026.6.0*
+
+The `usb_uart` component drives external USB-to-serial adapters from a USB host port, exposing each adapter channel as a standard `uart`. A configured channel can be referenced as `uart_id` by any UART-based component (sensors, modbus, displays, etc.). New driver families in 2026.6.0: FTDI FT23XX (#14587) and Prolific PL2303 (#16885), alongside the existing CP210x and CH34x families.
+
+```yaml
+usb_uart:
+  - type: ft23xx            # also pl2303, pl2303gc/gb/gt/gl/ge/gs, cp210x, ch34x, ...
+    channels:
+      - id: usb_serial_1
+        baud_rate: 9600
+        buffer_size: 1024
+# usb_serial_1 is now usable as uart_id on any UART-based component
+```
+
+Full 2026.6.0 details: references/release-2026-6.md
+
+---
+
 ## Common Patterns
 
 ### I2C Level Shifter
@@ -1003,3 +1023,13 @@ sensor:
     device_class: power
     state_class: measurement
 ```
+
+### DLMS rebuild (2026.6.0)
+
+In ESPHome 2026.6.0 the DLMS component was rebuilt on top of the external `dlms_parser` library (PR #15458). Sensors, text_sensors, and binary_sensors are now defined by OBIS code, the decryption key is optional (plaintext meters work without it), and the baud rate is configurable (the old hard 2400 baud requirement is gone). New options include `auth_key`, `custom_patterns`, `skip_crc`, and `receive_timeout`. The legacy schema still validates, but the `provider:` key is now ignored and emits a deprecation warning; it is scheduled for removal in 2026.11.0.
+
+Full 2026.6.0 details: references/release-2026-6.md
+
+### DSMR breaking change (2026.6.0)
+
+In ESPHome 2026.6.0 the DSMR `electricity_switch_position` value moved from `sensor:` to `text_sensor:` (PR #16561). Hungarian meters emit this position as a string rather than a number, so it can no longer be a numeric sensor. If you previously configured it under `sensor:`, move the entry to `text_sensor:`.

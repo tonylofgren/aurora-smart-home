@@ -3,6 +3,8 @@
 Reference documentation for ESPHome's audio stack, including the redesigned media player architecture (2026.3+).
 Source: https://esphome.io/components/
 
+Full 2026.6.0 details: references/release-2026-6.md
+
 ---
 
 ## Architecture Overview (2026.3+)
@@ -118,6 +120,8 @@ speaker:
 
 > **Note:** When mixing, all streams must have the same sample rate. Use a resampler if rates differ.
 
+> **2026.6.0 change:** The mixer now handles any bit depth (8, 16, 24, or 32 bit), not just 16-bit. The resampler also passes the input bit depth straight through by default instead of forcing 16-bit. PRs #16524, #16892.
+
 ### Resampler Speaker
 
 Converts sample rate of an audio stream. Passes through directly if no resampling needed.
@@ -131,6 +135,24 @@ speaker:
     bits_per_sample: 16
     num_channels: 1
 ```
+
+### Router Speaker (2026.6.0+)
+
+New in ESPHome 2026.6.0: route a single audio stream to one of several output speakers and switch the active output at runtime. Useful for picking between analog and SPDIF on the fly.
+
+```yaml
+speaker:
+  - platform: router
+    id: out_router
+    output_speakers: [analog_out, spdif_out]
+    bits_per_sample: 16      # 8 to 32
+    num_channels: 2          # 1 or 2
+    sample_rate: 48000
+# switch live:
+#   - router.speaker.switch_output: { id: out_router, target_speaker: spdif_out }
+```
+
+PR #16592.
 
 ### UDP Speaker
 
@@ -288,6 +310,28 @@ select:
 ```
 
 > **Note:** ES8388 is found on many ESP32-S3 audio dev boards (ESP32-S3-BOX, AI Thinker Audio Kit).
+
+### PCM5122 (2026.6.0+)
+
+New in ESPHome 2026.6.0: a high-quality stereo line-out DAC (I2S input, analog line output). Wire it as the `audio_dac` for an `i2s_audio` speaker.
+
+```yaml
+audio_dac:
+  - platform: pcm5122
+    id: dac
+    address: 0x4D            # default
+    bits_per_sample: 24bit   # 16bit / 24bit / 32bit
+
+speaker:
+  - platform: i2s_audio
+    id: line_out
+    i2s_audio_id: i2s_out
+    i2s_dout_pin: GPIO14
+    dac_type: external
+    audio_dac: dac
+```
+
+The PCM5122's onboard GPIO pins 3 to 6 are usable through the pin schema (`pin: { pcm5122: dac, number: 4, mode: { output: true } }`), so you can drive an amp mute line or status LED from the DAC itself. PR #15709.
 
 ---
 
@@ -462,6 +506,17 @@ audio_file:
 > **Note:** Audio files are stored in flash. Keep them small. Consider Ogg Opus for compression.
 
 > **2026.5.0 change:** Files embedded in the speaker media player `files:` block now have a **5 MB per-file size limit**. Compress oversized files or pick a more efficient codec before upgrading.
+
+### Audio task stacks in PSRAM (2026.6.0+)
+
+New in ESPHome 2026.6.0: audio component task stacks can live in PSRAM instead of internal SRAM, freeing roughly 3 KB of internal SRAM per task on the ESP32-S3. The option is consistent across `audio_file`, `audio_http`, `mixer`, `resampler`, `sendspin`, `micro_wake_word`, and the speaker media player.
+
+```yaml
+micro_wake_word:
+  task_stack_in_psram: true
+```
+
+Set it on whichever audio components are pressuring internal SRAM. The board must have PSRAM. PRs #16632, #16628.
 
 ---
 

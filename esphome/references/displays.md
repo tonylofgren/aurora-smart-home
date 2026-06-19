@@ -316,6 +316,10 @@ lvgl:
 - Check the ESPHome docs for the correct `init_sequence` for your specific display panel
 - Works with most ESP32, ESP32-S2, ESP32-S3, and ESP32-C3 boards
 
+### New panel (2026.6.0)
+
+- **Waveshare ESP32-S3-Touch-AMOLED-2.16** added to the `mipi_spi` driver (#16887). A 2.16" touch AMOLED on an ESP32-S3 board, configurable through the universal `mipi_spi` platform.
+
 ---
 
 ## E-Paper / E-Ink
@@ -929,6 +933,33 @@ binary_sensor:
 ```
 
 Previously a binary sensor bound to a toggle widget would only report press/release. The `state: checked` mode reports the toggle's logical state, which is what most automations actually want.
+
+### LVGL 2026.6.0 Improvements
+
+ESPHome 2026.6.0 continued the LVGL work:
+
+**1. Faster config validation**
+
+A schema hot-path rework makes LVGL config validation up to 4.5x faster (PRs #16567, #16569, #16614, #16615, #16633). In practice this shows up as snappier saves in the Device Builder when editing LVGL-heavy configs.
+
+**2. Rounded meter arcs**
+
+```yaml
+- meter:
+    scales:
+      - ticks: {...}
+        indicators:
+          - arc:
+              rounded: true     # new in 2026.6.0: rounded arc end caps
+```
+
+Meter arcs gained a `rounded` property for rounded end caps instead of square ones (#16669).
+
+**3. Display metadata drives LVGL automatically**
+
+Display drivers now register their own metadata (`byte_order`, `rotation`, `draw_rounding`, and similar) with the core (#16702). LVGL reads this from the attached display, so it auto-selects the correct byte order and merges the display's draw-rounding instead of you having to restate those values in the LVGL block.
+
+Full 2026.6.0 details: references/release-2026-6.md
 
 ---
 

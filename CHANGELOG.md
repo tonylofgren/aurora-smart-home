@@ -8,6 +8,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.15.0] - 2026-06-19
+
+### Added
+
+- **ESPHome 2026.6.0 release reference** (`esphome/references/release-2026-6.md`), mirroring the 2026.5.0 reference: an at-a-glance summary, an upgrade checklist, sections with verified YAML for every new component, a compact breaking-changes table, a developer-facing breaking-changes section, a "what did not change" block, and four worked recipes (motion/IMU tilt sensor, PCM5122 HiFi player, router-speaker SPDIF/analog switcher, low-RAM ethernet node). Wired into `esphome/SKILL.md` Release Notes table. All YAML schemas verified against the upstream component docs.
+- **New ESPHome component coverage** added as targeted markers in the topic reference files: the `motion` IMU hub with BMI270 and LSM6DS drivers (`sensors.md`), the PCM5122 audio DAC and `router` speaker plus any-bit-depth audio (`media-audio.md`), FTDI and Prolific USB-serial drivers and the DLMS/DSMR overhaul (`communication.md`), `light.effect.next` / `light.effect.previous` (`lights.md`), LVGL improvements and the Waveshare AMOLED panel (`displays.md`), YAML frontmatter, `esphome.build_flags`, and Codeberg sources (`packages-modular-config.md`), RP2040/RP2350 `variant` and `esp32` flash options (`boards.md`).
+
+### Changed
+
+- Documented the ESPHome 2026.6.0 platform changes: ESP8266 now defaults to `min_auth_mode: WPA2` (`security-hardening.md`), and `enable_on_boot: false` now reclaims internal SRAM on WiFi and ethernet (`power-management.md`).
+- Reconciled the legacy-dashboard claims across the ESPHome skill: ESPHome Device Builder 1.0.0 replaced the retired in-tree dashboard and is now the default in the Home Assistant add-on.
+
 ## [1.14.0] - 2026-06-13
 
 ### Added

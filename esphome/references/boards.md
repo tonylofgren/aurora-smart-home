@@ -178,6 +178,17 @@ esp32:
     type: arduino
 ```
 
+**Flash mode and frequency (2026.6.0+):**
+
+The `esp32:` block gained `flash_mode` and `flash_frequency` options to tune the SPI flash interface, useful when a board or module needs a slower or safer mode than the board default. PR #16920.
+
+```yaml
+esp32:
+  board: esp32dev
+  flash_mode: dio
+  flash_frequency: 80MHz
+```
+
 **Best For:** General IoT, BLE proxy, displays, most projects
 
 ---
@@ -1008,6 +1019,8 @@ esp32:
 
 **Best for:** Voice assistants, advanced projects, ESP32-S3/C6/H2
 
+**ESP-IDF 6 groundwork (2026.6.0):** Preparation for ESP-IDF 6 has begun (native RISC-V clang-tidy, sdkconfig changes). This is groundwork only and changes no YAML. PlatformIO remains the default build path.
+
 ### ESP8266 Framework
 
 ESP8266 only supports Arduino framework:
@@ -1050,6 +1063,16 @@ logger:
 | `rpipico2w` | RP2350 | Yes | Raspberry Pi Pico 2 W |
 | `rpipico` | RP2040 | No | Requires external WiFi module |
 | `rpipico2` | RP2350 | No | Requires external WiFi module |
+
+### Explicit variant Selection (2026.6.0+)
+
+The `rp2040:` platform gained a `variant` option to target RP2040 or RP2350 directly. When omitted it is auto-derived from the `board:`, so most configs need not set it; use it for custom or generic boards where the chip cannot be inferred. PR #16602.
+
+```yaml
+rp2040:
+  board: rpipicow
+  variant: rp2350
+```
 
 ### RP2040 BLE (`rp2040_ble`)
 
@@ -1149,3 +1172,5 @@ ota:
 - [device-guides.md](device-guides.md) - Converting commercial devices
 - [troubleshooting.md](troubleshooting.md) - Common hardware issues
 - [power-management.md](power-management.md) - Deep sleep and battery
+
+Full 2026.6.0 details: references/release-2026-6.md

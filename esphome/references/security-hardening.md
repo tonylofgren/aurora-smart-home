@@ -409,6 +409,23 @@ Notable security fixes by ESPHome release. If you operate any of the affected co
 
 The fix for `status=0x85` (133) GATT failures on bluetooth_proxy now holds `ESP_COEX_PREFER_BT` for the lifetime of any active BLE connection. This is the correct security/reliability tradeoff (lock operations now complete reliably) but means BLE-heavy configurations can deprioritize concurrent WiFi traffic. See [ble-proxy.md](ble-proxy.md) for details.
 
+### 2026.6.0: ESP8266 min_auth_mode default raised to WPA2 (breaking)
+
+On ESP8266 the default `min_auth_mode` under `wifi:` flipped from WPA to WPA2, matching the long-standing ESP32 default. Modern WPA2/WPA3 access points need no change. Only devices that must associate with a legacy WPA-only (TKIP) router are affected, and they need to pin the old behavior explicitly. PR #16682.
+
+```yaml
+wifi:
+  min_auth_mode: WPA   # only needed for legacy WPA/TKIP routers on ESP8266
+```
+
+Raising the floor to WPA2 rejects weak TKIP-only association attempts, so leave it at the default unless an old router forces otherwise.
+
+### 2026.6.0: WiFi SSIDs redacted in config output
+
+`esphome config` now redacts WiFi SSIDs in addition to passwords, driven by `cv.sensitive()`. Pass `--show-secrets` when you genuinely need the resolved values (for example while debugging). PR #16690. This reduces the chance of leaking your network name when pasting config output into issues, chats, or screen shares.
+
+Full 2026.6.0 details: references/release-2026-6.md
+
 ---
 
 ## See Also

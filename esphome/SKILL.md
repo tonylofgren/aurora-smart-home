@@ -217,6 +217,7 @@ When the user mentions a specific ESPHome version, is upgrading, or asks "what's
 
 | Version | Reference File |
 |---------|---------------|
+| ESPHome 2026.6.0 (June 2026): Device Builder 1.0 replaces the dashboard, ESP8266 WPA2 default, `enable_on_boot: false` reclaims RAM, `motion` IMU hub (BMI270/LSM6DS), `router` speaker + PCM5122 DAC, any-bit-depth audio, YAML frontmatter, `build_flags` | `references/release-2026-6.md` |
 | ESPHome 2026.5.0 (May 2026): Sendspin multi-room audio, `radio_frequency` entity, `modbus_server`, native ESP-IDF toolchain, Zigbee on H2/C6, main loop overhaul | `references/release-2026-5.md` |
 | Hardware Selection (MCU, sensors, power) | `references/hardware-selection.md` |
 | Enclosures, PCB & Manufacturing | `references/enclosures-manufacturing.md` |

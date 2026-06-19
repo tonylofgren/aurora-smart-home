@@ -947,11 +947,11 @@ The Apollo ESK-1 (announced alongside the new ESPHome Device Builder Beta at Sta
 - Pre-flashed firmware that walks through the Device Builder pairing flow
 
 **Why it matters for ESPHome 2026.5.0:**
-- The Device Builder Beta has first-run Wi-Fi onboarding and USB-plug detection. Plugging in an ESK-1 triggers a "set this up" prompt.
+- The Device Builder has first-run Wi-Fi onboarding and USB-plug detection. Plugging in an ESK-1 triggers a "set this up" prompt. (As of ESPHome 2026.6.0 the Device Builder reached 1.0 and is the default dashboard bundled in the Home Assistant ESPHome add-on, replacing the retired legacy dashboard.)
 - Pre-flashed firmware uses the Take Control / Adopt flow so the device is yours after pairing.
 - Good for teaching workflows, schools, and people who want to start with ESPHome without bringing their own board.
 
-**Where to buy:** apolloautomation.com (US-based, ships globally). The "ESPHome (beta)" Home Assistant add-on is what you want for the full pairing experience.
+**Where to buy:** apolloautomation.com (US-based, ships globally). The Home Assistant ESPHome add-on (which now bundles Device Builder 1.0 by default) is what you want for the full pairing experience.
 
 **Alternative starter paths** (if you don't want to buy a kit):
 - **Xiao ESP32-C6** ($5, smallest, has Zigbee/Thread radio)

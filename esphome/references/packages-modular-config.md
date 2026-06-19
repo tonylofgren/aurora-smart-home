@@ -96,6 +96,13 @@ packages:
   - github://your-org/esphome-fleet/base.yaml@main
 ```
 
+Since 2026.6.0 the short form (and `dashboard_import`) also accepts Codeberg alongside GitHub and GitLab, using `codeberg://owner/repo/path/file.yaml`. PR #16501.
+
+```yaml
+packages:
+  - codeberg://your-org/esphome-fleet/base.yaml@main
+```
+
 Treat remote packages like any dependency: pin the version, review changes before bumping, and prefer your own fork over a stranger's repo for anything flashed to real hardware.
 
 ## How Substitutions Interact with Packages
@@ -202,6 +209,34 @@ sensor:
 
 Adding device eleven to the fleet is a 20-line file, and a fleet-wide change (say, SHA256 OTA auth) is one edit in `common/base.yaml`.
 
+## 2026.6.0 Additions
+
+### YAML Frontmatter Metadata
+
+A leading `---`-delimited YAML block at the top of a file is now treated as opaque per-file metadata. It is stripped before validation, so it never reaches the config schema, and it is captured on `CORE.frontmatter` for tooling to read (author, version, labels, and similar). PR #16552. This lets fleet tooling tag files without ESPHome rejecting unknown keys.
+
+```yaml
+author: Jane Doe
+version: 1.0.0
+labels: [office, climate]
+---
+esphome:
+  name: my-node
+```
+
+### Top-Level esphome.build_flags
+
+`esphome.build_flags` now applies compiler flags on both native ESP-IDF and PlatformIO builds. The older `platformio_options.build_flags` was PlatformIO-only, so build flags previously dropped silently under the native ESP-IDF path. PR #16629.
+
+```yaml
+esphome:
+  name: my-node
+  build_flags:
+    - "-DMY_DEFINE=1"
+```
+
+Prefer `esphome.build_flags` for portable defines so a later framework switch does not quietly lose them.
+
 ## Merge Rules and Gotchas
 
 - **Device file wins.** Keys set directly in the device YAML override the same keys coming from a package.
@@ -209,3 +244,5 @@ Adding device eleven to the fleet is a 20-line file, and a fleet-wide change (sa
 - **Avoid the same key in two packages.** Cross-package precedence is easy to get wrong; keep each concern (wifi, ota, diagnostics) in exactly one package file.
 - **Give packaged components ids.** Without an `id:` there is nothing for `!extend` or `!remove` to target later.
 - **Remote refresh can surprise you.** A `ref: main` package with default `refresh:` silently picks up upstream changes on the next compile after the cache expires. Pin tags for production fleets.
+
+Full 2026.6.0 details: references/release-2026-6.md

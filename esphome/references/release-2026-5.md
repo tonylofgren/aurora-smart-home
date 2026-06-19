@@ -1165,7 +1165,7 @@ Capabilities over legacy:
 - Real settings UI: theme, English/Français/Nederlands, editor layout, remote-builder controls
 - First-run Wi-Fi onboarding + USB-plug detection
 
-**The legacy dashboard remains the default in 2026.5.0.** PRs #16206, #16290, #16300, #16346, #15548, #16145, #16267, #16276, #16296, #16357, #16214, #16378.
+**The legacy dashboard remains the default in 2026.5.0.** (Update: ESPHome 2026.6.0 retired the legacy dashboard and made Device Builder 1.0 the default. See references/release-2026-6.md.) PRs #16206, #16290, #16300, #16346, #15548, #16145, #16267, #16276, #16296, #16357, #16214, #16378.
 
 ---
 

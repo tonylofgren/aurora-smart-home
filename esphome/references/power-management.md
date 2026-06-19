@@ -70,6 +70,21 @@ Real ESP32 + Bluetooth proxy measurements: the watchdog CPU bucket dropped from 
 
 ---
 
+## Lazy WiFi/Ethernet Init Frees SRAM (2026.6.0+)
+
+Setting `enable_on_boot: false` on `wifi:` or `ethernet:` now truly defers driver allocation via lazy init. Previously the driver stayed resident even when disabled. The freed memory is DMA-capable internal SRAM, the scarce kind on RAM-tight ESP32 builds: about 15 to 30 KB for WiFi (#16606) and about 3 to 8 KB for ethernet (#16607). The driver only allocates once `wifi.enable` (or `ethernet.enable`) runs.
+
+```yaml
+wifi:
+  enable_on_boot: false   # frees ~15-30 KB internal SRAM until wifi.enable runs
+```
+
+Ethernet also gained matching runtime control: the `ethernet.enable` / `ethernet.disable` actions and the `ethernet.connected` / `ethernet.enabled` conditions, mirroring the existing WiFi actions.
+
+Full 2026.6.0 details: references/release-2026-6.md
+
+---
+
 ## Deep Sleep Configuration
 
 ### Basic Deep Sleep

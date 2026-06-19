@@ -202,6 +202,22 @@ sensor:
     update_interval: 60s
 ```
 
+### XDB401 (I2C) (since 2026.6)
+I2C pressure and temperature sensor. Reports pressure in Pa, so scale to your preferred unit with a filter. Set `pressure_range_bar` to match your model's full-scale range. PR #15108.
+
+```yaml
+sensor:
+  - platform: xdb401
+    update_interval: 1s
+    address: 0x7F             # default
+    pressure_range_bar: 10    # your model's range: 1, 2, 10, ...
+    pressure:
+      name: "Pressure"
+      filters: [ multiply: 0.00001 ]   # Pa to bar
+    temperature:
+      name: "Temperature"
+```
+
 ### SHT3X-D / SHT4X (I2C)
 High-precision temperature and humidity.
 
@@ -939,6 +955,33 @@ sensor:
 - MSA311 address: 0x62
 - MSA301 address: 0x26
 - Range: configurable 2g / 4g / 8g / 16g
+
+### IMU `motion` framework (since 2026.6)
+New unified IMU framework. The chip driver lives under a top-level `motion:` hub block; each exposed value is a separate `sensor:` with `platform: motion` and a `type:`. Do not write `platform: bmi270` under `sensor:`. Drivers: BMI270 (#16202), STMicro LSM6DS3TR-C (#16232); hub (#16226).
+
+```yaml
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+
+motion:
+  - platform: bmi270          # or lsm6ds
+    id: imu
+    address: 0x68             # BMI270 default; LSM6DS defaults to 0x6A (some boards 0x6B)
+    accelerometer_range: 4G
+    gyroscope_range: 2000DPS
+
+sensor:
+  - platform: motion
+    type: pitch               # also: acceleration_x/y/z, gyroscope_x/y/z, roll
+    name: "Pitch"
+```
+
+**Key options:**
+- The `motion:` hub supports `axis_map` and a 3x3 `transform_matrix` for reorienting the chip relative to the device body
+- Calibration actions: `motion.calibrate_level`, `motion.calibrate_heading`, `motion.clear_calibration` (each takes `save:` to persist results to NVS)
+- Exposed `type:` values: `acceleration_x`, `acceleration_y`, `acceleration_z`, `gyroscope_x`, `gyroscope_y`, `gyroscope_z`, `pitch`, `roll`
+- Full 2026.6.0 details: references/release-2026-6.md
 
 ---
 

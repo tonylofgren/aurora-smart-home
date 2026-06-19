@@ -10,8 +10,8 @@ against schema-checked profiles, and refuses to ship code that does not pass.
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skills-7c3aed.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Home Assistant](https://img.shields.io/badge/Home_Assistant-2024.x--2026.x-41BDF5.svg)](https://www.home-assistant.io/)
-[![ESPHome](https://img.shields.io/badge/ESPHome-2026.5.0-000000.svg)](https://esphome.io/)
-[![Version](https://img.shields.io/badge/Version-v1.14.0-success.svg)](CHANGELOG.md)
+[![ESPHome](https://img.shields.io/badge/ESPHome-2026.6.0-000000.svg)](https://esphome.io/)
+[![Version](https://img.shields.io/badge/Version-v1.15.0-success.svg)](CHANGELOG.md)
 [![Validated](https://img.shields.io/badge/Validated-against_datasheets-success.svg)](aurora/references/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Support Nabu Casa](https://img.shields.io/badge/Support_HA-Nabu_Casa-3b8cd3.svg)](https://www.nabucasa.com)
@@ -26,6 +26,12 @@ against schema-checked profiles, and refuses to ship code that does not pass.
 > See [DISCLAIMER.md](DISCLAIMER.md) for full terms.
 
 ---
+
+## What's new: ESPHome 2026.6.0 support (v1.15.0, June 2026)
+
+- **New ESPHome release reference:** Aurora now knows ESPHome 2026.6.0, with an upgrade checklist, breaking changes, and copy-ready examples, so generated firmware matches the current release instead of older patterns.
+- **New hardware covered:** the motion/IMU framework (BMI270 and LSM6DS tilt and orientation), the PCM5122 HiFi audio DAC, the router speaker for live SPDIF/analog switching, the XDB401 pressure sensor, and FTDI/Prolific USB-serial adapters, each with a worked config.
+- **Safer upgrades:** Aurora warns that ESP8266 now defaults to WPA2 (legacy routers need a one-line opt-out) and shows how `enable_on_boot: false` now frees real RAM on WiFi and ethernet.
 
 ## What's new: two new recipes and four more sensors (v1.14.0, June 2026)
 

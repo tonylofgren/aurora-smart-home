@@ -322,6 +322,8 @@ light:
     name: "LED Strip"
 ```
 
+> **2026.6.0:** `neopixelbus` is deprecated on ESP32 (#16676). On ESP32 use `esp32_rmt_led_strip` (see "ESP32 RMT" above) instead. `neopixelbus` remains the addressable option for ESP8266.
+
 ### FastLED (Alternative)
 
 ```yaml
@@ -543,6 +545,19 @@ light:
             Color color = Color(brightness, 0, brightness);
             it.all() = color;
 ```
+
+### Cycling Effects (2026.6.0+)
+
+New in ESPHome 2026.6.0: the `light.effect.next` and `light.effect.previous` actions cycle through a light's configured effects without hardcoding effect names, which is handy for a single button that walks through every effect.
+
+```yaml
+on_press:
+  - light.effect.next:
+      id: my_light
+      include_none: true   # allow cycling through "no effect"
+```
+
+The light must have at least one effect defined. PR #16491. Lambda light effects now also receive the light as `it`, so a lambda effect can read and write the light directly (#16815).
 
 ---
 
