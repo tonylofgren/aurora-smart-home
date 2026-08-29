@@ -269,11 +269,18 @@ Full details, breaking changes, and copy-paste recipes: [`esphome/references/rel
 
 ## What is Aurora
 
-Aurora is a community plugin for [Claude Code](https://claude.com/claude-code).
-You install it once. After that, every smart home request you make ("build a
-temperature sensor on ESP32", "automate my lights at sunset", "publish this
-integration to HACS") is handed to a specialist agent that consults
-machine-readable board and component profiles before generating code.
+Aurora is a community plugin for [Claude Code](https://claude.com/claude-code)
+and the [OpenAI Codex CLI](https://developers.openai.com/codex). You install it
+once. After that, every smart home request you make ("build a temperature
+sensor on ESP32", "automate my lights at sunset", "publish this integration to
+HACS") is handed to a specialist agent that consults machine-readable board
+and component profiles before generating code.
+
+You never pick a skill or paste documentation yourself. Ask about ESPHome and
+the ESPHome references load; ask for an integration and the integration
+development rules load. The model does not have to remember whether a given
+ESP32 pin is safe or how a modern config flow is structured, because the
+relevant reference file is pulled in exactly when the task needs it.
 
 If the GPIO you asked for is reserved by USB, Aurora says so. If two I2C sensors
 collide on address 0x76, Aurora says so. If an automation references an entity
