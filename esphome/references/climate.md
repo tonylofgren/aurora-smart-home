@@ -1,5 +1,9 @@
 # ESPHome Climate Reference
 
+> **Current release:** 2026.9 adds template climate and Tuya water heaters. In 2026.10 check IR supports_heat_cool and PID deadband actions.
+> Read [2026.10 migration](release-2026-10.md) and the
+> [new-component catalog with examples](new-components-2026-9-10.md) before using older recipes.
+
 Complete reference for climate/HVAC platforms including thermostats, PID controllers, and IR air conditioners.
 
 ## Table of Contents

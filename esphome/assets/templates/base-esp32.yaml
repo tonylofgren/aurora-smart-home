@@ -46,7 +46,9 @@ api:
 # Over-the-air updates
 ota:
   - platform: esphome
-    password: !secret ota_password
+    # ESPHome 2026.9+: encrypted OTA reusing the api: key. Device flashed earlier with
+    # an OTA password? Update once with password: kept, then switch to this block.
+    encryption:
 
 # Logging
 logger:

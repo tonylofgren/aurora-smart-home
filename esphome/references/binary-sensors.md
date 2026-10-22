@@ -1,5 +1,9 @@
 # ESPHome Binary Sensors Reference
 
+> **Current release:** 2026.10 adds ESPectre motion/calibration, Xiaomi MCCGQ02HL opening and Mk2PVRouter relay telemetry.
+> Read [2026.10 migration](release-2026-10.md) and the
+> [new-component catalog with examples](new-components-2026-9-10.md) before using older recipes.
+
 Complete guide to binary sensors: motion, door/window, touch, NFC, buttons, and more.
 
 ## Table of Contents

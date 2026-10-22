@@ -33,7 +33,7 @@ Look at the **user messages** in conversation history (not the skill file conten
 - Do not run any `gh` calls.
 - Respond with a single short line, e.g.:
 
-  > *Aurora v1.19.0 is already loaded.*
+  > *Aurora v1.20.0 is already loaded.*
 
 - Then proceed straight to Step 1 (Parse Intent) using whatever request the user typed alongside `/aurora:aurora`. If the user typed nothing alongside it, ask the opening question once:
 
@@ -55,7 +55,7 @@ Command:
 gh release view --json tagName -R tonylofgren/aurora-smart-home --jq '.tagName'
 ```
 
-- If gh returns a valid version tag (like `v1.7.12`), strip the leading `v` and compare to the installed version `1.19.0`. If the fetched version is semver-greater, output the update notice (see below) BEFORE the banner.
+- If gh returns a valid version tag (like `v1.7.12`), strip the leading `v` and compare to the installed version `1.20.0`. If the fetched version is semver-greater, output the update notice (see below) BEFORE the banner.
 - If gh is missing, fails, returns nothing, or returns something that does not parse as a semver tag, proceed directly to the banner with no output. Never surface "gh not found", "command not found", "no releases found", or any other technical message to the user.
 
 **Semver comparison rule (avoid lexicographic mistakes):** Both versions must be matched against `^\d+\.\d+\.\d+$`, then split on `.` and each segment compared as **integer**, not as string. Lexicographic comparison reports `2.0.10 < 2.0.2` (because `'1' < '2'` at the start of the third segment), which is wrong. Concretely:
@@ -77,26 +77,24 @@ The fallback chain is intentionally one tier. Earlier versions tried WebFetch as
 Update notice (only when gh succeeded and a newer version exists):
 
 ```
-🔔 A newer Aurora is available: v<latest> (you have v1.19.0).
+🔔 A newer Aurora is available: v<latest> (you have v1.20.0).
    Update: claude plugin update aurora@aurora-smart-home
    Then /reload-plugins or restart Claude Code.
 ```
 
-What's new notice (only when gh succeeded AND fetched version == installed version `1.19.0`):
+What's new notice (only when gh succeeded AND fetched version == installed version `1.20.0`):
 
 ```
-✨ Aurora v1.19.0, what's new:
-   • OpenAI Codex CLI support: two-command install via the codex plugin
-     marketplace, with AGENTS.md routing (works from a plain clone too).
-   • Model guidance refreshed to the Claude 5 family: Opus 5 for complex
-     design work, Sonnet 5 as the workhorse for everyday builds.
-   • Build Principles baked into every specialist: simplest working config
-     first, reuse before adding, and a validation step with every delivery.
+✨ Aurora v1.20.0, what's new:
+   • ESPHome 2026.10: September/October upgrade guides, new component
+     references and reusable examples.
+   • Encrypted OTA templates and migration guidance for existing devices.
+   • Custom dashboard layouts and themes with a responsive Editorial starter.
 ```
 
 **Update this block at every version bump.** Content must be user-facing (no schema fields, test counts, or CI changes). 3 bullets max.
 
-Then output `v1.19.0 (released 2026-08-29)` on its own line, then output the banner:
+Then output `v1.20.0 (released 2026-10-22)` on its own line, then output the banner:
 
 ```
   ┌─────────────────────────────────────────────────────────┐
@@ -183,7 +181,7 @@ This step lowers onboarding friction; it never blocks an experienced user who al
 | **Ada** | `ha-integration` | opus | sonnet | Python custom integrations | custom_components, Python, coordinator, config_flow, HACS, cloud API, OAuth2, REST integration |
 | **Mira** | `ha-integration` + `ha-yaml` | opus | sonnet | LLM, AI, conversation agents | LLM, Ollama, ChatGPT, OpenAI, conversation agent, AI assistant, generative |
 | **River** | `node-red` | sonnet | haiku | Visual automation flows | Node-RED, flow, function node, trigger-state, visual programming, MQTT flow |
-| **Iris** | `ha-dashboard-design` | sonnet | haiku | Dashboard visual design | Mushroom, minimalist, card layout, beautiful dashboard, styling, theme, card-mod, Lovelace |
+| **Iris** | `ha-dashboard-design` | sonnet | haiku | Dashboard visual design | custom dashboard, own theme, visual identity, wall panel, CSS Grid, Mushroom, card layout, styling, card-mod, Lovelace |
 
 ### External Data
 
@@ -542,7 +540,7 @@ Single-format outputs still carry the file-header comment naming the install met
 Every project Aurora delivers lives in **one project folder**. Inside that folder, generated artifacts are organised into Home-Assistant-conventional subdirectories. The rule is enforced as an Iron Law by every specialist that writes files (Iron Law 8 for Volt, Iron Law 3 for Sage, Ada, River, Iris). A delivery that puts files at the project root or in unconventional subdirectories does not pass the disk check.
 
 Canonical layout: `<project-name>/README.md`, `esphome/`, `hardware/`,
-`automations/`, `scripts/`, `blueprints/`, `packages/`, `dashboards/`,
+`automations/`, `scripts/`, `blueprints/`, `packages/`, `dashboards/`, `themes/`, `www/`,
 `node-red-flows/`, `custom_components/<integration_id>/`, plus
 `aurora-project.json` (DEEP mode only). For the full annotated tree with
 every filename per subdirectory, read `aurora/references/project-layout.md`.
@@ -556,7 +554,7 @@ every filename per subdirectory, read `aurora/references/project-layout.md`.
 | Sage   | `<project>/automations/` (or `scripts/`, `blueprints/`, `packages/` per output type) | `<automation-name>.yaml` |
 | Ada    | `<project>/custom_components/<integration_id>/` | Python files, `manifest.json`, `strings.json`, `translations/en.json`, plus optional `<project>/hacs.json`, `<project>/.github/workflows/validate.yaml`, `<project>/LICENSE` for HACS-ready repos |
 | River  | `<project>/node-red-flows/`   | `<flow-name>.json` |
-| Iris   | `<project>/dashboards/`       | `<dashboard-name>.yaml` |
+| Iris   | `<project>/dashboards/`, `themes/`, `www/` when needed | Dashboard YAML, theme YAML, local frontend assets |
 
 **Project README on root:** Every project folder has a `README.md` at the **root**, written by the agent that started the project (or by Manual if explicitly invoked). The root README is the master document and links to each agent's contribution by subdirectory: "ESPHome firmware: see `esphome/`", "Automations: see `automations/`", etc. Per-subdirectory READMEs are optional for complex deliverables (e.g. `esphome/INSTALL.md` is required, `automations/README.md` only if there is non-obvious context).
 

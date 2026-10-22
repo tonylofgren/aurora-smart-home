@@ -1,5 +1,9 @@
 # ESPHome Lights Reference
 
+> **Current release:** 2026.10 adds restore_state, transition reporting, effect resume, named colors and MIPI SPI AMOLED brightness. Light restore_mode remains accepted; review initial_state boot behavior.
+> Read [2026.10 migration](release-2026-10.md) and the
+> [new-component catalog with examples](new-components-2026-9-10.md) before using older recipes.
+
 Complete guide to lights: addressable LEDs, RGB strips, effects, and control.
 
 ## Table of Contents

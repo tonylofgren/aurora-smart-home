@@ -143,7 +143,7 @@ solar-inverter-modbus/
 
 ```bash
 cp secrets.yaml.example secrets.yaml
-# edit secrets.yaml and fill in wifi_ssid, wifi_password, api_key, ota_password
+# edit secrets.yaml and fill in wifi_ssid, wifi_password, api_key
 ```
 
 ### 2. Verify Modbus address and baud rate

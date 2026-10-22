@@ -46,7 +46,9 @@ mqtt:
 
 ota:
   platform: esphome
-  password: !secret ota_password
+  # ESPHome 2026.9+: encrypted OTA. No api: block, so OTA carries its own key.
+  encryption:
+    key: !secret ota_encryption_key
 
 logger:
 

@@ -1,5 +1,9 @@
 # ESPHome Solar Energy Reference
 
+> **Current release:** New since August: Mk2PVRouter telemetry, PZEM-6L24 three-phase metering and Systa solar thermal monitoring.
+> Read [2026.10 migration](release-2026-10.md) and the
+> [new-component catalog with examples](new-components-2026-9-10.md) before using older recipes.
+
 Complete guide for solar inverter monitoring, battery management, and energy dashboards.
 
 ## Table of Contents

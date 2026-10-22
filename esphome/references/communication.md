@@ -1,5 +1,9 @@
 # ESPHome Communication Protocols Reference
 
+> **Current release:** 2026.9/2026.10 add shared SPI Ethernet, USB-UART bridge/mux, TCP virtual UART, physical UART-to-TCP and serial proxy ownership/USB identity.
+> Read [2026.10 migration](release-2026-10.md) and the
+> [new-component catalog with examples](new-components-2026-9-10.md) before using older recipes.
+
 Complete reference for communication buses and protocols.
 
 ## Table of Contents
@@ -978,14 +982,21 @@ Generic serial port proxy over the network. Useful for any device with a serial 
 
 ```yaml
 uart:
+  id: uart_bus
   tx_pin: GPIO17
   rx_pin: GPIO16
   baud_rate: 9600
 
 serial_proxy:
-  uart_id: uart_bus
-  port: 6638  # TCP port to listen on
+  - uart_id: uart_bus
+    name: Equipment UART
+    port_type: TTL
 ```
+
+Requires `api:`; this proxy uses the native API, not a raw TCP listening port. Since
+2026.10 only the subscribed client may control the port. For a raw TCP bridge, use
+`uart_tcp`; for a virtual UART consumed by ESPHome, use `tcp_uart`. See the
+[component catalog and examples](new-components-2026-9-10.md).
 
 ---
 

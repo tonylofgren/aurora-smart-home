@@ -1,5 +1,9 @@
 # ESPHome: Datetime and Event Components
 
+> **Current release:** 2026.10 adds HA text/select/button platforms, RX8025T and derived template time, plus motion gesture events.
+> Read [2026.10 migration](release-2026-10.md) and the
+> [new-component catalog with examples](new-components-2026-9-10.md) before using older recipes.
+
 Reference documentation for datetime and event entity platforms.
 Source: https://esphome.io/components/
 

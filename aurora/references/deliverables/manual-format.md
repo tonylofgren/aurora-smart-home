@@ -11,7 +11,7 @@ This spec describes the **root** `README.md` at `<project>/README.md`. The root 
 - `<project>/automations/`, `<project>/scripts/`, `<project>/blueprints/`, `<project>/packages/` (Sage)
 - `<project>/custom_components/<integration_id>/` (Ada)
 - `<project>/node-red-flows/` (River)
-- `<project>/dashboards/` (Iris)
+- `<project>/dashboards/`, plus `themes/` and `www/` when needed (Iris)
 
 The root README links to each subdirectory's contribution. Per-subdirectory READMEs (e.g. `<project>/automations/README.md`) are optional and only added when a subdirectory's content has non-obvious context that does not belong in the master. The required sections below apply to the **root** README; sub-READMEs may use any structure.
 

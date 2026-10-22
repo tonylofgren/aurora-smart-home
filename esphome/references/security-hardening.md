@@ -7,7 +7,7 @@ Checklist and best practices for securing ESPHome devices.
 ### Essential (Must Have)
 
 - [ ] **API encryption enabled** - Prevents eavesdropping on HA communication
-- [ ] **OTA password set** - Prevents unauthorized firmware updates
+- [ ] **OTA encryption enabled** - Authenticates and encrypts firmware updates (ESPHome 2026.9+)
 - [ ] **secrets.yaml used** - No hardcoded credentials in config files
 - [ ] **secrets.yaml in .gitignore** - Never commit credentials
 - [ ] **Unique passwords per device** - Limits breach impact
@@ -46,15 +46,97 @@ api:
 
 **Why:** Without encryption, API traffic is plaintext. Anyone on your network can intercept commands and sensor data.
 
-### OTA Password
+### OTA Encryption
+
+```yaml
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  - platform: esphome
+    encryption:   # bare block: reuses the API key (ESPHome 2026.9+)
+```
+
+**Why:** An OTA password only proves who is uploading. The firmware image itself, which carries your WiFi credentials and API key, still crosses the network readable. With `encryption:` the upload is both authenticated and confidential, and one key per device covers API and OTA.
+
+Rules:
+
+- Normally `encryption:` replaces `password:`. ESPHome 2026.10 permits both only with the explicit `encryption.allow_plaintext_upload` migration option described below.
+- With an `api:` key present, leave `encryption:` empty. A separate OTA key that differs from a static API key is rejected.
+- Only a device without an `api:` block (for example MQTT-only) gets its own OTA key:
+
+```yaml
+ota:
+  - platform: esphome
+    encryption:
+      key: !secret ota_encryption_key  # base64 of 32 random bytes, same format as the API key
+```
+
+Generate a key with `python -c "import base64,os;print(base64.b64encode(os.urandom(32)).decode())"` or `openssl rand -base64 32`.
+
+### Migrating an existing device from OTA password to encryption (ESPHome 2026.9+)
+
+**Source:** https://esphome.io/components/ota/esphome/
+
+Firmware built before 2026.9 cannot negotiate encrypted OTA. Use the two-upload path
+below, or the explicit one-install path available since 2026.10. Removing its password
+without either migration path prevents the old firmware from accepting the upload.
+
+1. **Check the API key.** The config must contain `api:` with `encryption: key:`. If Home Assistant created that key when the device was adopted, copy the existing key into `secrets.yaml`. Never generate a new one here: Home Assistant would no longer be able to talk to the device and you would have to add it again.
+2. **First upload: new firmware, old authentication.** Leave `password:` in place and upload with ESPHome 2026.9.x. Validation warns that a password and an API key are both set; that is expected for this one step.
+3. **Second upload: switch to encryption.** Replace `password:` with a bare `encryption:` and upload again. The `ota_password` entry in `secrets.yaml` can then be deleted.
+
+```yaml
+# First upload (device still runs pre-2026.9 firmware)
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+# Second upload (device now runs 2026.9 or newer)
+ota:
+  - platform: esphome
+    encryption:
+```
+
+| Error message | Cause | Fix |
+|---------------|-------|-----|
+| `ESP requests password, but no password given!` | `password:` was removed before the device was running 2026.9 firmware | Put `password:` back, do the first upload, then the second |
+| `the device did not offer encryption; refusing to send the image in plaintext` | `encryption:` was added while the device still runs pre-2026.9 firmware | Upload once with `password:`, then switch |
+
+**Recovery:** if the device refuses every network upload, flash it over USB/serial, or use `web_server` OTA if that component is enabled.
+
+**Deadline:** ESPHome 2027.3.0 removes implicit plaintext fallback. For firmware that
+never migrated, the documented alternatives are the explicit single-install path below,
+serial flashing, or web-server OTA if enabled. This is not removal of every recovery path.
+
+**Limitation:** do not change a working OTA/API key as part of this migration. Key replacement
+requires a supported recovery/provisioning path; preserve the adopted device's key.
+
+### ESPHome 2026.10: explicit single-install migration
+
+For one transitional install, retain the old password and use:
 
 ```yaml
 ota:
   - platform: esphome
     password: !secret ota_password
+    encryption:
+      allow_plaintext_upload: true
+      # key: !secret ota_encryption_key  # required only when there is no api:
 ```
 
-**Why:** Without password, anyone on the network can flash malicious firmware to your device.
+The CLI permits that install in plaintext, while the new firmware requires encryption.
+After it succeeds, remove `allow_plaintext_upload` and `password:`. Never leave the
+fallback in a new-device template. If HA provisioned the API key, put that same key in
+the configuration before the migration.
+
+For an MQTT-only device using the **two-step** path, first add a temporary encrypted
+`api:` with `reboot_timeout: 0s`, keeping the password. After that install, remove `api:`,
+move the **same** key to `ota.encryption.key`, and remove the password. The one-install
+path needs no temporary API server. Confirm available flash for any transitional build.
+
+Source: [official OTA migration](https://esphome.io/components/ota/esphome/#enabling-encryption-on-an-existing-device).
 
 ### Secrets Management
 
@@ -63,7 +145,6 @@ ota:
 wifi_ssid: "YourNetwork"
 wifi_password: "SecurePassword123"
 api_encryption_key: "base64EncodedKey=="
-ota_password: "AnotherSecurePassword"
 fallback_ap_password: "FallbackPassword"
 ```
 
@@ -79,7 +160,7 @@ api:
 
 ota:
   - platform: esphome
-    password: !secret ota_password
+    encryption:
 ```
 
 **.gitignore:**
@@ -280,10 +361,10 @@ api:
   encryption:
     key: !secret api_encryption_key
 
-# Password-protected OTA
+# Encrypted OTA (reuses the API key)
 ota:
   - platform: esphome
-    password: !secret ota_password
+    encryption:
 
 # Secure WiFi with fallback
 wifi:
@@ -319,7 +400,7 @@ Run through this checklist before deploying:
 □ secrets.yaml exists and contains all sensitive values
 □ secrets.yaml is in .gitignore
 □ API encryption key is unique (32 bytes, base64)
-□ OTA password is set and strong
+□ OTA uses encryption: (not password:)
 □ WiFi password uses WPA2/WPA3
 □ Fallback AP has password set
 □ Web server disabled or password-protected
@@ -354,11 +435,13 @@ wifi:
 ```yaml
 # BAD
 ota:
-  password: "admin"
+  - platform: esphome
+    password: "admin"
 
-# GOOD
+# GOOD (ESPHome 2026.9+: encrypted, reuses the API key)
 ota:
-  password: !secret ota_password  # Use generated password
+  - platform: esphome
+    encryption:
 ```
 
 **Exposed web server:**

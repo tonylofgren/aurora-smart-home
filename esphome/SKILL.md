@@ -217,6 +217,8 @@ When the user mentions a specific ESPHome version, is upgrading, or asks "what's
 
 | Version | Reference File |
 |---------|---------------|
+| ESPHome 2026.10.0 (October 2026): native ESP8266 builds, compressed OTA, explicit OTA migration fallback, light restore_state, Sendspin protocol upgrade, USB/TCP bridges, CSI motion, STCC4 and persistent sensors | `references/release-2026-10.md` |
+| ESPHome 2026.9.0 / 2026.9.1 (September 2026): encrypted OTA, Modbus renames, template climate, Tuya water heater, new sensors and headless display snapshots | `references/release-2026-9.md` |
 | ESPHome 2026.8.0 (August 2026): BLE goes platform-neutral (`ble_device_base`, Pico W/BK72xx/LN882H trackers), `esp32_ble_id`→`ble_hub_id`, SGP4x/SEN5x/SEN6x `voc`/`nox`→`voc_index`/`nox_index`, LED strip `channel_colors` replaces `rgb_order`/`is_rgbw`/`is_wrgb`, dual Ethernet+WiFi, Modbus fairness + server 0x17, RC522 I2C default address change | `references/release-2026-8.md` |
 | ESPHome 2026.7.0 (July 2026): native ESP-IDF/nRF toolchains default, EN18031 security stack (NVS encryption, OTA downgrade protection, `provisioning`), Modbus rewrite, LVGL animations + rotation + `paused`, `image:` becomes a platform, 11 new components (qmi8658, pixoo, it8951, touch controllers), RTC-backed preferences, web server digest auth | `references/release-2026-7.md` |
 | ESPHome 2026.6.0 (June 2026): Device Builder 1.0 replaces the dashboard, ESP8266 WPA2 default, `enable_on_boot: false` reclaims RAM, `motion` IMU hub (BMI270/LSM6DS), `router` speaker + PCM5122 DAC, any-bit-depth audio, YAML frontmatter, `build_flags` | `references/release-2026-6.md` |
@@ -236,6 +238,19 @@ When the user mentions a specific ESPHome version, is upgrading, or asks "what's
 
 Located in `assets/templates/` - starter configs for common use cases.
 
+For components added since Aurora v1.19.0, start with
+[`references/new-components-2026-9-10.md`](references/new-components-2026-9-10.md).
+It maps every new September/October component and additional public platforms to official
+references and [`assets/templates/2026-10/`](assets/templates/2026-10/README.md) examples.
+Internal helpers are explicitly marked; do not invent YAML for them. These are reusable
+packages with illustrative hardware assignments, not authorization to assume a user's board.
+
+For current output, read the latest release reference **and** the relevant topic reference.
+When they conflict, use the version-specific migration rule and verify against that version's
+schema. For deployed devices preserve existing keys and explain the OTA migration path;
+for new devices use encrypted API and OTA. State whether validation was schema-only,
+compiled, or tested on hardware.
+
 For fleets of similar devices, factor shared blocks (wifi, api, ota, diagnostics) into `packages:` instead of copying them per device - see `references/packages-modular-config.md`.
 
 ## Quick Start (after confirming board)
@@ -254,8 +269,11 @@ wifi:
   password: !secret wifi_password
 
 api:
+  encryption:
+    key: !secret api_encryption_key
 ota:
   platform: esphome
+  encryption:  # New USB-flashed devices; deployed devices need the OTA migration path.
 logger:
 ```
 

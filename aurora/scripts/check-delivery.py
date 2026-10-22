@@ -59,6 +59,8 @@ CANONICAL_SUBDIRS = {
     "blueprints",
     "packages",
     "dashboards",
+    "themes",
+    "www",
     "node-red-flows",
     "custom_components",
     "hardware",

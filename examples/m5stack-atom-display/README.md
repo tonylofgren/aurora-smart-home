@@ -115,7 +115,7 @@ The Roboto family is Apache 2.0 licensed and available from Google Fonts: https:
 
    ```bash
    cp secrets.yaml.example secrets.yaml
-   # edit secrets.yaml and fill in wifi_ssid, wifi_password, api_encryption_key, ota_password, ap_password
+   # edit secrets.yaml and fill in wifi_ssid, wifi_password, api_encryption_key, ap_password
    ```
 
 4. **Generate an API encryption key**:

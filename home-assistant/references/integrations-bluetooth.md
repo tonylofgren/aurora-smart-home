@@ -394,7 +394,7 @@ api:
 
 ota:
   - platform: esphome
-    password: !secret ota_password
+    encryption:
 ```
 
 ### Proxy with Local Sensors

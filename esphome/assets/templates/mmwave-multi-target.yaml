@@ -60,7 +60,9 @@ api:
 
 ota:
   - platform: esphome
-    password: !secret ota_password
+    # ESPHome 2026.9+: encrypted OTA reusing the api: key. Device flashed earlier with
+    # an OTA password? Update once with password: kept, then switch to this block.
+    encryption:
 
 # Disable serial logger so UART2 is free for RD-03D
 logger:

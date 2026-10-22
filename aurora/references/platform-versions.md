@@ -44,7 +44,28 @@
 - **New integrations** — UniFi Access, WiiM, Solarman, TRMNL (e-paper display). → Route to **Grid** (UniFi), **Ada** (others)
 - **Backup upload progress** — Per-location upload percentage visible. → Route to **Forge**
 
-## ESPHome 2026.8 (released August 2026)
+## ESPHome 2026.10 (released 2026-10-21)
+
+Full reference: `esphome/references/release-2026-10.md`. Component coverage and examples:
+`esphome/references/new-components-2026-9-10.md` and `esphome/assets/templates/2026-10/`.
+
+- **Native ESP8266 builds** and compressed OTA on more platforms. PlatformIO fallback for ESP8266 is deprecated for removal in 2027.4. Route to **Volt**.
+- **OTA migration** gains `encryption.allow_plaintext_upload` for one transitional install; preserve the old password and real key, then remove the fallback. Route to **Volt**.
+- **New hardware and interfaces**: STCC4, TF-Luna, PZEM-6L24, Systa bus, Xiaomi BLE sensors, TAS amplifiers, ICNT86, RX8025T, persistent counter/average, USB bridges and TCP UART. Route to **Volt**.
+- **ESPectre WiFi CSI motion** and motion gestures; **Zigbee** measurement clusters and number/switch additions. Route to **Volt** / **Nano** as applicable.
+- **Breaking behavior**: speaker codec option removed, mute independent of volume, Sendspin requires compatible Music Assistant and ESP-IDF, IR receive buffers change units, light boot state honors `initial_state`. Route to **Glitch** or **Volt**.
+- **HA onboarding wizard is version-gated**: firmware support exists now, but HA displays it starting in 2026.11. Do not promise it in HA 2026.10.
+
+## ESPHome 2026.9 (released 2026-09-16; patch 2026.9.1 on 2026-09-29)
+
+Full reference: `esphome/references/release-2026-9.md`.
+
+- **Encrypted OTA** reuses the API key; existing firmware needs a migration path. Patch 2026.9.1 fixes key retention in safe mode. Route to **Volt**.
+- **Modbus** `custom_pdu`, `reuse_previous_range`, retired per-item `skip_updates`, corrected write offsets and state behavior. Route to **Volt** / **Glitch**.
+- **Template climate**, Tuya water heater, SFA40, D01, DS1603L, Mk2PVRouter and host display snapshots. Route to **Volt**.
+- Shared SPI Ethernet, Improv on non-WiFi interfaces, API action metadata, custom eFuse MAC propagation and stricter UART validation. Read the release checklist before upgrading.
+
+## ESPHome 2026.8 (released August 2026; patch 2026.8.2 on 2026-08-31)
 
 Full reference: `esphome/references/release-2026-8.md`.
 

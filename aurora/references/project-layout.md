@@ -30,6 +30,9 @@ file whitelist — this file is just the tree for reference.
 ├── packages/                          ← Sage (packages)
 ├── dashboards/                        ← Iris
 │   └── <dashboard-name>.yaml
+├── themes/                            ← Iris (when a custom theme is delivered)
+│   └── <theme-name>.yaml
+├── www/                               ← Iris (only required local frontend assets)
 ├── node-red-flows/                    ← River
 │   └── <flow-name>.json
 └── custom_components/                 ← Ada (HA standard)

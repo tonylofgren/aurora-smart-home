@@ -104,8 +104,7 @@ soil-moisture-plant/
    ```bash
    cp secrets.yaml.example secrets.yaml
    ```
-   Fill in `wifi_ssid`, `wifi_password`, `api_encryption_key`, and
-   `ota_password`.
+   Fill in `wifi_ssid`, `wifi_password`, and `api_encryption_key`.
 
 2. **Flash the Xiao**:
    ```bash

@@ -1025,7 +1025,7 @@ esphome run device.yaml
 ```yaml
 ota:
   platform: esphome
-  password: !secret ota_password
+  encryption:
 
 # For HTTP OTA (larger updates)
 ota:

@@ -596,7 +596,6 @@ substitutions:
 wifi_ssid: "MyNetwork"
 wifi_password: "MyPassword"
 api_key: "generated-key"
-ota_password: "ota-secret"
 
 # Device config
 wifi:
@@ -608,5 +607,6 @@ api:
     key: !secret api_key
 
 ota:
-  password: !secret ota_password
+  - platform: esphome
+    encryption:  # reuses the api key (ESPHome 2026.9+)
 ```

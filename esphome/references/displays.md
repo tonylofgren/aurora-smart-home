@@ -1,5 +1,9 @@
 # ESPHome Displays Reference
 
+> **Current release:** 2026.9/2026.10 add headless snapshots, LVGL list/table widgets, ICNT86 touch, AMOLED brightness and more e-paper models. Review partial refresh and PSRAM requirements.
+> Read [2026.10 migration](release-2026-10.md) and the
+> [new-component catalog with examples](new-components-2026-9-10.md) before using older recipes.
+
 Complete reference for display platforms, graphics, fonts, and LVGL.
 
 ## Table of Contents

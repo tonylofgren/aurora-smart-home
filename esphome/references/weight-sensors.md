@@ -1,5 +1,9 @@
 # Weight Sensors Reference
 
+> **Current release:** 2026.10 adds Xiaomi Body Scale S200/S400 via BLE with a device-specific bind key.
+> Read [2026.10 migration](release-2026-10.md) and the
+> [new-component catalog with examples](new-components-2026-9-10.md) before using older recipes.
+
 Complete guide for weight measurement using load cells and ADC modules in ESPHome.
 
 ## Overview

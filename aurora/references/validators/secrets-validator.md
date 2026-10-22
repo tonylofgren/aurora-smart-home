@@ -47,7 +47,9 @@ decision, not a side effect.
 - `refresh_token`
 - `webhook_secret`
 - `encryption_key`
-- `ota_password`
+- `api_encryption_key`
+- `ota_encryption_key`
+- `key` (only when nested under an `encryption:` block)
 - `wifi_password`
 - `mqtt_password`
 
@@ -90,6 +92,20 @@ For each line in `yaml_text` that contains a key from the high-risk list:
    `'<file_path>' line <N>: '<key>' uses a template. Confirm the template
    resolves to a !secret reference and not a literal at render time.`
 
+5. **OTA password next to an API key (ESPHome 2026.9+)**: when an
+   `ota:` entry has `password:` and the same document has an `api:`
+   block with `encryption: key:`, emit a warning (ESPHome 2026.9 itself
+   warns on this combination):
+   `'<file_path>' line <N>: 'password' under 'ota:' is set while the API
+   has an encryption key. Since ESPHome 2026.9 use a bare 'encryption:'
+   under 'ota:' instead; it reuses the API key. Existing devices need the
+   two-step migration in esphome/references/security-hardening.md.`
+   `encryption:` and `password:` in the same `ota:` entry is normally invalid.
+   ESPHome 2026.10 permits this only with the explicit
+   `encryption.allow_plaintext_upload: true` migration option. Warn that this
+   is temporary; remove the password and fallback after a successful upload.
+   Without that option, report the combination as a failure.
+
 ## Output
 
 - Pass: empty list of failures.
@@ -111,7 +127,8 @@ device or integration context. Examples:
 |-----|---------|----------------------|
 | `password` | `wifi:` block in ESPHome | `wifi_password` |
 | `api_key` | ESPHome `api:` block | `api_encryption_key` |
-| `ota_password` | ESPHome `ota:` block | `ota_password` |
+| `key` | ESPHome `api:` `encryption:` block | `api_encryption_key` |
+| `key` | ESPHome `ota:` `encryption:` block, device has no `api:` (e.g. MQTT-only) | `ota_encryption_key` |
 | `password` | Sage `notify.email:` | `notify_email_password` |
 | `client_secret` | Atlas OAuth integration | `<service>_client_secret` |
 
@@ -205,3 +222,30 @@ Failures: []
 
 The validator cannot prove the block content is safe, so it warns rather
 than block. Agents should rewrite this to `!secret` whenever possible.
+
+### Example 6: OTA password next to an API key
+
+Input (`garage-sensor.yaml`):
+```yaml
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+```
+
+Output:
+```
+Warnings:
+- 'garage-sensor.yaml' line 7: 'password' under 'ota:' is set while the API has an encryption key. Since ESPHome 2026.9 use a bare 'encryption:' under 'ota:' instead; it reuses the API key. Existing devices need the two-step migration in esphome/references/security-hardening.md.
+Failures: []
+```
+
+Volt rewrites the `ota:` block for new devices:
+```yaml
+ota:
+  - platform: esphome
+    encryption:
+```

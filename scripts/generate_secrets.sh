@@ -31,12 +31,6 @@ generate_api_key() {
     openssl rand -base64 32
 }
 
-# Generate a URL-safe password
-generate_password() {
-    local length=${1:-16}
-    openssl rand -base64 "$length" | tr -d '/+=' | head -c "$length"
-}
-
 # Generate AP password (8 hex chars)
 generate_ap_password() {
     openssl rand -hex 4
@@ -51,8 +45,9 @@ print_secrets() {
     echo "API Encryption Key (for api: encryption: key:)"
     echo "  $(generate_api_key)"
     echo ""
-    echo "OTA Password (for ota: password:)"
-    echo "  $(generate_password 12)"
+    echo "OTA: no separate secret needed. A bare 'ota: encryption:' reuses"
+    echo "  the API key (ESPHome 2026.9+). For a device without api: (MQTT-only),"
+    echo "  generate an ota_encryption_key with --api-key-only."
     echo ""
     echo "Fallback AP Password (optional)"
     echo "  $(generate_ap_password)"
@@ -66,7 +61,7 @@ print_secrets() {
 # Create secrets.yaml file
 create_secrets_file() {
     local api_key=$(generate_api_key)
-    local ota_pass=$(generate_password 12)
+    local ota_key=$(generate_api_key)
     local ap_pass=$(generate_ap_password)
 
     cat > "$OUTPUT_FILE" << EOF
@@ -84,8 +79,10 @@ wifi_password: "${WIFI_PASSWORD}"
 # Used for secure communication with Home Assistant
 api_encryption_key: "${api_key}"
 
-# OTA (Over-The-Air) update password
-ota_password: "${ota_pass}"
+# OTA updates (ESPHome 2026.9+): use a bare `encryption:` under `ota:`.
+# It reuses api_encryption_key, so no OTA secret is needed.
+# Only a device WITHOUT an api: block (e.g. MQTT-only) needs its own key:
+# ota_encryption_key: "${ota_key}"
 
 # Fallback AP password (used when WiFi connection fails)
 ap_password: "${ap_pass}"

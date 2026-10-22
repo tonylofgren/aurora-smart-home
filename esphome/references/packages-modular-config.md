@@ -179,7 +179,7 @@ api:
     key: !secret api_encryption_key
 ota:
   - platform: esphome
-    password: !secret ota_password
+    encryption:
 ```
 
 Each device file then carries only identity, packages, and its unique hardware:

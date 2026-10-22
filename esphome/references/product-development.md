@@ -220,7 +220,7 @@ api:
 
 ota:
   platform: esphome
-  password: !secret ota_password
+  encryption:
 
 logger:
   level: INFO  # DEBUG for development, INFO for production

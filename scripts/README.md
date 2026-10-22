@@ -51,7 +51,7 @@ The scripts generate:
 | Secret | Format | Used For |
 |--------|--------|----------|
 | `api_encryption_key` | 32 bytes, base64 | Secure HA communication |
-| `ota_password` | 12 chars, URL-safe | OTA updates |
+| `ota_encryption_key` (commented out) | 32 bytes, base64 | OTA only on devices without `api:` (e.g. MQTT-only) |
 | `ap_password` | 8 hex chars | Fallback AP |
 
 ## Example Output
@@ -60,8 +60,7 @@ The scripts generate:
 # secrets.yaml
 wifi_ssid: "YOUR_WIFI_SSID"
 wifi_password: "YOUR_WIFI_PASSWORD"
-api_encryption_key: "dGVzdGtleXRlc3RrZXl0ZXN0a2V5dGVzdGtleXRlcw=="
-ota_password: "xK9mN2pQr4sT"
+api_encryption_key: "GENERATE_A_UNIQUE_KEY_WITH_THE_SCRIPT"
 ap_password: "a1b2c3d4"
 ```
 
@@ -84,5 +83,17 @@ api:
     key: !secret api_encryption_key
 
 ota:
-  password: !secret ota_password
+  - platform: esphome
+    encryption:  # reuses the API key (ESPHome 2026.9+)
+```
+
+No OTA secret is needed when the device has an `api:` block. For a device
+without `api:` (for example MQTT-only), uncomment `ota_encryption_key` in the
+generated file and reference it:
+
+```yaml
+ota:
+  - platform: esphome
+    encryption:
+      key: !secret ota_encryption_key
 ```

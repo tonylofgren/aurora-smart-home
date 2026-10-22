@@ -69,7 +69,8 @@ Fill in:
 - `api_encryption_key`: generate one with
   `openssl rand -base64 32` (or
   `[Convert]::ToBase64String((1..32 | % { Get-Random -Maximum 256 }))` in PowerShell)
-- `ota_password`: any strong password
+- no OTA password is needed: OTA updates are encrypted with the same
+  `api_encryption_key` (ESPHome 2026.9+)
 
 ### 3. Flash the device
 

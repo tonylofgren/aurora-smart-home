@@ -1,10 +1,11 @@
 ---
 name: HA Dashboard Design
 description: >
-  Beautiful, copy-paste-ready Home Assistant dashboard designs with complete CSS themes,
+  Bespoke Home Assistant dashboards with original layouts, typography, CSS themes,
   card-mod styles, and button-card templates. Nine distinct visual styles: Glassmorphism,
   Dark Minimal, Material You, Nordic, Neon/Cyberpunk, Warm Home, Soft Pastel, Luxury Gold,
-  and Retro Terminal. Use this skill whenever the user wants to make their dashboard look good,
+  and Retro Terminal are starting points, not limits. Supports custom dashboards that do not
+  look like the stock Home Assistant UI. Use when the user wants their own visual identity,
   asks about card styling, CSS for Home Assistant, card-mod, button-card templates, Lovelace
   themes, dashboard aesthetics, or wants a specific visual style - even if they don't use the
   words "design" or "CSS".
@@ -13,14 +14,33 @@ source: https://github.com/tonylofgren/aurora-smart-home
 
 # HA Dashboard Design
 
-Copy-paste-ready dashboard designs for Home Assistant. Pick a style, copy the blocks you need.
+Create a dashboard around the user's visual direction. Home Assistant supplies entities and
+actions; its default card appearance is optional. The nine styles below are references,
+not a menu the user must choose from.
 
-## Prerequisites (install via HACS)
+## Choose the design approach
 
-- **card-mod** - CSS styling for any card
+For an original theme, a reference screenshot, a wall panel, or a request that should not
+look like Home Assistant, read [Custom dashboards](references/custom-dashboards.md).
+Start with the intended screen, the information hierarchy, and the user's aesthetic.
+Reuse supplied preferences; ask only for missing details that change the design.
+
+- Theme only: preserve familiar cards and change colors, typography and surfaces.
+- Custom composition: reshape the whole view with CSS Grid, button-card templates and
+  original navigation. This is the usual choice for an app-like dashboard.
+- Custom card or panel: use a maintained web component when the interaction cannot be
+  expressed by existing cards. Do not force an independent frontend on a theme request.
+
+Working starter: [Editorial dashboard](assets/custom-editorial/README.md), with separate
+theme and dashboard files, responsive layouts and replaceable entity placeholders.
+
+## Optional building blocks (install only those used)
+
+- **card-mod** - CSS styling for supported cards, with shadow-DOM limits
 - **button-card** - fully customizable button cards
 - **mini-graph-card** - beautiful graphs (optional)
 - **mushroom** - modern card suite (optional, used in some styles)
+- **layout-card** - explicit responsive CSS Grid layouts (used by the editorial starter)
 
 ## Available Styles
 
@@ -38,9 +58,11 @@ Copy-paste-ready dashboard designs for Home Assistant. Pick a style, copy the bl
 
 ## How to Use
 
-1. Read the reference file for the chosen style
+1. Read the requested style, or `references/custom-dashboards.md` for an original design
 2. Copy the **Theme YAML** → paste into `config/themes/your-style.yaml`
-3. Copy the **card-mod global styles** → paste into your dashboard resources
+3. Place card-level `card_mod: style:` under each target card. The old style references'
+   "global styles" blocks are reusable card-level blocks, not dashboard resources.
+   Resources register JavaScript modules; theme-wide card-mod uses its documented theme format.
 4. Copy individual **card blocks** → paste directly into your dashboard YAML
 5. Adjust entity IDs to match your setup
 
@@ -53,8 +75,12 @@ frontend:
 ```
 
 ```yaml
-# Activate theme in dashboard
-theme: your-theme-name
+# Activate a theme on a view, inside the dashboard's views list
+views:
+  - title: Home
+    theme: your-theme-name
+    type: sections
+    sections: []
 ```
 
 ## Image Generation
@@ -67,6 +93,7 @@ DALL-E 3, Stable Diffusion, and Flux for every style.
 
 Read only the file for the requested style:
 
+- `references/custom-dashboards.md` - original visual identities, layout choice, installation and QA
 - `references/glassmorphism.md`
 - `references/dark-minimal.md`
 - `references/material-you.md`
@@ -99,29 +126,35 @@ Each reference file contains copy-paste blocks for:
 
 ## Dashboard Types
 
-**Always default to `masonry`** - it works in all HA versions and requires no setup.
+Choose for the layout, using the user's installed HA and custom-card versions:
 
-```yaml
-# Safe default - works everywhere
-views:
-  - title: Home
-    type: masonry   # ← default, always works
-    cards:
-      - ...
-```
+| View | Use when |
+|---|---|
+| `sections` | Native responsive grouping and visual editing are useful; current HA default |
+| `masonry` | Independently sized cards should flow into columns |
+| `panel` | A full-width composition needs one root card, such as a layout-card grid |
+| `custom:grid-layout` | Explicit CSS Grid placement and breakpoints are needed; requires layout-card |
 
-`type: sections` (HA 2024.6+ grid layout) can give a blank page if the user's HA version
-doesn't support it or if the view structure is wrong. Only suggest it if the user explicitly
-asks for it or confirms they're on HA 2024.6+.
+Do not mix `sections:` and masonry `cards:` structures. A panel view has exactly one card.
+An original appearance does not require hiding HA navigation. Offer kiosk behavior only when
+requested, with an obvious route back to editing and without treating hidden controls as access control.
 
 ## Pre-Output Checklist
 
-- [ ] Dashboard uses `type: masonry` unless user specifically asked for Sections
+- [ ] Layout and visual identity match the request; no forced preset or masonry default
 - [ ] Theme YAML included with correct filename
 - [ ] card-mod styles wrapped in correct YAML structure
 - [ ] All entity IDs marked as placeholders (e.g., `sensor.YOUR_TEMPERATURE`)
 - [ ] HACS dependencies listed at top of output
 - [ ] Credentials/secrets not hardcoded
+- [ ] Dependencies, theme installation, resource registration and entity replacements documented
+- [ ] Narrow/mobile and wide layouts considered; touch targets and visible text remain legible
+- [ ] Missing/unavailable entities render honestly; critical actions retain confirmation
+- [ ] Distinguish YAML/schema checks from actual live HA rendering and device interaction tests
+
+For repository templates, placeholders are intentional and documented. For a user's live
+dashboard, resolve real entity IDs (or explicitly identify unverified IDs). Write the dashboard,
+theme and installation notes to disk; follow the Iris delivery contract in `aurora/souls/iris.md`.
 
 ## Integration
 

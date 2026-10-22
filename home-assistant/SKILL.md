@@ -209,7 +209,7 @@ When a request involves more than YAML configuration, hand it off to the right s
 | ESPHome firmware on the device side | [`esphome`](../esphome/SKILL.md) - hardware confirmation, wiring, sensor YAML |
 | Custom Python integration (anything beyond template sensors) | [`ha-integration-dev`](../ha-integration-dev/SKILL.md) - coordinator pattern, config flow, HACS publishing |
 | Visual flow editor instead of YAML | [`node-red`](../node-red/SKILL.md) - flow JSON, function nodes, HA WebSocket nodes |
-| Dashboard styling (CSS, card-mod, themes, button-card templates) | [`ha-dashboard-design`](../ha-dashboard-design/SKILL.md) - nine ready styles, theme YAML |
+| Dashboard styling and original custom layouts (CSS, card-mod, themes, button-card) | [`ha-dashboard-design`](../ha-dashboard-design/SKILL.md) - original visual identities, responsive starter, nine optional styles |
 
 ### Dashboards
 

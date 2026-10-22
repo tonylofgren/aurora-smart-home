@@ -1,5 +1,9 @@
 # ESPHome Bluetooth Reference
 
+> **Current release:** 2026.10 adds encrypted Xiaomi S200/S400 scale and MCCGQ02HL door advertisements; both require the actual device bind key.
+> Read [2026.10 migration](release-2026-10.md) and the
+> [new-component catalog with examples](new-components-2026-9-10.md) before using older recipes.
+
 Complete guide to BLE tracker, proxy, presence detection, and Bluetooth devices.
 
 ## Table of Contents

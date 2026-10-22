@@ -1,6 +1,6 @@
 # ESPHome 2026.8.0 - Complete Release Reference (August 2026)
 
-**Release date:** August 19, 2026 (2026.8.0), with a patch release 2026.8.1 on August 24, 2026  
+**Release date:** August 19, 2026 (2026.8.0), with patches 2026.8.1 on August 24 and 2026.8.2 on August 31, 2026
 **Source:** https://esphome.io/changelog/2026.8.0/
 
 When the user is on this version, upgrading TO it, or asking "what's new", read this file BEFORE generating YAML. Bluetooth Low Energy stops being ESP32-only, several BLE and sensor keys are renamed, addressable LED strips move to a single `channel_colors` key, and Modbus gets another round of changes on top of the 2026.7.0 rewrite.
@@ -297,6 +297,13 @@ light:
 - `rotary_encoder` reset pin now respects `min_value` instead of always resetting to `0`.
 
 ---
+
+## Patch Release 2026.8.2 (August 31, 2026)
+
+This patch followed Aurora v1.19.0. It fixes ESP-IDF component-discovery reconfiguration,
+1-Wire reset timing wraparound, LVGL select triggers, HTTP watchdog defaults, JC3636518V2
+dimensions and ESP8266 mDNS while its radio cannot transmit. Device Builder reaches 1.13.1.
+No new component YAML is required. See the [official patch list](https://esphome.io/blog/2026/08/19/esphome-2026-8/#release-2026-8-2---august-31).
 
 ## Patch Release 2026.8.1 (August 24, 2026)
 

@@ -1,5 +1,9 @@
 # ESPHome: Media Player, Microphone, Speaker & Audio DAC
 
+> **Current release:** 2026.10 adds TAS2780/TAS58xx DACs and microphone resampling. Speaker codec selection and mute behavior changed; Sendspin needs compatible Music Assistant and ESP-IDF.
+> Read [2026.10 migration](release-2026-10.md) and the
+> [new-component catalog with examples](new-components-2026-9-10.md) before using older recipes.
+
 Reference documentation for ESPHome's audio stack, including the redesigned media player architecture (2026.3+).
 Source: https://esphome.io/components/
 
@@ -376,7 +380,7 @@ At least one of `media_pipeline` or `announcement_pipeline` is required. Each pi
 | `num_channels` | int | | 1 (mono) or 2 (stereo) |
 
 > **2026.5.0 codec changes:**
-> - `codec_support_enabled` is now **deprecated and inert**. Codec inclusion is determined from the pipeline `format:` setting. Use `format: NONE` to include all codecs (old `all` mode), or `format: WAV` for the closest equivalent to the old `none`/`false` mode.
+> - Since **2026.10**, `codec_support_enabled` is **removed** and fails validation (it was deprecated in 2026.5). Codec inclusion comes from the pipeline `format:`. Use `format: NONE` for all codecs or select a specific supported format such as `WAV`.
 > - **WAV decoding is no longer always compiled in.** WAV is auto-included when you embed a WAV file, set `format: WAV` as the preferred pipeline format, or use the speaker media player with `format: NONE`. If you only play WAV from arbitrary URLs via YAML actions, add `audio: codecs: wav:` to keep the WAV decoder compiled in.
 > - Audio decoders now sit on the new microMP3 / microWAV / microFLAC streaming libraries. Per-frame CPU drops noticeably, and the previously-flaky Opus-on-plain-ESP32 case is now stable.
 

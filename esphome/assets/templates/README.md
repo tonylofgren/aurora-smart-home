@@ -2,6 +2,14 @@
 
 Ready-to-use ESPHome configuration templates for common use cases.
 
+## September / October 2026 components
+
+See [2026.9/2026.10 packages](2026-10/README.md) for new sensors, audio, USB/TCP bridges,
+touch, persistent state, HA inputs and provisioning. These package fragments have explicit
+prerequisites; include one in a node configured for confirmed hardware. The complete
+[component inventory](../../references/new-components-2026-9-10.md) distinguishes public
+YAML platforms from internal libraries.
+
 ---
 
 ## Base Templates

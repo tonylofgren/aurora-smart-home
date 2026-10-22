@@ -19,7 +19,7 @@ instead of code that fails silently.
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skills-7c3aed.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Home Assistant](https://img.shields.io/badge/Home_Assistant-2024.x--2026.x-41BDF5.svg)](https://www.home-assistant.io/)
 [![ESPHome](https://img.shields.io/badge/ESPHome-2026.8.0-000000.svg)](https://esphome.io/)
-[![Version](https://img.shields.io/badge/Version-v1.19.0-success.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-v1.20.0-success.svg)](CHANGELOG.md)
 [![Validated](https://img.shields.io/badge/Validated-against_datasheets-success.svg)](aurora/references/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Support Nabu Casa](https://img.shields.io/badge/Support_HA-Nabu_Casa-3b8cd3.svg)](https://www.nabucasa.com)
@@ -105,18 +105,24 @@ Home Assistant automation, Python, or a Node-RED flow.
 
 ---
 
-## What's new: OpenAI Codex support (v1.19.0, August 2026)
+## What's new: ESPHome 2026.10 and custom dashboards (v1.20.0, October 2026)
 
-- **OpenAI Codex CLI support:** a two-command install via the codex plugin marketplace, with AGENTS.md routing so Codex users get the same specialist routing as Claude Code. Also works from a plain repository clone, no plugin install required.
-- **Model guidance refreshed to the Claude 5 family:** Opus 5 recommended for complex design work (PCB layout, integration architecture), Sonnet 5 as the workhorse for everyday builds and automations.
-- **Build Principles baked into every specialist:** simplest working config first, reuse existing patterns before adding new dependencies, and a validation step built into every delivery.
+- **ESPHome coverage through 2026.10.0:** upgrade guides for September and October, official references for every new component, and [32 reusable examples](esphome/assets/templates/2026-10/README.md).
+- **Encrypted OTA migration:** updated device templates, secret generators and step-by-step guidance for existing devices, including MQTT-only installations.
+- **Your own dashboard identity:** custom layouts, typography and themes, with a [responsive Editorial starter](ha-dashboard-design/assets/custom-editorial/README.md) that goes beyond Home Assistant's standard appearance.
 
 Earlier releases (ESPHome 2026.8.0, ESPHome 2026.7.0, XIAO boards, the recipe
 library, verified JLCPCB part numbers, fab-ready hardware delivery, and
 more): see [CHANGELOG.md](CHANGELOG.md).
 
 <details>
-<summary><strong>Previous release notes</strong> (v1.9.2 - v1.18.0)</summary>
+<summary><strong>Previous release notes</strong> (v1.9.2 - v1.19.0)</summary>
+
+## What's new: OpenAI Codex support (v1.19.0, August 2026)
+
+- **OpenAI Codex CLI support:** a two-command install via the codex plugin marketplace, with AGENTS.md routing so Codex users get the same specialist routing as Claude Code. Also works from a plain repository clone, no plugin install required.
+- **Model guidance refreshed to the Claude 5 family:** Opus 5 recommended for complex design work (PCB layout, integration architecture), Sonnet 5 as the workhorse for everyday builds and automations.
+- **Build Principles baked into every specialist:** simplest working config first, reuse existing patterns before adding new dependencies, and a validation step built into every delivery.
 
 ## What's new: ESPHome 2026.8.0 support (v1.18.0, August 2026)
 

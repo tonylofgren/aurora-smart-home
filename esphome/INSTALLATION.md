@@ -104,7 +104,6 @@ This creates a complete `secrets.yaml` with secure random keys.
 wifi_ssid: "YourWiFiName"
 wifi_password: "YourWiFiPassword"
 api_encryption_key: "your-32-byte-base64-key"  # Generate: openssl rand -base64 32
-ota_password: "your-ota-password"
 ```
 
 See [scripts/README.md](../scripts/README.md) for more options.

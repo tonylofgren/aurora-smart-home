@@ -62,7 +62,7 @@ You should get a JSON blob back with `state`, `session_energy`, `amp`, `voltage`
 
 ```bash
 cp secrets.yaml.example secrets.yaml
-# edit secrets.yaml and fill in wifi_ssid, wifi_password, api_key, ota_password
+# edit secrets.yaml and fill in wifi_ssid, wifi_password, api_key
 ```
 
 ### 3. Set the charger host in the YAML

@@ -25,11 +25,6 @@ def generate_api_key() -> str:
     return base64.b64encode(secrets.token_bytes(32)).decode('utf-8')
 
 
-def generate_password(length: int = 16) -> str:
-    """Generate a URL-safe password."""
-    return secrets.token_urlsafe(length)
-
-
 def generate_wifi_ap_password() -> str:
     """Generate a simple AP fallback password (8 chars)."""
     return secrets.token_hex(4)
@@ -41,7 +36,7 @@ def create_secrets_yaml(
 ) -> str:
     """Generate complete secrets.yaml content."""
     api_key = generate_api_key()
-    ota_pass = generate_password(12)
+    ota_key = generate_api_key()
     ap_pass = generate_wifi_ap_password()
 
     return f"""# ESPHome Secrets File
@@ -58,8 +53,10 @@ wifi_password: "{wifi_password}"
 # Used for secure communication with Home Assistant
 api_encryption_key: "{api_key}"
 
-# OTA (Over-The-Air) update password
-ota_password: "{ota_pass}"
+# OTA updates (ESPHome 2026.9+): use a bare `encryption:` under `ota:`.
+# It reuses api_encryption_key, so no OTA secret is needed.
+# Only a device WITHOUT an api: block (e.g. MQTT-only) needs its own key:
+# ota_encryption_key: "{ota_key}"
 
 # Fallback AP password (used when WiFi connection fails)
 ap_password: "{ap_pass}"
@@ -80,8 +77,9 @@ def print_secrets():
     print("API Encryption Key (for api: encryption: key:)")
     print(f"  {generate_api_key()}")
     print()
-    print("OTA Password (for ota: password:)")
-    print(f"  {generate_password(12)}")
+    print("OTA: no separate secret needed. A bare 'ota: encryption:' reuses")
+    print("  the API key (ESPHome 2026.9+). For a device without api: (MQTT-only),")
+    print("  generate an ota_encryption_key with --api-key-only.")
     print()
     print("Fallback AP Password (optional)")
     print(f"  {generate_wifi_ap_password()}")

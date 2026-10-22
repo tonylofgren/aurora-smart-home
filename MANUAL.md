@@ -487,7 +487,7 @@ api:
 
 ota:
   - platform: esphome
-    password: !secret ota_password
+    encryption:
 ```
 
 Your `secrets.yaml` (in the same folder, never shared) holds the actual values:
@@ -495,8 +495,9 @@ Your `secrets.yaml` (in the same folder, never shared) holds the actual values:
 wifi_ssid: "MyHomeNetwork"
 wifi_password: "mysecretpassword123"
 api_encryption_key: "base64encodedkey=="
-ota_password: "myotapassword"
 ```
+
+OTA updates are encrypted with the same `api_encryption_key` (ESPHome 2026.9+), so no separate OTA secret is needed.
 
 ### Ask Claude for a secrets template
 ```

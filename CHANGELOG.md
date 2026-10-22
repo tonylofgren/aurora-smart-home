@@ -8,6 +8,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.20.0] - 2026-10-22
+
+### Added
+
+- **ESPHome coverage through 2026.10.0**: September/October release routing, the post-release 2026.8.2 patch, a complete new-component inventory with official references, and 32 reusable component examples. Public components are separated from internal helpers. An optional ESPHome 2026.10.0 schema test validates the microcontroller packages in isolated fixtures; the host snapshot example requires Linux/macOS.
+- **Original dashboard design workflow**: custom layouts and themes can depart from Home Assistant's standard appearance. A responsive Editorial starter includes dashboard YAML, a separate theme and installation instructions; the nine existing styles remain optional inspiration.
+
+### Changed
+
+- Device templates, examples and secret generators now use encrypted OTA for ESPHome 2026.9+. Existing devices must follow the documented migration path before removing their OTA password.
+- ESPHome topic references point to current migration guidance for OTA, light restoration, audio/Sendspin, native builds and serial/USB/TCP interfaces. OTA migration documents the explicit 2026.10 single-install fallback alongside the two-step method, including MQTT-only devices.
+- Dashboard layout selection follows the requested design instead of forcing masonry. Theme CSS and JavaScript resources have distinct installation instructions. Iris delivery supports `themes/` and public `www/` assets alongside `dashboards/`.
+
+### Fixed
+
+- Serial Proxy example now uses the native API schema with a declared UART ID, port name and electrical type instead of an unsupported TCP `port` option.
+- Audio reference no longer describes removed `codec_support_enabled` as merely inert; toolchain guidance no longer presents the historical PlatformIO default as current.
+
 ## [1.19.0] - 2026-08-29
 
 ### Changed

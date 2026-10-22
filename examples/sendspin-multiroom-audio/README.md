@@ -10,6 +10,12 @@ playback works on a plain ESP32 in this release.
 
 ## Features
 
+**ESPHome 2026.10 upgrade:** update Music Assistant to 2.10.7 or 2.11.0b4+ first.
+Sendspin connections now use encryption and require ESP-IDF. Explicit codec lists must
+include FLAC or PCM; BMP artwork is no longer accepted. This example's original 2026.5
+description is historical; validate its complete pipeline for the target version before
+flashing. See [current audio migration notes](../../esphome/references/release-2026-10.md).
+
 - **One group media_player in HA** that drives every speaker at once
 - **Per-room delay compensation** to align rooms with different
   DAC/amp latency

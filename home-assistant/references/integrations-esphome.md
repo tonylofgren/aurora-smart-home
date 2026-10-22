@@ -61,9 +61,10 @@ api:
   encryption:
     key: !secret api_encryption_key
 
-# Enable OTA updates
+# Enable encrypted OTA updates (reuses the API key, ESPHome 2026.9+)
 ota:
-  password: !secret ota_password
+  - platform: esphome
+    encryption:
 
 # WiFi configuration
 wifi:
@@ -997,7 +998,6 @@ sensor:
 wifi_ssid: "MyNetwork"
 wifi_password: "MyPassword"
 api_key: "base64encodedkey=="
-ota_password: "otapassword"
 
 # device.yaml
 wifi:

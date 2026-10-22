@@ -91,7 +91,7 @@ api:
 
 ota:
   platform: esphome
-  password: !secret ota_password
+  encryption:
 
 logger:
   level: WARN  # Reduce logging for performance

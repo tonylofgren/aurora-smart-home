@@ -1,5 +1,9 @@
 # ESPHome External Components Reference
 
+> **Current release:** 2026.10 changes action codegen, remote protocol registration, NFC ownership and Modbus helpers. Configuration validation alone cannot check C++ migrations.
+> Read [2026.10 migration](release-2026-10.md) and the
+> [new-component catalog with examples](new-components-2026-9-10.md) before using older recipes.
+
 Community-developed components not included in official ESPHome.
 
 ## Table of Contents

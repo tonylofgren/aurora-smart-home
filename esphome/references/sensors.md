@@ -1,5 +1,9 @@
 # ESPHome Sensor Reference
 
+> **Current release:** New in 2026.9/2026.10: SFA40, D01, DS1603L, Mk2PVRouter, STCC4, TF-Luna, PZEM-6L24, persistent counter/average and WiFi CSI motion.
+> Read [2026.10 migration](release-2026-10.md) and the
+> [new-component catalog with examples](new-components-2026-9-10.md) before using older recipes.
+
 ## Table of Contents
 - [Common Sensor Options](#common-sensor-options)
 - [Environmental Sensors](#environmental-sensors)

@@ -24,7 +24,8 @@ REQUIRED_HIGH_RISK_KEYS = [
     "secret",
     "client_secret",
     "private_key",
-    "ota_password",
+    "api_encryption_key",
+    "ota_encryption_key",
     "wifi_password",
 ]
 
@@ -139,6 +140,20 @@ def test_doc_suggests_secret_names(doc_text):
     )
 
 
+def test_doc_warns_on_ota_password_next_to_api_key(doc_text):
+    """ESPHome 2026.9 replaced OTA passwords with OTA encryption that reuses
+    the API key. The validator must warn when `password:` under `ota:` sits
+    next to an API encryption key."""
+    assert re.search(r"'password' under 'ota:'", doc_text), (
+        "secrets-validator.md does not warn about an OTA password next to "
+        "an API encryption key (ESPHome 2026.9 validation warning)."
+    )
+    assert "ota_password" not in doc_text.split("## Suggested Secret Names")[1].split("## Examples")[0], (
+        "Suggested secret names still recommend ota_password; new devices "
+        "should use a bare `encryption:` block instead."
+    )
+
+
 def test_volt_iron_law_6_references_secrets_validator():
     """Volt produces ESPHome YAML containing wifi/OTA passwords and API
     keys, so its Iron Law 6 must invoke the secrets-validator before
@@ -146,6 +161,6 @@ def test_volt_iron_law_6_references_secrets_validator():
     volt_text = VOLT_SOUL_PATH.read_text(encoding="utf-8")
     assert "secrets-validator" in volt_text, (
         "volt.md does not reference secrets-validator. Volt's YAML routinely "
-        "contains wifi_password, ota_password, and api encryption keys — "
+        "contains wifi_password and api/ota encryption keys; "
         "without invoking the validator, literal credentials can ship."
     )

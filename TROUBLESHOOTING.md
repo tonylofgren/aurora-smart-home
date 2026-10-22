@@ -75,20 +75,26 @@ Common issues and solutions across all Aurora Smart Home skills.
    ```yaml
    ota:
      - platform: esphome
-       password: !secret ota_password
-       safe_mode: true
+       encryption:
+   safe_mode:
    ```
 
 3. **Increase timeout** (for slow networks)
    ```yaml
    ota:
      - platform: esphome
-       password: !secret ota_password
-       num_attempts: 5
+       encryption:
+   safe_mode:
+     num_attempts: 5
    ```
 
 4. **Firewall ports**
    - ESPHome OTA uses port 3232 (ESP32) or 8266 (ESP8266)
+
+5. **OTA errors after switching to `encryption:` (ESPHome 2026.9+)**
+   - `ESP requests password, but no password given!`: the device still runs firmware built with an OTA `password:`, but the config no longer has one. Put `password:` back for one more upload, then switch to `encryption:`.
+   - `the device did not offer encryption; refusing to send the image in plaintext`: the config asks for encryption, but the device runs firmware older than 2026.9. Upload once with `password:` still in place, then switch.
+   - Locked out: flash over USB/serial, or upload through `web_server` OTA. Full two-step procedure in [security-hardening.md](esphome/references/security-hardening.md#migrating-an-existing-device-from-ota-password-to-encryption-esphome-20269).
 
 ### GPIO Issues
 

@@ -1,5 +1,9 @@
 # ESP Board Reference
 
+> **Current release:** 2026.10 makes the native ESP8266 Arduino toolchain the default. Host builds use Ninja and require Linux/macOS; MCU firmware builds still support Windows.
+> Read [2026.10 migration](release-2026-10.md) and the
+> [new-component catalog with examples](new-components-2026-9-10.md) before using older recipes.
+
 Complete reference for ESP32 and ESP8266 boards supported by ESPHome.
 
 ---
@@ -1019,7 +1023,7 @@ esp32:
 
 **Best for:** Voice assistants, advanced projects, ESP32-S3/C6/H2
 
-**ESP-IDF 6 groundwork (2026.6.0):** Preparation for ESP-IDF 6 has begun (native RISC-V clang-tidy, sdkconfig changes). This is groundwork only and changes no YAML. PlatformIO remains the default build path.
+**Historical ESP-IDF 6 groundwork (2026.6.0):** native RISC-V clang-tidy and sdkconfig preparation began here. Native ESP-IDF builds became the default in 2026.7; native ESP8266 Arduino builds follow in 2026.10. Do not use the historical PlatformIO default as current guidance. See `release-2026-10.md`.
 
 ### ESP8266 Framework
 

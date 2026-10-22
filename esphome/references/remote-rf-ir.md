@@ -1,5 +1,9 @@
 # ESPHome Remote Control Reference
 
+> **Current release:** 2026.10 changes receive buffer units on pulse-ring targets and RMT defaults; check explicit buffer_size before upgrading.
+> Read [2026.10 migration](release-2026-10.md) and the
+> [new-component catalog with examples](new-components-2026-9-10.md) before using older recipes.
+
 Complete reference for IR and RF remote transmitters, receivers, and protocols.
 
 ## Table of Contents

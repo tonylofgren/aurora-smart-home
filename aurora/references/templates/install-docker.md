@@ -65,7 +65,7 @@ top right. Paste the contents of `secrets.yaml.example` and fill in:
 - `wifi_ssid`, `wifi_password`
 - `api_encryption_key` (generate with
   `openssl rand -base64 32`)
-- `ota_password` (any strong password)
+- no OTA password is needed (OTA updates reuse `api_encryption_key`)
 
 Save.
 
