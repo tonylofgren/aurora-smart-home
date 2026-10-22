@@ -18,7 +18,7 @@ instead of code that fails silently.
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skills-7c3aed.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Home Assistant](https://img.shields.io/badge/Home_Assistant-2024.x--2026.x-41BDF5.svg)](https://www.home-assistant.io/)
-[![ESPHome](https://img.shields.io/badge/ESPHome-2026.8.0-000000.svg)](https://esphome.io/)
+[![ESPHome](https://img.shields.io/badge/ESPHome-2026.10.0-000000.svg)](https://esphome.io/)
 [![Version](https://img.shields.io/badge/Version-v1.20.0-success.svg)](CHANGELOG.md)
 [![Validated](https://img.shields.io/badge/Validated-against_datasheets-success.svg)](aurora/references/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -37,11 +37,14 @@ instead of code that fails silently.
 
 ## Aurora in 10 seconds
 
+In Claude Code 2.1.275 or later, install Aurora with:
+
+```text
+/plugin install aurora --marketplace tonylofgren/aurora-smart-home
 ```
-/plugin marketplace add tonylofgren/aurora-smart-home
-/plugin install aurora@aurora-smart-home
-/aurora:aurora
-```
+
+Confirm the installation, then run `/aurora:aurora`.
+Using Codex or an older Claude Code? See the [installation guide](#quick-start).
 
 Then just describe it. One request is enough for a complete build: Aurora
 delivers the ESPHome firmware, the Home Assistant automation, and the
@@ -320,58 +323,91 @@ correct.
 
 ## Quick start
 
-Aurora has two tracks: the plugin experience inside Claude Code, or plain
-Markdown reference content read directly by the OpenAI Codex CLI. Pick the
-one you use.
+Choose the tool you use. Aurora is installed into Claude Code or Codex on your
+computer; it is not a Home Assistant add-on.
+
+| Your tool | Start here |
+|-----------|------------|
+| Claude Code | [Install with one command](#install-for-claude-code) |
+| OpenAI Codex CLI | [Install with two commands](#install-for-openai-codex) |
 
 ### Install for Claude Code
 
-You need Claude Code installed first. Get it at
-[claude.com/claude-code](https://claude.com/claude-code).
+You need [Claude Code](https://claude.com/claude-code) installed and signed in.
+Inside Claude Code **2.1.275 or later**, paste:
 
-Inside Claude Code:
-
+```text
+/plugin install aurora --marketplace tonylofgren/aurora-smart-home
 ```
+
+Review the plugin and choose **Install for you** to use Aurora across your
+projects. Follow any reload instruction shown by Claude Code, then start Aurora:
+
+```text
+/aurora:aurora
+```
+
+**Check it worked:** open `/plugin` and look for Aurora on the Installed tab.
+Then ask: "Use Aurora to help me build a temperature sensor with ESPHome."
+
+<details>
+<summary>Older Claude Code, or installing from a terminal?</summary>
+
+If your version does not recognize `--marketplace`, use these two commands
+inside Claude Code:
+
+```text
 /plugin marketplace add tonylofgren/aurora-smart-home
 /plugin install aurora@aurora-smart-home
 ```
 
-Restart Claude Code, then run:
+To install from your operating system's terminal instead, Claude Code
+**2.1.292 or later** supports:
 
-```
-/aurora:aurora
+```sh
+claude plugin install aurora --marketplace tonylofgren/aurora-smart-home
 ```
 
-Aurora opens, asks what you want to build, and routes the request to the right
-specialist. That is it.
+Start Claude Code after installation, then run `/aurora:aurora`.
+
+</details>
+
+[Official Claude Code installation instructions](https://code.claude.com/docs/en/discover-plugins#add-a-marketplace-and-install-in-one-command).
 
 ### Install for OpenAI Codex
 
 You need the [OpenAI Codex CLI](https://developers.openai.com/codex)
-installed first. Codex reads the same plugin marketplace format as Claude
-Code, so the install is two commands:
+installed and signed in. In your operating system's terminal, run these
+commands one at a time:
 
-```
+```sh
 codex plugin marketplace add https://github.com/tonylofgren/aurora-smart-home.git
 codex plugin add aurora@aurora-smart-home
 ```
 
-Then start `codex` anywhere and ask your smart home question. Aurora's
-skills are picked up automatically; no command or activation phrase is
-needed. To update later, run `codex plugin marketplace upgrade`.
+**Check it worked:** run the following and confirm Aurora is installed:
 
-Alternatively, skip the install and just run `codex` from inside a clone of
+```sh
+codex plugin list --marketplace aurora-smart-home
+```
+
+Start a new `codex` session and ask: "Use Aurora to help me build a temperature
+sensor with ESPHome." The specialist skills load from your question;
+`/aurora:aurora` is the Claude Code entry point.
+
+If `codex plugin` is not recognized, update your Codex CLI before retrying.
+To refresh the Aurora marketplace later, run
+`codex plugin marketplace upgrade aurora-smart-home`.
+
+Alternatively, skip the plugin install and run `codex` from inside a clone of
 this repo: [`AGENTS.md`](AGENTS.md) routes Codex to the right `SKILL.md`
-per domain on its own.
-
-The Claude Code slash command (`/aurora:aurora`) and hooks do not carry
-over; in Codex the skills activate from your plain question instead.
+per domain.
 
 ---
 
 ## Try your first prompt
 
-After `/aurora:aurora` opens, paste any of these:
+After starting Aurora in Claude Code, or opening a new Codex session, try any of these:
 
 | You say                                                | Aurora does                                                                                  |
 |--------------------------------------------------------|----------------------------------------------------------------------------------------------|
@@ -744,11 +780,14 @@ Aurora's agent personas are inspired by the people building the Open Home.
 
 ## Get started in 30 seconds
 
+In Claude Code 2.1.275 or later, install Aurora with:
+
+```text
+/plugin install aurora --marketplace tonylofgren/aurora-smart-home
 ```
-/plugin marketplace add tonylofgren/aurora-smart-home
-/plugin install aurora@aurora-smart-home
-/aurora:aurora
-```
+
+Confirm the installation, then run `/aurora:aurora`.
+Using Codex or an older Claude Code? See the [installation guide](#quick-start).
 
 Then describe what you want to build.
 

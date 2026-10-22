@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- Simplified installation guide: one-command Claude Code installation with version requirements and an older-version fallback, a clear Codex path, and installation checks for both tools.
+
 ## [1.20.0] - 2026-10-22
 
 ### Added
